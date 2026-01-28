@@ -343,7 +343,7 @@ curl -sL https://raw.githubusercontent.com/artvision-agency/claude-code-settings
 ```
 
 Это установит:
-- 132 агента
+- 199 агентов
 - 33 плагина  
 - Hooks защиты
 - Все настройки
