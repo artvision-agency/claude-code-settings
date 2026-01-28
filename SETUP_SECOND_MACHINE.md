@@ -5,7 +5,21 @@
 
 ---
 
-## Быстрая установка (One-liner)
+## 🚀 Полная установка (одна команда)
+
+```bash
+curl -sL https://raw.githubusercontent.com/artvision-agency/claude-code-settings/main/scripts/full-setup.sh | bash
+```
+
+Эта команда:
+- ✅ Клонирует настройки в `~/.claude/`
+- ✅ Клонирует wshobson-agents (108 агентов, 129 skills)
+- ✅ Создаёт симлинки
+- ✅ Настраивает permissions
+
+---
+
+## Ручная установка (если нужен контроль)
 
 ```bash
 # Клонировать настройки Claude
