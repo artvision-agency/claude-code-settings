@@ -331,3 +331,21 @@ ui-comprehensive-tester → task-completion-validator
 | Конфиги | comprehensive-review |
 | Security | security-auditor |
 
+
+---
+
+## ПЕРВЫЙ ЗАПУСК НА НОВОЙ МАШИНЕ
+
+Если это новая машина или аккаунт — выполни:
+
+```bash
+curl -sL https://raw.githubusercontent.com/artvision-agency/claude-code-settings/main/scripts/full-setup.sh | bash
+```
+
+Это установит:
+- 132 агента
+- 33 плагина  
+- Hooks защиты
+- Все настройки
+
+После этого перезапусти Claude Code.
