@@ -33,5 +33,31 @@
     "database-design@wshobson-agents": true,
     "kubernetes-operations@wshobson-agents": true,
     "data-engineering@wshobson-agents": true
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[$(date '+%Y-%m-%d %H:%M')] Session stop\" >> ~/.claude/session_logs/sessions.log",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-read.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }
