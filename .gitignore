@@ -1,0 +1,42 @@
+# Секреты и токены
+.secrets
+*.secret
+*.token
+
+# Приватные данные
+projects/*/
+
+# Логи и временные файлы
+*.log
+*.tmp
+.DS_Store
+
+# Claude внутренние файлы
+.claude.json
+projects/
+
+# Кэши
+*.cache
+
+# Дополнительные исключения
+github_token
+history.jsonl
+settings.json
+settings.local.json
+claude_desktop_config.json
+stats-cache.json
+CLAUDE.md.save
+cache/
+paste-cache/
+shell-snapshots/
+file-history/
+debug/
+downloads/
+statsig/
+telemetry/
+todos/
+commands/
+skills/
+plugins/
+plans/
+agents-artvision/
