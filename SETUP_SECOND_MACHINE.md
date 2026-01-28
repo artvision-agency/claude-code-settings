@@ -234,3 +234,40 @@ https://github.com/artvision-agency/claude-code-settings
 1. Проверьте `gh auth status`
 2. Проверьте файл `~/.claude/.secrets`
 3. Попробуйте `~/.claude/scripts/setup-github-access.sh`
+
+---
+
+## Дополнительные Marketplaces
+
+### wshobson/agents (25K stars)
+
+108 агентов + 129 skills + 15 оркестраторов. Лучшая коллекция для Claude Code.
+
+**Установка:**
+
+```bash
+# Клонировать репо
+cd ~ && git clone --depth 1 https://github.com/wshobson/agents.git wshobson-agents
+
+# Создать симлинк в marketplaces
+ln -s ~/wshobson-agents ~/.claude/plugins/marketplaces/wshobson-agents
+```
+
+**Использование:**
+
+```bash
+# В Claude Code
+/plugin                              # Посмотреть доступные
+/plugin install python-development   # Установить плагин
+```
+
+**Полезные плагины:**
+
+| Плагин | Что внутри |
+|--------|------------|
+| `python-development` | python-pro, django-pro, fastapi-pro + 5 skills |
+| `javascript-typescript` | js-pro, ts-pro + 4 skills |
+| `kubernetes-operations` | k8s-specialist + 4 skills |
+| `security-scanning` | security-auditor + SAST skills |
+| `full-stack-orchestration` | Multi-agent workflows |
+
