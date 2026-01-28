@@ -1,8 +1,31 @@
-# Claude Code Hooks - Token Protection
+# Claude Code Hooks - Token Protection & Auto-Logging
 
-Хуки для предотвращения перерасхода токенов.
+Хуки для предотвращения перерасхода токенов и автоматического логирования уроков.
 
 ## Установленные хуки
+
+### 0. save_session.py (АВТОЛОГИРОВАНИЕ)
+**Срабатывает**: В конце каждой сессии (SessionEnd hook)
+
+**Что делает**:
+- Анализирует сессию на наличие ошибок, паттернов, решений
+- Записывает уроки в `~/.claude/session_logs/lessons_learned.md`
+- Пропускает тривиальные сессии (простые вопрос-ответ)
+
+**Формат записи**:
+```markdown
+## [2026-01-28 13:34] category
+**Проект:** `/path/to/project`
+**Что произошло:** описание
+**Урок/Действие:** что запомнить
+```
+
+**Категории**: error, pattern, decision, optimization, setup
+
+**Ручной вызов**:
+```bash
+~/.claude/hooks/save_session.py '{"category": "error", "description": "что случилось", "action": "что делать", "cwd": "/путь"}'
+```
 
 ### 1. pre-read.sh
 **Срабатывает**: Перед каждым Read tool

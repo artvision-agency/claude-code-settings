@@ -1,0 +1,45 @@
+# Claude Code Hooks Configuration
+# Автологирование сессий и защита от ошибок
+
+hooks:
+  # === АВТОЛОГИРОВАНИЕ ===
+
+  # Hook на конец сессии — анализирует и предлагает записать уроки
+  - event: SessionEnd
+    action: prompt
+    prompt: |
+      Проанализируй эту сессию. Если были:
+      1. Ошибки которые пришлось исправлять
+      2. Неэффективные подходы (перерасход токенов, лишние действия)
+      3. Новые паттерны которые сработали хорошо
+      4. Важные решения по архитектуре/подходам
+
+      Запиши урок используя скрипт:
+      ~/.claude/hooks/save_session.py '{"category": "тип", "description": "что произошло", "action": "что запомнить", "cwd": "путь_к_проекту"}'
+
+      Категории: error, pattern, decision, optimization
+
+      Если сессия была тривиальной (простой вопрос-ответ) — ничего не записывай.
+
+  # === ЗАЩИТА ОТ ОШИБОК ===
+
+  # Предупреждение перед чтением больших файлов
+  - event: PreToolUse
+    tool: Read
+    action: bash
+    command: ~/.claude/hooks/pre-read.sh "$FILE_PATH"
+
+  # Мониторинг контекста
+  - event: PreToolUse
+    action: bash
+    command: ~/.claude/hooks/context-monitor.sh
+    runInBackground: true
+
+  # === ОПТИМИЗАЦИЯ WORKFLOW ===
+
+  # После frontend-developer — проверка результата
+  - event: SubagentStop
+    matcher:
+      subagent_type: frontend-developer
+    action: bash
+    command: ~/.claude/hooks/post-frontend.sh
