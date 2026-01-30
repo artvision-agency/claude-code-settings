@@ -159,8 +159,9 @@ def print_session(idx: int, session: dict, show_project: bool = False):
     size_str = format_size(session['size'])
 
     # Первое сообщение
-    msg = session.get('first_message', '')[:60] or '(no message)'
-    if len(session.get('first_message', '')) > 60:
+    first_msg = session.get('first_message') or ''
+    msg = first_msg[:60] or '(no message)'
+    if len(first_msg) > 60:
         msg += '...'
 
     # Проект
