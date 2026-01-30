@@ -233,6 +233,143 @@ def list_sessions(args):
 
     print(f"{Colors.DIM}Use: claude-sessions --resume <number> to resume a session{Colors.RESET}\n")
 
+def export_session(session: dict, output_dir: Path) -> Path:
+    """Экспорт сессии в markdown для синхронизации."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    date_str = session['modified'].strftime('%Y-%m-%d_%H-%M')
+    filename = f"{date_str}_{session.get('slug') or session['id'][:8]}.md"
+    filepath = output_dir / filename
+
+    # Читаем полный контент сессии
+    messages = []
+    try:
+        with open(session['path'], 'r', encoding='utf-8') as f:
+            for line in f:
+                try:
+                    data = json.loads(line)
+                    if data.get('type') == 'user':
+                        msg = data.get('message', {})
+                        content = msg.get('content', '') if isinstance(msg, dict) else str(msg)
+                        # Убираем system-reminder
+                        if '<system-reminder>' in content:
+                            parts = content.split('</system-reminder>')
+                            content = parts[-1].strip() if len(parts) > 1 else content
+                        if content:
+                            messages.append(('user', content[:500]))
+                    elif data.get('type') == 'assistant':
+                        msg = data.get('message', {})
+                        content = msg.get('content', '') if isinstance(msg, dict) else str(msg)
+                        if content and len(content) > 20:
+                            messages.append(('assistant', content[:500]))
+                except json.JSONDecodeError:
+                    continue
+    except Exception as e:
+        messages.append(('error', str(e)))
+
+    # Формируем markdown
+    md_content = f"""# Session Export
+
+## Metadata
+- **ID**: {session['id']}
+- **Slug**: {session.get('slug') or 'N/A'}
+- **Date**: {session['modified'].strftime('%Y-%m-%d %H:%M')}
+- **Status**: {'🔴 INTERRUPTED' if session.get('is_interrupted') else '🟢 Completed'}
+- **Project**: {session['project']}
+- **CWD**: {session.get('cwd') or 'N/A'}
+- **Messages**: {session['message_count']}
+
+## Summary
+{session.get('first_message') or 'No first message'}
+
+## Conversation (last {min(len(messages), 10)} exchanges)
+"""
+
+    for role, content in messages[-10:]:
+        if role == 'user':
+            md_content += f"\n### 👤 User\n{content}\n"
+        elif role == 'assistant':
+            md_content += f"\n### 🤖 Assistant\n{content[:300]}{'...' if len(content) > 300 else ''}\n"
+
+    md_content += f"""
+---
+*Exported at {datetime.now().strftime('%Y-%m-%d %H:%M')} for cross-client sync*
+"""
+
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(md_content)
+
+    return filepath
+
+
+def sync_sessions(args):
+    """Синхронизация сессий в git репо."""
+    sessions_dir = get_sessions_dir()
+    if not sessions_dir:
+        print(f"{Colors.RED}Sessions directory not found{Colors.RESET}")
+        return
+
+    # Директория для экспорта
+    sync_repo = Path.home() / 'claude-code-settings' / 'session_logs'
+    if not sync_repo.parent.exists():
+        print(f"{Colors.YELLOW}Sync repo not found. Clone it first:{Colors.RESET}")
+        print("  gh repo clone artvision-agency/claude-code-settings ~/claude-code-settings")
+        return
+
+    # Собираем незавершённые сессии
+    all_sessions = []
+    for project_dir in sessions_dir.iterdir():
+        if not project_dir.is_dir():
+            continue
+        for jsonl_file in project_dir.glob('*.jsonl'):
+            session = parse_session(jsonl_file)
+            # Только за последние 7 дней
+            if (datetime.now() - session['modified']).days <= 7:
+                all_sessions.append(session)
+
+    all_sessions.sort(key=lambda x: x['modified'], reverse=True)
+
+    # Фильтр
+    if args.interrupted:
+        all_sessions = [s for s in all_sessions if s.get('is_interrupted')]
+
+    if not all_sessions:
+        print(f"{Colors.GREEN}No sessions to sync{Colors.RESET}")
+        return
+
+    # Лимит
+    sessions_to_export = all_sessions[:args.limit]
+
+    print(f"\n{Colors.BOLD}Syncing {len(sessions_to_export)} sessions...{Colors.RESET}\n")
+
+    exported = []
+    for session in sessions_to_export:
+        filepath = export_session(session, sync_repo)
+        status = f"{Colors.RED}INTERRUPTED{Colors.RESET}" if session.get('is_interrupted') else f"{Colors.GREEN}completed{Colors.RESET}"
+        print(f"  ✅ {filepath.name} [{status}]")
+        exported.append(filepath)
+
+    # Git commit & push если указан флаг
+    if args.push:
+        print(f"\n{Colors.CYAN}Committing and pushing...{Colors.RESET}")
+        os.chdir(sync_repo.parent)
+        subprocess.run(['git', 'add', 'session_logs/'])
+        result = subprocess.run(
+            ['git', 'commit', '-m', f'sync: export {len(exported)} sessions\n\nCo-Authored-By: Claude <noreply@anthropic.com>'],
+            capture_output=True, text=True
+        )
+        if result.returncode == 0:
+            subprocess.run(['git', 'push', 'origin', 'main'])
+            print(f"{Colors.GREEN}✅ Pushed to git!{Colors.RESET}")
+        else:
+            print(f"{Colors.YELLOW}Nothing to commit (already up to date){Colors.RESET}")
+    else:
+        print(f"\n{Colors.DIM}Use --push to commit and push to git{Colors.RESET}")
+
+    print(f"\n{Colors.BOLD}Sync complete!{Colors.RESET}")
+    print(f"Other Claude clients can read: ~/claude-code-settings/session_logs/\n")
+
+
 def resume_session(args):
     """Восстановление сессии."""
     sessions_dir = get_sessions_dir()
@@ -295,10 +432,16 @@ Examples:
                         help='Filter by project name')
     parser.add_argument('--limit', '-l', type=int, default=20,
                         help='Limit number of sessions (default: 20)')
+    parser.add_argument('--sync', '-s', action='store_true',
+                        help='Export recent sessions to git repo for cross-client sync')
+    parser.add_argument('--push', action='store_true',
+                        help='With --sync: commit and push to git')
 
     args = parser.parse_args()
 
-    if args.resume:
+    if args.sync:
+        sync_sessions(args)
+    elif args.resume:
         resume_session(args)
     else:
         list_sessions(args)
