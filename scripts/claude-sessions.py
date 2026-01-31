@@ -94,21 +94,54 @@ def parse_session(jsonl_path: Path) -> dict:
                     continue
 
             # Проверяем последние строки на предмет нормального завершения
-            for line in reversed(lines[-10:]):
+            last_assistant_has_tool_use = False
+            last_meaningful_type = None
+
+            for line in reversed(lines[-20:]):
                 try:
                     data = json.loads(line)
-                    session_info['last_type'] = data.get('type', '')
+                    msg_type = data.get('type', '')
+                    session_info['last_type'] = msg_type
 
-                    # Признаки нормального завершения
+                    # Явные признаки нормального завершения
                     if data.get('subtype') == 'stop_hook_summary':
                         session_info['is_interrupted'] = False
                         break
-                    if data.get('type') == 'result' and data.get('subtype') == 'success':
+                    if msg_type == 'result' and data.get('subtype') == 'success':
                         session_info['is_interrupted'] = False
                         break
 
+                    # Пропускаем служебные записи
+                    if msg_type in ('file-history-snapshot', 'queue-operation', 'system'):
+                        continue
+
+                    # Запоминаем последний значимый тип
+                    if not last_meaningful_type and msg_type in ('user', 'assistant'):
+                        last_meaningful_type = msg_type
+
+                        # Проверяем есть ли tool_use в assistant message
+                        if msg_type == 'assistant':
+                            message = data.get('message', {})
+                            content = message.get('content', [])
+                            if isinstance(content, list):
+                                for item in content:
+                                    if isinstance(item, dict) and item.get('type') == 'tool_use':
+                                        last_assistant_has_tool_use = True
+                                        break
+
                 except json.JSONDecodeError:
                     continue
+
+            # Мягкая логика: считаем completed если:
+            # 1. Последнее сообщение от assistant БЕЗ незавершённого tool_use
+            # 2. Или последнее сообщение от user (ждал ответа)
+            # 3. И размер файла > 1KB (была реальная работа)
+            if session_info['is_interrupted'] and session_info['size'] > 1024:
+                if last_meaningful_type == 'assistant' and not last_assistant_has_tool_use:
+                    session_info['is_interrupted'] = False
+                elif last_meaningful_type == 'user':
+                    # User написал но не получил ответ — это interrupted
+                    pass
 
     except Exception as e:
         session_info['error'] = str(e)
@@ -337,8 +370,11 @@ def sync_sessions(args):
         print(f"{Colors.GREEN}No sessions to sync{Colors.RESET}")
         return
 
-    # Лимит
-    sessions_to_export = all_sessions[:args.limit]
+    # Лимит (--all убирает лимит)
+    if args.all:
+        sessions_to_export = all_sessions
+    else:
+        sessions_to_export = all_sessions[:args.limit]
 
     print(f"\n{Colors.BOLD}Syncing {len(sessions_to_export)} sessions...{Colors.RESET}\n")
 
