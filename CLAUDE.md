@@ -60,6 +60,34 @@ git add sync/ && git commit -m "sync: update session status" && git push
 
 > `artvision-data-memo` удалён (бэкап: `~/.artvision-data-memo-backup`)
 
+### Аккаунты и роли
+
+**Текущий режим:** Все аккаунты с полными правами (общий доступ)
+
+| Аккаунт | Роль | Сотрудники | Текущие права |
+|---------|------|------------|---------------|
+| justtrance@gmail.com | Основной | 2 человека | Полные |
+| adw.artvision.pro@gmail.com | Рабочий | 3-й сотрудник | Полные (пока) |
+
+**Планируемое разделение (на будущее):**
+
+```
+justtrance@gmail.com — ОСНОВНОЙ
+├── Git: push/pull/merge
+├── SYNC_STATUS.md: read/write
+└── Роль: Admin/Maintain в GitHub
+
+adw.artvision.pro@gmail.com — ОГРАНИЧЕННЫЙ (планируется)
+├── Git: pull + создание PR (без прямого push в main)
+├── SYNC_STATUS.md: read (обновление через PR)
+└── Роль: Write в GitHub (требует review для merge)
+```
+
+**Важно про облако Anthropic:**
+- Сессии Claude Code синхронизируются автоматически внутри ОДНОГО аккаунта
+- Между разными аккаунтами сессии НЕ видны — используй sync/SYNC_STATUS.md
+- Для полной прозрачности между аккаунтами — обновляй SYNC_STATUS.md через git
+
 ### Репозиторий агентов (100+ штук)
 
 **URL:** https://github.com/artvision-agency/sub-agents.directory
