@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-field="meta-title">[Название услуги] — Artvision</title>
+    <meta name="description" content="[Мета-описание услуги до 160 символов]" data-field="meta-description">
+    <style>
+        /* ========== RESET & BASE ========== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #333;
+            background: #f8f9fa;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: #1e3a5f; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        img { max-width: 100%; height: auto; }
+
+        /* ========== LAYOUT ========== */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .container--narrow { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+
+        /* ========== HEADER ========== */
+        .site-header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .site-header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .site-logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e3a5f;
+        }
+        .site-logo span { color: #c9a227; }
+        .site-nav { display: flex; gap: 24px; flex-wrap: wrap; }
+        .site-nav a { color: #444; font-size: 0.95rem; font-weight: 500; }
+        .site-nav a:hover { color: #1e3a5f; text-decoration: none; }
+
+        /* ========== BREADCRUMBS ========== */
+        .breadcrumbs {
+            padding: 12px 0;
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .breadcrumbs a { color: #1e3a5f; }
+        .breadcrumbs span { margin: 0 6px; }
+
+        /* ========== HERO ========== */
+        .hero-section {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a5080 60%, #1a3050 100%);
+            color: #fff;
+            padding: 64px 0 56px;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .hero-section p {
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.92;
+            line-height: 1.7;
+        }
+
+        /* ========== DESCRIPTION ========== */
+        .description-section { padding: 56px 0; background: #fff; }
+        .description-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .description-section p {
+            color: #444;
+            margin-bottom: 16px;
+            font-size: 1.05rem;
+            line-height: 1.75;
+        }
+
+        /* ========== BENEFITS ========== */
+        .benefits-section { padding: 56px 0; }
+        .benefits-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+        .benefit-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .benefit-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .benefit-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            color: #c9a227;
+        }
+        .benefit-card h3 {
+            font-size: 1.15rem;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .benefit-card p {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* ========== PROCESS ========== */
+        .process-section { padding: 56px 0; background: #fff; }
+        .process-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+        .process-steps { max-width: 700px; margin: 0 auto; }
+        .process-step {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 32px;
+            align-items: flex-start;
+        }
+        .step-number {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            background: #1e3a5f;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .step-content h3 {
+            font-size: 1.1rem;
+            color: #1e3a5f;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .step-content p { color: #555; font-size: 0.95rem; line-height: 1.6; }
+
+        /* ========== PRICING ========== */
+        .pricing-section { padding: 56px 0; }
+        .pricing-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .pricing-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.05rem;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .pricing-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 36px 28px;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        .pricing-card--featured {
+            border-color: #c9a227;
+            position: relative;
+        }
+        .pricing-card--featured::before {
+            content: 'Популярный';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #c9a227;
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .pricing-card h3 {
+            font-size: 1.2rem;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .pricing-price {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin: 16px 0;
+        }
+        .pricing-price span { font-size: 0.9rem; font-weight: 400; color: #888; }
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin: 20px 0 28px;
+        }
+        .pricing-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #555;
+            font-size: 0.95rem;
+            padding-left: 24px;
+            position: relative;
+        }
+        .pricing-features li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 14px;
+            height: 14px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2328a745'%3E%3Cpath d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+        .pricing-features li.disabled {
+            color: #bbb;
+            text-decoration: line-through;
+        }
+        .pricing-features li.disabled::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23ccc'%3E%3Cpath d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'/%3E%3C/svg%3E");
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .btn:hover { text-decoration: none; transform: translateY(-1px); }
+        .btn--primary { background: #c9a227; color: #fff; }
+        .btn--primary:hover { background: #b8921f; }
+        .btn--outline { background: transparent; color: #1e3a5f; border: 2px solid #1e3a5f; }
+        .btn--outline:hover { background: #1e3a5f; color: #fff; }
+        .btn--white { background: #fff; color: #1e3a5f; }
+        .btn--white:hover { background: #f0f0f0; }
+        .btn--block { display: block; width: 100%; }
+
+        /* ========== FAQ ========== */
+        .faq-section { padding: 56px 0; background: #fff; }
+        .faq-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+        .faq-list { max-width: 800px; margin: 0 auto; }
+        .faq-item {
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .faq-question {
+            width: 100%;
+            text-align: left;
+            padding: 20px 40px 20px 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #1e3a5f;
+            position: relative;
+            font-family: inherit;
+            line-height: 1.4;
+        }
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #c9a227;
+            transition: transform 0.3s;
+        }
+        .faq-item.active .faq-question::after {
+            content: '\2212';
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+        }
+        .faq-answer-inner {
+            padding: 0 0 20px;
+            color: #555;
+            font-size: 0.98rem;
+            line-height: 1.7;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+
+        /* ========== CTA ========== */
+        .cta-section {
+            padding: 56px 0;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a5080 100%);
+            color: #fff;
+            text-align: center;
+        }
+        .cta-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .cta-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 28px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ========== CONTACT FORM ========== */
+        .contact-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #c9a227;
+        }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+
+        /* ========== CONTACT INFO ========== */
+        .contact-section { padding: 48px 0; background: #fff; }
+        .contact-grid {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: #f0f4f8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .contact-icon svg { width: 20px; height: 20px; color: #1e3a5f; }
+        .contact-item .label { font-size: 0.8rem; color: #888; margin-bottom: 2px; }
+        .contact-item .value { font-size: 0.95rem; color: #333; font-weight: 500; }
+
+        /* ========== FOOTER ========== */
+        .site-footer {
+            background: #1e3a5f;
+            color: #ccc;
+            padding: 32px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .site-footer a { color: #c9a227; }
+
+        /* ========== BACK TO TOP ========== */
+        .back-to-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 48px;
+            height: 48px;
+            background: #1e3a5f;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+            z-index: 99;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-2px); background: #2a5080; }
+        .back-to-top svg { width: 24px; height: 24px; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .hero-section { padding: 40px 0 36px; }
+            .hero-section h1 { font-size: 1.7rem; }
+            .hero-section p { font-size: 1rem; }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+            .process-step { gap: 14px; }
+            .step-number { width: 40px; height: 40px; font-size: 1rem; }
+            .contact-grid { gap: 24px; flex-direction: column; align-items: center; }
+            .site-nav { gap: 16px; }
+            section { padding: 40px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SECTION: header -->
+<header class="site-header">
+    <div class="container">
+        <a href="/" class="site-logo">Art<span>vision</span></a>
+        <nav class="site-nav">
+            <a href="#">Услуги</a>
+            <a href="#">Кейсы</a>
+            <a href="#">О нас</a>
+            <a href="#">Блог</a>
+            <a href="#">Контакты</a>
+        </nav>
+    </div>
+</header>
+
+<!-- SECTION: breadcrumbs -->
+<div class="breadcrumbs">
+    <div class="container">
+        <a href="/">Главная</a>
+        <span>/</span>
+        <a href="#">Услуги</a>
+        <span>/</span>
+        <span data-field="breadcrumb-current">[Название услуги]</span>
+    </div>
+</div>
+
+<!-- SECTION: hero -->
+<section class="hero-section">
+    <div class="container">
+        <h1 data-field="title">[Название услуги]</h1>
+        <p data-field="hero-description">[Краткое описание услуги в 1-2 предложения. Объясните ценность для клиента и ключевой результат.]</p>
+    </div>
+</section>
+
+<!-- SECTION: description -->
+<section class="description-section">
+    <div class="container--narrow">
+        <h2 data-field="description-title">[Подробнее об услуге]</h2>
+        <p data-field="description-p1">[Первый абзац описания услуги. Расскажите подробно, что включает услуга, для кого она предназначена и какие задачи решает. Используйте конкретные примеры.]</p>
+        <p data-field="description-p2">[Второй абзац. Углубитесь в детали: методологию работы, используемые инструменты, подходы. Покажите экспертизу команды.]</p>
+        <p data-field="description-p3">[Третий абзац. Опишите результаты, которые получают клиенты. Можно упомянуть статистику или сроки достижения результатов.]</p>
+    </div>
+</section>
+
+<!-- SECTION: benefits -->
+<section class="benefits-section">
+    <div class="container">
+        <h2>Преимущества</h2>
+        <div class="benefits-grid">
+
+            <div class="benefit-card" data-field="benefit-1">
+                <div class="benefit-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                </div>
+                <h3 data-field="benefit-1-title">[Преимущество 1]</h3>
+                <p data-field="benefit-1-text">[Описание первого преимущества. Кратко объясните, почему это важно для клиента.]</p>
+            </div>
+
+            <div class="benefit-card" data-field="benefit-2">
+                <div class="benefit-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
+                <h3 data-field="benefit-2-title">[Преимущество 2]</h3>
+                <p data-field="benefit-2-text">[Описание второго преимущества. Укажите конкретную выгоду и измеримый результат.]</p>
+            </div>
+
+            <div class="benefit-card" data-field="benefit-3">
+                <div class="benefit-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <h3 data-field="benefit-3-title">[Преимущество 3]</h3>
+                <p data-field="benefit-3-text">[Описание третьего преимущества. Подчеркните надёжность, безопасность или качество.]</p>
+            </div>
+
+            <div class="benefit-card" data-field="benefit-4">
+                <div class="benefit-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                </div>
+                <h3 data-field="benefit-4-title">[Преимущество 4]</h3>
+                <p data-field="benefit-4-text">[Описание четвёртого преимущества. Расскажите о прозрачности, отчётности или поддержке.]</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: process -->
+<section class="process-section">
+    <div class="container">
+        <h2>Как мы работаем</h2>
+        <div class="process-steps">
+
+            <div class="process-step" data-field="step-1">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3 data-field="step-1-title">[Шаг 1: Название]</h3>
+                    <p data-field="step-1-text">[Описание первого шага. Что происходит на этом этапе, какие данные собираются, какие решения принимаются.]</p>
+                </div>
+            </div>
+
+            <div class="process-step" data-field="step-2">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3 data-field="step-2-title">[Шаг 2: Название]</h3>
+                    <p data-field="step-2-text">[Описание второго шага. Как формируется стратегия, что включает план работ.]</p>
+                </div>
+            </div>
+
+            <div class="process-step" data-field="step-3">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3 data-field="step-3-title">[Шаг 3: Название]</h3>
+                    <p data-field="step-3-text">[Описание третьего шага. Какие работы выполняются, в какие сроки, как контролируется качество.]</p>
+                </div>
+            </div>
+
+            <div class="process-step" data-field="step-4">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3 data-field="step-4-title">[Шаг 4: Название]</h3>
+                    <p data-field="step-4-text">[Описание четвёртого шага. Как подводятся итоги, какие отчёты предоставляются, что дальше.]</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: pricing -->
+<section class="pricing-section">
+    <div class="container">
+        <h2>Тарифы</h2>
+        <p class="pricing-subtitle" data-field="pricing-subtitle">[Выберите подходящий тариф или свяжитесь с нами для индивидуального предложения]</p>
+        <div class="pricing-grid">
+
+            <div class="pricing-card" data-field="plan-basic">
+                <h3 data-field="plan-basic-name">Базовый</h3>
+                <p style="color:#888;font-size:0.9rem;" data-field="plan-basic-description">[Краткое описание тарифа]</p>
+                <div class="pricing-price" data-field="plan-basic-price">[XX 000] <span>руб/мес</span></div>
+                <ul class="pricing-features">
+                    <li data-field="plan-basic-feature-1">[Включённая функция 1]</li>
+                    <li data-field="plan-basic-feature-2">[Включённая функция 2]</li>
+                    <li data-field="plan-basic-feature-3">[Включённая функция 3]</li>
+                    <li class="disabled" data-field="plan-basic-feature-4">[Недоступная функция]</li>
+                    <li class="disabled" data-field="plan-basic-feature-5">[Недоступная функция]</li>
+                </ul>
+                <a href="#cta" class="btn btn--outline btn--block">Выбрать</a>
+            </div>
+
+            <div class="pricing-card pricing-card--featured" data-field="plan-standard">
+                <h3 data-field="plan-standard-name">Стандарт</h3>
+                <p style="color:#888;font-size:0.9rem;" data-field="plan-standard-description">[Краткое описание тарифа]</p>
+                <div class="pricing-price" data-field="plan-standard-price">[XX 000] <span>руб/мес</span></div>
+                <ul class="pricing-features">
+                    <li data-field="plan-standard-feature-1">[Включённая функция 1]</li>
+                    <li data-field="plan-standard-feature-2">[Включённая функция 2]</li>
+                    <li data-field="plan-standard-feature-3">[Включённая функция 3]</li>
+                    <li data-field="plan-standard-feature-4">[Включённая функция 4]</li>
+                    <li class="disabled" data-field="plan-standard-feature-5">[Недоступная функция]</li>
+                </ul>
+                <a href="#cta" class="btn btn--primary btn--block">Выбрать</a>
+            </div>
+
+            <div class="pricing-card" data-field="plan-premium">
+                <h3 data-field="plan-premium-name">Премиум</h3>
+                <p style="color:#888;font-size:0.9rem;" data-field="plan-premium-description">[Краткое описание тарифа]</p>
+                <div class="pricing-price" data-field="plan-premium-price">[XX 000] <span>руб/мес</span></div>
+                <ul class="pricing-features">
+                    <li data-field="plan-premium-feature-1">[Включённая функция 1]</li>
+                    <li data-field="plan-premium-feature-2">[Включённая функция 2]</li>
+                    <li data-field="plan-premium-feature-3">[Включённая функция 3]</li>
+                    <li data-field="plan-premium-feature-4">[Включённая функция 4]</li>
+                    <li data-field="plan-premium-feature-5">[Включённая функция 5]</li>
+                </ul>
+                <a href="#cta" class="btn btn--outline btn--block">Выбрать</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: faq -->
+<section class="faq-section">
+    <div class="container">
+        <h2>Часто задаваемые вопросы</h2>
+        <div class="faq-list">
+
+            <div class="faq-item" data-field="faq-1">
+                <button class="faq-question" data-field="faq-1-question">[Вопрос 1: Сколько стоит услуга?]</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner" data-field="faq-1-answer">[Ответ на первый вопрос. Подробно опишите ценообразование, от чего зависит стоимость, есть ли бесплатная консультация.]</div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-field="faq-2">
+                <button class="faq-question" data-field="faq-2-question">[Вопрос 2: Какие сроки выполнения?]</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner" data-field="faq-2-answer">[Ответ на второй вопрос. Укажите типичные сроки для разных объёмов работ.]</div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-field="faq-3">
+                <button class="faq-question" data-field="faq-3-question">[Вопрос 3: Какие гарантии вы предоставляете?]</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner" data-field="faq-3-answer">[Ответ на третий вопрос. Расскажите о гарантиях результата, возврате средств.]</div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-field="faq-4">
+                <button class="faq-question" data-field="faq-4-question">[Вопрос 4: Как происходит отчётность?]</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner" data-field="faq-4-answer">[Ответ на четвёртый вопрос. Опишите формат отчётов, частоту, доступ к метрикам.]</div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-field="faq-5">
+                <button class="faq-question" data-field="faq-5-question">[Вопрос 5: Можно ли совмещать с другими услугами?]</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner" data-field="faq-5-answer">[Ответ на пятый вопрос. Расскажите о комплексных решениях и скидках при заказе пакета.]</div>
+                </div>
+            </div>
+
+            <div class="faq-item" data-field="faq-6">
+                <button class="faq-question" data-field="faq-6-question">[Вопрос 6: Дополнительный вопрос]</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner" data-field="faq-6-answer">[Ответ на шестой вопрос.]</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: cta -->
+<section class="cta-section" id="cta">
+    <div class="container">
+        <h2 data-field="cta-title">[Готовы начать? Свяжитесь с нами]</h2>
+        <p data-field="cta-description">[Оставьте заявку и получите бесплатную консультацию. Мы ответим в течение 1 рабочего дня.]</p>
+        <form class="contact-form" onsubmit="return false;">
+            <div class="form-group">
+                <input type="text" placeholder="Ваше имя" data-field="form-name">
+            </div>
+            <div class="form-group">
+                <input type="tel" placeholder="Телефон" data-field="form-phone">
+            </div>
+            <div class="form-group">
+                <input type="email" placeholder="Email" data-field="form-email">
+            </div>
+            <div class="form-group">
+                <textarea placeholder="Расскажите о вашем проекте" data-field="form-message"></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary btn--block">Отправить заявку</button>
+        </form>
+    </div>
+</section>
+
+<!-- SECTION: contact-info -->
+<section class="contact-section">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-item" data-field="contact-phone">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                </div>
+                <div>
+                    <div class="label">Телефон</div>
+                    <div class="value">[+7 (XXX) XXX-XX-XX]</div>
+                </div>
+            </div>
+            <div class="contact-item" data-field="contact-email">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div>
+                    <div class="label">Email</div>
+                    <div class="value">[email@example.com]</div>
+                </div>
+            </div>
+            <div class="contact-item" data-field="contact-address">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div>
+                    <div class="label">Адрес</div>
+                    <div class="value">[г. Город, ул. Улица, д. XX]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: footer -->
+<footer class="site-footer">
+    <div class="container">
+        <p>&copy; 2025 <a href="/">Artvision</a>. Все права защищены.</p>
+    </div>
+</footer>
+
+<!-- Back to top button -->
+<button class="back-to-top" id="backToTop" aria-label="Наверх">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"/>
+    </svg>
+</button>
+
+<script>
+    /* ========== FAQ Accordion ========== */
+    document.querySelectorAll('.faq-question').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var item = this.parentElement;
+            var wasActive = item.classList.contains('active');
+            // Close all
+            document.querySelectorAll('.faq-item').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            // Toggle current
+            if (!wasActive) {
+                item.classList.add('active');
+            }
+        });
+    });
+
+    /* ========== Back to Top ========== */
+    var backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+
+</body>
+</html>

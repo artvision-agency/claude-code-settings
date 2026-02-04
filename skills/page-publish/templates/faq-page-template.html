@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-field="meta-title">Часто задаваемые вопросы — Artvision</title>
+    <meta name="description" content="[Ответы на популярные вопросы об услугах, ценах и процессе работы Artvision]" data-field="meta-description">
+    <style>
+        /* ========== RESET & BASE ========== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #333;
+            background: #f8f9fa;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: #1e3a5f; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ========== LAYOUT ========== */
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+
+        /* ========== HEADER ========== */
+        .site-header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .site-logo { font-size: 1.4rem; font-weight: 700; color: #1e3a5f; }
+        .site-logo span { color: #c9a227; }
+        .site-nav { display: flex; gap: 24px; flex-wrap: wrap; }
+        .site-nav a { color: #444; font-size: 0.95rem; font-weight: 500; }
+        .site-nav a:hover { color: #1e3a5f; text-decoration: none; }
+
+        /* ========== HERO ========== */
+        .hero-section {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a5080 60%, #1a3050 100%);
+            color: #fff;
+            padding: 56px 0 48px;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+        .hero-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ========== SEARCH ========== */
+        .search-section { padding: 32px 0 0; }
+        .search-box {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 16px 20px 16px 48px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #c9a227;
+        }
+        .search-box input::placeholder { color: #aaa; }
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #999;
+        }
+        .search-no-results {
+            text-align: center;
+            padding: 32px 0;
+            color: #888;
+            font-size: 1rem;
+            display: none;
+        }
+
+        /* ========== CATEGORY TABS ========== */
+        .category-section { padding: 24px 0 0; }
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .category-tab {
+            padding: 8px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 24px;
+            background: #fff;
+            color: #555;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .category-tab:hover { border-color: #1e3a5f; color: #1e3a5f; }
+        .category-tab.active {
+            background: #1e3a5f;
+            color: #fff;
+            border-color: #1e3a5f;
+        }
+
+        /* ========== FAQ ========== */
+        .faq-section { padding: 40px 0 56px; }
+        .faq-category-group { margin-bottom: 40px; }
+        .faq-category-title {
+            font-size: 1.3rem;
+            color: #1e3a5f;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+        .faq-list { /* container for items */ }
+        .faq-item {
+            border-bottom: 1px solid #e8e8e8;
+            background: #fff;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .faq-question {
+            width: 100%;
+            text-align: left;
+            padding: 18px 44px 18px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.02rem;
+            font-weight: 600;
+            color: #1e3a5f;
+            position: relative;
+            font-family: inherit;
+            line-height: 1.4;
+            transition: background 0.2s;
+        }
+        .faq-question:hover { background: #f8f9fa; }
+        .faq-question::after {
+            content: '';
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid #c9a227;
+            border-bottom: 2px solid #c9a227;
+            transform: translateY(-70%) rotate(45deg);
+            transition: transform 0.3s;
+        }
+        .faq-item.active .faq-question::after {
+            transform: translateY(-30%) rotate(-135deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+        .faq-answer-inner {
+            padding: 0 20px 20px;
+            color: #555;
+            font-size: 0.96rem;
+            line-height: 1.7;
+        }
+        .faq-answer-inner p { margin-bottom: 10px; }
+        .faq-answer-inner p:last-child { margin-bottom: 0; }
+        .faq-item.active .faq-answer { max-height: 600px; }
+
+        .faq-item.hidden { display: none; }
+        .faq-category-group.hidden { display: none; }
+
+        /* ========== CTA ========== */
+        .cta-section {
+            padding: 56px 0;
+            background: #fff;
+            text-align: center;
+        }
+        .cta-section h2 {
+            font-size: 1.6rem;
+            color: #1e3a5f;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .cta-section p {
+            color: #555;
+            font-size: 1.05rem;
+            margin-bottom: 24px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ========== CONTACT FORM ========== */
+        .contact-form {
+            max-width: 480px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #444;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #f8f9fa;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #c9a227;
+            background: #fff;
+        }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, transform 0.15s;
+            font-family: inherit;
+        }
+        .btn:hover { text-decoration: none; transform: translateY(-1px); }
+        .btn--primary { background: #c9a227; color: #fff; }
+        .btn--primary:hover { background: #b8921f; }
+        .btn--block { display: block; width: 100%; }
+
+        /* ========== FOOTER ========== */
+        .site-footer {
+            background: #1e3a5f;
+            color: #ccc;
+            padding: 32px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .site-footer a { color: #c9a227; }
+
+        /* ========== BACK TO TOP ========== */
+        .back-to-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 48px;
+            height: 48px;
+            background: #1e3a5f;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+            z-index: 99;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-2px); background: #2a5080; }
+        .back-to-top svg { width: 24px; height: 24px; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .hero-section { padding: 40px 0 32px; }
+            .hero-section h1 { font-size: 1.6rem; }
+            .category-tabs { gap: 6px; }
+            .category-tab { padding: 6px 14px; font-size: 0.85rem; }
+            .site-nav { gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SECTION: header -->
+<header class="site-header">
+    <div class="header-inner">
+        <a href="/" class="site-logo">Art<span>vision</span></a>
+        <nav class="site-nav">
+            <a href="#">Услуги</a>
+            <a href="#">Кейсы</a>
+            <a href="#">О нас</a>
+            <a href="#">Блог</a>
+            <a href="#">Контакты</a>
+        </nav>
+    </div>
+</header>
+
+<!-- SECTION: hero -->
+<section class="hero-section">
+    <div class="container">
+        <h1 data-field="title">Часто задаваемые вопросы</h1>
+        <p data-field="hero-description">[Здесь вы найдёте ответы на самые популярные вопросы о наших услугах]</p>
+    </div>
+</section>
+
+<!-- SECTION: search -->
+<section class="search-section">
+    <div class="container">
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="faqSearch" placeholder="Поиск по вопросам..." data-field="search-placeholder">
+        </div>
+        <div class="search-no-results" id="noResults">По вашему запросу ничего не найдено. Попробуйте изменить формулировку.</div>
+    </div>
+</section>
+
+<!-- SECTION: category-tabs -->
+<section class="category-section">
+    <div class="container">
+        <div class="category-tabs" id="categoryTabs">
+            <button class="category-tab active" data-category="all">Все вопросы</button>
+            <button class="category-tab" data-category="services">Услуги</button>
+            <button class="category-tab" data-category="pricing">Цены</button>
+            <button class="category-tab" data-category="technical">Технические</button>
+            <button class="category-tab" data-category="process">Процесс работы</button>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: faq -->
+<section class="faq-section">
+    <div class="container">
+
+        <!-- Category: services -->
+        <div class="faq-category-group" data-category-group="services">
+            <h2 class="faq-category-title">Услуги</h2>
+            <div class="faq-list">
+
+                <div class="faq-item" data-category="services" data-field="faq-s1">
+                    <button class="faq-question" data-field="faq-s1-question">[Какие услуги вы предоставляете?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-s1-answer">
+                            <p>[Описание спектра услуг. Перечислите основные направления: SEO-продвижение, контекстная реклама, веб-разработка, аналитика и т.д.]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="services" data-field="faq-s2">
+                    <button class="faq-question" data-field="faq-s2-question">[Работаете ли вы с сайтами на конкретной CMS?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-s2-answer">
+                            <p>[Ответ о поддерживаемых CMS и технологиях.]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="services" data-field="faq-s3">
+                    <button class="faq-question" data-field="faq-s3-question">[Можно ли заказать только аудит без продвижения?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-s3-answer">
+                            <p>[Ответ о доступности отдельных услуг, аудит как самостоятельный продукт.]</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Category: pricing -->
+        <div class="faq-category-group" data-category-group="pricing">
+            <h2 class="faq-category-title">Цены и оплата</h2>
+            <div class="faq-list">
+
+                <div class="faq-item" data-category="pricing" data-field="faq-p1">
+                    <button class="faq-question" data-field="faq-p1-question">[Сколько стоит SEO-продвижение?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-p1-answer">
+                            <p>[Ответ о ценообразовании: от чего зависит стоимость, минимальный бюджет, что входит в тариф.]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="pricing" data-field="faq-p2">
+                    <button class="faq-question" data-field="faq-p2-question">[Какие способы оплаты вы принимаете?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-p2-answer">
+                            <p>[Ответ о способах оплаты: счёт, карта, безналичный расчёт, рассрочка.]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="pricing" data-field="faq-p3">
+                    <button class="faq-question" data-field="faq-p3-question">[Есть ли скидки при заказе нескольких услуг?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-p3-answer">
+                            <p>[Ответ о пакетных предложениях и скидках.]</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Category: technical -->
+        <div class="faq-category-group" data-category-group="technical">
+            <h2 class="faq-category-title">Технические вопросы</h2>
+            <div class="faq-list">
+
+                <div class="faq-item" data-category="technical" data-field="faq-t1">
+                    <button class="faq-question" data-field="faq-t1-question">[Нужен ли доступ к сайту для начала работ?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-t1-answer">
+                            <p>[Ответ о необходимых доступах: хостинг, CMS, аналитика, Search Console.]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="technical" data-field="faq-t2">
+                    <button class="faq-question" data-field="faq-t2-question">[Могут ли ваши работы навредить сайту?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-t2-answer">
+                            <p>[Ответ о безопасности: белые методы, согласование изменений, бэкапы.]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="technical" data-field="faq-t3">
+                    <button class="faq-question" data-field="faq-t3-question">[Как я смогу отслеживать результаты?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-t3-answer">
+                            <p>[Ответ о системе отчётности: личный кабинет, регулярные отчёты, доступ к метрикам.]</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Category: process -->
+        <div class="faq-category-group" data-category-group="process">
+            <h2 class="faq-category-title">Процесс работы</h2>
+            <div class="faq-list">
+
+                <div class="faq-item" data-category="process" data-field="faq-w1">
+                    <button class="faq-question" data-field="faq-w1-question">[Как начать сотрудничество?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-w1-answer">
+                            <p>[Ответ о первых шагах: заявка, бесплатная консультация, аудит, коммерческое предложение.]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="process" data-field="faq-w2">
+                    <button class="faq-question" data-field="faq-w2-question">[Какие сроки достижения результатов?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-w2-answer">
+                            <p>[Ответ о типичных сроках: первые результаты через X месяцев, стабильный рост через Y месяцев.]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="process" data-field="faq-w3">
+                    <button class="faq-question" data-field="faq-w3-question">[Какие гарантии вы предоставляете?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-w3-answer">
+                            <p>[Ответ о гарантиях: KPI, возврат средств, договорные обязательства.]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-category="process" data-field="faq-w4">
+                    <button class="faq-question" data-field="faq-w4-question">[Можно ли приостановить работы?]</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner" data-field="faq-w4-answer">
+                            <p>[Ответ об условиях приостановки: сроки, сохранение результатов, возобновление.]</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- SECTION: cta -->
+<section class="cta-section">
+    <div class="container">
+        <h2 data-field="cta-title">[Не нашли ответ на свой вопрос?]</h2>
+        <p data-field="cta-description">[Свяжитесь с нами, и мы ответим на все ваши вопросы в течение 1 рабочего дня.]</p>
+        <form class="contact-form" onsubmit="return false;">
+            <div class="form-group">
+                <label>Ваше имя</label>
+                <input type="text" placeholder="Как к вам обращаться?" data-field="form-name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="email@example.com" data-field="form-email">
+            </div>
+            <div class="form-group">
+                <label>Ваш вопрос</label>
+                <textarea placeholder="Опишите ваш вопрос подробно..." data-field="form-question"></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary btn--block">Отправить вопрос</button>
+        </form>
+    </div>
+</section>
+
+<!-- SECTION: footer -->
+<footer class="site-footer">
+    <div class="container">
+        <p>&copy; 2025 <a href="/">Artvision</a>. Все права защищены.</p>
+    </div>
+</footer>
+
+<!-- Back to top button -->
+<button class="back-to-top" id="backToTop" aria-label="Наверх">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"/>
+    </svg>
+</button>
+
+<script>
+    /* ========== FAQ Accordion ========== */
+    document.querySelectorAll('.faq-question').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var item = this.parentElement;
+            var wasActive = item.classList.contains('active');
+            // Close siblings in same group
+            var group = item.closest('.faq-category-group');
+            if (group) {
+                group.querySelectorAll('.faq-item').forEach(function(el) {
+                    el.classList.remove('active');
+                });
+            }
+            if (!wasActive) {
+                item.classList.add('active');
+            }
+        });
+    });
+
+    /* ========== Category Tabs ========== */
+    var tabs = document.querySelectorAll('.category-tab');
+    var groups = document.querySelectorAll('.faq-category-group');
+
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            var category = this.getAttribute('data-category');
+
+            // Update active tab
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            this.classList.add('active');
+
+            // Show/hide groups
+            if (category === 'all') {
+                groups.forEach(function(g) { g.classList.remove('hidden'); });
+            } else {
+                groups.forEach(function(g) {
+                    if (g.getAttribute('data-category-group') === category) {
+                        g.classList.remove('hidden');
+                    } else {
+                        g.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Clear search
+            document.getElementById('faqSearch').value = '';
+            document.querySelectorAll('.faq-item').forEach(function(item) {
+                item.classList.remove('hidden');
+            });
+            document.getElementById('noResults').style.display = 'none';
+        });
+    });
+
+    /* ========== Search ========== */
+    var searchInput = document.getElementById('faqSearch');
+    var noResults = document.getElementById('noResults');
+
+    searchInput.addEventListener('input', function() {
+        var query = this.value.toLowerCase().trim();
+        var allItems = document.querySelectorAll('.faq-item');
+        var visibleCount = 0;
+
+        // Reset category tabs to "all"
+        if (query.length > 0) {
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            tabs[0].classList.add('active');
+            groups.forEach(function(g) { g.classList.remove('hidden'); });
+        }
+
+        allItems.forEach(function(item) {
+            var questionText = item.querySelector('.faq-question').textContent.toLowerCase();
+            var answerText = item.querySelector('.faq-answer-inner').textContent.toLowerCase();
+
+            if (query === '' || questionText.indexOf(query) !== -1 || answerText.indexOf(query) !== -1) {
+                item.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                item.classList.add('hidden');
+            }
+        });
+
+        // Hide empty category groups
+        groups.forEach(function(g) {
+            var visibleItems = g.querySelectorAll('.faq-item:not(.hidden)');
+            if (visibleItems.length === 0 && query.length > 0) {
+                g.classList.add('hidden');
+            } else {
+                g.classList.remove('hidden');
+            }
+        });
+
+        noResults.style.display = (visibleCount === 0 && query.length > 0) ? 'block' : 'none';
+    });
+
+    /* ========== Back to Top ========== */
+    var backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+
+</body>
+</html>

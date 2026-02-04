@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-field="meta-title">[Заголовок лендинга] — Artvision</title>
+    <meta name="description" content="[Мета-описание лендинга до 160 символов]" data-field="meta-description">
+    <style>
+        /* ========== RESET & BASE ========== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #333;
+            background: #f8f9fa;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: #1e3a5f; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        img { max-width: 100%; height: auto; }
+
+        /* ========== LAYOUT ========== */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .container--narrow { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+
+        /* ========== HEADER ========== */
+        .site-header {
+            background: rgba(30,58,95,0.95);
+            padding: 16px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+        .site-header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .site-logo { font-size: 1.4rem; font-weight: 700; color: #fff; }
+        .site-logo span { color: #c9a227; }
+        .header-cta {
+            padding: 10px 24px;
+            background: #c9a227;
+            color: #fff;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .header-cta:hover { background: #b8921f; text-decoration: none; }
+
+        /* ========== HERO ========== */
+        .hero-section {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a5080 40%, #1a3050 100%);
+            color: #fff;
+            padding: 140px 0 80px;
+            text-align: center;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+        }
+        .hero-section .container { width: 100%; }
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.15;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-section .subtitle {
+            font-size: 1.25rem;
+            max-width: 650px;
+            margin: 0 auto 36px;
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+        .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+        /* ========== TRUST SIGNALS ========== */
+        .trust-section {
+            padding: 48px 0;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+        .trust-section p {
+            text-align: center;
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+        .trust-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        .trust-logo {
+            width: 120px;
+            height: 48px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #bbb;
+            font-size: 0.75rem;
+        }
+
+        /* ========== PROBLEM ========== */
+        .problem-section { padding: 72px 0; }
+        .problem-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+        .problem-section .section-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto 48px;
+        }
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+        }
+        .problem-card {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            padding: 24px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .problem-icon {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            background: #fef3cd;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .problem-icon svg { width: 24px; height: 24px; color: #c9a227; }
+        .problem-card h3 {
+            font-size: 1.05rem;
+            color: #1e3a5f;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .problem-card p { color: #555; font-size: 0.95rem; line-height: 1.6; }
+
+        /* ========== SOLUTION ========== */
+        .solution-section { padding: 72px 0; background: #fff; }
+        .solution-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+        .solution-section .section-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.05rem;
+            max-width: 650px;
+            margin: 0 auto 20px;
+        }
+        .solution-text {
+            max-width: 700px;
+            margin: 0 auto;
+            color: #444;
+            font-size: 1.05rem;
+            line-height: 1.75;
+            text-align: center;
+        }
+
+        /* ========== FEATURES ========== */
+        .features-section { padding: 72px 0; }
+        .features-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 48px;
+            font-weight: 700;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .feature-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            background: #e8f0f8;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+        .feature-icon svg { width: 22px; height: 22px; color: #1e3a5f; }
+        .feature-card h3 {
+            font-size: 1.08rem;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .feature-card p { color: #555; font-size: 0.95rem; line-height: 1.6; }
+
+        /* ========== TESTIMONIALS ========== */
+        .testimonials-section { padding: 72px 0; background: #fff; }
+        .testimonials-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 48px;
+            font-weight: 700;
+        }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .testimonial-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 28px 24px;
+        }
+        .testimonial-stars { color: #c9a227; font-size: 1.1rem; margin-bottom: 12px; letter-spacing: 2px; }
+        .testimonial-card blockquote {
+            color: #444;
+            font-size: 0.96rem;
+            line-height: 1.7;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .testimonial-avatar {
+            width: 44px;
+            height: 44px;
+            background: #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.65rem;
+            flex-shrink: 0;
+        }
+        .testimonial-name { font-weight: 700; color: #1e3a5f; font-size: 0.9rem; }
+        .testimonial-company { color: #888; font-size: 0.8rem; }
+
+        /* ========== STATISTICS ========== */
+        .stats-section {
+            padding: 64px 0;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a5080 100%);
+            color: #fff;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            text-align: center;
+        }
+        .stat-item { padding: 12px; }
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #c9a227;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .stat-label { font-size: 0.95rem; opacity: 0.85; }
+
+        /* ========== PROCESS / TIMELINE ========== */
+        .process-section { padding: 72px 0; }
+        .process-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 48px;
+            font-weight: 700;
+        }
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 0;
+            position: relative;
+        }
+        .timeline-step {
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+        }
+        .timeline-step::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ddd;
+            z-index: 0;
+        }
+        .timeline-step:first-child::before { left: 50%; }
+        .timeline-step:last-child::before { right: 50%; }
+        .timeline-number {
+            width: 48px;
+            height: 48px;
+            background: #1e3a5f;
+            color: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 16px;
+        }
+        .timeline-step h3 {
+            font-size: 1.05rem;
+            color: #1e3a5f;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .timeline-step p { color: #555; font-size: 0.9rem; line-height: 1.5; }
+
+        /* ========== PRICING ========== */
+        .pricing-section { padding: 72px 0; background: #fff; }
+        .pricing-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .pricing-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 48px;
+            font-size: 1.05rem;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .pricing-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 36px 28px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .pricing-card:hover { transform: translateY(-2px); }
+        .pricing-card--featured {
+            border-color: #c9a227;
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(201,162,39,0.15);
+            position: relative;
+        }
+        .pricing-card--featured::before {
+            content: 'Рекомендуем';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #c9a227;
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .pricing-card h3 {
+            font-size: 1.2rem;
+            color: #1e3a5f;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        .pricing-card .desc { color: #888; font-size: 0.9rem; margin-bottom: 16px; }
+        .pricing-price {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin: 12px 0;
+        }
+        .pricing-price span { font-size: 0.9rem; font-weight: 400; color: #888; }
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin: 20px 0 28px;
+        }
+        .pricing-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            color: #555;
+            font-size: 0.95rem;
+            padding-left: 24px;
+            position: relative;
+        }
+        .pricing-features li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 14px;
+            height: 14px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2328a745'%3E%3Cpath d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'/%3E%3C/svg%3E") no-repeat center;
+            background-size: contain;
+        }
+
+        /* ========== FAQ ========== */
+        .faq-section { padding: 72px 0; }
+        .faq-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+        .faq-list { max-width: 800px; margin: 0 auto; }
+        .faq-item { border-bottom: 1px solid #e8e8e8; }
+        .faq-question {
+            width: 100%;
+            text-align: left;
+            padding: 20px 40px 20px 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #1e3a5f;
+            position: relative;
+            font-family: inherit;
+            line-height: 1.4;
+        }
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #c9a227;
+            transition: transform 0.3s;
+        }
+        .faq-item.active .faq-question::after { content: '\2212'; }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+        .faq-answer-inner {
+            padding: 0 0 20px;
+            color: #555;
+            font-size: 0.98rem;
+            line-height: 1.7;
+        }
+        .faq-item.active .faq-answer { max-height: 500px; }
+
+        /* ========== FINAL CTA ========== */
+        .final-cta-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a5080 60%, #1a3050 100%);
+            color: #fff;
+            text-align: center;
+        }
+        .final-cta-section h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .final-cta-section p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: inline-block;
+            padding: 16px 36px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, transform 0.15s;
+            font-family: inherit;
+        }
+        .btn:hover { text-decoration: none; transform: translateY(-1px); }
+        .btn--primary { background: #c9a227; color: #fff; }
+        .btn--primary:hover { background: #b8921f; }
+        .btn--white { background: #fff; color: #1e3a5f; }
+        .btn--white:hover { background: #f0f0f0; }
+        .btn--outline-white { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.5); }
+        .btn--outline-white:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+        .btn--block { display: block; width: 100%; }
+        .btn--large { padding: 18px 44px; font-size: 1.1rem; }
+
+        /* ========== FOOTER ========== */
+        .site-footer {
+            background: #1a3050;
+            color: #aaa;
+            padding: 32px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .site-footer a { color: #c9a227; }
+
+        /* ========== BACK TO TOP ========== */
+        .back-to-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 48px;
+            height: 48px;
+            background: #c9a227;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+            z-index: 99;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-2px); background: #b8921f; }
+        .back-to-top svg { width: 24px; height: 24px; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .hero-section { padding: 100px 0 60px; min-height: auto; }
+            .hero-section h1 { font-size: 1.9rem; }
+            .hero-section .subtitle { font-size: 1.05rem; }
+            .problem-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .stat-value { font-size: 2.2rem; }
+            .timeline { grid-template-columns: 1fr; gap: 32px; }
+            .timeline-step::before { display: none; }
+            .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+            .final-cta-section h2 { font-size: 1.6rem; }
+            .trust-logos { gap: 20px; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SECTION: header -->
+<header class="site-header">
+    <div class="container">
+        <a href="/" class="site-logo">Art<span>vision</span></a>
+        <a href="#final-cta" class="header-cta" data-field="header-cta">Оставить заявку</a>
+    </div>
+</header>
+
+<!-- SECTION: hero -->
+<section class="hero-section">
+    <div class="container">
+        <h1 data-field="title">[Главный заголовок: обещание результата для клиента. Одно мощное предложение.]</h1>
+        <p class="subtitle" data-field="hero-subtitle">[Подзаголовок: конкретика. Для кого, что получат, за какой срок. 1-2 предложения.]</p>
+        <div class="hero-buttons">
+            <a href="#final-cta" class="btn btn--primary btn--large" data-field="hero-cta-primary">[Получить предложение]</a>
+            <a href="#process" class="btn btn--outline-white btn--large" data-field="hero-cta-secondary">[Как это работает]</a>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: trust-signals -->
+<section class="trust-section">
+    <div class="container">
+        <p data-field="trust-label">[Нам доверяют]</p>
+        <div class="trust-logos">
+            <div class="trust-logo" data-field="trust-logo-1">[Логотип 1]</div>
+            <div class="trust-logo" data-field="trust-logo-2">[Логотип 2]</div>
+            <div class="trust-logo" data-field="trust-logo-3">[Логотип 3]</div>
+            <div class="trust-logo" data-field="trust-logo-4">[Логотип 4]</div>
+            <div class="trust-logo" data-field="trust-logo-5">[Логотип 5]</div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: problem -->
+<section class="problem-section">
+    <div class="container">
+        <h2 data-field="problem-title">[Знакомые проблемы?]</h2>
+        <p class="section-subtitle" data-field="problem-subtitle">[Подзаголовок: если хотя бы одна из этих ситуаций вам знакома -- мы можем помочь]</p>
+        <div class="problem-grid">
+
+            <div class="problem-card" data-field="problem-1">
+                <div class="problem-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 data-field="problem-1-title">[Проблема 1: Название]</h3>
+                    <p data-field="problem-1-text">[Описание болевой точки клиента. Что не так, как это влияет на бизнес, почему это критично.]</p>
+                </div>
+            </div>
+
+            <div class="problem-card" data-field="problem-2">
+                <div class="problem-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 data-field="problem-2-title">[Проблема 2: Название]</h3>
+                    <p data-field="problem-2-text">[Описание второй болевой точки. Конкретные последствия для бизнеса.]</p>
+                </div>
+            </div>
+
+            <div class="problem-card" data-field="problem-3">
+                <div class="problem-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 data-field="problem-3-title">[Проблема 3: Название]</h3>
+                    <p data-field="problem-3-text">[Описание третьей болевой точки. Упущенная выгода, потерянные клиенты.]</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: solution -->
+<section class="solution-section">
+    <div class="container">
+        <h2 data-field="solution-title">[Наше решение]</h2>
+        <p class="section-subtitle" data-field="solution-subtitle">[Подзаголовок: как именно мы решаем эти проблемы]</p>
+        <div class="solution-text" data-field="solution-text">
+            <p>[Подробное описание решения: какой подход используется, чем он отличается от конкурентов, почему это работает. 2-3 абзаца.]</p>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: features -->
+<section class="features-section">
+    <div class="container">
+        <h2 data-field="features-title">[Что вы получите]</h2>
+        <div class="features-grid">
+
+            <div class="feature-card" data-field="feature-1">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <h3 data-field="feature-1-title">[Преимущество 1]</h3>
+                <p data-field="feature-1-text">[Краткое описание: что получает клиент, какой результат.]</p>
+            </div>
+
+            <div class="feature-card" data-field="feature-2">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <h3 data-field="feature-2-title">[Преимущество 2]</h3>
+                <p data-field="feature-2-text">[Описание: конкретная выгода для бизнеса.]</p>
+            </div>
+
+            <div class="feature-card" data-field="feature-3">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3 data-field="feature-3-title">[Преимущество 3]</h3>
+                <p data-field="feature-3-text">[Описание: надёжность и безопасность.]</p>
+            </div>
+
+            <div class="feature-card" data-field="feature-4">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <h3 data-field="feature-4-title">[Преимущество 4]</h3>
+                <p data-field="feature-4-text">[Описание: прозрачность и отчётность.]</p>
+            </div>
+
+            <div class="feature-card" data-field="feature-5">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                </div>
+                <h3 data-field="feature-5-title">[Преимущество 5]</h3>
+                <p data-field="feature-5-text">[Описание: команда экспертов.]</p>
+            </div>
+
+            <div class="feature-card" data-field="feature-6">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                </div>
+                <h3 data-field="feature-6-title">[Преимущество 6]</h3>
+                <p data-field="feature-6-text">[Описание: окупаемость инвестиций.]</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: testimonials -->
+<section class="testimonials-section">
+    <div class="container">
+        <h2 data-field="testimonials-title">[Что говорят наши клиенты]</h2>
+        <div class="testimonials-grid">
+
+            <div class="testimonial-card" data-field="testimonial-1">
+                <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <blockquote data-field="testimonial-1-text">[Отзыв клиента 1. 2-3 предложения о результатах сотрудничества и впечатлениях от работы.]</blockquote>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" data-field="testimonial-1-avatar">[Фото]</div>
+                    <div>
+                        <div class="testimonial-name" data-field="testimonial-1-name">[Имя Фамилия]</div>
+                        <div class="testimonial-company" data-field="testimonial-1-company">[Должность, Компания]</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card" data-field="testimonial-2">
+                <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <blockquote data-field="testimonial-2-text">[Отзыв клиента 2. Конкретные цифры и результаты.]</blockquote>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" data-field="testimonial-2-avatar">[Фото]</div>
+                    <div>
+                        <div class="testimonial-name" data-field="testimonial-2-name">[Имя Фамилия]</div>
+                        <div class="testimonial-company" data-field="testimonial-2-company">[Должность, Компания]</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card" data-field="testimonial-3">
+                <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <blockquote data-field="testimonial-3-text">[Отзыв клиента 3. Рекомендация и общее впечатление.]</blockquote>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" data-field="testimonial-3-avatar">[Фото]</div>
+                    <div>
+                        <div class="testimonial-name" data-field="testimonial-3-name">[Имя Фамилия]</div>
+                        <div class="testimonial-company" data-field="testimonial-3-company">[Должность, Компания]</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: statistics -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item" data-field="stat-1">
+                <div class="stat-value" data-field="stat-1-value">[XXX]+</div>
+                <div class="stat-label" data-field="stat-1-label">[Выполненных проектов]</div>
+            </div>
+            <div class="stat-item" data-field="stat-2">
+                <div class="stat-value" data-field="stat-2-value">[XX]</div>
+                <div class="stat-label" data-field="stat-2-label">[Лет на рынке]</div>
+            </div>
+            <div class="stat-item" data-field="stat-3">
+                <div class="stat-value" data-field="stat-3-value">[XX]%</div>
+                <div class="stat-label" data-field="stat-3-label">[Клиентов продлевают контракт]</div>
+            </div>
+            <div class="stat-item" data-field="stat-4">
+                <div class="stat-value" data-field="stat-4-value">[X.X]x</div>
+                <div class="stat-label" data-field="stat-4-label">[Средний ROI]</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: process -->
+<section class="process-section" id="process">
+    <div class="container">
+        <h2 data-field="process-title">[Как мы работаем]</h2>
+        <div class="timeline">
+
+            <div class="timeline-step" data-field="process-step-1">
+                <div class="timeline-number">1</div>
+                <h3 data-field="process-step-1-title">[Заявка]</h3>
+                <p data-field="process-step-1-text">[Оставляете заявку, мы связываемся в течение часа.]</p>
+            </div>
+
+            <div class="timeline-step" data-field="process-step-2">
+                <div class="timeline-number">2</div>
+                <h3 data-field="process-step-2-title">[Аудит]</h3>
+                <p data-field="process-step-2-text">[Бесплатный аудит и стратегия за 3-5 дней.]</p>
+            </div>
+
+            <div class="timeline-step" data-field="process-step-3">
+                <div class="timeline-number">3</div>
+                <h3 data-field="process-step-3-title">[Реализация]</h3>
+                <p data-field="process-step-3-text">[Внедрение стратегии с еженедельными отчётами.]</p>
+            </div>
+
+            <div class="timeline-step" data-field="process-step-4">
+                <div class="timeline-number">4</div>
+                <h3 data-field="process-step-4-title">[Результат]</h3>
+                <p data-field="process-step-4-text">[Измеримый рост метрик и масштабирование.]</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: pricing -->
+<section class="pricing-section">
+    <div class="container">
+        <h2 data-field="pricing-title">[Тарифы]</h2>
+        <p class="pricing-subtitle" data-field="pricing-subtitle">[Выберите подходящий вариант или получите индивидуальное предложение]</p>
+        <div class="pricing-grid">
+
+            <div class="pricing-card" data-field="plan-1">
+                <h3 data-field="plan-1-name">[Старт]</h3>
+                <p class="desc" data-field="plan-1-desc">[Для небольших проектов]</p>
+                <div class="pricing-price" data-field="plan-1-price">[XX 000] <span>руб/мес</span></div>
+                <ul class="pricing-features">
+                    <li data-field="plan-1-feature-1">[Функция 1]</li>
+                    <li data-field="plan-1-feature-2">[Функция 2]</li>
+                    <li data-field="plan-1-feature-3">[Функция 3]</li>
+                </ul>
+                <a href="#final-cta" class="btn btn--primary btn--block">Выбрать</a>
+            </div>
+
+            <div class="pricing-card pricing-card--featured" data-field="plan-2">
+                <h3 data-field="plan-2-name">[Бизнес]</h3>
+                <p class="desc" data-field="plan-2-desc">[Для растущих компаний]</p>
+                <div class="pricing-price" data-field="plan-2-price">[XX 000] <span>руб/мес</span></div>
+                <ul class="pricing-features">
+                    <li data-field="plan-2-feature-1">[Функция 1]</li>
+                    <li data-field="plan-2-feature-2">[Функция 2]</li>
+                    <li data-field="plan-2-feature-3">[Функция 3]</li>
+                    <li data-field="plan-2-feature-4">[Функция 4]</li>
+                </ul>
+                <a href="#final-cta" class="btn btn--primary btn--block">Выбрать</a>
+            </div>
+
+            <div class="pricing-card" data-field="plan-3">
+                <h3 data-field="plan-3-name">[Премиум]</h3>
+                <p class="desc" data-field="plan-3-desc">[Максимальный результат]</p>
+                <div class="pricing-price" data-field="plan-3-price">[XX 000] <span>руб/мес</span></div>
+                <ul class="pricing-features">
+                    <li data-field="plan-3-feature-1">[Функция 1]</li>
+                    <li data-field="plan-3-feature-2">[Функция 2]</li>
+                    <li data-field="plan-3-feature-3">[Функция 3]</li>
+                    <li data-field="plan-3-feature-4">[Функция 4]</li>
+                    <li data-field="plan-3-feature-5">[Функция 5]</li>
+                </ul>
+                <a href="#final-cta" class="btn btn--primary btn--block">Выбрать</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: faq -->
+<section class="faq-section">
+    <div class="container">
+        <h2 data-field="faq-title">[Вопросы и ответы]</h2>
+        <div class="faq-list">
+
+            <div class="faq-item" data-field="faq-1">
+                <button class="faq-question" data-field="faq-1-question">[Вопрос 1: Как быстро будут результаты?]</button>
+                <div class="faq-answer"><div class="faq-answer-inner" data-field="faq-1-answer">[Ответ: конкретные сроки и что влияет на скорость.]</div></div>
+            </div>
+
+            <div class="faq-item" data-field="faq-2">
+                <button class="faq-question" data-field="faq-2-question">[Вопрос 2: Что если результата не будет?]</button>
+                <div class="faq-answer"><div class="faq-answer-inner" data-field="faq-2-answer">[Ответ: гарантии и условия.]</div></div>
+            </div>
+
+            <div class="faq-item" data-field="faq-3">
+                <button class="faq-question" data-field="faq-3-question">[Вопрос 3: Сколько нужно вложить?]</button>
+                <div class="faq-answer"><div class="faq-answer-inner" data-field="faq-3-answer">[Ответ: диапазон бюджетов и от чего зависит.]</div></div>
+            </div>
+
+            <div class="faq-item" data-field="faq-4">
+                <button class="faq-question" data-field="faq-4-question">[Вопрос 4: Работаете ли вы с нашей нишей?]</button>
+                <div class="faq-answer"><div class="faq-answer-inner" data-field="faq-4-answer">[Ответ: перечень отраслей и опыт.]</div></div>
+            </div>
+
+            <div class="faq-item" data-field="faq-5">
+                <button class="faq-question" data-field="faq-5-question">[Вопрос 5: Как начать сотрудничество?]</button>
+                <div class="faq-answer"><div class="faq-answer-inner" data-field="faq-5-answer">[Ответ: простые шаги для старта.]</div></div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: final-cta -->
+<section class="final-cta-section" id="final-cta">
+    <div class="container">
+        <h2 data-field="final-cta-title">[Готовы увеличить продажи? Начните прямо сейчас]</h2>
+        <p data-field="final-cta-text">[Оставьте заявку и получите бесплатный аудит вашего сайта. Покажем точки роста и потенциал.]</p>
+        <a href="#" class="btn btn--primary btn--large" data-field="final-cta-button">[Получить бесплатный аудит]</a>
+    </div>
+</section>
+
+<!-- SECTION: footer -->
+<footer class="site-footer">
+    <div class="container">
+        <p>&copy; 2025 <a href="/">Artvision</a>. Все права защищены.</p>
+    </div>
+</footer>
+
+<!-- Back to top button -->
+<button class="back-to-top" id="backToTop" aria-label="Наверх">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"/>
+    </svg>
+</button>
+
+<script>
+    /* ========== FAQ Accordion ========== */
+    document.querySelectorAll('.faq-question').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var item = this.parentElement;
+            var wasActive = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            if (!wasActive) {
+                item.classList.add('active');
+            }
+        });
+    });
+
+    /* ========== Back to Top ========== */
+    var backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    /* ========== Smooth scroll for anchor links ========== */
+    document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            var target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

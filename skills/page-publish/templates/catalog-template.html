@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-field="meta-title">[Название каталога] — Artvision</title>
+    <meta name="description" content="[Мета-описание каталога до 160 символов]" data-field="meta-description">
+    <style>
+        /* ========== RESET & BASE ========== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #333;
+            background: #f8f9fa;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: #1e3a5f; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        img { max-width: 100%; height: auto; }
+
+        /* ========== LAYOUT ========== */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* ========== HEADER ========== */
+        .site-header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .site-header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .site-logo { font-size: 1.4rem; font-weight: 700; color: #1e3a5f; }
+        .site-logo span { color: #c9a227; }
+        .site-nav { display: flex; gap: 24px; flex-wrap: wrap; }
+        .site-nav a { color: #444; font-size: 0.95rem; font-weight: 500; }
+        .site-nav a:hover { color: #1e3a5f; text-decoration: none; }
+
+        /* ========== BREADCRUMBS ========== */
+        .breadcrumbs { padding: 12px 0; font-size: 0.85rem; color: #888; }
+        .breadcrumbs a { color: #1e3a5f; }
+        .breadcrumbs span { margin: 0 6px; }
+
+        /* ========== PAGE HEADER ========== */
+        .page-header-section {
+            padding: 40px 0 32px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+        .page-header-section h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin-bottom: 12px;
+        }
+        .page-header-section p {
+            color: #555;
+            font-size: 1.05rem;
+            max-width: 700px;
+            line-height: 1.7;
+        }
+
+        /* ========== CATALOG LAYOUT ========== */
+        .catalog-section { padding: 32px 0 56px; }
+        .catalog-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        /* ========== SIDEBAR / FILTERS ========== */
+        .filters-sidebar {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            position: sticky;
+            top: 80px;
+        }
+        .filter-group { margin-bottom: 24px; }
+        .filter-group:last-child { margin-bottom: 0; }
+        .filter-group h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .filter-checkbox input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #1e3a5f;
+            cursor: pointer;
+        }
+        .filter-checkbox .count {
+            margin-left: auto;
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+
+        /* Price range */
+        .price-range { display: flex; gap: 8px; align-items: center; }
+        .price-range input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            text-align: center;
+        }
+        .price-range input:focus { outline: none; border-color: #c9a227; }
+        .price-range span { color: #aaa; font-size: 0.85rem; flex-shrink: 0; }
+
+        /* Sorting */
+        .sorting-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: #fff;
+            color: #444;
+            cursor: pointer;
+        }
+        .sorting-select:focus { outline: none; border-color: #c9a227; }
+
+        .filter-btn {
+            width: 100%;
+            padding: 10px;
+            background: #1e3a5f;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+        .filter-btn:hover { background: #2a5080; }
+        .filter-reset {
+            display: block;
+            text-align: center;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #888;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+        .filter-reset:hover { color: #c9a227; }
+
+        /* ========== PRODUCT GRID ========== */
+        .catalog-main {}
+        .catalog-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .catalog-count { color: #888; font-size: 0.9rem; }
+        .catalog-sort-mobile {
+            display: none;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: #fff;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        .product-image {
+            background: #e8e8e8;
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #bbb;
+            font-size: 0.85rem;
+            position: relative;
+        }
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #c9a227;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .product-body { padding: 16px; }
+        .product-category {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .product-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        .product-description {
+            color: #666;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        .product-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .product-price {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #1e3a5f;
+        }
+        .product-price span {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #888;
+        }
+        .product-btn {
+            padding: 8px 16px;
+            background: #1e3a5f;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+        .product-btn:hover { background: #2a5080; text-decoration: none; }
+
+        /* ========== PAGINATION ========== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .pagination a {
+            background: #fff;
+            color: #555;
+            border: 1px solid #ddd;
+        }
+        .pagination a:hover {
+            background: #1e3a5f;
+            color: #fff;
+            border-color: #1e3a5f;
+            text-decoration: none;
+        }
+        .pagination .active {
+            background: #1e3a5f;
+            color: #fff;
+            border: 1px solid #1e3a5f;
+            font-weight: 700;
+        }
+        .pagination .dots {
+            background: none;
+            border: none;
+            color: #aaa;
+        }
+        .pagination .nav-arrow {
+            width: auto;
+            padding: 0 14px;
+            font-size: 0.85rem;
+        }
+
+        /* ========== CTA ========== */
+        .cta-section {
+            padding: 56px 0;
+            background: #fff;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .cta-section h2 {
+            font-size: 1.6rem;
+            color: #1e3a5f;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .cta-section p {
+            color: #555;
+            font-size: 1.05rem;
+            margin-bottom: 24px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, transform 0.15s;
+            font-family: inherit;
+        }
+        .btn:hover { text-decoration: none; transform: translateY(-1px); }
+        .btn--primary { background: #c9a227; color: #fff; }
+        .btn--primary:hover { background: #b8921f; }
+
+        /* ========== CONTACT INFO ========== */
+        .contact-section { padding: 40px 0; border-top: 1px solid #eee; }
+        .contact-grid {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+        .contact-item { display: flex; align-items: center; gap: 12px; }
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: #f0f4f8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .contact-icon svg { width: 20px; height: 20px; color: #1e3a5f; }
+        .contact-item .label { font-size: 0.8rem; color: #888; margin-bottom: 2px; }
+        .contact-item .value { font-size: 0.95rem; color: #333; font-weight: 500; }
+
+        /* ========== FOOTER ========== */
+        .site-footer {
+            background: #1e3a5f;
+            color: #ccc;
+            padding: 32px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .site-footer a { color: #c9a227; }
+
+        /* ========== BACK TO TOP ========== */
+        .back-to-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 48px;
+            height: 48px;
+            background: #1e3a5f;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+            z-index: 99;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-2px); background: #2a5080; }
+        .back-to-top svg { width: 24px; height: 24px; }
+
+        /* ========== MOBILE FILTER TOGGLE ========== */
+        .filter-toggle {
+            display: none;
+            width: 100%;
+            padding: 12px;
+            background: #1e3a5f;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            margin-bottom: 16px;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            .catalog-layout {
+                grid-template-columns: 1fr;
+            }
+            .filters-sidebar {
+                position: static;
+                display: none;
+            }
+            .filters-sidebar.mobile-open { display: block; }
+            .filter-toggle { display: block; }
+            .catalog-sort-mobile { display: block; }
+        }
+        @media (max-width: 600px) {
+            .product-grid { grid-template-columns: 1fr; }
+            .page-header-section h1 { font-size: 1.5rem; }
+            .contact-grid { flex-direction: column; align-items: center; gap: 20px; }
+            .site-nav { gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SECTION: header -->
+<header class="site-header">
+    <div class="container">
+        <a href="/" class="site-logo">Art<span>vision</span></a>
+        <nav class="site-nav">
+            <a href="#">Услуги</a>
+            <a href="#">Кейсы</a>
+            <a href="#">О нас</a>
+            <a href="#">Блог</a>
+            <a href="#">Контакты</a>
+        </nav>
+    </div>
+</header>
+
+<!-- SECTION: breadcrumbs -->
+<div class="breadcrumbs">
+    <div class="container">
+        <a href="/">Главная</a>
+        <span>/</span>
+        <span data-field="breadcrumb-current">[Название каталога]</span>
+    </div>
+</div>
+
+<!-- SECTION: page-header -->
+<section class="page-header-section">
+    <div class="container">
+        <h1 data-field="title">[Название каталога / раздела]</h1>
+        <p data-field="category-description">[Описание категории каталога. Что здесь представлено, для кого предназначено, как выбрать подходящий вариант. 1-2 предложения.]</p>
+    </div>
+</section>
+
+<!-- SECTION: catalog -->
+<section class="catalog-section">
+    <div class="container">
+
+        <!-- Mobile filter toggle -->
+        <button class="filter-toggle" id="filterToggle">
+            <svg style="width:16px;height:16px;vertical-align:middle;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg>
+            Фильтры
+        </button>
+
+        <div class="catalog-layout">
+
+            <!-- SECTION: filters -->
+            <aside class="filters-sidebar" id="filtersSidebar">
+
+                <div class="filter-group" data-field="filter-category">
+                    <h3>Категория</h3>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" checked>
+                        <span data-field="filter-cat-1">[Категория 1]</span>
+                        <span class="count">(12)</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox">
+                        <span data-field="filter-cat-2">[Категория 2]</span>
+                        <span class="count">(8)</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox">
+                        <span data-field="filter-cat-3">[Категория 3]</span>
+                        <span class="count">(5)</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox">
+                        <span data-field="filter-cat-4">[Категория 4]</span>
+                        <span class="count">(3)</span>
+                    </label>
+                </div>
+
+                <div class="filter-group" data-field="filter-price">
+                    <h3>Цена</h3>
+                    <div class="price-range">
+                        <input type="number" placeholder="От" data-field="price-min">
+                        <span>&mdash;</span>
+                        <input type="number" placeholder="До" data-field="price-max">
+                    </div>
+                </div>
+
+                <div class="filter-group" data-field="filter-sort">
+                    <h3>Сортировка</h3>
+                    <select class="sorting-select" data-field="sort-select">
+                        <option value="popular">По популярности</option>
+                        <option value="price-asc">Цена: по возрастанию</option>
+                        <option value="price-desc">Цена: по убыванию</option>
+                        <option value="new">Сначала новые</option>
+                        <option value="name">По названию</option>
+                    </select>
+                </div>
+
+                <button class="filter-btn">Применить фильтры</button>
+                <button class="filter-reset">Сбросить все</button>
+
+            </aside>
+
+            <!-- SECTION: products -->
+            <div class="catalog-main">
+
+                <div class="catalog-toolbar">
+                    <span class="catalog-count" data-field="catalog-count">Найдено: <strong>[28]</strong> позиций</span>
+                    <select class="catalog-sort-mobile" data-field="sort-mobile">
+                        <option>По популярности</option>
+                        <option>Цена: по возрастанию</option>
+                        <option>Цена: по убыванию</option>
+                        <option>Сначала новые</option>
+                    </select>
+                </div>
+
+                <div class="product-grid">
+
+                    <div class="product-card" data-field="product-1">
+                        <div class="product-image" data-field="product-1-image">
+                            <span>[Изображение товара]</span>
+                            <span class="product-badge" data-field="product-1-badge">Хит</span>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category" data-field="product-1-category">[Категория]</div>
+                            <div class="product-title" data-field="product-1-title">[Название товара / услуги 1]</div>
+                            <div class="product-description" data-field="product-1-description">[Краткое описание на 1-2 строки.]</div>
+                            <div class="product-footer">
+                                <div class="product-price" data-field="product-1-price">[XX 000] <span>руб.</span></div>
+                                <a href="#" class="product-btn" data-field="product-1-link">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-field="product-2">
+                        <div class="product-image" data-field="product-2-image">
+                            <span>[Изображение товара]</span>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category" data-field="product-2-category">[Категория]</div>
+                            <div class="product-title" data-field="product-2-title">[Название товара / услуги 2]</div>
+                            <div class="product-description" data-field="product-2-description">[Краткое описание на 1-2 строки.]</div>
+                            <div class="product-footer">
+                                <div class="product-price" data-field="product-2-price">[XX 000] <span>руб.</span></div>
+                                <a href="#" class="product-btn" data-field="product-2-link">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-field="product-3">
+                        <div class="product-image" data-field="product-3-image">
+                            <span>[Изображение товара]</span>
+                            <span class="product-badge" style="background:#28a745;" data-field="product-3-badge">Новинка</span>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category" data-field="product-3-category">[Категория]</div>
+                            <div class="product-title" data-field="product-3-title">[Название товара / услуги 3]</div>
+                            <div class="product-description" data-field="product-3-description">[Краткое описание на 1-2 строки.]</div>
+                            <div class="product-footer">
+                                <div class="product-price" data-field="product-3-price">[XX 000] <span>руб.</span></div>
+                                <a href="#" class="product-btn" data-field="product-3-link">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-field="product-4">
+                        <div class="product-image" data-field="product-4-image">
+                            <span>[Изображение товара]</span>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category" data-field="product-4-category">[Категория]</div>
+                            <div class="product-title" data-field="product-4-title">[Название товара / услуги 4]</div>
+                            <div class="product-description" data-field="product-4-description">[Краткое описание на 1-2 строки.]</div>
+                            <div class="product-footer">
+                                <div class="product-price" data-field="product-4-price">[XX 000] <span>руб.</span></div>
+                                <a href="#" class="product-btn" data-field="product-4-link">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-field="product-5">
+                        <div class="product-image" data-field="product-5-image">
+                            <span>[Изображение товара]</span>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category" data-field="product-5-category">[Категория]</div>
+                            <div class="product-title" data-field="product-5-title">[Название товара / услуги 5]</div>
+                            <div class="product-description" data-field="product-5-description">[Краткое описание на 1-2 строки.]</div>
+                            <div class="product-footer">
+                                <div class="product-price" data-field="product-5-price">[XX 000] <span>руб.</span></div>
+                                <a href="#" class="product-btn" data-field="product-5-link">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-field="product-6">
+                        <div class="product-image" data-field="product-6-image">
+                            <span>[Изображение товара]</span>
+                            <span class="product-badge" style="background:#dc3545;" data-field="product-6-badge">Скидка</span>
+                        </div>
+                        <div class="product-body">
+                            <div class="product-category" data-field="product-6-category">[Категория]</div>
+                            <div class="product-title" data-field="product-6-title">[Название товара / услуги 6]</div>
+                            <div class="product-description" data-field="product-6-description">[Краткое описание на 1-2 строки.]</div>
+                            <div class="product-footer">
+                                <div class="product-price" data-field="product-6-price">[XX 000] <span>руб.</span></div>
+                                <a href="#" class="product-btn" data-field="product-6-link">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- SECTION: pagination -->
+                <nav class="pagination" data-field="pagination">
+                    <a href="#" class="nav-arrow">&larr; Назад</a>
+                    <span class="active">1</span>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <span class="dots">...</span>
+                    <a href="#">12</a>
+                    <a href="#" class="nav-arrow">Вперёд &rarr;</a>
+                </nav>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: cta -->
+<section class="cta-section">
+    <div class="container">
+        <h2 data-field="cta-title">[Не нашли, что искали?]</h2>
+        <p data-field="cta-description">[Свяжитесь с нами, и мы подберём оптимальное решение под ваши задачи и бюджет.]</p>
+        <a href="#" class="btn btn--primary" data-field="cta-button">Получить консультацию</a>
+    </div>
+</section>
+
+<!-- SECTION: contact-info -->
+<section class="contact-section">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-item" data-field="contact-phone">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                </div>
+                <div>
+                    <div class="label">Телефон</div>
+                    <div class="value">[+7 (XXX) XXX-XX-XX]</div>
+                </div>
+            </div>
+            <div class="contact-item" data-field="contact-email">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div>
+                    <div class="label">Email</div>
+                    <div class="value">[email@example.com]</div>
+                </div>
+            </div>
+            <div class="contact-item" data-field="contact-address">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div>
+                    <div class="label">Адрес</div>
+                    <div class="value">[г. Город, ул. Улица, д. XX]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: footer -->
+<footer class="site-footer">
+    <div class="container">
+        <p>&copy; 2025 <a href="/">Artvision</a>. Все права защищены.</p>
+    </div>
+</footer>
+
+<!-- Back to top button -->
+<button class="back-to-top" id="backToTop" aria-label="Наверх">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"/>
+    </svg>
+</button>
+
+<script>
+    /* ========== Mobile Filter Toggle ========== */
+    var filterToggle = document.getElementById('filterToggle');
+    var filtersSidebar = document.getElementById('filtersSidebar');
+    if (filterToggle && filtersSidebar) {
+        filterToggle.addEventListener('click', function() {
+            filtersSidebar.classList.toggle('mobile-open');
+            this.textContent = filtersSidebar.classList.contains('mobile-open') ? 'Скрыть фильтры' : 'Фильтры';
+        });
+    }
+
+    /* ========== Back to Top ========== */
+    var backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+
+</body>
+</html>

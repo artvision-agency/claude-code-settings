@@ -1,0 +1,14 @@
+{
+  "name": "wordpress-content-expert",
+  "description": "WordPress контент-эксперт для Artvision. Следит за правильным применением фирменных шаблонов, структурой статей и SEO-оптимизацией для artvision.pro",
+  "triggers": [
+    "WordPress шаблон",
+    "шаблон статьи",
+    "публикация на сайт",
+    "SEO статья",
+    "блог artvision",
+    "content template"
+  ],
+  "version": "1.0.0",
+  "author": "Claude"
+}

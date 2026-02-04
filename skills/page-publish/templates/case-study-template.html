@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-field="meta-title">[Название кейса] — Artvision</title>
+    <meta name="description" content="[Мета-описание кейса: клиент, задача, результат — до 160 символов]" data-field="meta-description">
+    <style>
+        /* ========== RESET & BASE ========== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #333;
+            background: #f8f9fa;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: #1e3a5f; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* ========== LAYOUT ========== */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .container--narrow { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+
+        /* ========== HEADER ========== */
+        .site-header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .site-header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .site-logo { font-size: 1.4rem; font-weight: 700; color: #1e3a5f; }
+        .site-logo span { color: #c9a227; }
+        .site-nav { display: flex; gap: 24px; flex-wrap: wrap; }
+        .site-nav a { color: #444; font-size: 0.95rem; font-weight: 500; }
+        .site-nav a:hover { color: #1e3a5f; text-decoration: none; }
+
+        /* ========== BREADCRUMBS ========== */
+        .breadcrumbs { padding: 12px 0; font-size: 0.85rem; color: #888; }
+        .breadcrumbs a { color: #1e3a5f; }
+        .breadcrumbs span { margin: 0 6px; }
+
+        /* ========== HERO ========== */
+        .hero-section {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a5080 60%, #1a3050 100%);
+            color: #fff;
+            padding: 64px 0 56px;
+            text-align: center;
+        }
+        .hero-section .tag {
+            display: inline-block;
+            background: rgba(201,162,39,0.2);
+            color: #c9a227;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .hero-section h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .hero-section p {
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.92;
+            line-height: 1.7;
+        }
+
+        /* ========== CLIENT INFO CARD ========== */
+        .client-info-section { padding: 0; position: relative; z-index: 2; }
+        .client-info-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+            padding: 32px;
+            margin-top: -40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 24px;
+        }
+        .client-info-item {
+            text-align: center;
+            padding: 8px;
+        }
+        .client-info-item .label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .client-info-item .value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e3a5f;
+        }
+
+        /* ========== CONTENT SECTIONS ========== */
+        .content-section { padding: 56px 0; }
+        .content-section--alt { background: #fff; }
+        .content-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .content-section p {
+            color: #444;
+            font-size: 1.05rem;
+            line-height: 1.75;
+            margin-bottom: 16px;
+        }
+
+        /* ========== SOLUTION STEPS ========== */
+        .solution-steps { margin: 24px 0; }
+        .solution-step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            align-items: flex-start;
+        }
+        .solution-step-num {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            background: #c9a227;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .solution-step-content h3 {
+            font-size: 1.1rem;
+            color: #1e3a5f;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .solution-step-content p {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 0;
+        }
+
+        /* ========== RESULTS ========== */
+        .results-section { padding: 56px 0; background: #fff; }
+        .results-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .result-card {
+            text-align: center;
+            padding: 28px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        .result-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #c9a227;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .result-value.positive { color: #28a745; }
+        .result-value.negative { color: #dc3545; }
+        .result-label {
+            font-size: 0.95rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* ========== BEFORE / AFTER ========== */
+        .comparison-section { padding: 56px 0; }
+        .comparison-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+        .comparison-col h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid;
+        }
+        .comparison-col--before h3 { color: #888; border-color: #ddd; }
+        .comparison-col--after h3 { color: #28a745; border-color: #28a745; }
+        .comparison-image-placeholder {
+            background: #e8e8e8;
+            border-radius: 8px;
+            aspect-ratio: 16/10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        .comparison-col p {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* ========== TESTIMONIAL ========== */
+        .testimonial-section { padding: 56px 0; background: #fff; }
+        .testimonial-block {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .testimonial-block blockquote {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: #444;
+            line-height: 1.8;
+            margin-bottom: 24px;
+            position: relative;
+            padding: 0 24px;
+        }
+        .testimonial-block blockquote::before {
+            content: '\201C';
+            font-size: 4rem;
+            color: #c9a227;
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            line-height: 1;
+            font-style: normal;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        .testimonial-avatar {
+            width: 56px;
+            height: 56px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+        .testimonial-author-info { text-align: left; }
+        .testimonial-name {
+            font-weight: 700;
+            color: #1e3a5f;
+            font-size: 1rem;
+        }
+        .testimonial-position {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        /* ========== RELATED CASES ========== */
+        .related-section { padding: 56px 0; }
+        .related-section h2 {
+            font-size: 1.8rem;
+            color: #1e3a5f;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .related-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .related-card-image {
+            background: #e0e0e0;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.9rem;
+        }
+        .related-card-body { padding: 20px; }
+        .related-card-body .tag {
+            display: inline-block;
+            background: #f0f4f8;
+            color: #1e3a5f;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .related-card-body h3 {
+            font-size: 1.1rem;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .related-card-body p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        .related-card-body a {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #c9a227;
+        }
+
+        /* ========== CTA ========== */
+        .cta-section {
+            padding: 56px 0;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a5080 100%);
+            color: #fff;
+            text-align: center;
+        }
+        .cta-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .cta-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 28px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .btn:hover { text-decoration: none; transform: translateY(-1px); }
+        .btn--primary { background: #c9a227; color: #fff; }
+        .btn--primary:hover { background: #b8921f; }
+        .btn--white { background: #fff; color: #1e3a5f; }
+        .btn--white:hover { background: #f0f0f0; }
+
+        /* ========== FOOTER ========== */
+        .site-footer {
+            background: #1e3a5f;
+            color: #ccc;
+            padding: 32px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .site-footer a { color: #c9a227; }
+
+        /* ========== BACK TO TOP ========== */
+        .back-to-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 48px;
+            height: 48px;
+            background: #1e3a5f;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+            z-index: 99;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+        }
+        .back-to-top.visible { opacity: 1; visibility: visible; }
+        .back-to-top:hover { transform: translateY(-2px); background: #2a5080; }
+        .back-to-top svg { width: 24px; height: 24px; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .hero-section { padding: 40px 0 36px; }
+            .hero-section h1 { font-size: 1.7rem; }
+            .client-info-card { grid-template-columns: 1fr 1fr; gap: 16px; padding: 24px 16px; }
+            .comparison-grid { grid-template-columns: 1fr; }
+            .related-grid { grid-template-columns: 1fr; }
+            .result-value { font-size: 2.2rem; }
+            .results-grid { grid-template-columns: 1fr 1fr; }
+            .site-nav { gap: 16px; }
+        }
+        @media (max-width: 480px) {
+            .client-info-card { grid-template-columns: 1fr; }
+            .results-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SECTION: header -->
+<header class="site-header">
+    <div class="container">
+        <a href="/" class="site-logo">Art<span>vision</span></a>
+        <nav class="site-nav">
+            <a href="#">Услуги</a>
+            <a href="#">Кейсы</a>
+            <a href="#">О нас</a>
+            <a href="#">Блог</a>
+            <a href="#">Контакты</a>
+        </nav>
+    </div>
+</header>
+
+<!-- SECTION: breadcrumbs -->
+<div class="breadcrumbs">
+    <div class="container">
+        <a href="/">Главная</a>
+        <span>/</span>
+        <a href="#">Кейсы</a>
+        <span>/</span>
+        <span data-field="breadcrumb-current">[Название проекта]</span>
+    </div>
+</div>
+
+<!-- SECTION: hero -->
+<section class="hero-section">
+    <div class="container">
+        <div class="tag" data-field="hero-tag">[Отрасль / Тип услуги]</div>
+        <h1 data-field="title">[Название проекта: Как мы увеличили трафик на X% для компании Y]</h1>
+        <p data-field="hero-description">[Краткое описание проекта в 1-2 предложения. Суть задачи и ключевой результат.]</p>
+    </div>
+</section>
+
+<!-- SECTION: client-info -->
+<section class="client-info-section">
+    <div class="container">
+        <div class="client-info-card">
+            <div class="client-info-item" data-field="client-name">
+                <div class="label">Клиент</div>
+                <div class="value">[Название компании]</div>
+            </div>
+            <div class="client-info-item" data-field="client-industry">
+                <div class="label">Отрасль</div>
+                <div class="value">[Отрасль клиента]</div>
+            </div>
+            <div class="client-info-item" data-field="client-task">
+                <div class="label">Задача</div>
+                <div class="value">[Ключевая задача]</div>
+            </div>
+            <div class="client-info-item" data-field="client-timeline">
+                <div class="label">Сроки</div>
+                <div class="value">[X месяцев]</div>
+            </div>
+            <div class="client-info-item" data-field="client-result">
+                <div class="label">Результат</div>
+                <div class="value">[+XX% к метрике]</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: problem -->
+<section class="content-section content-section--alt">
+    <div class="container--narrow">
+        <h2 data-field="problem-title">Проблема</h2>
+        <p data-field="problem-p1">[Подробное описание проблемы клиента. С чем обратился, какие были сложности, что не работало. Используйте конкретные цифры: падение трафика на X%, потеря Y позиций, снижение конверсии.]</p>
+        <p data-field="problem-p2">[Дополнительный контекст: какие попытки решения предпринимались ранее, почему они не сработали. Какие ограничения были у проекта.]</p>
+    </div>
+</section>
+
+<!-- SECTION: solution -->
+<section class="content-section">
+    <div class="container--narrow">
+        <h2 data-field="solution-title">Решение</h2>
+        <p data-field="solution-intro">[Вводный абзац: общий подход к решению проблемы. Какую стратегию выбрали и почему.]</p>
+
+        <div class="solution-steps">
+            <div class="solution-step" data-field="solution-step-1">
+                <div class="solution-step-num">1</div>
+                <div class="solution-step-content">
+                    <h3 data-field="solution-step-1-title">[Этап 1: Аудит и анализ]</h3>
+                    <p data-field="solution-step-1-text">[Что было сделано на первом этапе. Какие инструменты использовались, что выявлено.]</p>
+                </div>
+            </div>
+            <div class="solution-step" data-field="solution-step-2">
+                <div class="solution-step-num">2</div>
+                <div class="solution-step-content">
+                    <h3 data-field="solution-step-2-title">[Этап 2: Разработка стратегии]</h3>
+                    <p data-field="solution-step-2-text">[Какие решения были приняты, на что сделали ставку.]</p>
+                </div>
+            </div>
+            <div class="solution-step" data-field="solution-step-3">
+                <div class="solution-step-num">3</div>
+                <div class="solution-step-content">
+                    <h3 data-field="solution-step-3-title">[Этап 3: Реализация]</h3>
+                    <p data-field="solution-step-3-text">[Конкретные работы: техническая оптимизация, контент, ссылки и т.д.]</p>
+                </div>
+            </div>
+            <div class="solution-step" data-field="solution-step-4">
+                <div class="solution-step-num">4</div>
+                <div class="solution-step-content">
+                    <h3 data-field="solution-step-4-title">[Этап 4: Мониторинг и корректировка]</h3>
+                    <p data-field="solution-step-4-text">[Как отслеживались результаты, какие корректировки вносились.]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: results -->
+<section class="results-section">
+    <div class="container">
+        <h2>Результаты</h2>
+        <div class="results-grid">
+            <div class="result-card" data-field="result-1">
+                <div class="result-value positive" data-field="result-1-value">+145%</div>
+                <div class="result-label" data-field="result-1-label">[Органический трафик]</div>
+            </div>
+            <div class="result-card" data-field="result-2">
+                <div class="result-value positive" data-field="result-2-value">+78</div>
+                <div class="result-label" data-field="result-2-label">[Ключевых слов в ТОП-10]</div>
+            </div>
+            <div class="result-card" data-field="result-3">
+                <div class="result-value negative" data-field="result-3-value">-32%</div>
+                <div class="result-label" data-field="result-3-label">[Показатель отказов]</div>
+            </div>
+            <div class="result-card" data-field="result-4">
+                <div class="result-value positive" data-field="result-4-value">x2.5</div>
+                <div class="result-label" data-field="result-4-label">[Конверсия в заявки]</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: comparison -->
+<section class="comparison-section">
+    <div class="container">
+        <h2>До и После</h2>
+        <div class="comparison-grid">
+            <div class="comparison-col comparison-col--before" data-field="comparison-before">
+                <h3>До</h3>
+                <div class="comparison-image-placeholder" data-field="comparison-before-image">[Скриншот / график ДО начала работ]</div>
+                <p data-field="comparison-before-text">[Описание состояния до начала работ. Метрики, позиции, внешний вид сайта.]</p>
+            </div>
+            <div class="comparison-col comparison-col--after" data-field="comparison-after">
+                <h3>После</h3>
+                <div class="comparison-image-placeholder" data-field="comparison-after-image">[Скриншот / график ПОСЛЕ завершения работ]</div>
+                <p data-field="comparison-after-text">[Описание состояния после работ. Улучшенные метрики, новые позиции, обновлённый дизайн.]</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: testimonial -->
+<section class="testimonial-section">
+    <div class="container">
+        <div class="testimonial-block">
+            <blockquote data-field="testimonial-text">
+                [Отзыв клиента о работе с Artvision. Что понравилось, какие результаты получили, рекомендуют ли другим. 2-4 предложения.]
+            </blockquote>
+            <div class="testimonial-author">
+                <div class="testimonial-avatar" data-field="testimonial-avatar">[Фото]</div>
+                <div class="testimonial-author-info">
+                    <div class="testimonial-name" data-field="testimonial-name">[Имя Фамилия]</div>
+                    <div class="testimonial-position" data-field="testimonial-position">[Должность, Компания]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: related-cases -->
+<section class="related-section">
+    <div class="container">
+        <h2>Похожие кейсы</h2>
+        <div class="related-grid">
+
+            <a href="#" class="related-card" data-field="related-1">
+                <div class="related-card-image" data-field="related-1-image">[Превью кейса]</div>
+                <div class="related-card-body">
+                    <div class="tag" data-field="related-1-tag">[Отрасль]</div>
+                    <h3 data-field="related-1-title">[Название кейса 1]</h3>
+                    <p data-field="related-1-text">[Краткое описание результата. 1-2 предложения.]</p>
+                    <span>Подробнее &rarr;</span>
+                </div>
+            </a>
+
+            <a href="#" class="related-card" data-field="related-2">
+                <div class="related-card-image" data-field="related-2-image">[Превью кейса]</div>
+                <div class="related-card-body">
+                    <div class="tag" data-field="related-2-tag">[Отрасль]</div>
+                    <h3 data-field="related-2-title">[Название кейса 2]</h3>
+                    <p data-field="related-2-text">[Краткое описание результата. 1-2 предложения.]</p>
+                    <span>Подробнее &rarr;</span>
+                </div>
+            </a>
+
+            <a href="#" class="related-card" data-field="related-3">
+                <div class="related-card-image" data-field="related-3-image">[Превью кейса]</div>
+                <div class="related-card-body">
+                    <div class="tag" data-field="related-3-tag">[Отрасль]</div>
+                    <h3 data-field="related-3-title">[Название кейса 3]</h3>
+                    <p data-field="related-3-text">[Краткое описание результата. 1-2 предложения.]</p>
+                    <span>Подробнее &rarr;</span>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: cta -->
+<section class="cta-section">
+    <div class="container">
+        <h2 data-field="cta-title">[Хотите такие же результаты?]</h2>
+        <p data-field="cta-description">[Расскажите о вашем проекте, и мы подготовим индивидуальную стратегию продвижения.]</p>
+        <a href="#" class="btn btn--primary" data-field="cta-button">Обсудить проект</a>
+        <span style="margin:0 12px;opacity:0.6;">или</span>
+        <a href="#" class="btn btn--white" data-field="cta-button-secondary">Смотреть все кейсы</a>
+    </div>
+</section>
+
+<!-- SECTION: footer -->
+<footer class="site-footer">
+    <div class="container">
+        <p>&copy; 2025 <a href="/">Artvision</a>. Все права защищены.</p>
+    </div>
+</footer>
+
+<!-- Back to top button -->
+<button class="back-to-top" id="backToTop" aria-label="Наверх">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"/>
+    </svg>
+</button>
+
+<script>
+    /* ========== Back to Top ========== */
+    var backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+
+</body>
+</html>
