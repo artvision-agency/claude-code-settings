@@ -51,10 +51,27 @@ fi
 # 5. Создать директорию для логов
 mkdir -p "$HOME/.claude/session_logs"
 
-# 6. Сделать скрипты исполняемыми
+# 6. Разместить memory файлы
+# Memory привязана к пути проекта — определяем автоматически
+ARTVISION_DIR="$HOME/artvision-data"
+if [ -d "$ARTVISION_DIR" ]; then
+    # Путь memory = хэш от абсолютного пути проекта
+    # Claude Code использует формат: ~/.claude/projects/-Users-username/memory/
+    USERNAME=$(whoami)
+    MEMORY_DIR="$HOME/.claude/projects/-Users-${USERNAME}/memory"
+    mkdir -p "$MEMORY_DIR"
+    if [ -d "$HOME/.claude/memory" ]; then
+        echo "📝 Копирую memory файлы..."
+        cp -n "$HOME/.claude/memory/"*.md "$MEMORY_DIR/" 2>/dev/null || true
+        echo "   Memory: $MEMORY_DIR"
+    fi
+fi
+
+# 7. Сделать скрипты исполняемыми
 chmod +x "$HOME/.claude/hooks/"*.sh 2>/dev/null || true
 chmod +x "$HOME/.claude/hooks/"*.py 2>/dev/null || true
 chmod +x "$HOME/.claude/scripts/"*.sh 2>/dev/null || true
+chmod +x "$HOME/.claude/statusline.sh" 2>/dev/null || true
 
 # 7. Установить cc-update / cc-share команды
 mkdir -p "$HOME/.local/bin"
@@ -79,12 +96,16 @@ echo ""
 echo "✅ Настройка завершена!"
 echo ""
 echo "📦 Установлено:"
-echo "   - 199 агентов (VoltAgent + wshobson)"
-echo "   - 33 плагина (official + wshobson)"
-echo "   - Hooks для защиты токенов"
-echo "   - Автологирование сессий"
-echo "   - agent-browser + playwright (E2E тесты)"
+echo "   - 11 hooks (6 событий: Start, PreTool, PostTool, Compact, Stop)"
+echo "   - 50+ skills (/seo-audit, /page-create, /goal, ...)"
+echo "   - 24 plugins (Playwright, Asana, Context7, ...)"
+echo "   - Statusline (ctx%, cost, branch)"
+echo "   - Memory (lessons, revenue-goal, accounts)"
+echo "   - agent-browser + playwright (E2E)"
 echo ""
-echo "📝 CLAUDE.md: $HOME/.claude/CLAUDE.md"
+echo "📝 Конфиги:"
+echo "   - CLAUDE.md: $HOME/.claude/CLAUDE.md"
+echo "   - Settings: $HOME/.claude/settings.json"
+echo "   - Hooks:    $HOME/.claude/hooks/ (11 scripts)"
 echo ""
 echo "🚀 Запусти 'claude' чтобы начать!"
