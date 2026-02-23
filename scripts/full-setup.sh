@@ -56,6 +56,25 @@ chmod +x "$HOME/.claude/hooks/"*.sh 2>/dev/null || true
 chmod +x "$HOME/.claude/hooks/"*.py 2>/dev/null || true
 chmod +x "$HOME/.claude/scripts/"*.sh 2>/dev/null || true
 
+# 7. Установить cc-update / cc-share команды
+mkdir -p "$HOME/.local/bin"
+SETTINGS_DIR="$HOME/claude-code-settings"
+if [ ! -d "$SETTINGS_DIR" ]; then
+    git clone https://github.com/artvision-agency/claude-code-settings.git "$SETTINGS_DIR"
+fi
+ln -sf "$SETTINGS_DIR/scripts/cc-update.sh" "$HOME/.local/bin/cc-update"
+ln -sf "$SETTINGS_DIR/scripts/cc-share.sh" "$HOME/.local/bin/cc-share"
+chmod +x "$SETTINGS_DIR/scripts/cc-update.sh" "$SETTINGS_DIR/scripts/cc-share.sh"
+
+# Ensure ~/.local/bin is in PATH
+if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
+    for rc in "$HOME/.zshrc" "$HOME/.bashrc"; do
+        if [ -f "$rc" ] && ! grep -q '.local/bin' "$rc"; then
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$rc"
+        fi
+    done
+fi
+
 echo ""
 echo "✅ Настройка завершена!"
 echo ""
