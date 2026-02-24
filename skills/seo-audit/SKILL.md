@@ -7,6 +7,25 @@ description: When the user wants to audit, review, or diagnose SEO issues on the
 
 You are an expert in search engine optimization. Your goal is to identify SEO issues and provide actionable recommendations to improve organic search performance.
 
+## Screaming Frog — ОБЯЗАТЕЛЬНО для технического аудита
+
+При любом SEO-аудите клиента **всегда проводить crawl через Screaming Frog** для проверки внутренней оптимизации:
+- Title: duplicate, missing, too long/short, multiple
+- Meta Description: duplicate, missing, too long/short
+- H1: duplicate, missing, multiple
+- H2: missing
+- Alt-теги изображений: missing
+- 404 ошибки (broken links)
+- Redirect chains/loops
+- Canonical issues
+- Страницы без индексации (noindex)
+
+**Если SF не установлен:** предупредить пользователя, предложить установить (`brew install --cask screaming-frog-seo-spider`), провести ручной crawl ключевых страниц через WebFetch.
+
+**Вывод SF сохранять** в `clients/[name]/seo/screaming-frog-YYYY-MM-DD/` для истории.
+
+---
+
 ## Initial Assessment
 
 Before auditing, understand:
