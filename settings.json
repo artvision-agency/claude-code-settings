@@ -1,39 +1,226 @@
 {
-  "enabledPlugins": {
-    "github@claude-plugins-official": true,
-    "commit-commands@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
-    "pr-review-toolkit@claude-plugins-official": true,
-    "feature-dev@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true,
-    "hookify@claude-plugins-official": true,
-    "claude-md-management@claude-plugins-official": true,
-    "learning-output-style@claude-plugins-official": true,
-    "huggingface-skills@claude-plugins-official": true,
-    "ralph-loop@claude-plugins-official": false,
-    "supabase@claude-plugins-official": false,
-    "agent-sdk-dev@claude-plugins-official": false,
-    "claude-code-setup@claude-plugins-official": false,
-    "asana@claude-plugins-official": false,
-    "explanatory-output-style@claude-plugins-official": false,
-    "plugin-dev@claude-plugins-official": false,
-    "security-guidance@claude-plugins-official": false,
-    "full-stack-orchestration@wshobson-agents": false,
-    "conductor@wshobson-agents": false,
-    "agent-orchestration@wshobson-agents": false,
-    "comprehensive-review@wshobson-agents": false,
-    "debugging-toolkit@wshobson-agents": false,
-    "security-scanning@wshobson-agents": false,
-    "cicd-automation@wshobson-agents": false,
-    "deployment-strategies@wshobson-agents": false,
-    "backend-development@wshobson-agents": false,
-    "python-development@wshobson-agents": false,
-    "javascript-typescript@wshobson-agents": false,
-    "database-design@wshobson-agents": false,
-    "kubernetes-operations@wshobson-agents": false,
-    "data-engineering@wshobson-agents": false
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(cd *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(echo *)",
+      "Bash(printf *)",
+      "Bash(python3 *)",
+      "Bash(python *)",
+      "Bash(node *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(pip *)",
+      "Bash(pip3 *)",
+      "Bash(grep *)",
+      "Bash(rg *)",
+      "Bash(find *)",
+      "Bash(sort *)",
+      "Bash(uniq *)",
+      "Bash(diff *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(touch *)",
+      "Bash(chmod *)",
+      "Bash(chown *)",
+      "Bash(which *)",
+      "Bash(type *)",
+      "Bash(pwd)",
+      "Bash(date *)",
+      "Bash(env *)",
+      "Bash(export *)",
+      "Bash(source *)",
+      "Bash(open *)",
+      "Bash(sips *)",
+      "Bash(base64 *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(gh *)",
+      "Bash(crontab *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Bash(rsync *)",
+      "Bash(tar *)",
+      "Bash(zip *)",
+      "Bash(unzip *)",
+      "Bash(gzip *)",
+      "Bash(gunzip *)",
+      "Bash(sed *)",
+      "Bash(awk *)",
+      "Bash(tr *)",
+      "Bash(cut *)",
+      "Bash(tee *)",
+      "Bash(xargs *)",
+      "Bash(jq *)",
+      "Bash(yq *)",
+      "Bash(pup *)",
+      "Bash(ggrep *)",
+      "Bash(brew *)",
+      "Bash(docker *)",
+      "Bash(docker-compose *)",
+      "Bash(launchctl *)",
+      "Bash(pkill *)",
+      "Bash(kill *)",
+      "Bash(ps *)",
+      "Bash(lsof *)",
+      "Bash(du *)",
+      "Bash(df *)",
+      "Bash(file *)",
+      "Bash(stat *)",
+      "Bash(md5 *)",
+      "Bash(shasum *)",
+      "Bash(openssl *)",
+      "Bash(sqlite3 *)",
+      "Bash(realpath *)",
+      "Bash(dirname *)",
+      "Bash(basename *)",
+      "Bash(mktemp *)",
+      "Bash(tput *)",
+      "Bash(test *)",
+      "Bash(true *)",
+      "Bash(false *)",
+      "Bash(sleep *)",
+      "Bash(wait *)",
+      "Bash(rm *)",
+      "Bash(rmdir *)",
+      "Bash(ln *)",
+      "Bash(readlink *)",
+      "Bash(pbcopy *)",
+      "Bash(pbpaste *)",
+      "Bash(sw_vers *)",
+      "Bash(uname *)",
+      "Bash(hostname *)",
+      "Bash(whoami *)",
+      "Bash(id *)",
+      "Bash(groups *)",
+      "Bash(defaults *)",
+      "Bash(plutil *)",
+      "Bash(osascript *)",
+      "Bash(say *)",
+      "Bash(caffeinate *)",
+      "Bash(nohup *)",
+      "Bash(screen *)",
+      "Bash(tmux *)",
+      "Bash(ag *)",
+      "Bash(fd *)",
+      "Bash(fzf *)",
+      "Bash(bat *)",
+      "Bash(exa *)",
+      "Bash(htop *)",
+      "Bash(top *)",
+      "Bash(dig *)",
+      "Bash(nslookup *)",
+      "Bash(ping *)",
+      "Bash(traceroute *)",
+      "Bash(nc *)",
+      "Bash(telnet *)",
+      "Bash(ifconfig *)",
+      "Bash(networksetup *)",
+      "Bash(security *)",
+      "Bash(certbot *)",
+      "Bash(vercel *)",
+      "Bash(firebase *)",
+      "Bash(gcloud *)",
+      "Bash(aws *)",
+      "Bash(az *)",
+      "Bash(terraform *)",
+      "Bash(ansible *)",
+      "Bash(kubectl *)",
+      "Bash(helm *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(bun *)",
+      "Bash(deno *)",
+      "Bash(cargo *)",
+      "Bash(go *)",
+      "Bash(rustc *)",
+      "Bash(gcc *)",
+      "Bash(g++ *)",
+      "Bash(make *)",
+      "Bash(cmake *)",
+      "Bash(ruby *)",
+      "Bash(gem *)",
+      "Bash(bundle *)",
+      "Bash(rails *)",
+      "Bash(java *)",
+      "Bash(javac *)",
+      "Bash(mvn *)",
+      "Bash(gradle *)",
+      "Bash(swift *)",
+      "Bash(swiftc *)",
+      "Bash(xcodebuild *)",
+      "Bash(pod *)",
+      "Bash(flutter *)",
+      "Bash(dart *)",
+      "Bash(dotnet *)",
+      "Bash(php *)",
+      "Bash(composer *)",
+      "Bash(wp *)",
+      "Bash(redis-cli *)",
+      "Bash(mongo *)",
+      "Bash(mongosh *)",
+      "Bash(mysql *)",
+      "Bash(psql *)",
+      "Bash(pg_dump *)",
+      "Bash(pg_restore *)",
+      "Bash(ffmpeg *)",
+      "Bash(ffprobe *)",
+      "Bash(convert *)",
+      "Bash(magick *)",
+      "Bash(pandoc *)",
+      "Bash(wkhtmltopdf *)",
+      "Bash(weasyprint *)",
+      "Bash(lighthouse *)",
+      "Bash(playwright *)",
+      "Bash(cypress *)",
+      "Bash(jest *)",
+      "Bash(pytest *)",
+      "Bash(vitest *)",
+      "Bash(mocha *)",
+      "Bash(eslint *)",
+      "Bash(prettier *)",
+      "Bash(black *)",
+      "Bash(ruff *)",
+      "Bash(mypy *)",
+      "Bash(pyright *)",
+      "Bash(tsc *)",
+      "Bash(biome *)",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "Task",
+      "Skill",
+      "NotebookEdit",
+      "mcp__asana__*",
+      "mcp__claude_ai_Asana__*",
+      "mcp__plugin_playwright_playwright__*",
+      "mcp__plugin_context7_context7__*",
+      "mcp__claudeus-wp__*",
+      "mcp__elementor-mcp__*"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf /*)",
+      "Bash(> /dev/sda*)",
+      "Bash(mkfs *)",
+      "Bash(dd if=*)"
+    ]
+  },
+  "model": "claude-opus-4-6",
   "hooks": {
     "SessionStart": [
       {
@@ -43,6 +230,11 @@
             "type": "command",
             "command": "cd ~/artvision-data 2>/dev/null && git pull --quiet 2>/dev/null; echo '# Project Sync Status — artvision-data'; echo ''; cat ~/artvision-data/sync/SYNC_STATUS.md 2>/dev/null | head -80; echo ''; echo '---'; echo ''; cat ~/artvision-data/sync/QUICK_CONTEXT.md 2>/dev/null || echo 'Sync: no artvision-data context'",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/check-unsaved-artifacts.sh",
+            "timeout": 5
           }
         ]
       }
@@ -53,8 +245,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd ~/artvision-data 2>/dev/null && git add sync/ 2>/dev/null && git diff --cached --quiet || (git commit -m \"sync: auto $(date +%Y-%m-%d_%H:%M)\" --no-verify 2>/dev/null && git push --quiet 2>/dev/null); echo \"[$(date '+%Y-%m-%d %H:%M')] Session stop\" >> ~/.claude/session_logs/sessions.log",
-            "timeout": 15
+            "command": "~/.claude/hooks/stop-quality-check.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/sync-all-repos.sh",
+            "timeout": 30
           }
         ]
       }
@@ -69,7 +266,119 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-client-write.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-client-write.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-bash-check.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-push-summary.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-edit-lint.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-edit-lint.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-generate-validate.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-compact.sh",
+            "timeout": 10
+          }
+        ]
       }
     ]
-  }
+  },
+  "enabledPlugins": {
+    "github@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "supabase@claude-plugins-official": true,
+    "agent-sdk-dev@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "asana@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true,
+    "plugin-dev@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "playground@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "huggingface-skills@claude-plugins-official": true,
+    "superpowers@superpowers-dev": false,
+    "claude-session-driver@superpowers-marketplace": true,
+    "superpowers@superpowers-marketplace": true,
+    "figma@claude-plugins-official": true,
+    "superpowers-lab@superpowers-marketplace": true,
+    "superpowers-dev@superpowers-marketplace": true
+  },
+  "skipDangerousModePermissionPrompt": true
 }
