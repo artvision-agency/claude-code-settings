@@ -147,6 +147,31 @@ Identify and list:
 - Create/update `products/ROADMAP-2026-Q1.md`
 - Create Asana milestones for each quarterly target
 
+## STEP 8: Distribution Channels Research
+
+At each skill run, research and rank distribution channels:
+
+### For Agency (Pillar 1):
+- Referrals from existing clients (cost: 0, conversion: high)
+- SEO on artvision.pro (cost: time, conversion: medium)
+- vc.ru / Habr case studies (cost: time, conversion: medium)
+- Cold outreach via email/TG (cost: low, conversion: low)
+- Partnerships with web studios (cost: revenue share, conversion: medium)
+
+### For Products (Pillar 2):
+- Upsell to existing agency clients (cost: 0, highest probability)
+- Landing page + SEO (cost: time)
+- Product Hunt / directories (cost: time, good for international)
+- Free tool strategy → paid conversion
+- Content marketing (without mentioning AI internals!)
+
+### For Partnerships (Pillar 3):
+- Industry events / conferences
+- Professional communities (TG groups, forums)
+- White-label agreements
+
+**Always evaluate:** cost, time to result, expected ROI, scalability.
+
 ## RULES
 
 1. ALL amounts in BOTH RUB and USD (note exchange rate used)
@@ -156,3 +181,23 @@ Identify and list:
 5. Review quarterly, adjust based on actuals
 6. Cross-reference with `/revenue-2m` — 2M is prerequisite
 7. Focus on LEVERAGE — what generates revenue without proportional time investment
+8. **PROACTIVE:** suggest revenue actions even when not asked
+9. **ASK QUESTIONS:** if data is missing, ask 10-30 questions in one block
+
+## TABOO: AI/Neural Networks in Public Materials
+
+**ABSOLUTE BAN** on mentioning AI, neural networks, Claude, GPT, ML in:
+- Client proposals (KP)
+- Service pages
+- Public materials (vc.ru, Habr, social media)
+- Client reports
+- Product landing pages
+
+**Instead use:**
+- "Proprietary methodology" not "AI-generation"
+- "Analytical system" not "neural network"
+- "Expert analysis" not "machine learning"
+- "Automated audit" not "AI-audit"
+- Show RESULTS, not tools
+
+**Exception:** AIvision — the product is about AI visibility, but positioning is "we make YOU visible to AI", NOT "we use AI to do our work"

@@ -121,6 +121,35 @@ Update `~/.claude/projects/-Users-antonk/memory/revenue-goal.md` with:
 - Updated client statuses
 - Next review date
 
+## STEP 6: Proactive Revenue Monitoring
+
+Claude MUST create these cron tasks at session start:
+
+```
+CronCreate: every 4 hours
+Prompt: "Revenue check — прочитай revenue-goal.md, проверь:
+1. Есть ли незакрытые счета (просроченные)?
+2. Есть ли горячие лиды без КП?
+3. Есть ли клиенты которым можно допродать услугу?
+4. Есть ли готовые продукты без лендинга/публикации?
+Если есть хоть один пункт — напомни Антону конкретное действие."
+```
+
+### Revenue triggers (при ЛЮБОМ упоминании в сессии):
+- Новый клиент / лид / запрос → сразу оценить чек + создать задачу КП
+- Готовая страница / продукт → сразу спросить "куда распространяем?"
+- Завершённая задача клиенту → сразу спросить "можно допродать?"
+- Конец месяца → напомнить про счета ВСЕМ клиентам
+
+## STEP 7: Distribution Research
+
+При каждом запуске скилла — WebSearch по:
+1. "SEO агентство привлечение клиентов каналы 2026" — новые каналы
+2. "B2B lead generation digital agency" — международные практики
+3. Проверить конкурентов из competitor-analysis.md — что нового
+
+Результат: 3 конкретных идеи для распространения с оценкой стоимости и ROI.
+
 ## RULES
 
 1. ALL amounts shown in BOTH RUB and USD
@@ -129,3 +158,23 @@ Update `~/.claude/projects/-Users-antonk/memory/revenue-goal.md` with:
 4. Focus on actions Claude can EXECUTE (KP, content, audit), not just suggest
 5. Cross-reference with Asana — don't create duplicate tasks
 6. Run this at least weekly (suggest in /weekly-check)
+7. **PROACTIVE:** не ждать запроса — напоминать о revenue-действиях каждые 4 часа через cron
+8. **ASK QUESTIONS:** если не хватает данных для оценки — задать 10-30 вопросов сразу, одним блоком
+
+## TABOO: AI/Neural Networks in Public Materials
+
+**АБСОЛЮТНЫЙ ЗАПРЕТ** упоминать AI, нейросети, Claude, GPT, машинное обучение в:
+- КП для клиентов
+- Страницах услуг
+- Публичных материалах (vc.ru, Habr, соцсети)
+- Отчётах клиентам
+- Лендингах продуктов
+
+**Что вместо этого:**
+- "Авторская методология" вместо "AI-генерация"
+- "Аналитическая система" вместо "нейросеть"
+- "Экспертный анализ" вместо "машинное обучение"
+- "Автоматизированный аудит" вместо "AI-аудит"
+- Показывать РЕЗУЛЬТАТ, не инструмент
+
+**Исключение:** AIvision — сам продукт про AI, но позиционирование: "мы делаем вас видимым для AI", НЕ "мы используем AI для работы"
