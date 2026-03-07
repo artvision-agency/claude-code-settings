@@ -1,7 +1,7 @@
 ---
 name: pbn-domains
 description: "PBN domain system: find expired domains, check history, buy at auction, build PBN networks for clients. Revenue upsell 30-80K/client/month. Triggers: 'pbn', 'дроп домен', 'expired', 'домен аукцион', 'сетка', 'pbn сетка', 'линкбилдинг домены'"
-argument-hint: "[action: search|check|buy|propose-client]"
+argument-hint: "[action: search|check|buy|propose-client|niche-eval|telderi]"
 ---
 
 # /pbn-domains — PBN Domain System
@@ -38,6 +38,22 @@ SEARCH → CHECK → BUY → DEPLOY → SELL
 | **Webnames** | webnames.ru/domains/deleted | Удалённые домены | рег. цена |
 | **ExpiredDomains.net** | expireddomains.net | Международные TLD | бесплатно |
 | **Dynadot** | dynadot.com/market/auction | Международные аукционы | от $1 |
+| **xpire.ru** | xpire.ru | Поиск дропов с фильтрами, бэклинки, DR | Аккаунт Антона |
+| **Telderi** | telderi.ru | Аукцион готовых сайтов и доменов | от 100₽ |
+
+### Telderi — анализ ниш
+```
+1. WebSearch: "site:telderi.ru [ниша]" — что продают
+2. Оценить: трафик, цена, бэклинки, возраст
+3. Если трафик из Google коммерческий → покупать дроп
+4. Если трафик информационный → делать страницу на artvision.pro
+```
+
+### xpire.ru — поиск дропов
+У Антона есть аккаунт. Использовать для:
+- Фильтры по DR, бэклинкам, возрасту, тематике
+- Мониторинг освобождающихся доменов по ключевым словам
+- Экспорт кандидатов в CSV для дальнейшей проверки
 
 ### Критерии поиска (для SEO)
 
@@ -177,6 +193,79 @@ Playwright:
 | 5 доменов | 1.5-10K | 3-6K | 5-15K | ~15-30K |
 | 10 доменов | 3-20K | 6-12K | 10-30K | ~20-60K |
 | 20 доменов | 6-40K | 12-24K | 20-60K | ~40-120K |
+
+## STEP 3.5: Restore — Восстановление сайта из Wayback Machine
+
+### Зачем
+Купленный дроп-домен имеет бэклинки → но они ведут на 404. Восстановив оригинальный контент — бэклинки снова передают вес. Это КЛЮЧЕВОЕ преимущество дропов перед новыми доменами.
+
+### Инструменты
+
+| Инструмент | Команда | Что делает |
+|------------|---------|-----------|
+| **wayback-machine-downloader** | `gem install wayback_machine_downloader` | Полное зеркало сайта одной командой |
+| **waybackpy** | `pip install waybackpy` | Python API — список URL, снапшоты, CDX |
+| **CDX API** | `curl "web.archive.org/cdx/search/cdx?url=domain.ru/*"` | Все URL + даты |
+
+### Процесс восстановления
+
+```bash
+# 1. Скачать полный архив сайта
+wayback_machine_downloader https://domain.ru -d ./restored-domain
+
+# 2. Если wayback_machine_downloader недоступен — Python:
+python3 <<'PYEOF'
+import requests, os, time
+from urllib.parse import urlparse
+
+domain = "domain.ru"
+# Получить все URL из CDX
+cdx = requests.get(
+    f"https://web.archive.org/cdx/search/cdx?url={domain}/*&output=json&fl=timestamp,original&collapse=urlkey&limit=500"
+).json()
+
+os.makedirs("restored", exist_ok=True)
+for ts, url in cdx[1:]:  # skip header
+    wb_url = f"https://web.archive.org/web/{ts}id_/{url}"
+    path = urlparse(url).path.strip("/") or "index.html"
+    try:
+        resp = requests.get(wb_url, timeout=10)
+        filepath = f"restored/{path}"
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        with open(filepath, "wb") as f:
+            f.write(resp.content)
+        time.sleep(0.5)  # не DDoS-ить архив
+    except Exception as e:
+        print(f"Skip {url}: {e}")
+PYEOF
+
+# 3. Очистить от мусора Wayback
+# - Удалить toolbar Wayback Machine из HTML
+# - Заменить web.archive.org ссылки на оригинальные
+# - Удалить старые счётчики (GA, Метрика, LiveInternet)
+# - Починить битые картинки (base64 или заменить)
+
+# 4. Залить на хостинг
+scp -r restored/ user@vps:/var/www/domain.ru/
+```
+
+### Что чистить после восстановления
+- `<!-- BEGIN WAYBACK TOOLBAR INSERT -->` блоки
+- `web.archive.org/web/` в URL ссылок и картинок
+- Старые `<script>` счётчиков (GA UA-*, Метрика старая)
+- Невалидный HTML (doctype, charset)
+- Битые внешние ресурсы (CDN, шрифты)
+
+### Автоматизация через Claude
+```
+/pbn-domains restore domain.ru
+→ 1. CDX API: получить список всех страниц
+→ 2. Скачать последние версии каждой
+→ 3. Очистить от Wayback мусора
+→ 4. Сгенерировать недостающий контент через /content-writer
+→ 5. Залить на VPS
+→ 6. Проверить что бэклинки ведут на живые страницы
+```
 
 ## STEP 4: Deploy — Развёртывание PBN
 
