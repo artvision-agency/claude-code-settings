@@ -35,6 +35,21 @@
 - "Экспертный анализ" вместо "ML"
 - Показывать РЕЗУЛЬТАТ, не инструмент
 
+**Брендированные названия продуктов (ОБЯЗАТЕЛЬНО в публичных материалах):**
+
+| Внутреннее | Публичное |
+|-----------|-----------|
+| PBN/дропы | **Artvision LinkForge** |
+| AI GEO/AIvision | **Artvision Radar** |
+| SEO Pipeline | **Artvision Flow** |
+| Content writer | **Artvision Content Lab** |
+| SEO audit | **Artvision Pulse** |
+| Competitor monitor | **Artvision Scout** |
+| Sales Psychology | **Artvision Insight** |
+| Lead Auction | **Artvision Leads** |
+
+Формат: `Artvision + [метафора результата]`. Никаких AI/Bot/Neural/Smart/Auto.
+
 ## Разное
 
 - Временные скрипты → `.claude_temp_scripts/`
