@@ -1,0 +1,36 @@
+{
+  "week_start": "2026-03-07",
+  "accounts": {
+    "justtrance@gmail.com": {
+      "weekly_cost": 0.0,
+      "sessions": []
+    },
+    "adw.artvision.pro@gmail.com": {
+      "weekly_cost": 0.0,
+      "sessions": [
+        {
+          "date": "2026-03-07 19:50",
+          "cost": 0.0
+        },
+        {
+          "date": "2026-03-07 19:50",
+          "cost": 0.0
+        },
+        {
+          "date": "2026-03-07 19:51",
+          "cost": 0.0
+        },
+        {
+          "date": "2026-03-07 19:52",
+          "cost": 0.0
+        },
+        {
+          "date": "2026-03-07 19:55",
+          "cost": 0.0
+        }
+      ]
+    }
+  },
+  "weekly_limit_usd": 150,
+  "alert_threshold_pct": 97
+}
