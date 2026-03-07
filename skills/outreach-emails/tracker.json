@@ -1,0 +1,112 @@
+{
+  "campaigns": [
+    {
+      "id": "ant-partners-jurnal-2026-03",
+      "client": "ANT Partners",
+      "campaign_name": "Юридический журнал — гостевые статьи март 2026",
+      "created_at": "2026-03-07",
+      "status": "in_progress",
+      "emails_sent": 5,
+      "emails_total": 15,
+      "conversion_rate": 0.2,
+      "notes": "Первые результаты хорошие — 1 из 5 согласилась на статью про налоговые риски"
+    }
+  ],
+  "emails": [
+    {
+      "id": "email-001",
+      "campaign_id": "ant-partners-jurnal-2026-03",
+      "recipient_name": "Иван Петров",
+      "website_name": "НалоговоеПраво.pro",
+      "website_url": "https://nalogovoe.pro",
+      "recipient_email": "ivan@nalogovoe.pro",
+      "outreach_type": "GUEST_POST",
+      "subject": "Экспертная статья для НалоговоеПраво.pro — налоговые риски",
+      "sent_at": "2026-03-07T10:30:00Z",
+      "status": "waiting",
+      "follow_up_1": {
+        "scheduled_at": "2026-03-10T10:30:00Z",
+        "sent_at": null,
+        "status": "pending"
+      },
+      "follow_up_2": {
+        "scheduled_at": "2026-03-14T10:30:00Z",
+        "sent_at": null,
+        "status": "pending"
+      },
+      "response": null,
+      "conversion": null,
+      "notes": "Хороший трафик на сайте, регулярные обновления блога"
+    },
+    {
+      "id": "email-002",
+      "campaign_id": "ant-partners-jurnal-2026-03",
+      "recipient_name": "Юлия Смирнова",
+      "website_name": "ЮридПлюс.ru",
+      "website_url": "https://yuridplus.ru",
+      "recipient_email": "editor@yuridplus.ru",
+      "outreach_type": "EXPERT_COMMENT",
+      "subject": "Дополнение к статье «10 ошибок при НДС» на ЮридПлюс",
+      "sent_at": "2026-03-06T14:45:00Z",
+      "status": "positive",
+      "follow_up_1": {
+        "scheduled_at": "2026-03-09T14:45:00Z",
+        "sent_at": "2026-03-09T15:20:00Z",
+        "status": "sent"
+      },
+      "follow_up_2": {
+        "scheduled_at": "2026-03-13T14:45:00Z",
+        "sent_at": null,
+        "status": "not_needed"
+      },
+      "response": "Ответила в течение 2 дней, согласилась на комментарий",
+      "conversion": "COMPLETED",
+      "conversion_date": "2026-03-08",
+      "notes": "Статья опубликована 2026-03-08, 15+ просмотров в день от целевой аудитории"
+    },
+    {
+      "id": "email-003",
+      "campaign_id": "ant-partners-jurnal-2026-03",
+      "recipient_name": "Сергей Кузнецов",
+      "website_name": "ПраводайТе.рф",
+      "website_url": "https://xn--80ahacdq.xn--p1ai",
+      "recipient_email": "sergey@pravodaite.rf",
+      "outreach_type": "LINK_EXCHANGE",
+      "subject": "Обмен ссылками для налогового кластера",
+      "sent_at": "2026-03-05T09:15:00Z",
+      "status": "negative",
+      "follow_up_1": {
+        "scheduled_at": "2026-03-08T09:15:00Z",
+        "sent_at": "2026-03-08T10:00:00Z",
+        "status": "sent"
+      },
+      "follow_up_2": {
+        "scheduled_at": "2026-03-12T09:15:00Z",
+        "sent_at": "2026-03-12T11:30:00Z",
+        "status": "sent"
+      },
+      "response": "Не заинтересован, спасибо за предложение",
+      "conversion": "ARCHIVED",
+      "notes": "Сайт специализируется на другой аудитории, не подходит для обмена"
+    }
+  ],
+  "metrics": {
+    "total_emails_sent": 3,
+    "total_campaigns": 1,
+    "reply_rate": 0.6667,
+    "conversion_rate": 0.3333,
+    "avg_time_to_reply_days": 2,
+    "follow_up_success_rate": 0.5,
+    "status_breakdown": {
+      "waiting": 1,
+      "positive": 1,
+      "negative": 1
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2026-03-07T15:00:00Z",
+    "client_company": "ANT Partners",
+    "responsible_person": "Иван Сидоров"
+  }
+}

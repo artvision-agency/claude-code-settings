@@ -112,6 +112,13 @@ python3 /Users/antonk/artvision-data/scripts/hybrid-seo-audit.py --url [URL]
 
 **Результат:** `clients/[name]/seo/audit_YYYY-MM-DD.md`
 
+**TF-IDF проверка контента страницы:**
+Если страница содержит SEO-контент (статья, услуга), проверить через:
+```bash
+python3 ~/artvision-data/products/seo-pipeline/core/content_checker.py --text page.html --query "основной запрос" --top 15 -v
+```
+Метрики: тематичность ≥70%, уникальность ≥85%, релевантность SERP ≥30%
+
 Если SEO-аудит уже существует — ПРОПУСТИТЬ этот шаг.
 
 #### ШАГ 3: КОПИРАЙТИНГ (landing-page-agent) — если нужны новые тексты
