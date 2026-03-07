@@ -50,6 +50,20 @@
 
 Формат: `Artvision + [метафора результата]`. Никаких AI/Bot/Neural/Smart/Auto.
 
+## Автопереключение аккаунтов (Claude Max)
+
+**Два аккаунта:** `justtrance@gmail.com` + `adw.artvision.pro@gmail.com`
+**Лимит:** сброс еженедельно в 3:00 MSK
+
+**Автоматика:**
+- `~/.claude/scripts/account-usage-tracker.sh` — трекинг расхода по аккаунтам
+- Stop-хук `stop-account-usage.sh` — записывает стоимость + проверяет лимит
+- При **97%** недельного лимита → алерт в TG + инструкция переключения
+- Statusline показывает `w:$XX` (недельный расход), `W!` при 97%+
+
+**Ручная проверка:** `~/.claude/scripts/account-usage-tracker.sh status`
+**Переключение:** `claude auth logout && claude auth login --email <другой>`
+
 ## Разное
 
 - Временные скрипты → `.claude_temp_scripts/`

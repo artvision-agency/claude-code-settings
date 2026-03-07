@@ -252,6 +252,11 @@
             "type": "command",
             "command": "~/.claude/hooks/sync-all-repos.sh",
             "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-account-usage.sh",
+            "timeout": 10
           }
         ]
       }
