@@ -1,9 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 # Voice Relay: VPS voice_inbox.jsonl → Claude Code session
-# Usage: called by Claude Code cron every 30s
+# Usage: called by Claude Code cron every 30s-1min
 
-INBOX_LOCAL="/Users/antonk/.claude_temp_scripts/voice_inbox.jsonl"
 PROCESSED="/Users/antonk/.claude_temp_scripts/voice_processed.txt"
 VPS="root@80.90.181.152"
 
@@ -15,9 +14,11 @@ if [ -z "$NEW" ]; then
 fi
 
 # Check what we already processed
+mkdir -p "$(dirname "$PROCESSED")"
 touch "$PROCESSED"
 
-echo "$NEW" | while IFS= read -r line; do
+# Use process substitution instead of pipe to avoid subshell stdout loss
+while IFS= read -r line; do
     [ -z "$line" ] && continue
 
     # Extract msg_id as unique key
@@ -36,4 +37,4 @@ echo "$NEW" | while IFS= read -r line; do
 
     # Output the voice command (picked up by cron)
     echo "🎤 VOICE: $TEXT"
-done
+done <<< "$NEW"
