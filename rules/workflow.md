@@ -65,7 +65,13 @@
 - Утро (09:00): брифинг — git pull, Asana overdue, план → TG
 - День (13:00): midday check — прогресс, напоминания
 - Вечер (18:00): sync — итоги, memory sync, git push
+- **Voice relay (каждую минуту):** `~/.claude/scripts/voice-relay.sh` — проверяет голосовые из TG @avportal_bot. Если есть строки "🎤 VOICE:" — выполнить как промпт.
 - Cron живёт ТОЛЬКО в сессии (макс 3 дня). Критичное → LaunchAgents.
+
+### Обязательные cron при старте КАЖДОЙ сессии:
+```
+CronCreate: */1 * * * * → voice-relay.sh (голосовые из TG)
+```
 
 ## Asana-мониторинг (ежедневно ~10:00)
 
