@@ -1,42 +1,80 @@
-# Секреты и токены
+# ═══════════════════════════════════════════════
+# Claude Code Settings — .gitignore
+# Repo: artvision-agency/claude-code-settings
+# ═══════════════════════════════════════════════
+
+# ── Секреты и токены ──
 .secrets
 *.secret
 *.token
+.credentials.json
+github_token
 
-# Приватные данные
-projects/*/
+# ── Приватные/локальные данные ──
+projects/
+history.jsonl
+.claude.json
 
-# Логи и временные файлы
+# ── Ephemeral / session-specific ──
+sessions/
+session_logs/
+session-env/
+security_warnings_state_*.json
+.update.lock
 *.log
 *.tmp
 .DS_Store
 
-# Claude внутренние файлы
-.claude.json
-projects/
-
-# Кэши
-*.cache
-
-# Дополнительные исключения
-github_token
-history.jsonl
-# settings.json — синхронизируем (список плагинов)
-settings.local.json
-claude_desktop_config.json
-stats-cache.json
-CLAUDE.md.save
+# ── Кэши ──
 cache/
 paste-cache/
-shell-snapshots/
-file-history/
+image-cache/
+mcp-needs-auth-cache.json
+stats-cache.json
+*.cache
+
+# ── IDE / debug / telemetry ──
 debug/
-downloads/
+file-history/
+shell-snapshots/
 statsig/
 telemetry/
+ide/
+
+# ── Ephemeral runtime ──
 todos/
 commands/
-# skills/ — версионируем (пользовательские скиллы)
-plugins/
+tasks/
+teams/
 plans/
-agents-artvision/
+downloads/
+backups/
+plugins/
+
+# ── Локальные конфиги (не синхронизировать) ──
+settings.local.json
+settings.json.bak
+claude_desktop_config.json
+CLAUDE.md.save
+*.local
+*.sync-all-sessions.sh.local
+
+# ── Legacy / бэкапы ──
+agents-backup-*/
+agents-artvision
+
+# ═══════════════════════════════════════════════
+# СИНХРОНИЗИРУЕМ (НЕ в gitignore):
+#   agents/           — агенты
+#   hooks/            — хуки
+#   rules/            — правила (workflow, git, tokens, security)
+#   scripts/          — скрипты
+#   skills/           — скиллы
+#   tools/            — кастомные инструменты
+#   settings.json     — плагины и настройки
+#   CLAUDE.md         — глобальные инструкции
+#   *.md              — документация
+#   wp-sites.json     — конфиг сайтов
+#   session-aliases.json — алиасы сессий
+#   statusline.sh     — статусбар
+# ═══════════════════════════════════════════════

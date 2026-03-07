@@ -1,9 +1,4 @@
 {
-  "model": "claude-opus-4-6",
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh"
-  },
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
@@ -212,7 +207,9 @@
       "mcp__asana__*",
       "mcp__claude_ai_Asana__*",
       "mcp__plugin_playwright_playwright__*",
-      "mcp__plugin_context7_context7__*"
+      "mcp__plugin_context7_context7__*",
+      "mcp__claudeus-wp__*",
+      "mcp__elementor-mcp__*"
     ],
     "deny": [
       "Bash(rm -rf /)",
@@ -223,6 +220,7 @@
       "Bash(dd if=*)"
     ]
   },
+  "model": "claude-opus-4-6",
   "hooks": {
     "SessionStart": [
       {
@@ -270,6 +268,26 @@
         ]
       },
       {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-client-write.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-client-write.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {
@@ -293,11 +311,6 @@
             "type": "command",
             "command": "~/.claude/hooks/post-edit-lint.sh \"$CLAUDE_FILE_PATH\"",
             "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/post-client-html-validate.sh \"$CLAUDE_FILE_PATH\"",
-            "timeout": 5
           }
         ]
       },
@@ -308,11 +321,16 @@
             "type": "command",
             "command": "~/.claude/hooks/post-edit-lint.sh \"$CLAUDE_FILE_PATH\"",
             "timeout": 5
-          },
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/post-client-html-validate.sh \"$CLAUDE_FILE_PATH\"",
-            "timeout": 5
+            "command": "~/.claude/hooks/post-generate-validate.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 30
           }
         ]
       }
@@ -354,7 +372,13 @@
     "code-simplifier@claude-plugins-official": true,
     "playground@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
-    "huggingface-skills@claude-plugins-official": true
+    "huggingface-skills@claude-plugins-official": true,
+    "superpowers@superpowers-dev": false,
+    "claude-session-driver@superpowers-marketplace": true,
+    "superpowers@superpowers-marketplace": true,
+    "figma@claude-plugins-official": true,
+    "superpowers-lab@superpowers-marketplace": true,
+    "superpowers-dev@superpowers-marketplace": true
   },
   "skipDangerousModePermissionPrompt": true
 }

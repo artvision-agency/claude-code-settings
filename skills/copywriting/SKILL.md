@@ -1,6 +1,6 @@
 ---
 name: copywriting
-description: When the user wants to write, rewrite, or improve marketing copy for any page — including homepage, landing pages, pricing pages, feature pages, about pages, or product pages. Also use when the user says "write copy for," "improve this copy," "rewrite this page," "marketing copy," "headline help," or "CTA copy." For email copy, see email-sequence. For popup copy, see popup-cro.
+description: "ENGLISH marketing copy for pages — homepage, landing, pricing, feature, about. Use when the user writes in English and says 'write copy for', 'improve this copy', 'rewrite this page', 'marketing copy', 'headline help', 'CTA copy'. For RUSSIAN content use /content-writer. For email copy see email-sequence. For popup copy see cro §3."
 ---
 
 # Copywriting

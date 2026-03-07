@@ -64,6 +64,31 @@ if [[ "$EXT" == "css" ]]; then
   fi
 fi
 
+# === Проверка регрессии: удалено >20% строк (в clients/) ===
+if echo "$FILE_PATH" | grep -q "/clients/"; then
+  if command -v git >/dev/null 2>&1; then
+    REPO_DIR=$(cd "$(dirname "$FILE_PATH")" && git rev-parse --show-toplevel 2>/dev/null)
+    if [ -n "$REPO_DIR" ]; then
+      REL_PATH="${FILE_PATH#$REPO_DIR/}"
+      DIFF_STAT=$(cd "$REPO_DIR" && git diff --numstat -- "$REL_PATH" 2>/dev/null)
+      if [ -n "$DIFF_STAT" ]; then
+        ADDED=$(echo "$DIFF_STAT" | awk '{print $1}')
+        DELETED=$(echo "$DIFF_STAT" | awk '{print $2}')
+        if [ "$DELETED" -gt 0 ] 2>/dev/null && [ "$ADDED" -lt "$DELETED" ] 2>/dev/null; then
+          NET_LOSS=$((DELETED - ADDED))
+          ORIG_LINES=$(cd "$REPO_DIR" && git show HEAD:"$REL_PATH" 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$ORIG_LINES" -gt 0 ] 2>/dev/null; then
+            PCT=$((NET_LOSS * 100 / ORIG_LINES))
+            if [ "$PCT" -gt 20 ]; then
+              WARNINGS="${WARNINGS}[regression] $BASENAME: УДАЛЕНО ${PCT}% контента (${NET_LOSS} строк из ${ORIG_LINES})!\n[regression] Это может быть регрессия. Проверь git diff.\n\n"
+            fi
+          fi
+        fi
+      fi
+    fi
+  fi
+fi
+
 # === Вывод ===
 if [ -n "$WARNINGS" ]; then
   echo "---"

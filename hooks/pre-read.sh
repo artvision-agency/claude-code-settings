@@ -29,11 +29,8 @@ if [ "$LINE_COUNT" -gt 10000 ]; then
   echo "      Grep(pattern='искомый_текст', path='$FILE_PATH')"
   echo "      Read(file_path='$FILE_PATH', offset=0, limit=500)"
   echo ""
-  read -p "❌ Прервать чтение? [Y/n]: " -n 1 -r confirm
-  echo ""
-  if [[ ! $confirm =~ ^[Nn]$ ]]; then
-    exit 1  # Прерываем
-  fi
+  echo "ЗАБЛОКИРОВАНО. Используйте Grep или Read с offset/limit."
+  exit 2  # Блокируем операцию
 
 elif [ "$LINE_COUNT" -gt 5000 ]; then
   echo "⚠️  БОЛЬШОЙ ФАЙЛ"
@@ -41,13 +38,8 @@ elif [ "$LINE_COUNT" -gt 5000 ]; then
   echo "   Строк: $LINE_COUNT"
   echo "   Токенов (оценка): ~$ESTIMATED_TOKENS"
   echo ""
-  echo "💡 Рассмотрите использование Grep или offset/limit"
-  echo ""
-  read -p "Продолжить чтение целиком? [y/N]: " -n 1 -r confirm
-  echo ""
-  if [[ ! $confirm =~ ^[Yy]$ ]]; then
-    exit 1  # Прерываем
-  fi
+  echo "Рекомендуется: Grep или Read с offset/limit"
+  # exit 1 = предупреждение (Claude увидит и решит)
 
 elif [ "$LINE_COUNT" -gt 2000 ]; then
   echo "ℹ️  Файл: $(basename "$FILE_PATH") ($LINE_COUNT строк, ~$ESTIMATED_TOKENS токенов)"
