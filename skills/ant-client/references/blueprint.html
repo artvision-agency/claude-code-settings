@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<style>
+    @font-face{font-family:'Cormorant';font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/cormorant.woff2) format('woff2')}
+    @font-face{font-family:'Montserrat';font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/montserrat.woff2) format('woff2')}
+</style>
+<title>{{PAGE_TITLE}} | ANT Attorneys | ANT Partners</title>
+<meta content="{{META_DESCRIPTION}}" name="description"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!-- Open Graph -->
+<meta content="website" property="og:type"/>
+<meta content="ru_RU" property="og:locale"/>
+<meta content="{{PAGE_TITLE}} | ANT Attorneys | ANT Partners" property="og:title"/>
+<meta content="{{META_DESCRIPTION}}" property="og:description"/>
+<meta content="https://ant.partners/{{SLUG}}/" property="og:url"/>
+<link href="https://ant.partners/{{SLUG}}/" rel="canonical"/>
+<meta content="ANT Attorneys" property="og:site_name"/>
+<!-- Schema.org: LegalService -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LegalService",
+  "name": "{{SCHEMA_SERVICE_NAME}}",
+  "description": "{{META_DESCRIPTION}}",
+  "url": "https://ant.partners/{{SLUG}}/",
+  "provider": {
+    "@type": "Organization",
+    "name": "ANT Attorneys",
+    "telephone": "+7 (812) 241-78-78",
+    "email": "office@ant.partners",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Саперный пер., д. 10, лит. А",
+      "addressLocality": "Санкт-Петербург",
+      "addressCountry": "RU"
+    }
+  },
+  "areaServed": ["Москва", "Санкт-Петербург", "Россия"]
+}
+</script>
+<!-- Schema.org: FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{FAQ_SCHEMA_ITEMS}}
+  ]
+}
+</script>
+
+<!-- ============================================ -->
+<!-- CSS: Bootstrap 5.3.2 minimal (inline)        -->
+<!-- Скопировать из любой wave1 страницы           -->
+<!-- ============================================ -->
+<style>/* Bootstrap 5.3.2 minimal - copy from wave1 page */
+{{BOOTSTRAP_CSS}}
+</style>
+
+<!-- ============================================ -->
+<!-- CSS: ANT Partners custom styles              -->
+<!-- ============================================ -->
+<style>
+:root {
+  --font-main: "Montserrat", sans-serif;
+  --font-title: "Cormorant", serif;
+  --color-dark: #232528;
+  --color-accent: #3b6589;
+  --color-bg: #2e3338;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-main);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--color-dark);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+a { color: var(--color-accent); text-decoration: underline; transition: .3s; }
+a:hover { text-decoration: none; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+p { margin: 0 0 1.2em; }
+p:last-child { margin: 0; }
+ul, ol { margin: 0 0 1.2em; padding-left: 25px; }
+li { margin-bottom: 8px; line-height: 1.6; }
+
+/* ============================================
+   СКОПИРОВАТЬ ВСЕ ОСТАЛЬНЫЕ СТИЛИ ИЗ WAVE1
+   sidebar, header, toc, hero, sections, stats,
+   features-grid, timeline, cases-grid, advantages,
+   services-grid, price-table, faq, form, footer,
+   modal, back-top, responsive
+   ============================================ */
+{{CUSTOM_CSS}}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ==================== SIDEBAR ==================== -->
+<aside class="sidebar">
+<div class="sidebar-inner">
+<div class="sidebar-logo">
+  <img alt="Ant.partners" src="data:image/svg+xml;base64,{{LOGO_BASE64}}"/>
+</div>
+<nav>
+<ul class="sidebar-nav">
+  <li><a href="https://ant.partners/">Главная</a>
+    <ul class="sidebar-submenu">
+      <li><a href="/nalogovye-spory/">Налоговые споры</a></li>
+      <li><a href="/kameralnaya-proverka/">Камеральная проверка</a></li>
+      <li><a href="/vyezdnaya-proverka/">Выездная проверка</a></li>
+      <li><a href="/dopros-ifns/">Допрос в ИФНС</a></li>
+      <li><a href="/komissiya-ifns/">Комиссия ИФНС</a></li>
+      <li><a href="/nds/">Возмещение НДС</a></li>
+      <li><a href="/nalog-na-pribyl/">Налог на прибыль</a></li>
+      <li><a href="/droblenie/">Дробление бизнеса</a></li>
+      <li><a href="/obzhalovanie/">Обжалование решений</a></li>
+      <li><a href="/blokirovka-scheta/">Блокировка счёта</a></li>
+      <li><a href="/54-1/">Статья 54.1 НК</a></li>
+      <li><a href="/subsidiarnaya-otvetstvennost/">Субсидиарная ответственность</a></li>
+      <li><a href="/nalogovyj-advokat/">Налоговый адвокат</a></li>
+    </ul>
+  </li>
+</ul>
+</nav>
+</div>
+</aside>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<main class="main-content" id="main">
+
+<!-- Header -->
+<header class="header">
+  <!-- Logo (mobile) + contacts + hamburger -->
+  {{HEADER_HTML}}
+</header>
+
+<!-- Mobile Nav -->
+<nav>
+  {{MOBILE_NAV_HTML}}
+</nav>
+
+<!-- TOC (горизонтальный скролл) -->
+<div class="toc-wrapper" id="tocWrapper">
+<div class="toc-scroll-container">
+<div class="toc-scroll-zone toc-scroll-zone-left" data-direction="-1"></div>
+<div class="toc-scroll-zone toc-scroll-zone-right" data-direction="1"></div>
+<nav aria-label="Содержание страницы" class="toc">
+<ul class="toc-list" id="tocList">
+  {{TOC_ITEMS}}
+  <!-- Формат: <li class="toc-item" data-target="sec-ID"><a href="#sec-ID">Название</a></li> -->
+</ul>
+</nav>
+</div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+<div class="hero-bg">
+  <img alt="{{HERO_ALT}}" src="images/{{SLUG}}/hero.jpg"/>
+</div>
+<div class="hero-content">
+  <div class="breadcrumbs">
+    <a href="https://ant.partners/">Главная</a>
+    <span class="sep">/</span>
+    <span>{{BREADCRUMB_CURRENT}}</span>
+  </div>
+  <h1 class="hero-title">{{H1_TITLE}}</h1>
+  <div class="hero-subtitle">{{HERO_SUBTITLE}}</div>
+</div>
+<div class="hero-cta">
+  <a class="btn-main" href="#sec-consult" onclick="if(typeof openModal==='function'){openModal();return false;}">
+    {{CTA_TEXT}}
+    <svg viewBox="0 0 50 12" fill="none"><path d="M0 6H48M48 6L42 1M48 6L42 11" stroke="currentColor" stroke-width="1.5"></path></svg>
+  </a>
+</div>
+</section>
+
+<!-- ==================== CONTENT SECTIONS ==================== -->
+<!-- Вставить секции по паттернам из section-patterns.md -->
+<!-- Чередование: .section → .section.section-alt → ... -->
+
+{{CONTENT_SECTIONS}}
+
+<!-- ==================== FORM SECTION ==================== -->
+<section class="section-form">
+<h2 class="h2-title">{{FORM_TITLE}}</h2>
+<div class="text">
+  <p>{{FORM_SUBTITLE}}</p>
+</div>
+<form action="#" method="post" onsubmit="return false;">
+  <div class="form-row">
+    <div class="form-inputs">
+      <input type="text" name="name" class="form-input" placeholder="Ваше имя:" aria-label="Ваше имя"/>
+      <input type="tel" name="phone" class="form-input" placeholder="Телефон:" required aria-required="true" aria-label="Телефон"/>
+      <input type="email" name="email" class="form-input" placeholder="Email:" aria-label="Email"/>
+    </div>
+    <div>
+      <button type="submit" class="btn-main">
+        Оставить заявку
+        <svg viewBox="0 0 50 12" fill="none"><path d="M0 6H48M48 6L42 1M48 6L42 11" stroke="currentColor" stroke-width="1.5"></path></svg>
+      </button>
+    </div>
+  </div>
+</form>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+<div class="footer-row">
+  <div class="footer-col footer-logo">
+    <img alt="Ant.partners" src="data:image/svg+xml;base64,{{LOGO_BASE64}}"/>
+  </div>
+  <div class="footer-col footer-contact">
+    <p>г. Санкт-Петербург, Саперный пер., д. 10, лит. А</p>
+  </div>
+  <div class="footer-col footer-right">
+    <a href="tel:+78122417878">+7 (812) 241-78-78</a>
+    <a href="mailto:office@ant.partners">office@ant.partners</a>
+  </div>
+</div>
+</footer>
+
+</main>
+</div>
+
+<!-- Back to Top -->
+<div class="back-top" id="backTop" role="button" tabindex="0" aria-label="Наверх">
+<svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
+</div>
+
+<!-- Modal Form -->
+<div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="modalFormTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+  <h2 class="h2-title" id="modalFormTitle">Оставить заявку</h2>
+  <div class="text">Оставьте свои контактные данные, и мы свяжемся с вами в ближайшее время</div>
+  <form action="#" method="post" onsubmit="return false;">
+    <input type="text" name="name" class="form-input" placeholder="Ваше имя:" aria-label="Ваше имя"/>
+    <input type="tel" name="phone" class="form-input" placeholder="Телефон:" required aria-required="true" aria-label="Телефон"/>
+    <input type="email" name="email" class="form-input" placeholder="Email:" aria-label="Email"/>
+    <button type="submit" class="btn-main">
+      Отправить
+      <svg viewBox="0 0 50 12" fill="none"><path d="M0 6H48M48 6L42 1M48 6L42 11" stroke="currentColor" stroke-width="1.5"></path></svg>
+    </button>
+  </form>
+</div>
+</div>
+</div>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+/* Bootstrap 5.3.2 Minimal JS — Modal + Carousel + Collapse */
+{{BOOTSTRAP_JS}}
+</script>
+<script>
+/* ANT Partners custom JS — FAQ toggle, TOC scroll, back-to-top, sidebar */
+{{CUSTOM_JS}}
+</script>
+</body>
+</html>

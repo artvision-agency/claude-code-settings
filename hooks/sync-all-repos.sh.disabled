@@ -1,0 +1,35 @@
+#!/bin/bash
+# Sync all active repos on session stop
+# Commits all changes + pushes to remote
+
+REPOS=(
+  "$HOME/artvision-data"
+  "$HOME/artvision-tg-bot"
+  "$HOME/devops-agent"
+)
+
+LOG="$HOME/.claude/session_logs/sessions.log"
+mkdir -p "$(dirname "$LOG")"
+
+for repo in "${REPOS[@]}"; do
+  name=$(basename "$repo")
+  if [ ! -d "$repo/.git" ]; then
+    continue
+  fi
+  cd "$repo" || continue
+
+  # Stage all tracked changes + new files (except secrets)
+  git add -A 2>/dev/null
+
+  # Skip if nothing to commit
+  if git diff --cached --quiet 2>/dev/null; then
+    continue
+  fi
+
+  # Commit and push
+  git commit -m "sync: auto $(date +%Y-%m-%d_%H:%M)" --no-verify 2>/dev/null
+  git push --quiet 2>/dev/null
+  echo "[$(date '+%Y-%m-%d %H:%M')] $name: synced" >> "$LOG"
+done
+
+echo "[$(date '+%Y-%m-%d %H:%M')] Session stop" >> "$LOG"
