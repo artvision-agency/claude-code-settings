@@ -1,6 +1,6 @@
 ---
 name: seo-master
-description: "Полный SEO-инструмент: аудит, keyword research, on-page оптимизация, link building, Core Web Vitals, schema markup. Для клиентов Artvision: hybrid-seo-audit.py + curl для мета-тегов (НЕ WebFetch!). Триггеры: 'SEO аудит', 'аудит сайта', 'проверь SEO', 'technical SEO', 'мета-теги', 'SEO', 'ключевые слова', 'keyword research', 'оптимизация сайта', 'позиции в поиске', 'link building', 'линкбилдинг', 'SEO issues', 'on-page SEO', 'meta tags review', 'SEO health check', 'why am I not ranking', 'почему не ранжируется', 'seo expert', 'Core Web Vitals', 'pagespeed', 'скорость сайта', 'индексация', 'crawl budget', 'robots.txt', 'sitemap'."
+description: "Полный SEO-инструмент: аудит, keyword research, on-page оптимизация, link building, Core Web Vitals, schema markup. Для клиентов Artvision: hybrid-seo-audit.py + curl для мета-тегов (НЕ WebFetch!). Триггеры: 'SEO аудит', 'аудит сайта', 'проверь SEO', 'technical SEO', 'мета-теги', 'SEO', 'ключевые слова', 'keyword research', 'оптимизация сайта', 'позиции в поиске', 'link building', 'линкбилдинг', 'SEO issues', 'on-page SEO', 'meta tags review', 'SEO health check', 'why am I not ranking', 'почему не ранжируется', 'seo expert', 'Core Web Vitals', 'pagespeed', 'скорость сайта', 'индексация', 'crawl budget', 'robots.txt', 'sitemap', 'semrush', 'backlink gap', 'backlink analysis', 'ссылочный профиль'."
 ---
 
 # SEO Audit — Artvision
@@ -92,6 +92,30 @@ grep -oE '<title>[^<]+</title>'
 
 Сохранить в: clients/[name]/seo/audit_YYYY-MM-DD.md
 ```
+
+---
+
+## Semrush API Integration
+
+Ключ: `tokens.json → semrush` (проверить: `python3 -c "import json; print(json.load(open('/Users/antonk/artvision-data/tokens.json'))['semrush'])"`)
+
+### Автоматическое использование при:
+- **Keyword Research:** `semrush domain organic` → органические ключи конкурентов
+- **Backlink Analysis:** `semrush backlinks` → ссылочный профиль
+- **Backlink Gap:** `semrush backlink gap` → доноры конкурентов, которых нет у нас
+- **Domain Overview:** `semrush domain overview` → трафик, ключи, позиции
+
+### Скрипт:
+```bash
+python3 ~/artvision-data/scripts/semrush-api.py --domain example.com --report organic
+python3 ~/artvision-data/scripts/semrush-api.py --domain example.com --report backlinks
+python3 ~/artvision-data/scripts/semrush-api.py --domains "site1.com,site2.com" --report backlink-gap
+```
+
+### Когда вызывать:
+- При SEO-аудите (ШАГ 1) — domain overview
+- При keyword research — organic keywords
+- При линкбилдинге → перенаправлять на `/parasitic-seo` или `/outreach-emails`
 
 ---
 
@@ -611,3 +635,6 @@ If you need more context:
 - **schema-markup**: For implementing structured data
 - **page-cro**: For optimizing pages for conversion (not just ranking)
 - **analytics-tracking**: For measuring SEO performance
+- **parasitic-seo** — для линкбилдинга через площадки (НЕ seo-master)
+- **content-writer** — для создания контента
+- **outreach-emails** — для outreach-писем

@@ -86,6 +86,31 @@ description: "Русскоязычный контент: статьи, рера�
 ```
 SEO: ключ в H1 + первый абзац + H2, плотность 1-2%, LSI, meta 150-160 символов.
 
+### TF-IDF обязательный чеклист (CONTENT_RULES.md)
+
+Перед написанием ЛЮБОЙ SEO-статьи или рерайта:
+
+1. Запустить анализ конкурентов:
+```bash
+python3 ~/artvision-data/products/seo-pipeline/core/content_checker.py --query "целевой запрос" --top 15 -v
+```
+
+2. Извлечь LSI-слова из TF-IDF анализа топ-10
+
+3. Включить в текст обязательно:
+   - Маркер (главный ключ) — 3-5 раз
+   - LSI-слова из TF-IDF — все из топ-10 списка
+   - Тематичность ≥70%
+
+4. После написания — проверка:
+```bash
+python3 ~/artvision-data/products/seo-pipeline/core/content_checker.py --text article.md --query "запрос" --top 15 -v
+```
+
+**Целевые метрики:** тематичность ≥70%, уникальность ≥85%, релевантность SERP ≥30%
+
+**Справочник:** `~/artvision-data/products/seo-pipeline/CONTENT_RULES.md`
+
 ### Формулы заголовков
 
 **Новостные:** "[Компания] [действие]: что изменится для [аудитория]"
@@ -192,3 +217,9 @@ def create_wp_draft(title, content, excerpt="", tags=[]):
 3. **Ключевое слово** (для SEO)
 4. **Платформа**: TG / Telegraph / WordPress
 5. **Контекст**: ссылки на источники
+
+---
+
+## Related Skills
+- **seo-master** — для SEO-аудита
+- **parasitic-seo** — для размещения на площадках

@@ -1,0 +1,36 @@
+{
+  "created": "2026-03-05T18:46:00+03:00",
+  "reason": "Asana API rate limit (Payment Required)",
+  "pending_tasks": [
+    {
+      "session_id": "6cf3c6da",
+      "topic": "Bot bugfixes (11 bugs), VPS healer, NDA AdvertMed, review module, presentation",
+      "project": "Zadachi - Artvision",
+      "status": "completed_in_session",
+      "note": "100/100 tests passing. Deployed to Vercel."
+    },
+    {
+      "session_id": "e132e2c5",
+      "topic": "Large session (41.8M) - needs manual review",
+      "project": "unknown",
+      "status": "needs_review"
+    }
+  ],
+  "session_tasks_from_today": [
+    {
+      "task": "Fix 11 bot bugs in @avportal_bot",
+      "status": "DONE",
+      "project": "artvision-tg-bot"
+    },
+    {
+      "task": "Uslyga: perezd TG/WA/VK -> MAX (ot 35K)",
+      "status": "PENDING",
+      "project": "Zadachi - Artvision"
+    },
+    {
+      "task": "GEO: 7 statey + WP",
+      "status": "PENDING - needs template approval",
+      "project": "Zadachi - Artvision"
+    }
+  ]
+}
