@@ -1,5 +1,5 @@
 ---
-name: ai-factory.skill-generator
+name: skill-generator
 description: Generate professional Agent Skills for Claude Code and other AI agents. Creates complete skill packages with SKILL.md, references, scripts, and templates. Use when creating new skills, generating custom slash commands, or building reusable AI capabilities. Validates against Agent Skills specification.
 argument-hint: [skill-name or "search <query>" or URL(s)]
 allowed-tools: Read Grep Glob Write Bash(mkdir *) Bash(npx skills *) Bash(python *security-scan*) Bash(rm -rf *) WebFetch WebSearch

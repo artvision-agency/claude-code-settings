@@ -1,6 +1,6 @@
 ---
 name: ai-evolve
-description: Self-improve Artvision skills and CLAUDE.md based on client patches, context logs, and codebase patterns. Analyzes what went wrong across all clients, finds patterns, and enhances skills/rules. Use when you want to make Claude smarter. Triggers: 'evolve', 'улучши скиллы', 'самообучение', 'auto-improve'.
+description: "Self-improve Artvision skills and CLAUDE.md based on client patches, context logs, and codebase patterns. Analyzes what went wrong across all clients, finds patterns, and enhances skills/rules. Use when you want to make Claude smarter. Triggers: 'evolve', 'улучши скиллы', 'самообучение', 'auto-improve'."
 argument-hint: [skill-name or "all"]
 allowed-tools: Read Write Edit Glob Grep Bash(git *) Bash(python3 *context_logger*) AskUserQuestion
 disable-model-invocation: true

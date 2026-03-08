@@ -1,6 +1,6 @@
 ---
 name: ai-fix
-description: Fix a bug or problem for an Artvision client. Reads client patches before fixing, creates a new patch after. Use when user reports a bug, error, or rework needed. Triggers: 'fix bug', 'исправь баг', 'починить', 'не работает', 'rework'.
+description: "Fix a bug or problem for an Artvision client. Reads client patches before fixing, creates a new patch after. Use when user reports a bug, error, or rework needed. Triggers: 'fix bug', 'исправь баг', 'починить', 'не работает', 'rework'."
 argument-hint: <client-name> <bug description>
 allowed-tools: Read Write Edit Glob Grep Bash AskUserQuestion
 disable-model-invocation: false
