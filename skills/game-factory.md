@@ -78,6 +78,22 @@ VITE_PLATFORM=yandex npx vite build --outDir dist-yandex
 | **Facebook** | Instant Games | getSignedPlayerInfoAsync | setDataAsync | Нет | getInterstitialAdAsync | Предзагрузка рекламы |
 | **OK.ru** | FAPI | hash params | Нет | Нет | showAd | Старый API, callback-based |
 | **GameDistribution** | GD SDK | Нет | Нет | Нет | showAd events | Event-based architecture |
+| **itch.io** | Нет | Нет | Нет | Нет | Нет | Нулевой порог, без модерации, для фидбека |
+
+### Приоритет публикации (рекомендуемый)
+1. **Yandex** — большая RU-аудитория, хороший eCPM
+2. **CrazyGames** — англоязычный трафик, revenue share от рекламы, порог $100
+3. **Poki** — большой трафик, но строгие требования, работают по приглашениям (1-2 недели)
+4. **itch.io** — мгновенная публикация, обычный web-билд, для фидбека и портфолио
+5. **VK** — если нужна RU-аудитория сверх Яндекса
+6. **Telegram** — растущая платформа
+
+### i18n и платформы
+- **Engine** (`packages/shared`): только id-ключи (`pair`, `bronze`, `freeze-1s`)
+- **UI** (Vue): переводит через `t('combo.' + name)`, `t('ranks.' + id)`
+- **Дефолт языка**: международные (CrazyGames, Poki, itch.io) → `en`, русские (Yandex, VK, OK) → `ru`
+- **Переключатель языка**: скрывать только на Яндексе (SDK требование), на остальных — показывать
+- **Лидерборды**: показывать кнопку только на платформах с поддержкой
 
 ### Единые интерфейсы
 
@@ -207,6 +223,8 @@ VITE_PLATFORM=telegram npx vite build --outDir dist-telegram
 | Touch targets 32px | Минимум 44px, даже на маленьких экранах |
 | `:key="e.rank"` дублируется при ties | Использовать uniqueID или составной ключ |
 | Лидерборд names с `_` | Yandex: только `[a-zA-Z0-9]` |
+| Хардкод русских строк в shared engine | Combo/rank/effect names в engine — ТОЛЬКО id-ключи, перевод в UI через i18n |
+| `v-if="!isPlatform"` для языка | Скрывать переключатель только на Яндексе (`isYandex`), остальные платформы — показывать |
 
 ### MEDIUM
 | Ошибка | Урок |
@@ -216,6 +234,10 @@ VITE_PLATFORM=telegram npx vite build --outDir dist-telegram
 | `#54d474` хардкод вместо CSS var | Всегда CSS custom properties |
 | `onEvent` deprecated в SDK v2 | Следить за версиями SDK, читать changelog |
 | Cleanup subscriptions при HMR | Сохранять unsubscribe от `ysdk.on()` |
+| Fallback locale `ru` для CrazyGames | Международные платформы — fallback `en`, русскоязычные — `ru` |
+| Лидерборд виден без данных | Скрывать кнопку лидерборда на платформах без поддержки |
+| CrazyGames sitelock блокирует preview | SDK + sitelock не дают preview по IP — использовать dev-сервер |
+| CD индикатор только на Draw/Combo | Добавлять cd-fill на ВСЕ action-кнопки (включая Attack) |
 
 ### Из патчей проекта
 | Патч | Урок |
@@ -225,6 +247,7 @@ VITE_PLATFORM=telegram npx vite build --outDir dist-telegram
 | WebSocket navigation | Навигация ТОЛЬКО после подтверждения сервера |
 | structuredClone migration | После bulk replace — grep на оставшиеся occurrences |
 | PvP desync | Расчёты урона должны быть симметричны клиент-сервер |
+| i18n в shared engine | Engine возвращает id-ключи (`pair`, `bronze`), UI переводит через `t('combo.' + name)` |
 
 ---
 
