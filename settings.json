@@ -230,6 +230,11 @@
         "hooks": [
           {
             "type": "command",
+            "command": "~/.claude/hooks/start-sync-settings.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
             "command": "~/.claude/hooks/session-namer.sh",
             "timeout": 5
           },
