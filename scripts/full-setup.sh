@@ -92,6 +92,22 @@ if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
     done
 fi
 
+# 8. Auto-bootstrap в .zshrc (чтобы на новой машине ничего не набирать)
+for rc in "$HOME/.zshrc" "$HOME/.bashrc"; do
+    if [ -f "$rc" ] && ! grep -q "claude-code-settings" "$rc"; then
+        cat >> "$rc" << 'RCEOF'
+
+# Claude Code — auto-bootstrap (новая машина = автонастройка)
+[ -d "$HOME/.claude/.git" ] || {
+  git clone --depth 1 https://github.com/artvision-agency/claude-code-settings.git "$HOME/.claude" 2>/dev/null
+  chmod +x "$HOME/.claude/hooks/"*.sh "$HOME/.claude/scripts/"*.sh 2>/dev/null
+  echo "✅ Claude Code settings installed from git"
+}
+RCEOF
+        echo "   Added auto-bootstrap to $rc"
+    fi
+done
+
 echo ""
 echo "✅ Настройка завершена!"
 echo ""
