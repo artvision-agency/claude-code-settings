@@ -230,6 +230,11 @@
         "hooks": [
           {
             "type": "command",
+            "command": "~/.claude/hooks/session-namer.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
             "command": "~/.claude/hooks/start-restore-session.sh",
             "timeout": 15
           },
@@ -606,7 +611,8 @@
   "enabledPlugins": {
     "superpowers@superpowers-dev": true,
     "conductor@conductor-marketplace": true,
-    "pyright-lsp@claude-plugins-official": true
+    "pyright-lsp@claude-plugins-official": true,
+    "telegram@claude-plugins-official": true
   },
   "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true

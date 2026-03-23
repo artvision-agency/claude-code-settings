@@ -185,6 +185,18 @@ if [ -n "$WARNINGS" ] || [ "$H2_COUNT" -ge 3 ]; then
   fi
 fi
 
+# === 8. Смысловой фактчекинг — напоминание ===
+# Проверяем есть ли числа/статистика в HTML (значит нужен фактчек)
+NUMBER_COUNT=$(grep -cE '[0-9]+[%₽KМмлрд]|[0-9]{2,}\s*(руб|тыс|млн|млрд|магазин|точек|клиник|сотрудник)' "$FILE_PATH" 2>/dev/null || echo "0")
+NUMBER_COUNT=$(echo "$NUMBER_COUNT" | tr -d '[:space:]')
+if [ "$NUMBER_COUNT" -gt 3 ]; then
+  CLIENT_NAME_SHORT=$(echo "$CLIENT_DIR" | sed 's|clients/||')
+  SEMANTIC_MARKER="/tmp/factcheck-semantic-${CLIENT_NAME_SHORT}-$(date +%Y%m%d).done"
+  if [ ! -f "$SEMANTIC_MARKER" ]; then
+    WARNINGS="${WARNINGS}[factcheck] $BASENAME: найдено ${NUMBER_COUNT}+ числовых утверждений.\n  ⚠️  Смысловой фактчекинг НЕ подтверждён сегодня.\n  Перед отправкой клиенту: /factcheck $FILE_PATH\n  Или подтвердить вручную: touch $SEMANTIC_MARKER\n\n"
+  fi
+fi
+
 # === Вывод ===
 if [ -n "$WARNINGS" ]; then
   echo "=== ВАЛИДАЦИЯ КЛИЕНТСКОГО HTML ==="
