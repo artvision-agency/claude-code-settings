@@ -257,6 +257,11 @@
             "type": "command",
             "command": "~/.claude/hooks/session-inbox.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-smoothing-report.sh",
+            "timeout": 5
           }
         ]
       },
@@ -280,6 +285,11 @@
           },
           {
             "type": "command",
+            "command": "~/.claude/hooks/stop-smoothing-check.sh",
+            "timeout": 180
+          },
+          {
+            "type": "command",
             "command": "~/.claude/hooks/stop-sync-all.sh",
             "timeout": 30
           },
@@ -294,6 +304,12 @@
             "command": "~/.claude/hooks/auto-memory-suggest.sh",
             "timeout": 10,
             "statusMessage": "Checking memory suggestions..."
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/skills/continuous-learning/evaluate-session.sh",
+            "timeout": 15,
+            "statusMessage": "Extracting learning patterns..."
           }
         ]
       },
@@ -360,6 +376,11 @@
             "type": "command",
             "command": "~/.claude/hooks/pre-push-summary.sh \"$CLAUDE_BASH_COMMAND\"",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-scp-factcheck.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 30
           },
           {
             "type": "command",
