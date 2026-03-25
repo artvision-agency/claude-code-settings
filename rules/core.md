@@ -25,3 +25,10 @@ dry-run → бэкап → 1-2 файла → проверка → осталь�
 
 Код на VPS — только через git → deploy script. Прямое редактирование на VPS запрещено.
 После деплоя бота — 5 мин мониторинг логов. 3+ рестарта = алерт.
+
+## X-Robots-Tag — ОБЯЗАТЕЛЬНО при КАЖДОМ деплое
+
+**ВСЕ тестовые страницы на VPS** должны иметь `X-Robots-Tag: noindex, nofollow` в nginx.
+После scp/деплоя ВСЕГДА проверять: `curl -sI URL | grep -i x-robots`.
+Если заголовка нет — добавить в nginx location блок: `add_header X-Robots-Tag "noindex, nofollow" always;`
+Это НЕ заменяет meta robots в HTML — нужны ОБА.
