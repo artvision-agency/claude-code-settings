@@ -72,3 +72,4 @@ class PriceAnalyzer:
 - **Domain tests**: pure unit, no DB, no mocks needed
 - **Use case tests**: mock ports (repositories)
 - **Adapter tests**: SQLite in-memory for DB adapters
+# test change
