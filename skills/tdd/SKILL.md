@@ -51,6 +51,26 @@ NO CODE WITHOUT A FAILING TEST FIRST
 - Third-party APIs (mock them)
 - Trivial getters/setters
 
+## How To Test (DRY)
+
+Тесты проверяют **поведение** (input → output), не дублируют внутреннюю логику:
+
+```python
+# ❌ ПЛОХО — дублирует логику расчёта
+def test_price():
+    price = 200
+    median = 500
+    deviation = (price - median) / median * 100  # копия кода
+    assert deviation == -60
+
+# ✅ ХОРОШО — проверяет поведение
+def test_price_suspicious_low():
+    result = analyzer.analyze(price=200, stats=MarketStats(median=500, ...))
+    assert result.label == "suspicious_low"
+```
+
+Тест не должен знать **как** вычисляется результат — только **что** возвращается при данных входных данных.
+
 ## Python Patterns
 
 ```python
