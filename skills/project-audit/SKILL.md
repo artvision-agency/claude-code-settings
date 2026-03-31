@@ -63,21 +63,28 @@ scripts/sync-skills.sh — синхронизация skills настроена?
 
 ### Step 3: Синхронизация Skills
 
-Создать `scripts/sync-skills.sh` — двусторонняя синхронизация:
-- Source: `~/claude-code-settings/skills/` (git repo)
-- Target: `.claude/skills/` (проект)
+Шаблон скрипта: `~/claude-code-settings/scripts/sync-skills-template.sh`
 
-Логика:
-- `git pull` source repo
-- Сравнить хеши файлов с предыдущей синхронизацией
-- Source изменился → обновить проект
-- Проект изменился → обновить source + git push
-- Оба изменились → **CONFLICT** → уведомление в Telegram
+Настройка:
+1. Скопировать шаблон в `scripts/sync-skills.sh` проекта
+2. Изменить `PROJECT_DIR`, `SOURCE_REPO`, `SKILLS` под проект
+3. `chmod +x scripts/sync-skills.sh`
+4. Добавить в cron: `crontab -e`
 
-Добавить в cron (ежедневно):
+Логика скрипта:
+- `git pull` source repo (claude-code-settings)
+- Хеш по содержимому файлов (не по путям) — `find | sort | xargs cat | md5sum`
+- Source изменился → `rsync -a --delete source/ target/` (обновить проект)
+- Проект изменился → `rsync -a --delete target/ source/` + git push
+- Оба изменились → **CONFLICT** → уведомление в Telegram (BOT_TOKEN + CHAT_ID из .env)
+- Хеши хранятся в `data/.skills-hashes/`
+
+Cron (ежедневно в 6:00 UTC):
 ```
 0 6 * * * /path/to/scripts/sync-skills.sh >> data/logs/sync-skills.log 2>&1
 ```
+
+**Важно:** НЕ использовать `cp -r` для синхронизации — создаёт вложенные копии. Только `rsync -a --delete` с trailing slash.
 
 ### Step 4: Hooks (максимальный эффект)
 
