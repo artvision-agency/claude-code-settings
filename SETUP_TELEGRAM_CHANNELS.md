@@ -373,6 +373,157 @@ bash ~/.claude/scripts/tts-reply.sh "Привет, это тестовое со�
 
 ---
 
+## Автотранскрипция голосовых (хук)
+
+Вместо ручного вызова `download_attachment` + `transcribe-voice.sh` можно настроить хук `PostToolUse`, который автоматически транскрибирует скачанный файл.
+
+### Настройка
+
+Добавь в `~/.claude/settings.json` секцию `hooks`:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "mcp__plugin_telegram_telegram__download_attachment",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/scripts/transcribe-voice.sh \"$TOOL_RESULT_PATH\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+После этого при каждом `download_attachment` скрипт транскрипции запустится автоматически, и текст придёт в контекст сессии.
+
+**Требования:** скрипт `transcribe-voice.sh` (см. раздел «Голосовые сообщения» выше) и ключ Groq API.
+
+---
+
+## Переключение проектов из чата
+
+Позволяет управлять несколькими проектами через одного бота, переключая рабочую директорию командой из Telegram.
+
+### Как это работает
+
+1. Бот запущен в базовой директории (например, `~`)
+2. Пользователь пишет в чат: `/project auto-catalog`
+3. Claude переключает `cwd` на `/opt/auto-catalog` и загружает контекст проекта
+
+### Реализация
+
+Добавь в CLAUDE.md или правила проекта:
+
+```markdown
+## Переключение проектов
+
+Когда пользователь пишет `/project <имя>`, переключиться на проект:
+- auto-catalog → /opt/auto-catalog
+- card-duel → /opt/card-duel
+- telegram-monitor → /opt/telegram-monitor
+- housing-search → /opt/housing-search
+- frametime → /opt/frame-time
+
+Выполнить `cd /opt/<проект>`, прочитать CLAUDE.md проекта для контекста.
+```
+
+### Альтернатива: отдельные боты
+
+Для полной изоляции используй `TELEGRAM_STATE_DIR` (см. раздел «Несколько ботов на одном сервере»). Каждый бот = свой токен + своя сессия + свой проект.
+
+---
+
+## Медиа-ответы (скриншоты, графики, PDF)
+
+Бот может отправлять не только текст, но и файлы. Примеры практического использования:
+
+### Скриншот сайта
+
+```bash
+# Через Playwright (нужен npx playwright install)
+npx playwright screenshot https://avto-listing.ru /tmp/screenshot.png
+
+# Отправить через reply tool с files: ["/tmp/screenshot.png"]
+```
+
+### Графики и диаграммы
+
+```bash
+# Сгенерировать график через Python (matplotlib)
+python3 -c "
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10,6))
+plt.plot([1,2,3,4], [10,20,15,25])
+plt.title('Динамика')
+plt.savefig('/tmp/chart.png', dpi=150)
+"
+
+# Отправить: files: ["/tmp/chart.png"]
+```
+
+### PDF-отчёт
+
+```bash
+# Любой сгенерированный PDF
+files: ["/tmp/report.pdf"]
+```
+
+### Несколько файлов
+
+```bash
+# Можно отправить до нескольких файлов за раз
+files: ["/tmp/screenshot.png", "/tmp/chart.png"]
+```
+
+**Лимит:** 50 МБ на файл. Изображения отправляются с превью, остальное — как документ.
+
+---
+
+## Мониторинг бота (Healthcheck)
+
+Автоматическая проверка что бот-сессия жива. Алерт через отдельный канал (curl в TG API напрямую).
+
+### Скрипт `~/.claude/scripts/bot-healthcheck.sh`
+
+```bash
+#!/bin/bash
+# Проверка что Claude-бот жив
+# Использует отдельный TG-бот для алертов (не тот же!)
+
+ALERT_BOT_TOKEN="<токен-алерт-бота>"
+ALERT_CHAT_ID="<твой-chat-id>"
+PROCESS_NAME="claude.*channels.*telegram"
+
+if ! pgrep -f "$PROCESS_NAME" > /dev/null; then
+  curl -s "https://api.telegram.org/bot$ALERT_BOT_TOKEN/sendMessage" \
+    -d chat_id="$ALERT_CHAT_ID" \
+    -d text="⚠️ Claude Telegram-бот упал! Процесс не найден." \
+    > /dev/null
+fi
+```
+
+```bash
+chmod +x ~/.claude/scripts/bot-healthcheck.sh
+```
+
+### Крон (каждые 5 минут)
+
+```bash
+crontab -e
+# Добавить:
+*/5 * * * * /home/claude-user/.claude/scripts/bot-healthcheck.sh
+```
+
+**Важно:** алерт-бот должен быть **отдельным** от основного — если процесс упал, основной бот не может отправить уведомление.
+
+---
+
 ## Частые проблемы
 
 | Проблема | Решение |
