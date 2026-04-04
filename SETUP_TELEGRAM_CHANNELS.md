@@ -240,6 +240,90 @@ chmod +x ~/.claude/scripts/transcribe-voice.sh
 
 ---
 
+## Озвучка ответов (Text-to-Speech)
+
+Claude может отвечать аудиофайлами через edge-tts (бесплатный, без API ключа, голоса Microsoft Edge).
+
+### Установка:
+
+```bash
+python3 -m pip install edge-tts mutagen --break-system-packages
+```
+
+### Создать скрипт `~/.claude/scripts/tts-reply.sh`:
+
+```bash
+#!/bin/bash
+# Text-to-Speech using Microsoft Edge TTS (free, no API key)
+# Usage: tts-reply.sh "текст для озвучки" [title] [voice]
+# Voices: ru-RU-DmitryNeural (male), ru-RU-SvetlanaNeural (female)
+
+TEXT="$1"
+TITLE="${2:-Claude}"
+VOICE="${3:-ru-RU-DmitryNeural}"
+OUTPUT="/tmp/tts_$(date +%s).mp3"
+
+if [ -z "$TEXT" ]; then
+  echo "Usage: tts-reply.sh \"текст\" [title] [voice]"
+  exit 1
+fi
+
+/home/claude-user/.local/bin/edge-tts --voice "$VOICE" --text "$TEXT" --write-media "$OUTPUT" 2>/dev/null
+
+if [ -f "$OUTPUT" ] && [ -s "$OUTPUT" ]; then
+  # Set MP3 ID3 tags (artist + title)
+  python3 -c "
+from mutagen.mp3 import MP3
+from mutagen.id3 import ID3, TPE1, TIT2, ID3NoHeaderError
+try:
+    tags = ID3('$OUTPUT')
+except ID3NoHeaderError:
+    tags = ID3()
+tags.add(TPE1(encoding=3, text='Claude'))
+tags.add(TIT2(encoding=3, text='$TITLE'))
+tags.save('$OUTPUT')
+" 2>/dev/null
+
+  # Rename file with title
+  NAMED_OUTPUT="/tmp/Claude — ${TITLE}.mp3"
+  cp "$OUTPUT" "$NAMED_OUTPUT"
+  rm -f "$OUTPUT"
+  echo "$NAMED_OUTPUT"
+else
+  echo "ERROR: TTS generation failed"
+  exit 1
+fi
+```
+
+```bash
+chmod +x ~/.claude/scripts/tts-reply.sh
+```
+
+### Доступные русские голоса:
+
+```bash
+~/.local/bin/edge-tts --list-voices | grep ru-RU
+```
+
+| Голос | Пол | Стиль |
+|-------|-----|-------|
+| ru-RU-DmitryNeural | Мужской | Дружелюбный, позитивный |
+| ru-RU-SvetlanaNeural | Женский | Дружелюбный, позитивный |
+
+### Использование в сессии Claude:
+
+```bash
+# Сгенерировать аудио
+bash ~/.claude/scripts/tts-reply.sh "Привет, это тестовое сообщение" "тема ответа"
+# Вернёт путь: /tmp/Claude — тема ответа.mp3
+
+# Отправить через Telegram-плагин (reply tool с files)
+```
+
+Файл отправляется как документ с плеером (не как голосовое сообщение). В метаданных MP3 прописан автор "Claude" и название темы.
+
+---
+
 ## Возможности и ограничения
 
 ### Что может бот:
