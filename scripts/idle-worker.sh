@@ -247,10 +247,24 @@ if [ -f "$TASK_INFO_FILE" ] && [ -s "$TASK_INFO_FILE" ]; then
         # Run in foreground — timeout already handles kill
         # SECURITY: NO Bash tool — prevents RCE via Asana task injection
         # Claude can only read/write/search files, not execute commands
-        timeout "$MAX_TASK_TIME" claude -p "$PROMPT" \
-            --allowedTools "Read,Write,Edit,Glob,Grep" \
-            --model sonnet \
-            >> "$LOG" 2>&1 || log "Executor finished with code $?"
+        # macOS: use gtimeout (coreutils) or bash fallback
+        CLAUDE_BIN="${CLAUDE_BIN:-$(command -v claude 2>/dev/null || echo /Users/antonk/.local/bin/claude)}"
+        if command -v gtimeout &>/dev/null; then
+            gtimeout "$MAX_TASK_TIME" "$CLAUDE_BIN" -p "$PROMPT" \
+                --allowedTools "Read,Write,Edit,Glob,Grep" \
+                --model sonnet \
+                >> "$LOG" 2>&1 || log "Executor finished with code $?"
+        else
+            "$CLAUDE_BIN" -p "$PROMPT" \
+                --allowedTools "Read,Write,Edit,Glob,Grep" \
+                --model sonnet \
+                >> "$LOG" 2>&1 &
+            CLAUDE_PID=$!
+            ( sleep "$MAX_TASK_TIME" && kill "$CLAUDE_PID" 2>/dev/null ) &
+            TIMER_PID=$!
+            wait "$CLAUDE_PID" 2>/dev/null || log "Executor finished with code $?"
+            kill "$TIMER_PID" 2>/dev/null
+        fi
 
         # Проверка результата
         if [ -f /tmp/idle-worker-result.md ]; then

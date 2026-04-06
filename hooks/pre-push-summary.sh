@@ -52,4 +52,32 @@ fi
 
 echo "------------------------"
 
+# FACTCHECK: проверить HTML клиентов/продуктов перед пушем
+FACTCHECK_SCRIPT="/Users/antonk/artvision-data/scripts/factcheck-html.py"
+if [ -f "$FACTCHECK_SCRIPT" ] && [ -n "$HTML_FILES" ]; then
+  CLIENT_HTML=""
+  while IFS= read -r f; do
+    if [ -f "$f" ] && echo "$f" | grep -qE "^(clients|products|presales)/"; then
+      CLIENT_HTML="${CLIENT_HTML} $f"
+    fi
+  done <<< "$HTML_FILES"
+
+  if [ -n "$CLIENT_HTML" ]; then
+    echo ""
+    echo "--- FACTCHECK ---"
+    FACTCHECK_FAIL=0
+    for hf in $CLIENT_HTML; do
+      python3 "$FACTCHECK_SCRIPT" "$hf" 2>/dev/null
+      if [ $? -ne 0 ]; then
+        FACTCHECK_FAIL=1
+      fi
+    done
+    if [ "$FACTCHECK_FAIL" -eq 1 ]; then
+      echo ""
+      echo "⚠️  FACTCHECK: есть CRITICAL issues в HTML. Проверьте перед пушем."
+    fi
+    echo "-----------------"
+  fi
+fi
+
 exit 0

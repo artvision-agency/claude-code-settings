@@ -5,55 +5,53 @@ set -euo pipefail
 # Вызывается из SessionStart хука или вручную.
 # Принимает контекст из stdin или аргументом.
 # Возвращает JSON с additionalContext для инъекции в промпт.
+# NEVER exits with code 1 — graceful degradation only.
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SEARCH_SCRIPT="${SCRIPT_DIR}/memory-search.py"
 
 if [[ ! -f "$SEARCH_SCRIPT" ]]; then
-    echo '{"additionalContext": "Memory search script not found"}' >&2
-    exit 1
+    echo '{"additionalContext": ""}'
+    exit 0
 fi
 
 # Получаем query: из аргументов или stdin
 if [[ $# -gt 0 ]]; then
     QUERY="$*"
 elif [[ ! -t 0 ]]; then
-    QUERY="$(cat)"
+    QUERY="$(timeout 3 cat 2>/dev/null || true)"
 else
-    echo "Usage: memory-recall.sh <query>" >&2
-    echo "       echo 'context' | memory-recall.sh" >&2
-    exit 1
-fi
-
-if [[ -z "${QUERY:-}" ]]; then
-    echo '{"additionalContext": "Empty query, no memory recall"}' >&2
-    exit 1
-fi
-
-# Извлекаем ключевые слова (первые 200 символов, без спецсимволов)
-QUERY_CLEAN="$(echo "$QUERY" | head -c 200 | tr -d '\n\r')"
-
-# Запускаем поиск
-RESULTS="$(python3 "$SEARCH_SCRIPT" --json "$QUERY_CLEAN" 2>/dev/null || echo '[]')"
-
-# Если результаты пустые — выходим тихо
-if [[ "$RESULTS" == "[]" ]] || [[ -z "$RESULTS" ]]; then
     echo '{"additionalContext": ""}'
     exit 0
 fi
 
-# Собираем human-readable формат для additionalContext
-READABLE="$(python3 "$SEARCH_SCRIPT" "$QUERY_CLEAN" 2>/dev/null || echo '')"
+if [[ -z "${QUERY:-}" ]]; then
+    echo '{"additionalContext": ""}'
+    exit 0
+fi
 
-# Формируем JSON ответ
-# Используем Python для безопасной JSON-сериализации
-python3 -c "
-import json, sys
+# UTF-8 safe truncation (Python, not head -c which can split multi-byte chars)
+QUERY_CLEAN="$(printf '%s' "$QUERY" | python3 -c "import sys; print(sys.stdin.read()[:200].strip())" 2>/dev/null || printf '%s' "$QUERY" | head -c 200)"
 
-readable = sys.stdin.read().strip()
-if not readable:
+# Single invocation: get both JSON and readable format, build output in Python
+timeout 8 python3 -c "
+import json, sys, subprocess
+
+search_script = sys.argv[1]
+query = sys.argv[2]
+
+# Get readable results
+try:
+    readable = subprocess.check_output(
+        [sys.executable, search_script, query],
+        stderr=subprocess.DEVNULL, timeout=6
+    ).decode().strip()
+except Exception:
+    readable = ''
+
+if not readable or readable.startswith('MEMORY RECALL: no'):
     print(json.dumps({'additionalContext': ''}))
 else:
-    ctx = '## Memory Recall (auto)\n\n' + readable + '\n\nЧитай релевантные файлы при необходимости.'
+    ctx = '## Memory Recall (auto)\n\n' + readable + '\n\nRead relevant files if needed.'
     print(json.dumps({'additionalContext': ctx}, ensure_ascii=False))
-" <<< "$READABLE"
+" "$SEARCH_SCRIPT" "$QUERY_CLEAN" 2>/dev/null || echo '{"additionalContext": ""}'
