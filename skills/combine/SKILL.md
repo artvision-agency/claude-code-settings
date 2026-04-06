@@ -205,7 +205,7 @@ python3 scripts/validate_wave1_dom.py --file [name]
 ═══════════════════════════════════════════
   CONFIRM — нужно подтверждение (1 раз)
 ═══════════════════════════════════════════
-  1. WP publish: "SEO-статья BlueMart" → artvision.pro/blog/...
+  1. WP publish: "SEO-статья BluMart" → artvision.pro/blog/...
   2. MODX publish: "Страница НДС" → ant.partners/nds/
   3. TG клиенту: "Отчёт Mirulidi за март"
 ═══════════════════════════════════════════

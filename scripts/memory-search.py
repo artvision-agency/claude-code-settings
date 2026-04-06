@@ -66,30 +66,41 @@ STOP_WORDS = STOP_WORDS_RU | STOP_WORDS_EN
 def tokenize(text: str) -> list[str]:
     """Токенизация: lowercase, разбивка по не-буквенным символам, фильтрация стоп-слов."""
     text = text.lower()
-    # Разбиваем по границам слов (поддержка кириллицы и латиницы)
-    tokens = re.findall(r'[a-zа-яёA-ZА-ЯЁ0-9_-]+', text)
+    # Разбиваем по границам слов (поддержка кириллицы и латиницы, regex на lowercased text)
+    tokens = re.findall(r'[a-zа-яё0-9_-]+', text)
     # Фильтруем стоп-слова и короткие токены
     return [t for t in tokens if t not in STOP_WORDS and len(t) > 1]
 
 
 def parse_frontmatter(content: str) -> tuple[dict, str]:
-    """Парсинг YAML frontmatter (простой, без pyyaml)."""
+    """Парсинг YAML frontmatter (простой, без pyyaml). Handles multi-line values."""
     meta = {"name": "", "description": "", "type": "user"}
     body = content
 
     if content.startswith("---"):
-        parts = content.split("---", 2)
-        if len(parts) >= 3:
-            fm_text = parts[1].strip()
-            body = parts[2].strip()
-            for line in fm_text.split("\n"):
-                line = line.strip()
-                if ":" in line:
+        # Find closing --- (must be on its own line after the first)
+        lines = content.split("\n")
+        end_idx = -1
+        for i in range(1, len(lines)):
+            if lines[i].strip() == "---":
+                end_idx = i
+                break
+
+        if end_idx > 0:
+            fm_lines = lines[1:end_idx]
+            body = "\n".join(lines[end_idx + 1:]).strip()
+            current_key = ""
+            for line in fm_lines:
+                # Continuation line (starts with whitespace, no colon at root level)
+                if line and line[0] in (' ', '\t') and current_key:
+                    meta[current_key] += " " + line.strip()
+                elif ":" in line:
                     key, _, val = line.partition(":")
                     key = key.strip().lower()
                     val = val.strip().strip('"').strip("'")
                     if key in meta:
                         meta[key] = val
+                        current_key = key
 
     return meta, body
 
@@ -107,7 +118,10 @@ def load_memories() -> list[dict]:
             # Пропускаем индексный файл — он агрегирует остальные
             continue
 
-        content = f.read_text(encoding="utf-8", errors="replace")
+        try:
+            content = f.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
         meta, body = parse_frontmatter(content)
 
         # Если нет frontmatter, используем имя файла
@@ -169,10 +183,13 @@ def search(query: str, memories: list[dict], idf: dict[str, float]) -> list[dict
         for qt, q_count in query_tf.items():
             token_idf = idf.get(qt, 1.0)
 
-            # Зональный TF-IDF
-            name_score = tf_name.get(qt, 0) * WEIGHT_NAME * token_idf
-            desc_score = tf_desc.get(qt, 0) * WEIGHT_DESCRIPTION * token_idf
-            body_score = tf_body.get(qt, 0) * WEIGHT_BODY * token_idf
+            # Зональный TF-IDF with log-normalized TF (prevents long docs from dominating)
+            def log_tf(count: int) -> float:
+                return 1 + math.log(count) if count > 0 else 0
+
+            name_score = log_tf(tf_name.get(qt, 0)) * WEIGHT_NAME * token_idf
+            desc_score = log_tf(tf_desc.get(qt, 0)) * WEIGHT_DESCRIPTION * token_idf
+            body_score = log_tf(tf_body.get(qt, 0)) * WEIGHT_BODY * token_idf
 
             score += (name_score + desc_score + body_score) * q_count
 
@@ -228,6 +245,9 @@ def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
 
     if use_stdin:
+        if sys.stdin.isatty():
+            print("Error: --stdin requires piped input, not a TTY", file=sys.stderr)
+            sys.exit(1)
         query = sys.stdin.read().strip()
     elif args:
         query = " ".join(args)

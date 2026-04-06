@@ -61,12 +61,7 @@
       "Bash(tee *)",
       "Bash(xargs *)",
       "Bash(jq *)",
-      "Bash(yq *)",
-      "Bash(pup *)",
-      "Bash(ggrep *)",
       "Bash(brew *)",
-      "Bash(docker *)",
-      "Bash(docker-compose *)",
       "Bash(launchctl *)",
       "Bash(pkill *)",
       "Bash(kill *)",
@@ -122,27 +117,10 @@
       "Bash(ping *)",
       "Bash(traceroute *)",
       "Bash(nc *)",
-      "Bash(telnet *)",
       "Bash(ifconfig *)",
-      "Bash(networksetup *)",
       "Bash(security *)",
-      "Bash(certbot *)",
-      "Bash(vercel *)",
-      "Bash(firebase *)",
-      "Bash(gcloud *)",
-      "Bash(aws *)",
-      "Bash(az *)",
-      "Bash(terraform *)",
-      "Bash(ansible *)",
-      "Bash(kubectl *)",
-      "Bash(helm *)",
-      "Bash(yarn *)",
-      "Bash(pnpm *)",
       "Bash(bun *)",
-      "Bash(deno *)",
-      "Bash(cargo *)",
       "Bash(go *)",
-      "Bash(rustc *)",
       "Bash(gcc *)",
       "Bash(g++ *)",
       "Bash(make *)",
@@ -153,47 +131,18 @@
       "Bash(rails *)",
       "Bash(java *)",
       "Bash(javac *)",
-      "Bash(mvn *)",
-      "Bash(gradle *)",
       "Bash(swift *)",
       "Bash(swiftc *)",
       "Bash(xcodebuild *)",
-      "Bash(pod *)",
-      "Bash(flutter *)",
-      "Bash(dart *)",
-      "Bash(dotnet *)",
       "Bash(php *)",
       "Bash(composer *)",
       "Bash(wp *)",
-      "Bash(redis-cli *)",
-      "Bash(mongo *)",
-      "Bash(mongosh *)",
-      "Bash(mysql *)",
-      "Bash(psql *)",
-      "Bash(pg_dump *)",
-      "Bash(pg_restore *)",
       "Bash(ffmpeg *)",
       "Bash(ffprobe *)",
-      "Bash(convert *)",
-      "Bash(magick *)",
-      "Bash(pandoc *)",
-      "Bash(wkhtmltopdf *)",
       "Bash(weasyprint *)",
-      "Bash(lighthouse *)",
       "Bash(playwright *)",
-      "Bash(cypress *)",
-      "Bash(jest *)",
       "Bash(pytest *)",
-      "Bash(vitest *)",
-      "Bash(mocha *)",
-      "Bash(eslint *)",
-      "Bash(prettier *)",
-      "Bash(black *)",
-      "Bash(ruff *)",
-      "Bash(mypy *)",
       "Bash(pyright *)",
-      "Bash(tsc *)",
-      "Bash(biome *)",
       "Read",
       "Write",
       "Edit",
@@ -250,11 +199,6 @@
           },
           {
             "type": "command",
-            "command": "echo '⚠️ VOICE RELAY: Создай cron для голосовых из TG:'; echo 'CronCreate */1 * * * * → ~/.claude/scripts/voice-relay.sh'; echo 'Если есть строки VOICE: — выполнить как промпт.'",
-            "timeout": 3
-          },
-          {
-            "type": "command",
             "command": "~/.claude/hooks/session-inbox.sh",
             "timeout": 5
           },
@@ -262,6 +206,11 @@
             "type": "command",
             "command": "~/.claude/hooks/start-smoothing-report.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-asana-overdue.sh",
+            "timeout": 15
           }
         ]
       },
@@ -295,12 +244,6 @@
           },
           {
             "type": "command",
-            "command": "echo ''",
-            "timeout": 1,
-            "statusMessage": "DISABLED: stop-account-usage (OpenClaw)"
-          },
-          {
-            "type": "command",
             "command": "~/.claude/hooks/auto-memory-suggest.sh",
             "timeout": 10,
             "statusMessage": "Checking memory suggestions..."
@@ -310,6 +253,16 @@
             "command": "~/.claude/skills/continuous-learning/evaluate-session.sh",
             "timeout": 15,
             "statusMessage": "Extracting learning patterns..."
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-account-usage.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-anti-rationalization.sh",
+            "timeout": 5
           }
         ]
       },
@@ -395,6 +348,16 @@
         ]
       },
       {
+        "matcher": "mcp__asana__asana_create_task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-asana-required-fields.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
         "matcher": "",
         "hooks": [
           {
@@ -407,7 +370,7 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
@@ -443,46 +406,16 @@
             "type": "command",
             "command": "~/.claude/hooks/post-edit-skill-trigger.sh \"$CLAUDE_FILE_PATH\"",
             "timeout": 3
-          }
-        ]
-      },
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/post-edit-lint.sh \"$CLAUDE_FILE_PATH\"",
-            "timeout": 5
           },
           {
             "type": "command",
-            "command": "~/.claude/hooks/post-data-collect.sh \"$CLAUDE_FILE_PATH\"",
-            "timeout": 5
+            "command": "~/.claude/hooks/post-client-html-factcheck.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 30
           },
           {
             "type": "command",
-            "command": "~/.claude/hooks/post-client-context-log.sh \"$CLAUDE_FILE_PATH\"",
-            "timeout": 3
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/post-ux-cro-check.sh",
-            "timeout": 3
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/post-html-seo-check.sh",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/post-edit-autotest.sh \"$CLAUDE_FILE_PATH\"",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/post-edit-skill-trigger.sh \"$CLAUDE_FILE_PATH\"",
-            "timeout": 3
+            "command": "~/.claude/hooks/post-client-html-validate.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 10
           }
         ]
       },
@@ -497,7 +430,17 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/post-deploy-smoke.sh \"$CLAUDE_BASH_COMMAND\"",
-            "timeout": 10
+            "timeout": 60
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-orm-review-check.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-factcheck-autofix.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 5
           }
         ]
       },
@@ -506,9 +449,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo ''",
-            "timeout": 1,
-            "statusMessage": "DISABLED: post-websearch-factcheck (OpenClaw)"
+            "command": "~/.claude/hooks/post-websearch-factcheck.sh",
+            "timeout": 5
           }
         ]
       },
@@ -632,13 +574,35 @@
           }
         ]
       }
+    ],
+    "PostCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-compact.sh",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {
     "superpowers@superpowers-dev": true,
     "conductor@conductor-marketplace": true,
     "pyright-lsp@claude-plugins-official": true,
-    "telegram@claude-plugins-official": true
+    "telegram@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "codex@openai-codex": true
+  },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    }
   },
   "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true

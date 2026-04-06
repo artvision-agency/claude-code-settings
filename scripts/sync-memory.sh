@@ -1,44 +1,52 @@
 #!/bin/bash
 # Синхронизация Claude Code авто-памяти между аккаунтами через git
-# Запуск: ~/.claude/scripts/sync-memory.sh [push|pull]
+# Запуск: ~/.claude/scripts/sync-memory.sh [sync|push|pull]
+# По умолчанию (без аргументов) = sync = pull + push
 
-set -e
+set -euo pipefail
 
 MEMORY_SRC="$HOME/.claude/projects/-Users-antonk/memory"
 SYNC_DST="$HOME/artvision-data/.claude/memory-sync"
+RULES_SRC="$HOME/.claude/rules"
+RULES_DST="$HOME/artvision-data/.claude/rules-global"
 REPO="$HOME/artvision-data"
 
-case "${1:-push}" in
-  push)
-    echo "📤 Копирую memory → artvision-data/.claude/memory-sync/"
-    mkdir -p "$SYNC_DST"
-    rsync -av --delete "$MEMORY_SRC/" "$SYNC_DST/"
-    cd "$REPO"
-    git add .claude/memory-sync/
-    if git diff --cached --quiet; then
-      echo "✅ Нет изменений в памяти"
-    else
-      git commit -m "sync: memory $(date +%Y-%m-%d_%H:%M)
+do_pull() {
+  echo "📥 Pull: git → локальные memory + rules"
+  cd "$REPO"
+  git pull --ff-only 2>/dev/null || git pull --rebase
+  if [ -d "$SYNC_DST" ]; then
+    mkdir -p "$MEMORY_SRC"
+    rsync -a "$SYNC_DST/" "$MEMORY_SRC/"
+  fi
+  if [ -d "$RULES_DST" ]; then
+    mkdir -p "$RULES_SRC"
+    rsync -a "$RULES_DST/" "$RULES_SRC/"
+  fi
+  echo "✅ Pull done"
+}
+
+do_push() {
+  echo "📤 Push: локальные memory + rules → git"
+  mkdir -p "$SYNC_DST" "$RULES_DST"
+  rsync -a --delete "$MEMORY_SRC/" "$SYNC_DST/"
+  rsync -a --delete "$RULES_SRC/" "$RULES_DST/"
+  cd "$REPO"
+  git add .claude/memory-sync/ .claude/rules-global/
+  if git diff --cached --quiet; then
+    echo "✅ Нет изменений"
+  else
+    git commit -m "sync: memory+rules $(date +%Y-%m-%d_%H:%M)
 
 Co-Authored-By: Claude <noreply@anthropic.com>"
-      git push
-      echo "✅ Память запушена"
-    fi
-    ;;
-  pull)
-    echo "📥 Подтягиваю память из git"
-    cd "$REPO"
-    git pull --ff-only
-    if [ -d "$SYNC_DST" ]; then
-      mkdir -p "$MEMORY_SRC"
-      rsync -av "$SYNC_DST/" "$MEMORY_SRC/"
-      echo "✅ Память обновлена из git"
-    else
-      echo "⚠️ $SYNC_DST не найден в репо"
-    fi
-    ;;
-  *)
-    echo "Использование: sync-memory.sh [push|pull]"
-    exit 1
-    ;;
+    git push
+    echo "✅ Запушено"
+  fi
+}
+
+case "${1:-sync}" in
+  sync)  do_pull && do_push ;;
+  push)  do_push ;;
+  pull)  do_pull ;;
+  *)     echo "Использование: sync-memory.sh [sync|push|pull]"; exit 1 ;;
 esac
