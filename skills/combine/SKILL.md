@@ -1,9 +1,9 @@
 ---
 name: combine
 description: |
-  Комбайн — непрерывный конвейер: ASANA → ВЫПОЛНЕНИЕ → ПРОВЕРКА → ПУБЛИКАЦИЯ → ASANA ✅
-  НЕ останавливается между шагами. Единственная пауза = CONFIRM-уровень (security.md).
-  Тянет из Asana → читает контекст → сортирует → выполняет → верифицирует → деплоит → закрывает.
+  Комбайн — непрерывный конвейер: ОЧЕРЕДЬ → ВЫПОЛНЕНИЕ → ПРОВЕРКА → ПУБЛИКАЦИЯ → ЗАКРЫТИЕ.
+  НЕ останавливается между шагами. Единственная пауза = CONFIRM-уровень (security.md), собирается в батч в конце.
+  Тянет из Asana + 5 TODO, дедуплицирует, читает контекст, сортирует, выполняет, верифицирует, деплоит, закрывает.
   Триггеры: комбайн, combine, harvester, конвейер, перемалывай, го
 allowed-tools:
   - Bash
@@ -21,18 +21,17 @@ allowed-tools:
 # Комбайн — Непрерывный конвейер
 
 ```
-ASANA → ВЫПОЛНЕНИЕ → ПРОВЕРКА → ПУБЛИКАЦИЯ → ASANA ✅
-  │         │            │           │           │
-  │         │            │           │           └─ update_task(completed: true)
-  │         │            │           └─ git push / scp / WP REST API
-  │         │            └─ validate-pages / factcheck / screenshot
-  │         └─ skill по маршруту (seo-master, content-writer, etc)
-  └─ search_tasks → sort → read context
+ОЧЕРЕДЬ → ВЫПОЛНЕНИЕ → ПРОВЕРКА → ПУБЛИКАЦИЯ → ЗАКРЫТИЕ
+   │          │             │            │           │
+   │          │             │            │           └─ Asana ✅ + TODO [x] + context-log + git
+   │          │             │            └─ git/scp/WP/bot + post-deploy curl
+   │          │             └─ factcheck URL + числа + DOM + screenshot + bot healthcheck
+   │          └─ скилл по маршруту ([skill:X] > Asana-тег > эвристика)
+   └─ pull + dedup + parse + sort + context
 ```
 
 **ГЛАВНОЕ ПРАВИЛО: НЕ ОСТАНАВЛИВАТЬСЯ.**
-Конвейер идёт задача за задачей без пауз и вопросов.
-Единственная причина остановки = 🔴 CONFIRM из security.md.
+Конвейер идёт задача за задачей. Единственная пауза = батч 🔴 CONFIRM в конце прогона.
 
 ---
 
@@ -44,219 +43,441 @@ ASANA → ВЫПОЛНЕНИЕ → ПРОВЕРКА → ПУБЛИКАЦИЯ →
 | `комбайн план` | Только показать план, не выполнять |
 | `комбайн [клиент]` | Только задачи конкретного клиента |
 | `комбайн ревью` | Только анализ последнего прогона |
+| `комбайн авто` | Фоновый cron-режим (09:30 + 18:00) |
+
+---
+
+## СХЕМА ЗАДАЧИ (единый формат)
+
+Все задачи — из Asana и TODO — парсятся в единую структуру:
+
+```yaml
+id: <asana_gid | todo:file:line>
+title: <глагол + объект>
+source: asana | todo
+client: <имя или null>           # [client:X] или projects/tags в Asana
+product: <имя или null>           # [product:X]
+skill: <имя скилла или null>      # [skill:X] (явный) — ПРИОРИТЕТ
+priority: high | medium | low     # [priority:X] или by revenue
+due: <YYYY-MM-DD или null>
+blocked_by: <id или null>         # [blocked-by:X]
+session: ops | bot | infra | presale | products  # [session:X] → cwd
+human_only: bool                  # [human-only] или эвристика (встреча/звонок/перевод)
+result_type: code | html | doc | deploy | asana-only | human
+estimated_minutes: <число>        # классификация → таймаут
+context_dir: <путь к CLAUDE.md или null>
+confirm_level: auto | confirm     # по security.md
+```
+
+### Парсинг ключей
+
+**Из TODO.md** — regex: `\[(\w+):([^\]]+)\]`. Поддерживаемые ключи: `client`, `product`, `skill`, `priority`, `blocked-by`, `session`, `result`, `human-only`, `estimate`.
+
+**Из Asana:**
+- `client` → по tags `client-*` или по `projects` (матч `clients/*/CLAUDE.md` name)
+- `skill` → по tags `skill-*` или по ключевым словам в name/notes
+- `priority` → по tags `priority-*` или по дедлайну (overdue → high)
+- `session` → по projects (bot/infra/presale/products)
+- `confirm_level` → по tags `confirm-*` или по security.md-правилам
+
+Если пара ключ-значение не найдена → значение `null`, не блокер. Задача всё равно попадает в pipeline.
 
 ---
 
 ## PIPELINE (6 фаз, без остановок)
 
-### ФАЗА 1: PULL (Asana + TODO)
+### ФАЗА 1: PULL + DEDUP + PARSE + CONTEXT
 
-**1a. Задачи из Asana:**
+**1a. Тянем источники параллельно:**
 ```
 mcp__asana__asana_search_tasks:
   workspace: 860693669973770
   completed: false
   sort_by: due_date
-  opt_fields: name,due_on,projects,tags,notes,assignee
+  opt_fields: name,due_on,projects,tags,notes,assignee,dependencies
 ```
-
-**1b. Задачи из TODO.md** (5 файлов по todo-routing.md):
++ читаем 5 TODO-файлов:
 ```
 artvision-data/TODO.md
-artvision-tg-bot/TODO.md
-devops-agent/TODO.md
 artvision-data/presale/TODO.md
 artvision-data/products/TODO.md
+artvision-tg-bot/TODO.md
+devops-agent/TODO.md
 ```
 
-**1c. Сверка:** TODO ↔ Asana. Расхождения → исправить автоматически (AUTO).
+**1b. Дедупликация (source of truth = Asana):**
 
-**1d. Контекст КАЖДОЙ задачи:**
+Матч по двум сигнатурам:
+1. Точный: `asana_gid` в TODO-строке (`[asana:GID]`)
+2. Fuzzy: `slugify(title)` + `client` совпадают на 90%+ (Levenshtein)
+
+Правила слияния:
+- Задача в обоих местах → источник Asana, TODO-строка получает пометку `[asana:GID]` (AUTO)
+- Задача только в TODO → создать в Asana (AUTO, AsanaRequiredFields применяются)
+- Задача только в Asana → добавить строку в соответствующий TODO по `session`/`client`
+- Конфликт статуса (TODO `[x]`, Asana open) → Asana выигрывает, TODO откатывается
+- Конфликт `due_on` → Asana выигрывает
+
+**1c. Парсинг в единую схему** (см. выше). Задачи без минимума (`title` + `result_type`) → в секцию `🟡 NOT READY`, не в pipeline, показать в отчёте.
+
+**1d. Контекст для КАЖДОЙ задачи:**
+
 ```bash
-cat clients/[name]/CLAUDE.md          # правила
-cat clients/[name]/context-log.md     # история
-ls clients/[name]/patches/            # ошибки
+# если есть client:
+cat clients/<client>/CLAUDE.md          # правила
+tail -50 clients/<client>/context-log.md # последние решения
+ls clients/<client>/patches/             # известные ошибки
+
+# если есть product:
+cat products/<product>/CLAUDE.md
+
+# если ничего нет (внутренняя задача):
+# читаем PROJECTS.md секцию по session
 ```
 
-→ Результат: единый отсортированный список задач с контекстом.
-→ НЕ показывать план, НЕ ждать подтверждения. Сразу ФАЗА 2.
+CLAUDE.md клиента отсутствует → создать шаблон из `~/.claude/templates/client-CLAUDE.md`, записать в context-log что создан. НЕ блокировать задачу.
+
+→ Результат: список задач со схемой и контекстом.
+→ СРАЗУ ФАЗА 2.
 
 ### ФАЗА 2: СОРТИРОВКА + МАРШРУТИЗАЦИЯ
 
-**Приоритет (автоматический, без вопросов):**
-1. 🔴 OVERDUE (просрочено)
-2. 🟠 TODAY
-3. 🟡 THIS WEEK (≤7 дней)
-4. 🟢 LATER (>7 дней) — тоже выполнять, не откладывать
-5. ⚪ NO DEADLINE — выполнять последними
+**Порядок сортировки (lexicographic, от важного к неважному):**
 
-**Вторичная сортировка:** revenue impact (клиент > продукт > внутреннее).
+1. **Зависимости:** blocked_by существует и незакрыт → задача в хвост, её блокер впереди
+2. **CONFIRM отдельно:** CONFIRM-задачи собираются в отдельную очередь (батч в конце)
+3. **Priority:** high → medium → low
+4. **Deadline:** OVERDUE → TODAY → WEEK → LATER → NO-DEADLINE
+5. **Revenue weight:** клиент-платящий > клиент-presale > продукт > внутреннее
+6. **Estimated time:** короткие вперёд (≤10 мин → 10-30 → 30-60 → 60+)
 
-**Маршрут (проект/теги → скилл):**
+**Revenue weight таблица** (из `revenue-goal.md`): клиенты с MRR 50K+ → вес 3, 20-50K → 2, <20K → 1, presale → 0.5, продукты → 0.3, внутреннее → 0.1.
 
-| Проект/Тег Asana | Скилл | Тип агента |
-|-----------------|-------|------------|
-| SEO, позиции, ключевые | `/seo-master` | seo-analyzer |
-| КП, presale, предложение | `/presale-kp` | sales-engineer |
-| Контент, статья, блог | `/content-writer` | technical-writer |
-| HTML, страница, лендинг | `/page-review` | frontend-developer |
-| Линкбилдинг, ссылки | `/linkbuilding` | seo-analyzer |
-| Бот, telegram | `/bot-fix` | general-purpose |
-| Аудит, проверка | `/code-audit` | code-reviewer |
-| Schema, json-ld | `/schema-markup` | seo-analyzer |
-| GEO, ai видимость | `/geo-audit` | seo-analyzer |
-| PPC, реклама, директ | `/paid-ads` | general-purpose |
-| CRO, конверсия | `/cro` | general-purpose |
-| Код, фикс, баг | `/ai-fix` | debugger |
-| Мониторинг, отчёт | `/client-monitor` | general-purpose |
-| Деплой, сервер, VPS | devops | devops-engineer |
-| Дизайн, макет | pencil MCP | ui-designer |
+**Маршрут (порядок разрешения):**
 
-**Маршрут не найден** → `general-purpose` агент. НЕ останавливаться.
+1. `skill: X` явно в задаче → **использовать X** (абсолютный приоритет)
+2. `human_only: true` → маршрут `human-only` (см. ниже)
+3. Проект/тег Asana → таблица скиллов
+4. Эвристика по keywords в title
+5. Fallback → `general-purpose` агент
 
-→ Результат: каждая задача имеет скилл + тип агента + приоритет.
-→ Сразу ФАЗА 3.
+**Расширенная таблица маршрутов:**
 
-### ФАЗА 3: ВЫПОЛНЕНИЕ (волнами, параллельно)
+| Keywords / тег | Скилл | Агент | Категория |
+|----------------|-------|-------|-----------|
+| seo, позиции, ключевые, топвизор | `/seo-master` | seo-analyzer | tech |
+| кп, presale, предложение, pitch | `/presale-kp` | sales-engineer | revenue |
+| контент, статья, блог, текст | `/content-writer` | technical-writer | content |
+| html, страница, лендинг, page | `/page-review` | frontend-developer | web |
+| линкбилдинг, ссылки, pbn, дропы | `/linkbuilding` | seo-analyzer | seo |
+| бот, telegram, tg, flow | `/bot-fix` | general-purpose | bot |
+| аудит, проверка, review | `/code-audit` | code-reviewer | qa |
+| schema, json-ld, микроразметка | `/schema-markup` | seo-analyzer | seo |
+| geo, ai видимость, aivision | `/geo-audit` | seo-analyzer | seo |
+| ppc, реклама, директ, директ-радар | `/paid-ads` | general-purpose | ads |
+| cro, конверсия, а/б, ab | `/cro` | general-purpose | marketing |
+| баг, crash, fix, stack trace | `/ai-fix` | debugger | bug |
+| мониторинг, отчёт, дашборд | `/client-monitor` | general-purpose | ops |
+| деплой, сервер, vps, nginx, pm2 | devops | devops-engineer | infra |
+| дизайн, макет, figma, pencil | pencil MCP | ui-designer | design |
+| **финансы, пролив, перевод, счёт, акт** | `/finance-ops` | general-purpose | **finance** |
+| **встреча, звонок, переговоры, meeting** | `/meeting-prep` | general-purpose | **human** |
+| **hr, вакансия, найм, увольнение** | `/hr-vacancy` | general-purpose | **hr** |
+| **ндс, налоги, бухгалтерия, декларация** | `/accounting-prep` | general-purpose | **accounting** |
+| **договор, нда, акт, контракт** | `/legal-doc` | technical-writer | **legal** |
+| **e2e, playwright, browser test** | `/e2e-bot-testing` | e2e-runner | test |
+| **скриншот, визуал, ui ревью** | `/ui-review` | ui-visual-validator | visual |
 
-**Wave-система:**
-- 4+ независимых задач → параллельные агенты (Agent tool, max 3)
-- Зависимые задачи → последовательно
-- КАЖДЫЙ агент получает полный контекст проекта в промпте
+**Маршрут `human-only`** — не вызывает агента-исполнителя. Вместо этого:
+1. Подготавливает материалы (brief, ссылки, последние цифры)
+2. Формирует сообщение в TG ответственному (Антон/Андрей/Стас) через CONFIRM-батч
+3. Задача в Asana помечается `@waiting_human` (story, не completion)
+4. В отчёт — секция "Ожидает человека"
 
-**Для каждой задачи агент делает:**
-1. Прочитать контекст (CLAUDE.md, patches/, context-log)
-2. Вызвать скилл
-3. Выполнить до результата
-4. git add + commit (автоматически)
-5. **→ СРАЗУ перейти к ФАЗА 4 для этой задачи**
+→ Результат: у каждой задачи `skill`, `agent`, `priority`, `wave_group`. СРАЗУ ФАЗА 3.
 
-**НЕ ждать завершения всех задач wave. Каждая задача идёт по конвейеру независимо:**
+### ФАЗА 3: ВЫПОЛНЕНИЕ (волнами)
+
+**Критерии независимости (можно параллелить):**
+- Разные `client`/`product` ИЛИ
+- Разные файлы/директории (нет пересечения путей) ИЛИ
+- Разные репо (`session`)
+
+**НЕ параллелить:**
+- Две задачи на один файл (проверка по заявленным путям в task notes)
+- Зависимые (`blocked_by`)
+- Задачи одного клиента с пересечением git paths
+- CONFIRM-задачи (всегда в батч, не в wave)
+
+**File-lock:** перед стартом агента — взять lock `clients/<c>/.combine-lock` (flock). Освободить после git commit.
+
+**Wave-политика:**
+- Макс 3 агента параллельно (токены)
+- Макс 5 задач в одной волне
+- Если 4+ независимых → wave_1 запускается, остальные ждут завершения любого агента → добор
+
+**Таймаут по категории задачи:**
+
+| `estimated_minutes` | Категория | Hard timeout |
+|---------------------|-----------|--------------|
+| ≤10 | quick | 10 мин |
+| 10-30 | normal | 30 мин |
+| 30-60 | medium | 60 мин |
+| 60-180 | big | 180 мин |
+| >180 | epic | split на подзадачи перед запуском |
+
+По умолчанию (`null`) → normal (30 мин).
+
+**Стандартный промпт агента (шаблон):**
 ```
-Задача A: EXECUTE → VERIFY → PUBLISH → CLOSE
-Задача B: EXECUTE → VERIFY → PUBLISH → CLOSE  (параллельно)
-Задача C:           EXECUTE → VERIFY → PUBLISH → CLOSE
+CONTEXT:
+  session: <session>
+  cwd: <абсолютный путь по session>
+  client: <name или -->
+  product: <name или -->
+  files to read first:
+    - clients/<c>/CLAUDE.md (rules)
+    - clients/<c>/context-log.md (tail -50)
+    - clients/<c>/patches/ (все .md)
+  brand/CMS/bans: <из CLAUDE.md клиента>
+
+TASK:
+  <title>
+  notes: <Asana.notes или TODO-контекст>
+  priority: <high/medium/low>
+  deadline: <due или -->
+
+SUCCESS CRITERIA:
+  result_type: <code|html|doc|deploy|asana-only>
+  что считается готовым: <конкретный deliverable>
+
+CONSTRAINTS:
+  - НЕ править код на VPS (git only)
+  - Factcheck ПЕРЕД scp
+  - Не писать AI/нейросети в публичных материалах
+  - Русский язык
+
+RETURN:
+  - List файлов изменённых
+  - Результат проверок (если запускал)
+  - Команды для публикации (scp/git push/etc)
 ```
 
-### ФАЗА 4: ПРОВЕРКА (автоматическая, без пауз)
+После работы агента — СРАЗУ фаза 4 для ЭТОЙ задачи (не ждать остальных).
 
-Сразу после выполнения, БЕЗ ожидания подтверждения:
+### ФАЗА 4: ПРОВЕРКА
 
-**4a. Тип проверки по типу результата:**
+**4a. По типу результата:**
 
-| Результат | Проверка |
-|-----------|----------|
-| HTML-страница | `validate-pages` (DOM) + `factcheck-html.py` + screenshot |
-| Код (py/js/ts) | `run-tests.sh` + lint |
-| КП / документ | factcheck + screenshot 3 breakpoints |
-| SEO-контент | мета-теги + уникальность + H1/H2 |
-| Конфиг / деплой | `syntax check` + dry-run |
-| Asana-only (комментарий, статус) | пропустить проверку |
+| `result_type` | Проверки (в порядке) |
+|---------------|---------------------|
+| `html` | factcheck-v2 (URL + числа) → DOM-валидация → screenshot 3 bp → ui-visual-validator |
+| `doc` | factcheck (числа через senior-агент) → screenshot |
+| `code` | `run-tests.sh` → lint → build (если нужен) |
+| `deploy` | syntax check → dry-run |
+| `deploy-bot` | 4a + pre-deploy healthcheck план |
+| `asana-only` | пропуск |
+| `human` | пропуск (но готовится brief) |
 
-**4b. Factcheck (для HTML/документов):**
+**4b. Factcheck URL (обязательно для html/doc):**
 ```bash
-python3 ~/artvision-data/scripts/factcheck-html.py [file]
+python3 ~/artvision-data/scripts/factcheck-v2.py --standard <file>
 ```
-- CRITICAL → СТОП для ЭТОЙ задачи, автофикс, повторить проверку
-- WARNING → записать в context-log, продолжить
-- PASS → продолжить
+- CRITICAL > 0 → autofix через Edit → повторный factcheck (макс 2 попытки) → 3+ фейл = skip задача
+- WARNING → в context-log, продолжить
+- PASS → дальше
 
-**4c. DOM-валидация (для HTML):**
+**4c. Factcheck чисел (senior-агент):**
+
+Для КП / отчётов клиенту / документов с цифрами:
+```
+Agent(code-reviewer): "Проверь числа в <file> перекрёстно. Каждое число — источник?
+URL живой? (curl -sI). Маркируй CONFIRMED/UNCONFIRMED/WRONG."
+```
+- WRONG → autofix или skip
+- UNCONFIRMED → разрешено, но помечается в документе
+- CONFIRMED → дальше
+
+**4d. DOM-валидация (HTML):**
 ```bash
-python3 scripts/validate_wave1_dom.py --file [name]
+python3 scripts/validate_wave1_dom.py --file <name>
 ```
-- FAIL → автофикс через Edit tool → повторить валидацию → продолжить
-- PASS → продолжить
+FAIL → Edit autofix → retry (макс 2). Fail → skip.
 
-**4d. Screenshot (для визуального контента):**
-Снять скриншот на 3 breakpoints (desktop/tablet/mobile).
-Визуальная проверка через ui-visual-validator агента.
+**4e. Screenshot + визуал (HTML/dashboards):**
 
-→ Проверка пройдена → СРАЗУ ФАЗА 5.
-→ Проверка НЕ пройдена → автофикс → повторить проверку (макс 2 попытки).
-→ 2 попытки фейл → записать ошибку, пропустить задачу, продолжить остальные.
+Скриншоты на `desktop:1440`, `tablet:768`, `mobile:375`. Затем `ui-visual-validator` проверяет:
+
+| Критерий | PASS | FAIL |
+|----------|------|------|
+| Белый экран / пустая страница | контент виден | пусто → skip |
+| Overflow horizontal | нет | есть → autofix CSS |
+| Обрезанный текст | нет | есть → autofix |
+| Битые картинки (broken icons) | нет | есть → factcheck URL |
+| TOC/nav видны | есть | нет → warning |
+| Контраст текста | читаем | не читаем → warning |
+
+FAIL критичных (белый экран, overflow) → autofix → retry.
+
+**4f. Bot healthcheck (для `result_type=deploy-bot`):**
+
+После деплоя:
+```bash
+# 1. pm2 status: не restart loop
+pm2 jlist | jq '.[] | select(.name=="<bot>") | {restarts, uptime, status}'
+
+# 2. Логи за последние 2 мин: нет ERROR/Exception
+pm2 logs <bot> --lines 100 --nostream | grep -iE "error|exception|traceback"
+
+# 3. Healthcheck endpoint (если есть):
+curl -sf https://<bot>.artvision.pro/health || exit 1
+
+# 4. Smoke test через API:
+python3 scripts/bot-smoke-test.py <bot>
+```
+
+Любой FAIL → rollback (см. ФАЗА 5d).
+
+**4g. Post-publish curl (обязательно для HTML на VPS):**
+
+После scp:
+```bash
+# Все <a href>, <img src>, <link href> из HTML → curl -sI
+python3 ~/.claude/scripts/post-deploy-curl.py <url>
+```
+5+ 404/500 → rollback.
+
+→ Все проверки PASS → СРАЗУ ФАЗА 5.
+→ 2 цикла autofix → skip, записать ошибку в `patches/`.
 
 ### ФАЗА 5: ПУБЛИКАЦИЯ
 
-**5a. Определить тип публикации по задаче:**
+**5a. Матрица публикаций:**
 
-| Тип | Действие | Уровень |
-|-----|----------|---------|
-| Git push | `git push` | 🟢 AUTO |
-| Файл на VPS | `scp` + restart | 🟢 AUTO |
-| WordPress draft | REST API (status=draft) | 🟢 AUTO |
-| WordPress publish | REST API (status=publish) | 🔴 CONFIRM |
-| MODX/Bitrix | Playwright MCP | 🔴 CONFIRM |
-| Деплой бота | git push + pm2 restart | 🟢 AUTO + 5мин мониторинг |
-| Отправка клиенту | — | 🔴 CONFIRM |
+| Тип | Действие | Уровень | Post-check |
+|-----|----------|---------|-----------|
+| Git push | `git push` | 🟢 AUTO | - |
+| Файл на VPS | `scp` + restart | 🟢 AUTO | curl (4g) |
+| WordPress draft | REST API draft | 🟢 AUTO | - |
+| WordPress publish | REST API publish | 🔴 CONFIRM | - |
+| MODX/Bitrix publish | Playwright | 🔴 CONFIRM | - |
+| Деплой бота | git push → pm2 | 🟢 AUTO | healthcheck (4f) |
+| Отправка TG клиенту | - | 🔴 CONFIRM | - |
+| Отправка email клиенту | - | 🔴 CONFIRM | - |
+| Напоминание команде | TG group | 🟢 AUTO | - |
+| Asana комментарий | `create_task_story` | 🟢 AUTO | - |
 
-**5b. AUTO-публикация (без остановки):**
-- git push → автоматически
-- scp на VPS → автоматически
-- WordPress draft → автоматически
-- Деплой бота → автоматически + 5 мин мониторинг логов
+**5b. AUTO — без остановки.** Выполняется сразу после проверок.
 
-**5c. CONFIRM-публикация (единственная пауза):**
-Собрать ВСЕ CONFIRM-задачи в ОДИН батч в конце прогона.
-Показать ОДИН раз, получить ОДНО подтверждение.
-НЕ спрашивать по одной.
+**5c. CONFIRM — единый батч в конце прогона:**
 
 ```
 ═══════════════════════════════════════════
   CONFIRM — нужно подтверждение (1 раз)
 ═══════════════════════════════════════════
-  1. WP publish: "SEO-статья BluMart" → artvision.pro/blog/...
-  2. MODX publish: "Страница НДС" → ant.partners/nds/
-  3. TG клиенту: "Отчёт Mirulidi за март"
+  [1] WP publish: "SEO-статья BluMart" → artvision.pro/blog/...
+  [2] MODX publish: "Страница НДС" → ant.partners/nds/
+  [3] TG клиенту Mirulidi: "Отчёт за март"
+  [4] Meeting brief для Антона: Бабуров 15.04 — документ готов
 ═══════════════════════════════════════════
-  Го всё? (или номера для выборочного)
+  "го все" / "1,3" / "стоп"
 ═══════════════════════════════════════════
 ```
 
-### ФАЗА 6: ЗАКРЫТИЕ (Asana + TODO)
+**CONFIRM-таймаут:**
+- Батч показан → если нет ответа 30 мин → TG-уведомление Антону с номерами
+- 3 часа нет ответа → задачи помечаются `[waiting-confirm]`, откладываются до следующего прогона
+- Блокирует только эти задачи, остальные AUTO уже выполнены
 
-Сразу после публикации, автоматически:
+**Зависимые от CONFIRM:** задача B с `blocked_by: A` где A — CONFIRM → B идёт в батч тем же блоком («сначала A, потом B»), помечается `blocked-by-confirm`.
+
+**5d. Rollback (если post-check fail):**
+
+| Тип | Rollback |
+|-----|----------|
+| Git push | `git revert HEAD` + push |
+| scp HTML | `scp <file>.bak <server>` (backup создаётся ПЕРЕД scp автоматически) |
+| Деплой бота | `pm2 stop` → `git reset --hard HEAD~1` → `pm2 restart` → healthcheck |
+| WP draft | `DELETE /wp/v2/posts/<id>` |
+| WP publish | `PATCH status=draft` |
+
+Rollback успешен → задача в отчёт как `⚠️ ROLLED BACK`, в patches/ клиента запись. Rollback фейл → алерт в TG немедленно.
+
+### ФАЗА 6: ЗАКРЫТИЕ
 
 **6a. Asana:**
 ```
-mcp__asana__asana_update_task(task_id=<gid>, completed=true)
-mcp__asana__asana_create_task_story(task_id=<gid>,
-  text="✅ Выполнено [дата]. Результат: [описание]. Проверено: [тип]")
+asana_update_task(task_id=<gid>, completed=true)
+asana_create_task_story(task_id=<gid>,
+  text="✅ <дата>. Результат: <deliverable>. Проверено: <factcheck/healthcheck/visual>. Публикация: <url/git>")
 ```
+
+Если задача была только в TODO (не в Asana) → создать задачу в Asana как `completed:true` (зеркало).
 
 **6b. TODO.md:**
-`- [ ] задача` → `- [x] задача (выполнено [дата])`
+`- [ ] задача` → `- [x] задача (✅ <дата>)`. В конце файла — блок `## Завершено <дата>` с перемещёнными строками.
+
+Задача только в Asana → добавить строку `- [x]` в соответствующий TODO (зеркало).
 
 **6c. context-log.md клиента:**
-Дописать: что сделано, проверено, опубликовано.
-
-**6d. git commit + push** (автоматически):
+```markdown
+## <дата> — combine
+- Задача: <title>
+- Скилл: <skill>
+- Проверки: <список>
+- Публикация: <url/git sha>
+- Время: <минут>
 ```
-chore: combine [дата] — N задач выполнено
+
+**6d. patches/ клиента (если были ошибки autofix):**
+```markdown
+## <дата> — <тип ошибки>
+- Задача: <title>
+- Что сломалось: <описание>
+- Как пофиксили: <fix>
+- Урок: <что добавить в CLAUDE.md>
 ```
 
-→ Задача закрыта. Следующая. Без паузы.
+**6e. git commit + push:**
+```
+chore(combine): <дата> — <N> задач
+- <client1>: <titles>
+- <client2>: <titles>
+```
+Один commit на прогон (не на задачу) — экономит историю.
+
+→ Следующая задача. Без паузы.
 
 ---
 
-## ОТЧЁТ (в конце прогона, 1 раз)
+## ОТЧЁТ (1 раз в конце прогона)
 
+**Куда:** stdout + TG group (чат команды, `team-chat`) + файл `reports/combine-<YYYY-MM-DD-HH>.md`.
+
+**Шаблон:**
 ```
 ═══════════════════════════════════════════════════════
-  КОМБАЙН — итоги — [дата]
+  КОМБАЙН — <дата> <HH:MM> — <длительность>
 ═══════════════════════════════════════════════════════
 
-✅ Выполнено + опубликовано: N
-  1. [Задача] → [скилл] → verify ✅ → publish ✅ → Asana ✅
-  2. [Задача] → [скилл] → verify ✅ → git push → Asana ✅
+✅ Выполнено + опубликовано: <N>
+  1. [<client>] <title> → <skill> → verify ✅ → <publish_target> → Asana ✅
+  2. ...
 
-⏸️ Ожидает CONFIRM: M
-  3. [Задача] → готово, ждёт публикации
+⏸️ CONFIRM ждёт (батч показан): <M>
+  3. [<client>] <title> → готово, <publish_target>
 
-❌ Ошибка (после 2 попыток): K
-  4. [Задача] → ошибка: [описание]
+⚠️ ROLLED BACK: <K>
+  4. [<client>] <title> → <reason> → <rollback_target>
 
-📊 Агентов: X | Revenue impact: ~XXX,XXX RUB
+❌ SKIPPED после autofix retry: <L>
+  5. [<client>] <title> → <error>
+
+👤 HUMAN-ONLY (ждут Антона/Андрея): <P>
+  6. [<client>] <title> → brief готов
+
+📊 Агентов запущено: <X> | Revenue impact: ~<SUM> RUB
+📉 Ошибок: <E> | Rollbacks: <R> | Timeouts: <T>
 ═══════════════════════════════════════════════════════
 ```
 
@@ -264,30 +485,52 @@ chore: combine [дата] — N задач выполнено
 
 ## ЗАЩИТА ОТ ЗАЦИКЛИВАНИЯ
 
-- Макс 2 попытки автофикса на задачу → skip + записать ошибку
+- Макс 2 попытки autofix на задачу → skip + patches/
 - Макс 3 параллельных агента
-- Задача >10 мин → timeout, skip, следующая
-- Одинаковая ошибка 3 раза → СТОП, показать проблему
+- Таймаут по категории (quick/normal/medium/big/epic)
+- Одинаковая ошибка 3 раза подряд на разных задачах → СТОП прогон, алерт
+- 5+ rollback за прогон → СТОП, проверка инфры
 
 ---
 
-## САМОСОВЕРШЕНСТВОВАНИЕ (тихое)
+## САМОСОВЕРШЕНСТВОВАНИЕ (асинхронно, не блокирует)
 
-После отчёта — автоанализ:
-1. Паттерны ошибок → `patches/` клиента (AUTO)
-2. Новый маршрут → дописать в таблицу (AUTO)
-3. Изменения в rules/ и skills/ → СПРАШИВАТЬ
-4. Всё OK → ничего
+После отчёта — фоновый анализ (не пауза):
+
+| Находка | Действие | Уровень |
+|---------|----------|---------|
+| Паттерн ошибок на клиенте | дописать в `clients/<c>/patches/` | 🟢 AUTO |
+| Новый keyword-маршрут (часто fallback) | предложить в отчёте, не править | 🟡 показать |
+| Изменение rules/ или skills/ | в отчёте секция «ПРЕДЛОЖЕНИЯ» | 🔴 CONFIRM |
+| Повторный factcheck fail одного URL | добавить в `skip-urls.txt` клиента | 🟢 AUTO |
+
+Предложения идут в отчёт, не прерывают конвейер.
 
 ---
 
 ## 2 АККАУНТА
 
-Работает на justtrance + adw.artvision.pro.
-Синхронизация через git (TODO, context-log, PROJECTS.md).
+Работает на `justtrance` + `adw.artvision.pro`. Синхронизация через git: TODO, context-log, PROJECTS.md, patches/, reports/.
+
+**File-lock между аккаунтами:** `.combine-running` в `artvision-data/` — если есть, второй аккаунт ждёт 5 мин или показывает warning.
+
+---
 
 ## АВТОРЕЖИМ (cron)
 
-`комбайн авто`:
-- 09:30: pull → выполнить AUTO → собрать CONFIRM → TG
-- 18:00: отчёт + самосовершенствование
+**`комбайн авто`** — настраивает два LaunchAgent:
+
+```
+09:30 — morning run:
+  - git pull всех репо
+  - combine без CONFIRM-пауз (все CONFIRM → батч в TG 10:00)
+  - отчёт в TG группу
+
+18:00 — evening run:
+  - combine ревью дня
+  - самосовершенствование
+  - предложения → TG Антону
+```
+
+Скрипты: `~/.claude/scripts/combine-auto-morning.sh`, `combine-auto-evening.sh`.
+Логи: `~/Library/Logs/combine-auto.log`.
