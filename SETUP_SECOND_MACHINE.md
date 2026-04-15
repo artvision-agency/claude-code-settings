@@ -237,6 +237,21 @@ code --install-extension anthropic.claude
 
 Cursor автоматически использует настройки из `~/.claude/`
 
+### Screaming Frog CLI (`sf` команда)
+
+Нужен для SEO-аудитов (Claude использует вместо WebFetch-агентов).
+
+1. Установить Screaming Frog SEO Spider: https://www.screamingfrog.co.uk/seo-spider/
+2. Создать wrapper в `~/.local/bin/sf`:
+   ```bash
+   bash ~/claude-code-settings/scripts/install-sf-wrapper.sh
+   ```
+3. Проверка: `sf --help`
+
+Почему wrapper, а не symlink: launcher SF ищет `universalJavaApplicationStub` рядом с бинарём — symlink рвёт связь. Wrapper вызывает `.app` по абсолютному пути.
+
+Хук `seo-use-sf-reminder.sh` (уже в `hooks/`) срабатывает на ключевики (seo аудит, краул, битые ссылки, canonical, orphan pages) и напоминает использовать `sf`.
+
 ---
 
 ## Контакты
