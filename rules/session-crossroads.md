@@ -62,7 +62,7 @@
 Задача считается **ready** если заполнены все обязательные поля:
 
 ```
-✅ READY:  - [ ] **BluMart: зачистить данные Ростокиных** [client:blumart] [result:docx+deploy] [priority:high]
+✅ READY:  - [ ] **BluMart: зачистить данные Ростокиных** [client:blumart] [result:docx+deploy] [priority:high] [assignee:anton] [due:2026-04-19]
 ❌ NOT READY: - [ ] сделать что-то с сайтом
 ```
 
@@ -72,8 +72,12 @@
 | **Контекст** `[client:X]` или `[product:X]` | ✅ | [client:blumart] |
 | **Результат** `[result:X]` | ✅ | [result:docx+deploy] |
 | **Приоритет** `[priority:X]` | ✅ | [priority:high/medium/low] |
+| **Ответственный** `[assignee:X]` | ✅ | [assignee:anton/andrey/stas] |
+| **Дедлайн** `[due:YYYY-MM-DD]` | ✅ | [due:2026-04-19] |
 | **Скилл** `[skill:X]` | ⚪ авто | [skill:doc-manager] |
 | **Блокер** `[blocked-by:X]` | ⚪ если есть | [blocked-by:оплата] |
+
+> **Синхронизация с Asana:** `[assignee:]` + `[due:]` = те же 3 поля что обязательны в `asana-required-fields.md`. Любая ready задача → автоматически в Asana с этими полями. Без них = NOT READY → мини-интервью.
 
 **Claude автоматически обогащает задачу:**
 - Определяет `[skill:]` по содержанию (маршрутизация из CLAUDE.md)
