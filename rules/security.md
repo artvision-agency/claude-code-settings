@@ -43,25 +43,22 @@
 | AI GEO/AIvision | **Artvision Radar** |
 | SEO Pipeline | **Artvision Flow** |
 | Content writer | **Artvision Content Lab** |
-| SEO audit | **Artvision Pulse** |
+| ORM / мониторинг репутации | **Artvision Watch** |
 | Competitor monitor | **Artvision Scout** |
 | Sales Psychology | **Artvision Insight** |
-| Lead Auction | **Artvision Leads** |
+| HH-leadgen (B2B) | **Artvision Leads** |
+| Lead generation factory | **Artvision Funnel** |
+| Сбор отзывов (TG-бот) | **Artvision VoxRate** |
+| A/B тестирование | **Artvision Lens** *(в КП, реализация — TBD)* |
 
 Формат: `Artvision + [метафора результата]`. Никаких AI/Bot/Neural/Smart/Auto.
 
-## Автопереключение аккаунтов (Claude Max)
+## Аккаунты Claude Max
 
 **Два аккаунта:** `justtrance@gmail.com` + `adw.artvision.pro@gmail.com`
-**Лимит:** сброс еженедельно в 3:00 MSK
+**Лимит:** сброс еженедельно
 
-**Автоматика:**
-- `~/.claude/scripts/account-usage-tracker.sh` — трекинг расхода по аккаунтам
-- Stop-хук `stop-account-usage.sh` — записывает стоимость + проверяет лимит
-- При **97%** недельного лимита → алерт в TG + инструкция переключения
-- Statusline показывает `w:$XX` (недельный расход), `W!` при 97%+
-
-**Ручная проверка:** `~/.claude/scripts/account-usage-tracker.sh status`
+**Проверка лимита:** `/status` → вкладка Usage (реальные данные от Anthropic)
 **Переключение:** `claude auth logout && claude auth login --email <другой>`
 
 ## Разное
