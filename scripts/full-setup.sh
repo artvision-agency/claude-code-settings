@@ -83,6 +83,18 @@ ln -sf "$SETTINGS_DIR/scripts/cc-update.sh" "$HOME/.local/bin/cc-update"
 ln -sf "$SETTINGS_DIR/scripts/cc-share.sh" "$HOME/.local/bin/cc-share"
 chmod +x "$SETTINGS_DIR/scripts/cc-update.sh" "$SETTINGS_DIR/scripts/cc-share.sh"
 
+# 8b. Screaming Frog CLI wrapper (sf)
+if [ -x "/Applications/Screaming Frog SEO Spider.app/Contents/MacOS/ScreamingFrogSEOSpiderLauncher" ]; then
+    if [ ! -f "$HOME/.local/bin/sf" ]; then
+        echo "🔍 Устанавливаю sf (Screaming Frog CLI wrapper)..."
+        bash "$SETTINGS_DIR/scripts/install-sf-wrapper.sh"
+    else
+        echo "🔍 sf wrapper уже установлен"
+    fi
+else
+    echo "⚠️  Screaming Frog не найден — sf wrapper пропущен (поставь приложение и перезапусти)"
+fi
+
 # Ensure ~/.local/bin is in PATH
 if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
     for rc in "$HOME/.zshrc" "$HOME/.bashrc"; do
