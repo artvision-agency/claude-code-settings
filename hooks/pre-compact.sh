@@ -81,8 +81,12 @@ fi
 echo "[pre-compact] Контекст сохранён в $CONTEXT_FILE"
 echo "[pre-compact] Промпты сохранены в $PROMPTS_DIR/"
 echo ""
+echo "⚠️  HANDOVER ОБЯЗАТЕЛЕН перед /compact!"
+echo "    Skill: handover (создать ~/.claude/handovers/HANDOVER-{date}-{ctx}.md)"
+echo "    Иначе теряется ПОЧЕМУ были приняты решения"
+echo ""
 echo "⚠️ AFTER COMPACTION — MANDATORY:"
-echo "1. Read $CONTEXT_FILE"
+echo "1. Read $CONTEXT_FILE + последний HANDOVER"
 echo "2. TaskCreate for EVERY pending item from summary"
 echo "3. Check TODO.md files for open tasks"
 
