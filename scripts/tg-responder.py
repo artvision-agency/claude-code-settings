@@ -25,9 +25,17 @@ REQUESTS_FILE = TRACK_DIR / "status_requests.jsonl"
 RESPONSES_FILE = TRACK_DIR / "tg_responses.jsonl"
 ARCHIVE_DIR = TRACK_DIR / "archive"
 LOG_FILE = TRACK_DIR / "responder.log"
-CONTEXT_LOG_DEFAULT = Path.home() / "artvision-data" / "context-log.md"
+ARTVISION_REPO = Path.home() / "artvision-data"
+CONTEXT_LOG_DEFAULT = ARTVISION_REPO / "context-log.md"
+CLIENTS_DIR = ARTVISION_REPO / "clients"
 
 MAX_CLARIFY = 2  # сколько раз Claude переспрашивает перед эскалацией
+
+STOPWORDS = {
+    "и", "в", "на", "по", "для", "за", "с", "у", "к", "от", "до", "из",
+    "а", "но", "или", "что", "как", "это", "уже", "ещё", "же", "ли", "не",
+    "the", "a", "an", "of", "to", "for",
+}
 
 # Ключевые слова для классификации
 PATTERNS_CONFIRMED = [
@@ -189,15 +197,6 @@ def append_context_log(req, target_path=None):
         f.write("\n".join(lines) + "\n")
 
 
-CONTEXT_LOG_PATH = Path.home() / "artvision-data" / "context-log.md"
-CLIENTS_DIR = Path.home() / "artvision-data" / "clients"
-ARTVISION_REPO = Path.home() / "artvision-data"
-STOPWORDS = {
-    "и","в","на","по","для","за","с","у","к","от","до","из","а","но","или",
-    "что","как","это","уже","ещё","же","ли","не","the","a","an","of","to","for"
-}
-
-
 def _keywords(text, min_len=4, max_kw=6):
     """Извлекает значимые слова из вопроса для поиска по логам."""
     if not text:
@@ -221,11 +220,13 @@ def _keywords(text, min_len=4, max_kw=6):
 
 def _has_completion_marker(text):
     """Строка содержит признаки выполнения: done/готово/опубликовано/✅/URL/N/M."""
-    t = text.lower() if text else ""
+    if not text:
+        return False
+    t = text.lower()
     return (
         any(re.search(p, t) for p in PATTERNS_CONFIRMED)
         or "✅" in text
-        or "[x]" in text
+        or "[x]" in t
     )
 
 
@@ -241,8 +242,8 @@ def _factcheck_context_log(question_text, since_hours=48):
         return None
 
     candidates = []
-    if CONTEXT_LOG_PATH.exists():
-        candidates.append(CONTEXT_LOG_PATH)
+    if CONTEXT_LOG_DEFAULT.exists():
+        candidates.append(CONTEXT_LOG_DEFAULT)
     if CLIENTS_DIR.exists():
         candidates.extend(CLIENTS_DIR.glob("*/context-log.md"))
 
@@ -274,7 +275,10 @@ def _factcheck_context_log(question_text, since_hours=48):
             window = "\n".join(lines[max(0, idx-2):min(len(lines), idx+3)])
             if not _has_completion_marker(window):
                 continue
-            rel = path.relative_to(Path.home() / "artvision-data") if path.is_relative_to(Path.home() / "artvision-data") else path.name
+            try:
+                rel = str(path.relative_to(ARTVISION_REPO))
+            except ValueError:
+                rel = path.name
             return (ln.strip()[:200], f"context-log ({rel})")
     return None
 
@@ -379,7 +383,9 @@ def pre_clarify_factcheck(question):
     """
     Перед отправкой follow-up — проверить, не выполнено ли уже.
     Возвращает (evidence, source) если найдено, иначе None.
-    Источники: context-log → git log → архив запросов.
+    Источники (в порядке приоритета): tg_responses history (7д) → context-log
+    (48ч) → git log (48ч) → архив запросов.
+    Принцип: better false-negative — ≥2 keyword match + маркер выполнения.
     """
     qtext = question.get("text", "")
     for check in (_factcheck_responses_history, _factcheck_context_log, _factcheck_git_log, _factcheck_archive):
