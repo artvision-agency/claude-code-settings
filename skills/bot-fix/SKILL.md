@@ -58,6 +58,19 @@ PYEOF
 | Double call finish/cleanup | Guard: `if user_id not in sessions: return` |
 | Source tracking `==` vs prefix | `source.startswith("prefix")` |
 | 152-ФЗ consent bypass | Consent gate на ВСЕ entry points (deep links, QR) |
+| `409 Conflict: terminated by setWebhook request` (grammY/polling) | `curl .../deleteWebhook?drop_pending_updates=true` + `pm2 restart` |
+| `AI Advisor DM failed: 400: chat not found` | Битый ADMIN_ID — `getChat` для каждого ID, убрать/заменить битый в `.env` |
+| `pending_update_count` растёт | Polling отвалился — проверить webhook, рестарт |
+
+### Для @avportal_bot специфика (vps-bot/bot.js на 80.90.181.152)
+
+См. полный чеклист: `~/.claude/projects/-Users-antonk/memory/reference_avportal_bot_runtime.md` → раздел "Диагностический чеклист".
+
+Основные точки проверки:
+1. `ssh cmd "pm2 describe avportal-bot"` — uptime/restarts
+2. `getWebhookInfo` — если url != "" → вебхук мешает
+3. `getChat` для каждого ADMIN_IDS → найти битые ID
+4. `grep 'ai_advisor_sent'` в pm2 logs — есть ли успешные Advisor-нотификации
 
 ### Шаг 4: Проверка синтаксиса (ОБЯЗАТЕЛЬНО перед рестартом)
 
