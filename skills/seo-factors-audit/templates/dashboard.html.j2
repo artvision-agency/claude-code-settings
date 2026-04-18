@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEO-аудит {{ domain }} — artvision.pro Pulse</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --av-black: #181818;
+    --av-pure-black: #000000;
+    --av-white: #ffffff;
+    --av-text-primary: #181818;
+    --av-text-secondary: #636663;
+    --av-text-dark: #323232;
+    --av-green: #059856;
+    --av-green-light: #1a7d52;
+    --av-yellow: #e5a100;
+    --av-red: #d82b63;
+    --av-bg-light: #f3f3f3;
+    --av-bg-white: #ffffff;
+    --av-bg-footer: #e1e1e1;
+    --av-border: #c8c8c8;
+    --av-border-dark: #000000;
+    --av-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--av-font);
+    color: var(--av-text-primary);
+    background: #e8e8e8;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+.page {
+    max-width: 1200px;
+    margin: 24px auto;
+    background: var(--av-white);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+}
+
+/* ===== HERO ===== */
+.hero {
+    background: var(--av-black);
+    color: var(--av-white);
+    padding: 64px 80px;
+    border-bottom: 4px solid var(--av-green);
+}
+.hero-kicker {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--av-green);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+.hero h1 {
+    font-size: 44px;
+    line-height: 1.15;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+}
+.hero .domain {
+    font-size: 20px;
+    color: #d0d0d0;
+    margin-bottom: 32px;
+}
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-top: 40px;
+    align-items: center;
+}
+
+.score-box {
+    text-align: center;
+    padding: 32px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+}
+.score-huge {
+    font-size: 120px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -4px;
+}
+.score-huge.score-green { color: var(--av-green); }
+.score-huge.score-yellow { color: var(--av-yellow); }
+.score-huge.score-red { color: var(--av-red); }
+
+.score-subtitle {
+    margin-top: 12px;
+    font-size: 18px;
+    color: #d0d0d0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hero-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+.hero-meta-item {
+    padding: 16px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
+}
+.hero-meta-item .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--av-text-secondary);
+    margin-bottom: 6px;
+}
+.hero-meta-item .value { font-size: 20px; font-weight: 600; }
+
+/* ===== SECTION ===== */
+section { padding: 56px 80px; border-top: 1px solid var(--av-border); }
+section:first-of-type { border-top: none; }
+
+.section-kicker {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--av-green);
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+.section-title {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 24px;
+}
+
+/* ===== MODULES GRID ===== */
+.modules {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 24px;
+}
+.module-card {
+    border: 1px solid var(--av-border);
+    border-radius: 8px;
+    padding: 28px;
+    background: var(--av-bg-white);
+    display: flex;
+    flex-direction: column;
+}
+.module-card.failed { background: #fafafa; opacity: 0.75; }
+.module-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--av-border);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+.module-head .title {
+    font-size: 20px;
+    font-weight: 700;
+}
+.module-head .weight {
+    font-size: 12px;
+    color: var(--av-text-secondary);
+    margin-top: 4px;
+}
+.module-score {
+    text-align: right;
+}
+.module-score .num {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -2px;
+}
+.module-score .num.score-green { color: var(--av-green); }
+.module-score .num.score-yellow { color: var(--av-yellow); }
+.module-score .num.score-red { color: var(--av-red); }
+.module-score .tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--av-text-secondary);
+    margin-top: 4px;
+}
+.module-stats {
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    margin-bottom: 16px;
+}
+.factor-list {
+    list-style: none;
+    flex: 1;
+}
+.factor-list li {
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+    font-size: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+.factor-list li:last-child { border-bottom: none; }
+.mark {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    text-align: center;
+    line-height: 18px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--av-white);
+    margin-top: 2px;
+}
+.mark.ok { background: var(--av-green); }
+.mark.no { background: var(--av-red); }
+
+.module-link {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--av-border);
+    font-size: 14px;
+}
+.module-link a {
+    color: var(--av-green);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid var(--av-green);
+}
+.module-link a:hover { opacity: 0.75; }
+
+.module-error {
+    padding: 16px;
+    background: #fff0f4;
+    border-left: 3px solid var(--av-red);
+    color: var(--av-red);
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+/* ===== CRITICAL ISSUES ===== */
+.issues-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    font-size: 14px;
+}
+.issues-table th {
+    background: var(--av-bg-light);
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--av-border-dark);
+}
+.issues-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+}
+.sev-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.sev-critical { background: #ffdbe5; color: var(--av-red); }
+.sev-high { background: #fff0d6; color: #b87400; }
+.sev-medium { background: #e3f4ff; color: #0066a8; }
+.sev-low { background: #e8e8e8; color: var(--av-text-secondary); }
+.mod-chip {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--av-black);
+    color: var(--av-white);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* ===== RECOMMENDATIONS ===== */
+.rec-group {
+    margin-top: 24px;
+    padding: 24px;
+    border-radius: 8px;
+    border: 1px solid var(--av-border);
+}
+.rec-group.high { border-left: 4px solid var(--av-red); }
+.rec-group.medium { border-left: 4px solid var(--av-yellow); }
+.rec-group.low { border-left: 4px solid var(--av-green); }
+.rec-group h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.rec-list { list-style: none; }
+.rec-list li {
+    padding: 12px 0;
+    border-bottom: 1px dashed #eee;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 16px;
+    align-items: center;
+    font-size: 14px;
+}
+.rec-list li:last-child { border-bottom: none; }
+.rec-list .tag-eff, .rec-list .tag-imp {
+    font-size: 11px;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== COMPETITORS ===== */
+.competitors {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+.comp-card {
+    padding: 20px;
+    border: 1px solid var(--av-border);
+    border-radius: 6px;
+}
+.comp-card .name { font-weight: 700; margin-bottom: 8px; }
+.comp-card .note { font-size: 12px; color: var(--av-text-secondary); }
+
+/* ===== LINKS ===== */
+.report-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
+.report-link {
+    padding: 16px;
+    border: 1px solid var(--av-border);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--av-text-primary);
+    display: block;
+    transition: border-color 0.2s;
+}
+.report-link:hover { border-color: var(--av-green); }
+.report-link .name { font-weight: 600; margin-bottom: 4px; }
+.report-link .hint { font-size: 12px; color: var(--av-text-secondary); }
+
+/* ===== FOOTER ===== */
+footer {
+    padding: 40px 80px;
+    background: var(--av-bg-footer);
+    color: var(--av-text-secondary);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+footer .brand {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--av-black);
+}
+
+@media (max-width: 900px) {
+    .hero, section, footer { padding: 40px 24px; }
+    .hero h1 { font-size: 32px; }
+    .hero-grid, .modules { grid-template-columns: 1fr; }
+    .score-huge { font-size: 88px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ========= HERO ========= -->
+<div class="hero">
+    <div class="hero-kicker">artvision.pro Pulse · сквозной SEO-аудит</div>
+    <h1>SEO-аудит {{ domain }}</h1>
+    <div class="domain">Клиент: {{ client }} · Дата: {{ date_human }}</div>
+
+    <div class="hero-grid">
+        <div class="score-box">
+            <div class="score-huge {{ overall_score_class }}">{{ overall_score }}</div>
+            <div class="score-subtitle">Общий скор · {{ overall_score_label }}</div>
+            {% if ok_count < total_count %}
+            <div style="margin-top:16px;font-size:13px;color:#e5a100;">
+                ({{ ok_count }}/{{ total_count }} модулей выполнено)
+            </div>
+            {% endif %}
+        </div>
+        <div class="hero-meta">
+            {% for m in modules %}
+            <div class="hero-meta-item">
+                <div class="label">{{ m.label }}</div>
+                <div class="value {{ m.score_class }}">
+                    {% if m.ok %}{{ m.score }} / 100{% else %}—{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- ========= MODULES ========= -->
+<section id="modules">
+    <div class="section-kicker">Секции аудита</div>
+    <h2 class="section-title">4 направления · чекмарк-списки</h2>
+
+    <div class="modules">
+    {% for m in modules %}
+        <div class="module-card {% if not m.ok %}failed{% endif %}">
+            <div class="module-head">
+                <div>
+                    <div class="title">{{ m.label }}</div>
+                    <div class="weight">вес в общем скоре: {{ m.weight }}%</div>
+                </div>
+                <div class="module-score">
+                    <div class="num {{ m.score_class }}">{% if m.ok %}{{ m.score }}{% else %}—{% endif %}</div>
+                    <div class="tag">{{ m.score_label }}</div>
+                </div>
+            </div>
+
+            {% if m.ok %}
+                <div class="module-stats">
+                    Пройдено: <strong>{{ m.factors_passed }}/{{ m.factors_total }}</strong> факторов
+                </div>
+                <ul class="factor-list">
+                {% for f in m.top_factors %}
+                    <li>
+                        <span class="mark {% if f.passed %}ok{% else %}no{% endif %}">{% if f.passed %}✓{% else %}×{% endif %}</span>
+                        <span>{{ f.name }}</span>
+                    </li>
+                {% endfor %}
+                </ul>
+                {% if m.html_link %}
+                <div class="module-link">
+                    Детальный отчёт: <a href="{{ m.html_link }}" target="_blank">{{ m.html_link }}</a>
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="module-error">
+                    Модуль не выполнен: {{ m.error }}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+</section>
+
+<!-- ========= CRITICAL ISSUES ========= -->
+{% if critical_issues %}
+<section id="critical">
+    <div class="section-kicker">Что горит</div>
+    <h2 class="section-title">Топ-{{ critical_issues|length }} критических разрывов</h2>
+
+    <table class="issues-table">
+        <thead>
+            <tr>
+                <th>Модуль</th>
+                <th>Проблема</th>
+                <th>Severity</th>
+                <th>Влияние</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for i in critical_issues %}
+            <tr>
+                <td><span class="mod-chip">{{ i.module }}</span></td>
+                <td>
+                    <strong>{{ i.name }}</strong>
+                    {% if i.detail %}<div style="font-size:12px;color:var(--av-text-secondary);margin-top:4px;">{{ i.detail }}</div>{% endif %}
+                </td>
+                <td><span class="sev-badge sev-{{ i.severity }}">{{ i.severity }}</span></td>
+                <td>{{ i.impact }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endif %}
+
+<!-- ========= RECOMMENDATIONS ========= -->
+<section id="plan">
+    <div class="section-kicker">План работ</div>
+    <h2 class="section-title">Приоритизированные рекомендации</h2>
+
+    {% for prio, label in [('high', 'Высокий приоритет · делать первым'), ('medium', 'Средний приоритет · в квартал'), ('low', 'Низкий приоритет · по остаточному принципу')] %}
+        {% if recommendations[prio] %}
+        <div class="rec-group {{ prio }}">
+            <h3>{{ label }} · {{ recommendations[prio]|length }}</h3>
+            <ul class="rec-list">
+            {% for r in recommendations[prio] %}
+                <li>
+                    <div>
+                        <span class="mod-chip">{{ r.module }}</span>
+                        {{ r.action }}
+                    </div>
+                    <div class="tag-eff">усилия: {{ r.effort or '—' }}</div>
+                    <div class="tag-imp">эффект: {{ r.impact or '—' }}</div>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    {% endfor %}
+</section>
+
+<!-- ========= COMPETITORS ========= -->
+{% if competitors %}
+<section id="competitors">
+    <div class="section-kicker">Контекст рынка</div>
+    <h2 class="section-title">Сравнение с конкурентами</h2>
+    <div class="competitors">
+    {% for c in competitors %}
+        <div class="comp-card">
+            <div class="name">{{ c }}</div>
+            <div class="note">данные в детальных отчётах модулей</div>
+        </div>
+    {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- ========= LINKS ========= -->
+<section id="links">
+    <div class="section-kicker">Детализация</div>
+    <h2 class="section-title">Отчёты по модулям</h2>
+    <div class="report-links">
+    {% for m in modules %}
+        {% if m.html_link %}
+        <a class="report-link" href="{{ m.html_link }}" target="_blank">
+            <div class="name">{{ m.label }}</div>
+            <div class="hint">score {{ m.score }} · {{ m.html_link }}</div>
+        </a>
+        {% endif %}
+    {% endfor %}
+    </div>
+</section>
+
+<footer>
+    <div>
+        <div class="brand">artvision.pro</div>
+        <div style="margin-top:4px;">Методика: 4-модульный аудит · авторская методология</div>
+    </div>
+    <div>
+        <div>Сгенерировано {{ date_human }}</div>
+        <div style="margin-top:4px;">Сквозной SEO-аудит · Pulse</div>
+    </div>
+</footer>
+
+</div>
+</body>
+</html>

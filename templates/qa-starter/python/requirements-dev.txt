@@ -1,0 +1,17 @@
+# Test + QA toolchain. Upper bounds prevent surprise breakage on fresh install.
+pytest>=8,<9
+pytest-asyncio>=0.23,<1
+pytest-cov>=5,<7
+pytest-mock>=3,<4
+
+# Linting / formatting
+ruff>=0.6,<1
+
+# Type checking
+mypy>=1.11,<2
+
+# Security
+bandit[toml]>=1.7,<2
+
+# Pre-commit runner (optional but recommended)
+pre-commit>=3.7,<5

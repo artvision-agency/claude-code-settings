@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T00:53:25",
+  "repo": "artvision-tg-bot",
+  "commit": "f1658b4",
+  "message": "sync: session state 2026-04-17_00:53",
+  "signal_type": "workaround",
+  "detail": "workaround: +{\"fileNames\":[\"./node_modules/typescript/lib/lib.es5.d.ts\",\"./node_modules/typescript/lib/lib.es201",
+  "files": ["app/api/telegram/route.ts", "tsconfig.tsbuildinfo"]
+}

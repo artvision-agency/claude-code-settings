@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-08T20:47:34",
+  "repo": "artvision-data",
+  "commit": "6a0386b4c",
+  "message": "fix: broken map image + mobile table overflow in aleksandra KP",
+  "signal_type": "error_resolution",
+  "detail": "fix: broken map image + mobile table overflow in aleksandra KP",
+  "files": ["clients/aleksandra-dental/presale/kp/aleksandra_kp.html"]
+}

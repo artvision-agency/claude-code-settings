@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-12T21:49:38",
+  "repo": "artvision-data",
+  "commit": "5edb7df47",
+  "message": "chore: save session prompts before compact 2026-04-12_21:49",
+  "signal_type": "workaround",
+  "detail": "workaround: +   - Telegram inline buttons only work for bots, not personal accounts (fallback: markdown links)",
+  "files": ["prompts/2026-04-12_session_3814176b.md"]
+}

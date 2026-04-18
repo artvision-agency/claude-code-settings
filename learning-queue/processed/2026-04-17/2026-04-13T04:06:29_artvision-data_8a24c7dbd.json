@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-13T04:06:29",
+  "repo": "artvision-data",
+  "commit": "8a24c7dbd",
+  "message": "fix(unotrans): \u0421\u0422\u0422 \u041b\u043e\u0433\u0438\u0441\u0442\u0438\u043a\u0430 (sttlogistics.ru) \u0432\u043c\u0435\u0441\u0442\u043e STALOGISTIC",
+  "signal_type": "error_resolution",
+  "detail": "fix(unotrans): \u0421\u0422\u0422 \u041b\u043e\u0433\u0438\u0441\u0442\u0438\u043a\u0430 (sttlogistics.ru) \u0432\u043c\u0435\u0441\u0442\u043e STALOGISTIC",
+  "files": ["clients/unotrans/context-log.md"]
+}

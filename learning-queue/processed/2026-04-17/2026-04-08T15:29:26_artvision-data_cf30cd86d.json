@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-08T15:29:26",
+  "repo": "artvision-data",
+  "commit": "cf30cd86d",
+  "message": "feat: extract design system from domgazobeton.com",
+  "signal_type": "workaround",
+  "detail": "workaround: +| **Fallback** | `Arial, sans-serif` |",
+  "files": ["presales/domgazobeton/design-system.md"]
+}

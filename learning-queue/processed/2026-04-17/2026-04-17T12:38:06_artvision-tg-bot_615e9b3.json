@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T12:38:06",
+  "repo": "artvision-tg-bot",
+  "commit": "615e9b3",
+  "message": "sync: session state 2026-04-17_12:37",
+  "signal_type": "workaround",
+  "detail": "workaround: +    \"\"\"update.effective_user \u043c\u043e\u0436\u0435\u0442 \u0431\u044b\u0442\u044c None \u2014 fallback \u043d\u0430 \u043f\u0443\u0441\u0442\u044b\u0435 \u0441\u0442\u0440\u043e\u043a\u0438.\"\"\"",
+  "files": ["tvorim-opros-bot/tests/test_wave2_models.py", "tvorim-opros-bot/tests/test_wave2_sentiment.py"]
+}

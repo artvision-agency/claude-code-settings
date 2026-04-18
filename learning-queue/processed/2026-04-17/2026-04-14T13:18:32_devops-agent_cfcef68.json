@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-14T13:18:32",
+  "repo": "devops-agent",
+  "commit": "cfcef68",
+  "message": "sync: session state 2026-04-14_13:18",
+  "signal_type": "workaround",
+  "detail": "workaround: +    curl -fsS -m 10 --retry 3 -o /dev/null \"${PING_URL}${action}\" || true",
+  "files": ["reports/pidlock-healthchecks-audit-2026-04-14.md"]
+}

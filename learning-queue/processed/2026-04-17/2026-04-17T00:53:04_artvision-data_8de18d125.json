@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T00:53:04",
+  "repo": "artvision-data",
+  "commit": "8de18d125",
+  "message": "fix(che-group): research.md \u2014 \u0443\u0441\u0442\u0440\u0430\u043d\u0435\u043d\u044b \u043f\u0440\u043e\u0442\u0438\u0432\u043e\u0440\u0435\u0447\u0438\u044f \u043f\u043e\u0441\u043b\u0435 factcheck",
+  "signal_type": "error_resolution",
+  "detail": "fix(che-group): research.md \u2014 \u0443\u0441\u0442\u0440\u0430\u043d\u0435\u043d\u044b \u043f\u0440\u043e\u0442\u0438\u0432\u043e\u0440\u0435\u0447\u0438\u044f \u043f\u043e\u0441\u043b\u0435 factcheck",
+  "files": ["presale/che-group/research.md"]
+}

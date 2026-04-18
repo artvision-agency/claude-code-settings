@@ -1,0 +1,62 @@
+name: test
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci || npm install
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test:cov
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-html
+          path: coverage/
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci || npm install
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+      - name: Build & start app (override for your stack)
+        run: |
+          npm run build || echo "no build step"
+          # Start dev server in background — adjust command to your stack:
+          npm run start &
+          # Wait for server (simple poll):
+          npx wait-on "${BASE_URL:-http://localhost:3000}" -t 60000 || true
+        env:
+          BASE_URL: http://localhost:3000
+      - name: Playwright (all projects)
+        run: npx playwright test
+        env:
+          BASE_URL: http://localhost:3000
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-junit
+          path: reports/junit-e2e.xml

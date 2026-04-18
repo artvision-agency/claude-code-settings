@@ -4,7 +4,8 @@
 # Цель: визуально ловить асимметрию/обрезы/горизонт-скролл сразу после деплоя
 
 set -u
-COMMAND="${CLAUDE_BASH_COMMAND:-$1}"
+COMMAND="${CLAUDE_BASH_COMMAND:-${1:-}}"
+[ -z "$COMMAND" ] && exit 0
 
 # Триггер: scp + clients/*/kp/ + (srv|80.90.181.152)
 echo "$COMMAND" | grep -qE "scp.*clients/[^/]+/kp/[^/[:space:]]+\.html" || exit 0

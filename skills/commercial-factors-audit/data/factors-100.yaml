@@ -1,0 +1,1127 @@
+# 100 коммерческих факторов Яндекса — структурированный справочник
+# Источник: https://docs.google.com/spreadsheets/d/1pycFLxR8jhiB2q6Vm_CxfNkmMkQ_Ej1evqsDJKFyJMM/
+# Обновлено: 2026-04-17
+#
+# Поля:
+#   id           — порядковый номер
+#   category     — одна из 7 категорий (см. ниже)
+#   name         — краткое название фактора
+#   check_type   — как проверять: text_contains | url_exists | element_exists | structured_data | http_status | manual
+#   patterns     — ключевые слова/селекторы/паттерны для автоматической проверки
+#   pages        — на каких страницах искать (home, contacts, about, delivery, catalog, product)
+#   description  — пояснение что проверяем и зачем
+#   severity     — critical | high | medium | low
+#
+# Категории:
+#   1. navigation_company  — Навигация и информация о компании
+#   2. trust               — Доверие (сертификаты, отзывы, социальные доказательства)
+#   3. ecommerce           — E-commerce (корзина, доставка, оплата, гарантия)
+#   4. engagement          — Customer engagement (callback, чат, соцсети, формы)
+#   5. content_seo         — Content и SEO (контент, HTTPS, адаптивность)
+#   6. sales_tools         — Sales tools (скидки, акции, УТП, кросс-сейл)
+#   7. product_info        — Product info (описания, фото, отзывы товаров)
+
+factors:
+  # ============================================================
+  # КАТЕГОРИЯ 1: НАВИГАЦИЯ И КОМПАНИЯ
+  # ============================================================
+  - id: 1
+    category: navigation_company
+    name: "История компании"
+    check_type: text_contains
+    patterns: ["история компани", "о компани", "о нас", "about", "о бренде"]
+    pages: [home, about]
+    description: "Описаны этапы развития компании, рост, увеличение товарных предложений"
+    severity: medium
+
+  - id: 2
+    category: navigation_company
+    name: "Информация о персонале"
+    check_type: text_contains
+    patterns: ["команда", "сотрудник", "наши специалисты", "персонал", "staff", "team"]
+    pages: [home, about]
+    description: "Информация о сотрудниках, работающих в компании, их опыте, достижениях"
+    severity: medium
+
+  - id: 3
+    category: navigation_company
+    name: "Структура сайта"
+    check_type: element_exists
+    patterns: ["nav", "header nav", ".menu", ".navigation", "menu"]
+    pages: [home]
+    description: "У сайта есть проработанная структура навигации"
+    severity: high
+
+  - id: 4
+    category: navigation_company
+    name: "Оборудование, техника, материалы"
+    check_type: text_contains
+    patterns: ["оборудован", "материал", "техник", "производств", "цех"]
+    pages: [home, about]
+    description: "Блок-схема структуры компании, отделы, департаменты, бизнес-процессы, используемое оборудование"
+    severity: low
+
+  - id: 5
+    category: navigation_company
+    name: "Вакансии"
+    check_type: url_exists
+    patterns: ["/vacancies", "/careers", "/jobs", "/rabota", "вакансии", "карьера"]
+    pages: [home]
+    description: "Раздел с вакансиями"
+    severity: low
+
+  - id: 6
+    category: navigation_company
+    name: "Партнеры"
+    check_type: text_contains
+    patterns: ["партнер", "поставщик", "partners"]
+    pages: [home, about]
+    description: "Кто является партнером компании, поставщики"
+    severity: medium
+
+  - id: 7
+    category: navigation_company
+    name: "Контакты и обратная связь"
+    check_type: url_exists
+    patterns: ["/contacts", "/kontakty", "/contact", "контакты"]
+    pages: [home]
+    description: "Полные контакты с индексом, больше упоминаний на сайте"
+    severity: critical
+
+  - id: 8
+    category: navigation_company
+    name: "Телефон в шапке"
+    check_type: element_exists
+    patterns: ["header a[href^='tel:']", "a[href^='tel:']"]
+    pages: [home]
+    description: "Обязательное упоминание в шапке сайта, на странице Контакты и в футере"
+    severity: critical
+
+  - id: 9
+    category: navigation_company
+    name: "Реквизиты"
+    check_type: text_contains
+    patterns: ["реквизит", "ИНН", "ОГРН", "КПП", "юридический адрес", "юр. адрес"]
+    pages: [contacts, about]
+    description: "Раздел с реквизитами компании"
+    severity: high
+
+  - id: 10
+    category: navigation_company
+    name: "Филиалы"
+    check_type: text_contains
+    patterns: ["филиал", "наши офисы", "отделени", "branches"]
+    pages: [contacts, home]
+    description: "Контакты всех филиалов. Можно со структурой, персоналом"
+    severity: medium
+
+  - id: 11
+    category: navigation_company
+    name: "Представители"
+    check_type: text_contains
+    patterns: ["представител", "дилер", "региональные менеджеры", "дистрибьютор"]
+    pages: [contacts, about]
+    description: "Представители компании в других регионах, странах"
+    severity: low
+
+  - id: 12
+    category: navigation_company
+    name: "Новости"
+    check_type: url_exists
+    patterns: ["/news", "/novosti", "/blog/news", "новости"]
+    pages: [home]
+    description: "Раздел со свежими новостями компании"
+    severity: medium
+
+  - id: 13
+    category: navigation_company
+    name: "Портфолио"
+    check_type: url_exists
+    patterns: ["/portfolio", "/works", "/projects", "/cases", "портфолио", "кейсы", "работы"]
+    pages: [home]
+    description: "Раздел с примерами работ, товаров, продукции"
+    severity: medium
+
+  - id: 14
+    category: navigation_company
+    name: "Оптовикам"
+    check_type: url_exists
+    patterns: ["/opt", "/wholesale", "/optom", "оптом", "оптовикам", "dealers"]
+    pages: [home]
+    description: "Раздел с информацией по работе с оптовыми клиентами, партнерами"
+    severity: low
+
+  - id: 15
+    category: navigation_company
+    name: "Корпоративным клиентам"
+    check_type: url_exists
+    patterns: ["/corporate", "/b2b", "/business", "корпоративн", "юрлицам"]
+    pages: [home]
+    description: "Раздел с информацией для корпоративных клиентов"
+    severity: low
+
+  - id: 16
+    category: navigation_company
+    name: "График работы"
+    check_type: text_contains
+    patterns: ["график работы", "режим работы", "часы работы", "пн-пт", "working hours", "круглосуточно"]
+    pages: [home, contacts]
+    description: "Детальная информация по графику работы компании, основного офиса, филиалов"
+    severity: high
+
+  - id: 17
+    category: navigation_company
+    name: "Слоган"
+    check_type: manual
+    patterns: []
+    pages: [home]
+    description: "Наличие слогана в шапке сайта, желательно в левом верхнем углу"
+    severity: low
+
+  - id: 18
+    category: navigation_company
+    name: "Логотип"
+    check_type: element_exists
+    patterns: ["header img", "header .logo", ".logo img", "[class*='logo'] img", "a[href='/'] img"]
+    pages: [home]
+    description: "Наличие логотипа в шапке сайта, желательно в левом верхнем углу"
+    severity: critical
+
+  - id: 19
+    category: navigation_company
+    name: "Выбор региона"
+    check_type: text_contains
+    patterns: ["ваш город", "выбор города", "ваш регион", "город доставки", "выберите регион"]
+    pages: [home]
+    description: "Если работаете в нескольких регионах и есть поддомены — добавить выбор нужного региона"
+    severity: medium
+
+  - id: 20
+    category: navigation_company
+    name: "Телефоны — региональный/8-800"
+    check_type: text_contains
+    patterns: ["8 800", "8-800", "8(800)", "+7 800"]
+    pages: [home, contacts]
+    description: "Региональный или бесплатный 8-800. Мобильный лучше не использовать"
+    severity: medium
+
+  - id: 21
+    category: navigation_company
+    name: "Поиск по сайту"
+    check_type: element_exists
+    patterns: ["input[type='search']", "[class*='search'] input", "form[role='search']"]
+    pages: [home]
+    description: "Наличие формы поиска на видном месте"
+    severity: high
+
+  - id: 22
+    category: navigation_company
+    name: "Email в контактах"
+    check_type: element_exists
+    patterns: ["a[href^='mailto:']"]
+    pages: [home, contacts]
+    description: "Email-адрес для связи"
+    severity: high
+
+  # ============================================================
+  # КАТЕГОРИЯ 2: ДОВЕРИЕ (сертификаты, отзывы, репутация)
+  # ============================================================
+  - id: 23
+    category: trust
+    name: "Отзывы, рекомендации, благодарности"
+    check_type: url_exists
+    patterns: ["/reviews", "/otzyvy", "/testimonials", "отзывы", "рекомендации"]
+    pages: [home]
+    description: "Раздел с отзывами и рекомендациями"
+    severity: high
+
+  - id: 24
+    category: trust
+    name: "Наши клиенты"
+    check_type: text_contains
+    patterns: ["наши клиенты", "clients", "с нами работают", "нам доверяют"]
+    pages: [home, about]
+    description: "Информация о клиентах компании (логотипы, кейсы)"
+    severity: medium
+
+  - id: 25
+    category: trust
+    name: "Сертификаты и лицензии"
+    check_type: url_exists
+    patterns: ["/certificates", "/litsenzii", "/sertifikaty", "сертификат", "лицензи"]
+    pages: [home, about]
+    description: "Раздел-галерея с фотографиями и сканами официальных документов"
+    severity: high
+
+  - id: 26
+    category: trust
+    name: "Достижения"
+    check_type: text_contains
+    patterns: ["достижения", "награды", "премии", "грамоты", "патенты", "publications"]
+    pages: [home, about]
+    description: "Раздел с фотографиями грамот, достижений, патентов, публикаций"
+    severity: medium
+
+  - id: 27
+    category: trust
+    name: "Видимость в интернете (соцсети)"
+    check_type: element_exists
+    patterns: ["a[href*='vk.com']", "a[href*='t.me']", "a[href*='instagram']", "a[href*='youtube']", "a[href*='ok.ru']", "a[href*='dzen']"]
+    pages: [home]
+    description: "Активные страницы компании во всех соцсетях"
+    severity: high
+
+  - id: 28
+    category: trust
+    name: "Преимущества"
+    check_type: text_contains
+    patterns: ["наши преимущества", "почему мы", "почему выбирают", "why us", "advantages"]
+    pages: [home]
+    description: "Наличие блока Наши преимущества"
+    severity: high
+
+  - id: 29
+    category: trust
+    name: "Элементы доверия"
+    check_type: text_contains
+    patterns: ["visa", "mastercard", "мир", "сбербанк", "тинькофф", "робокасса", "яндекс касса", "юкасса"]
+    pages: [home]
+    description: "Размещение логотипов авторитетных сервисов (платежные системы, партнеры)"
+    severity: medium
+
+  - id: 30
+    category: trust
+    name: "Виджет карты и схема проезда"
+    check_type: element_exists
+    patterns: ["iframe[src*='yandex']", "iframe[src*='maps']", "[class*='map']", "#map"]
+    pages: [contacts]
+    description: "Схема проезда по актуальному адресу компании"
+    severity: high
+
+  - id: 31
+    category: trust
+    name: "Корпоративный блог"
+    check_type: url_exists
+    patterns: ["/blog", "/articles", "/статьи", "блог", "журнал"]
+    pages: [home]
+    description: "В блоге актуальная, регулярно обновляющаяся информация"
+    severity: medium
+
+  - id: 32
+    category: trust
+    name: "Фото и видео-отчёты"
+    check_type: text_contains
+    patterns: ["фото отчет", "видео отчет", "фотоотчет", "видеоотчет", "отчет о работе"]
+    pages: [home]
+    description: "Фото и/или видео-отчеты по каждой услуге"
+    severity: low
+
+  - id: 33
+    category: trust
+    name: "Видеообращение директора"
+    check_type: manual
+    patterns: []
+    pages: [home, about]
+    description: "Видеообращение руководителя повышает доверие клиента"
+    severity: low
+
+  - id: 34
+    category: trust
+    name: "Отсутствие сторонней рекламы"
+    check_type: manual
+    patterns: []
+    pages: [home]
+    description: "Сайт должен продавать свой товар, без баннеров чужих компаний"
+    severity: high
+
+  - id: 35
+    category: trust
+    name: "Видео / канал на YouTube"
+    check_type: element_exists
+    patterns: ["a[href*='youtube.com']", "iframe[src*='youtube']", "iframe[src*='rutube']", "iframe[src*='vkvideo']"]
+    pages: [home, about]
+    description: "Наличие видео-роликов или собственного канала"
+    severity: low
+
+  - id: 36
+    category: trust
+    name: "Репутация и возраст домена"
+    check_type: manual
+    patterns: []
+    pages: []
+    description: "Работа по репутации на сторонних сайтах отзывов о компании"
+    severity: high
+
+  - id: 37
+    category: trust
+    name: "Яндекс Справочник / Google Мой Бизнес"
+    check_type: manual
+    patterns: []
+    pages: []
+    description: "Компания зарегистрирована в справочниках (ручная проверка)"
+    severity: critical
+
+  - id: 38
+    category: trust
+    name: "Сервисы Яндекса"
+    check_type: manual
+    patterns: []
+    pages: []
+    description: "Участие в сервисах Яндекса (Маркет, Дзен, Карты, Услуги)"
+    severity: medium
+
+  - id: 39
+    category: trust
+    name: "Узнаваемость бренда"
+    check_type: manual
+    patterns: []
+    pages: []
+    description: "Упоминания названия бренда в интернете, особенно СМИ + брендованный трафик"
+    severity: high
+
+  - id: 40
+    category: trust
+    name: "Отзывы на отзовиках"
+    check_type: manual
+    patterns: []
+    pages: []
+    description: "Отзывы на сторонних сайтах (flamp.ru, otzovik.com, yandex отзывы)"
+    severity: high
+
+  - id: 41
+    category: trust
+    name: "Отзывы на агрегаторах"
+    check_type: manual
+    patterns: []
+    pages: []
+    description: "Отзывы на агрегаторах (Яндекс.Маркет, Ozon, Wildberries)"
+    severity: medium
+
+  - id: 42
+    category: trust
+    name: "Ссылки на авторитетных ресурсах"
+    check_type: manual
+    patterns: []
+    pages: []
+    description: "Работа по простановке ссылок с авторитетных ресурсов"
+    severity: medium
+
+  - id: 43
+    category: trust
+    name: "Упоминания бренда на форумах"
+    check_type: manual
+    patterns: []
+    pages: []
+    description: "Работа над упоминаниями бренда в интернете"
+    severity: low
+
+  # ============================================================
+  # КАТЕГОРИЯ 3: E-COMMERCE (корзина, доставка, оплата, гарантия)
+  # ============================================================
+  - id: 44
+    category: ecommerce
+    name: "Калькулятор стоимости"
+    check_type: text_contains
+    patterns: ["калькулятор", "рассчитать стоимость", "calculator", "расчет стоимости"]
+    pages: [home]
+    description: "Онлайн расчет стоимости услуг, товаров, доставки"
+    severity: medium
+
+  - id: 45
+    category: ecommerce
+    name: "Сравнение товаров"
+    check_type: text_contains
+    patterns: ["сравнить", "сравнение", "compare"]
+    pages: [catalog, product]
+    description: "Возможность сравнить товары"
+    severity: low
+
+  - id: 46
+    category: ecommerce
+    name: "Прайс-лист (скачать)"
+    check_type: text_contains
+    patterns: ["скачать прайс", "прайс-лист", "price list", "скачать каталог", ".pdf", ".xlsx", ".xls"]
+    pages: [home]
+    description: "Возможность скачать прайс-лист в удобном формате"
+    severity: medium
+
+  - id: 47
+    category: ecommerce
+    name: "Сервис и ремонт"
+    check_type: text_contains
+    patterns: ["сервис", "ремонт", "обслуживание", "гарантийный ремонт"]
+    pages: [home]
+    description: "Осуществляется ли обслуживание/ремонт компанией, условия"
+    severity: low
+
+  - id: 48
+    category: ecommerce
+    name: "Обслуживание клиента"
+    check_type: text_contains
+    patterns: ["персональный менеджер", "горячая линия", "бесплатный телефон", "консультация бесплатно"]
+    pages: [home]
+    description: "Персональный менеджер, бесплатный телефон горячей линии"
+    severity: medium
+
+  - id: 49
+    category: ecommerce
+    name: "Доставка"
+    check_type: url_exists
+    patterns: ["/delivery", "/dostavka", "/shipping", "доставка"]
+    pages: [home]
+    description: "Описаны условия доставки и возможные варианты"
+    severity: critical
+
+  - id: 50
+    category: ecommerce
+    name: "Условия оферты"
+    check_type: text_contains
+    patterns: ["оферт", "договор оферты", "публичная оферта", "пользовательское соглашение"]
+    pages: [home]
+    description: "Описание договора публичной оферты"
+    severity: high
+
+  - id: 51
+    category: ecommerce
+    name: "FAQ"
+    check_type: url_exists
+    patterns: ["/faq", "/voprosy", "/help", "faq", "вопрос-ответ", "частые вопросы"]
+    pages: [home]
+    description: "Подробный раздел вопрос-ответ"
+    severity: medium
+
+  - id: 52
+    category: ecommerce
+    name: "Франчайзинг"
+    check_type: url_exists
+    patterns: ["/franchise", "/franchising", "франшиз", "franchise"]
+    pages: [home]
+    description: "Возможность представления франшизы"
+    severity: low
+
+  - id: 53
+    category: ecommerce
+    name: "Гарантии, возврат, оплата"
+    check_type: text_contains
+    patterns: ["гарантия", "возврат", "способы оплаты", "warranty", "refund"]
+    pages: [home]
+    description: "Подробно описано что гарантируем и способы возврата"
+    severity: high
+
+  - id: 54
+    category: ecommerce
+    name: "Личный кабинет"
+    check_type: url_exists
+    patterns: ["/login", "/personal", "/cabinet", "/account", "личный кабинет", "войти"]
+    pages: [home]
+    description: "С информацией по бонусам, истории покупок"
+    severity: medium
+
+  - id: 55
+    category: ecommerce
+    name: "Ссылка на корзину в шапке"
+    check_type: element_exists
+    patterns: ["header a[href*='cart']", "header a[href*='order']", "[class*='cart']", "[class*='basket']"]
+    pages: [home]
+    description: "При добавлении товара в корзину отображается количество и сумма"
+    severity: high
+
+  - id: 56
+    category: ecommerce
+    name: "Корзина — правильный URL"
+    check_type: url_exists
+    patterns: ["/cart", "/order", "/checkout"]
+    pages: [home]
+    description: "Адрес корзины должен быть /cart или /order, но не /korzina (Яндекс не распознает)"
+    severity: high
+
+  - id: 57
+    category: ecommerce
+    name: "Оплата через Сбербанк Онлайн"
+    check_type: text_contains
+    patterns: ["сбербанк", "sberbank", "sberpay", "сберпей"]
+    pages: [home, delivery]
+    description: "Второй по популярности способ оплаты"
+    severity: medium
+
+  - id: 58
+    category: ecommerce
+    name: "Самовывоз"
+    check_type: text_contains
+    patterns: ["самовывоз", "pickup", "забрать из магазина", "забрать на складе"]
+    pages: [delivery, home]
+    description: "Возможность самовывоза"
+    severity: medium
+
+  - id: 59
+    category: ecommerce
+    name: "Адреса сервисных центров"
+    check_type: text_contains
+    patterns: ["сервисный центр", "сервисные центры", "сервисные точки", "service center"]
+    pages: [contacts, home]
+    description: "Адреса сервисных центров для клиентов"
+    severity: low
+
+  - id: 60
+    category: ecommerce
+    name: "Информация об оплате (иконки)"
+    check_type: element_exists
+    patterns: ["[class*='payment'] img", "[class*='pay-systems'] img", "footer img[alt*='visa' i]", "footer img[alt*='mir' i]"]
+    pages: [home]
+    description: "Дубль иконками и логотипами платежных систем"
+    severity: medium
+
+  - id: 61
+    category: ecommerce
+    name: "Срок доставки"
+    check_type: text_contains
+    patterns: ["срок доставки", "дн. доставка", "доставим за", "delivery time", "в течение"]
+    pages: [delivery, product]
+    description: "Упоминание примерного срока доставки товара"
+    severity: high
+
+  - id: 62
+    category: ecommerce
+    name: "Доп информация по заказу"
+    check_type: text_contains
+    patterns: ["в кредит", "рассрочка", "бонусы", "кэшбек", "cashback"]
+    pages: [home, product]
+    description: "Покупка в кредит, бонусы, рассрочка"
+    severity: medium
+
+  # ============================================================
+  # КАТЕГОРИЯ 4: CUSTOMER ENGAGEMENT (callback, чат, соцсети, формы)
+  # ============================================================
+  - id: 63
+    category: engagement
+    name: "Формы связи"
+    check_type: text_contains
+    patterns: ["обратный звонок", "перезвоните мне", "перезвонить", "callback", "заказать звонок"]
+    pages: [home]
+    description: "Кнопки Обратный звонок, Перезвонить"
+    severity: critical
+
+  - id: 64
+    category: engagement
+    name: "Онлайн-консультация"
+    check_type: element_exists
+    patterns: ["[class*='jivo']", "[class*='talk-me']", "[class*='livechat']", "[id*='tawk']", "[class*='widget-chat']"]
+    pages: [home]
+    description: "Наличие виджета онлайн-консультант"
+    severity: high
+
+  - id: 65
+    category: engagement
+    name: "Сервисы захвата посетителя"
+    check_type: element_exists
+    patterns: ["[class*='callback']", "[class*='popup']", "[class*='modal']"]
+    pages: [home]
+    description: "Виджеты типа CallbackHunter, Envybox и аналоги"
+    severity: medium
+
+  - id: 66
+    category: engagement
+    name: "Этапы взаимодействия с клиентом"
+    check_type: text_contains
+    patterns: ["этапы работы", "как мы работаем", "процесс работы", "как заказать", "шаг 1"]
+    pages: [home]
+    description: "Описан процесс консультации и работы с клиентом"
+    severity: medium
+
+  - id: 67
+    category: engagement
+    name: "Push-уведомления"
+    check_type: manual
+    patterns: []
+    pages: []
+    description: "Рассылка подписавшимся клиентам о новостях, товарах, акциях"
+    severity: low
+
+  - id: 68
+    category: engagement
+    name: "Виджеты связи через чат соцсетей"
+    check_type: element_exists
+    patterns: ["a[href*='wa.me']", "a[href*='whatsapp']", "a[href*='t.me']", "a[href*='telegram']", "[class*='messenger']"]
+    pages: [home]
+    description: "В один клик перейти к диалогу в соцсети/мессенджере"
+    severity: high
+
+  - id: 69
+    category: engagement
+    name: "Глубина вложенности страниц"
+    check_type: manual
+    patterns: []
+    pages: []
+    description: "Важные страницы не дальше третьего уровня вложенности (проверять вручную через SF)"
+    severity: medium
+
+  - id: 70
+    category: engagement
+    name: "Всплывающие окна"
+    check_type: element_exists
+    patterns: ["[class*='popup']", "[class*='modal']", "[class*='fancybox']"]
+    pages: [home]
+    description: "Скидки, заказ обратного звонка через всплывающие окна"
+    severity: low
+
+  - id: 71
+    category: engagement
+    name: "Слайдер на главной"
+    check_type: element_exists
+    patterns: ["[class*='slider']", "[class*='swiper']", "[class*='carousel']", ".slick"]
+    pages: [home]
+    description: "Слайдер с главной информацией, желательно с формой захвата"
+    severity: medium
+
+  - id: 72
+    category: engagement
+    name: "Комментарии"
+    check_type: text_contains
+    patterns: ["комментарии", "оставить комментарий", "добавить комментарий", "comments"]
+    pages: [blog, product]
+    description: "Наличие формы с комментариями"
+    severity: low
+
+  - id: 73
+    category: engagement
+    name: "Кнопки шаринга"
+    check_type: element_exists
+    patterns: ["[class*='share']", "[class*='social-share']", "[class*='yashare']"]
+    pages: [product, blog]
+    description: "Кнопки Поделиться в соцсетях"
+    severity: low
+
+  - id: 74
+    category: engagement
+    name: "Сообщить о поступлении"
+    check_type: text_contains
+    patterns: ["сообщить о поступлении", "уведомить о поступлении", "notify when available"]
+    pages: [product]
+    description: "Если товара нет в наличии — функционал Сообщить о поступлении"
+    severity: low
+
+  - id: 75
+    category: engagement
+    name: "Обратный отсчёт"
+    check_type: element_exists
+    patterns: ["[class*='countdown']", "[class*='timer']", "[class*='counter-time']"]
+    pages: [home, product]
+    description: "Формы с обратным отсчётом срока действия предложения"
+    severity: low
+
+  # ============================================================
+  # КАТЕГОРИЯ 5: CONTENT & SEO
+  # ============================================================
+  - id: 76
+    category: content_seo
+    name: "HTTPS (SSL сертификат)"
+    check_type: http_status
+    patterns: ["https"]
+    pages: [home]
+    description: "Сайт работает на HTTPS, настроен SSL сертификат"
+    severity: critical
+
+  - id: 77
+    category: content_seo
+    name: "Читабельность домена"
+    check_type: manual
+    patterns: []
+    pages: []
+    description: "Доменное имя читаемо и легко диктуется по телефону"
+    severity: medium
+
+  - id: 78
+    category: content_seo
+    name: "Адаптация под мобильные"
+    check_type: element_exists
+    patterns: ["meta[name='viewport']"]
+    pages: [home]
+    description: "Адаптивная или мобильная версия, AMP или Яндекс.Турбо"
+    severity: critical
+
+  - id: 79
+    category: content_seo
+    name: "Визуализация контента (инфографика, иконки)"
+    check_type: element_exists
+    patterns: ["svg", "[class*='icon']", "[class*='infographic']"]
+    pages: [home]
+    description: "Инфографика, иконки с преимуществами и кратким описанием"
+    severity: medium
+
+  - id: 80
+    category: content_seo
+    name: "Инфографика (процессы)"
+    check_type: text_contains
+    patterns: ["инфографик", "схема работы", "процесс доставки"]
+    pages: [home, delivery]
+    description: "Важные процессы описаны инфографикой (процесс доставки и т.д.)"
+    severity: low
+
+  - id: 81
+    category: content_seo
+    name: "Советы / инструкции"
+    check_type: text_contains
+    patterns: ["совет", "инструкция", "рекомендаци", "как выбрать", "руководство"]
+    pages: [home, blog]
+    description: "Раздел с советами по выбору продукции или услуг"
+    severity: medium
+
+  - id: 82
+    category: content_seo
+    name: "Инструкции к товарам"
+    check_type: text_contains
+    patterns: ["инструкция", "мануал", "скачать инструкцию", "manual", "user guide"]
+    pages: [product]
+    description: "Инструкции к товарам с возможностью скачивания"
+    severity: low
+
+  - id: 83
+    category: content_seo
+    name: "ЧПУ (человекочитаемые URL)"
+    check_type: manual
+    patterns: []
+    pages: [catalog, product]
+    description: "В URL карточек товаров — уровень /catalog/ + название категории"
+    severity: high
+
+  - id: 84
+    category: content_seo
+    name: "Meta title / description"
+    check_type: element_exists
+    patterns: ["title", "meta[name='description']"]
+    pages: [home]
+    description: "Прописаны title и description на главной странице"
+    severity: critical
+
+  - id: 85
+    category: content_seo
+    name: "Structured data (schema.org)"
+    check_type: structured_data
+    patterns: ["application/ld+json", "itemscope", "itemtype"]
+    pages: [home]
+    description: "Микроразметка schema.org (Organization, Product, Breadcrumb)"
+    severity: high
+
+  # ============================================================
+  # КАТЕГОРИЯ 6: SALES TOOLS (скидки, акции, УТП, кросс-сейл)
+  # ============================================================
+  - id: 86
+    category: sales_tools
+    name: "Скидки"
+    check_type: text_contains
+    patterns: ["скидка", "скидки", "discount", "-10%", "-20%", "-30%", "-50%"]
+    pages: [home, catalog]
+    description: "Системы скидок, накопительные системы"
+    severity: high
+
+  - id: 87
+    category: sales_tools
+    name: "Акции"
+    check_type: url_exists
+    patterns: ["/actions", "/akcii", "/promo", "/sale", "акции", "спецпредложения"]
+    pages: [home]
+    description: "Регулярная информация об акциях компании"
+    severity: high
+
+  - id: 88
+    category: sales_tools
+    name: "Распродажа"
+    check_type: url_exists
+    patterns: ["/sale", "/rasprodazha", "/clearance", "распродажа"]
+    pages: [home]
+    description: "Раздел Распродажа"
+    severity: medium
+
+  - id: 89
+    category: sales_tools
+    name: "Бонусы"
+    check_type: text_contains
+    patterns: ["бонус", "бонусная программа", "накопительная система", "cashback", "кэшбек"]
+    pages: [home]
+    description: "Собственная бонусная программа"
+    severity: medium
+
+  - id: 90
+    category: sales_tools
+    name: "УТП (уникальное торговое предложение)"
+    check_type: manual
+    patterns: []
+    pages: [home]
+    description: "Наличие в видимой части экрана уникального торгового предложения"
+    severity: critical
+
+  - id: 91
+    category: sales_tools
+    name: "Дополнительные предложения"
+    check_type: text_contains
+    patterns: ["с этим товаром", "рекомендуем", "также купили", "upsell"]
+    pages: [product]
+    description: "Услуги, в которых может возникнуть необходимость при покупке основного"
+    severity: medium
+
+  - id: 92
+    category: sales_tools
+    name: "Cross-sell (с этим покупают)"
+    check_type: text_contains
+    patterns: ["с этим покупают", "вместе с этим", "похожие товары", "related products"]
+    pages: [product]
+    description: "Формы допродаж — с этим покупают и т.д."
+    severity: medium
+
+  - id: 93
+    category: sales_tools
+    name: "Цена со скидкой (старая/новая)"
+    check_type: element_exists
+    patterns: ["[class*='old-price']", "[class*='discount-price']", "[class*='price-old']", "del", "s"]
+    pages: [product, catalog]
+    description: "Старая/новая цена — визуальное выделение скидки"
+    severity: medium
+
+  # ============================================================
+  # КАТЕГОРИЯ 7: PRODUCT INFO (описания, фото, отзывы товаров)
+  # ============================================================
+  - id: 94
+    category: product_info
+    name: "Детализация услуги/товара"
+    check_type: manual
+    patterns: []
+    pages: [product]
+    description: "Что включает услуга: замер, проектирование, доставка, монтаж"
+    severity: high
+
+  - id: 95
+    category: product_info
+    name: "Артикул"
+    check_type: text_contains
+    patterns: ["артикул", "sku", "код товара"]
+    pages: [product]
+    description: "Наличие артикула товара"
+    severity: medium
+
+  - id: 96
+    category: product_info
+    name: "Наличие товара (кол-во на складе)"
+    check_type: text_contains
+    patterns: ["в наличии", "на складе", "шт. в наличии", "осталось", "in stock"]
+    pages: [product, catalog]
+    description: "Количество штук на складе, а не только В наличии"
+    severity: medium
+
+  - id: 97
+    category: product_info
+    name: "Товарный ассортимент"
+    check_type: manual
+    patterns: []
+    pages: [catalog]
+    description: "Не менее 50% от среднего среди 20 конкурентов"
+    severity: high
+
+  - id: 98
+    category: product_info
+    name: "Характеристики товара"
+    check_type: text_contains
+    patterns: ["характеристики", "описание", "технические параметры", "specs", "specifications"]
+    pages: [product]
+    description: "Подробные технические характеристики товара"
+    severity: high
+
+  - id: 99
+    category: product_info
+    name: "Фотографии товара"
+    check_type: element_exists
+    patterns: ["[class*='product'] img", "[class*='gallery'] img", ".product img"]
+    pages: [product]
+    description: "Обязательное наличие фотографий товара"
+    severity: critical
+
+  - id: 100
+    category: product_info
+    name: "Обзоры на товар"
+    check_type: text_contains
+    patterns: ["обзор", "видеообзор", "review", "video review"]
+    pages: [product]
+    description: "Видео-обзоры от лица магазина или покупателя"
+    severity: low
+
+  - id: 101
+    category: product_info
+    name: "Отзывы о товаре / рейтинг"
+    check_type: text_contains
+    patterns: ["отзыв", "рейтинг", "оценка", "звезд", "rating"]
+    pages: [product]
+    description: "Отзывы о товаре, услуге на сайте, рейтинг"
+    severity: high
+
+  - id: 102
+    category: product_info
+    name: "Размерный ряд"
+    check_type: text_contains
+    patterns: ["размер", "размерная сетка", "размерный ряд", "size chart"]
+    pages: [product]
+    description: "Информация о доступных для заказа размерах"
+    severity: medium
+
+  - id: 103
+    category: product_info
+    name: "3D-модель"
+    check_type: element_exists
+    patterns: ["[class*='3d']", "[class*='sketchfab']", "iframe[src*='3d']"]
+    pages: [product]
+    description: "3D-модель объекта (строительство домов и т.п.)"
+    severity: low
+
+  - id: 104
+    category: product_info
+    name: "Быстрый просмотр товара"
+    check_type: text_contains
+    patterns: ["быстрый просмотр", "quick view", "быстрый просмотр товара"]
+    pages: [catalog]
+    description: "Функционал быстрого просмотра товара во всплывающем окне"
+    severity: low
+
+  - id: 105
+    category: product_info
+    name: "Фильтр перед каталогом"
+    check_type: element_exists
+    patterns: ["[class*='filter']", "[class*='catalog-filter']", ".filters"]
+    pages: [catalog]
+    description: "Фильтр по цене, популярности"
+    severity: high
+
+  - id: 106
+    category: product_info
+    name: "Расширенный фильтр"
+    check_type: text_contains
+    patterns: ["цвет", "размер", "бренд", "материал", "производитель"]
+    pages: [catalog]
+    description: "Фильтр по параметрам (цвет, размер, бренд)"
+    severity: medium
+
+  - id: 107
+    category: product_info
+    name: "Ссылки на тегирование"
+    check_type: element_exists
+    patterns: ["[class*='tag']", "[class*='tags'] a", ".tag-cloud a"]
+    pages: [catalog, blog]
+    description: "Страницы тегов для тематической перелинковки"
+    severity: low
+
+  - id: 108
+    category: product_info
+    name: "Выбор комплектации"
+    check_type: text_contains
+    patterns: ["комплектация", "выбор комплектации", "варианты", "configuration"]
+    pages: [product]
+    description: "Возможность выбора комплектации товара"
+    severity: low
+
+  - id: 109
+    category: product_info
+    name: "Купить в 1 клик"
+    check_type: text_contains
+    patterns: ["купить в 1 клик", "купить в один клик", "быстрый заказ", "заказать в один клик"]
+    pages: [product]
+    description: "Кнопка быстрого заказа"
+    severity: medium
+
+  - id: 110
+    category: product_info
+    name: "Перенаправление с карточки"
+    check_type: manual
+    patterns: []
+    pages: [catalog]
+    description: "Клик по изображению в каталоге ведёт на карточку товара"
+    severity: medium
+
+  - id: 111
+    category: product_info
+    name: "Рейтинг товара в каталоге"
+    check_type: element_exists
+    patterns: ["[class*='rating']", "[class*='stars']", ".rating"]
+    pages: [catalog, product]
+    description: "Рейтинг товара отображается в каталоге и карточке"
+    severity: medium
+
+  - id: 112
+    category: product_info
+    name: "Отметки (Новинка, Хит, Распродажа)"
+    check_type: text_contains
+    patterns: ["новинка", "хит продаж", "распродажа", "акция", "популярный", "sale", "new", "hit"]
+    pages: [catalog]
+    description: "Отметки Новинка, Хит продаж, Распродажа в каталоге"
+    severity: medium
+
+  - id: 113
+    category: product_info
+    name: "Цена в рублях (руб., не ₽)"
+    check_type: text_contains
+    patterns: ["руб.", "руб", "р."]
+    pages: [product, catalog]
+    description: "Цена выражается в рублёвом эквиваленте: 2000 руб. (не 2000 ₽)"
+    severity: medium
+
+  - id: 114
+    category: product_info
+    name: "Название товара с категорией"
+    check_type: manual
+    patterns: []
+    pages: [product]
+    description: "Название товара содержит название категории, в единственном числе"
+    severity: high
+
+  - id: 115
+    category: product_info
+    name: "Кнопка Купить (текстовая)"
+    check_type: element_exists
+    patterns: ["button", "a.button", ".btn-buy", "[class*='buy']"]
+    pages: [product, catalog]
+    description: "Кнопка Купить — текстовая, а не только иконка"
+    severity: high
+
+  - id: 116
+    category: product_info
+    name: "CTA-кнопки (не ссылки)"
+    check_type: element_exists
+    patterns: ["button[class*='cart']", "button[class*='buy']", "button[type='submit']"]
+    pages: [product]
+    description: "Купить, добавить в корзину — должны быть кнопками, а не ссылками"
+    severity: high
+
+  - id: 117
+    category: product_info
+    name: "Название и страна производителя"
+    check_type: text_contains
+    patterns: ["производитель", "страна производства", "бренд", "made in"]
+    pages: [product]
+    description: "В карточках товаров"
+    severity: medium
+
+  - id: 118
+    category: product_info
+    name: "Цена товара (наличие)"
+    check_type: manual
+    patterns: []
+    pages: [product, catalog]
+    description: "Цена присутствует на карточке товара и в каталоге"
+    severity: critical
+
+  # ============================================================
+  # ДОПОЛНИТЕЛЬНО: API-проверки через Яндекс.Метрику (auto-discovery)
+  # ============================================================
+  - id: 119
+    category: content_seo
+    name: "Счётчик Яндекс.Метрики (API-проверка)"
+    check_type: metrika_counter
+    patterns: []
+    pages: []
+    description: "Счётчик Яндекс.Метрики установлен, активен и собирает данные (проверка через API). Без tokens.json — проверка ручная"
+    severity: high
+
+  - id: 120
+    category: content_seo
+    name: "Цели конверсии в Метрике"
+    check_type: metrika_goals
+    patterns: []
+    pages: []
+    description: "В Яндекс.Метрике настроены цели конверсии (заказ, корзина, форма). E-commerce цель — приоритет. Без tokens.json — проверка ручная"
+    severity: high

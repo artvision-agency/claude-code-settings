@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T10:53:10",
+  "repo": "artvision-tg-bot",
+  "commit": "05ff256",
+  "message": "fix(bot): Array.from(Set) for ES5 compat \u2014 was breaking Vercel build",
+  "signal_type": "error_resolution",
+  "detail": "fix(bot): Array.from(Set) for ES5 compat \u2014 was breaking Vercel build",
+  "files": ["app/api/telegram/route.ts"]
+}

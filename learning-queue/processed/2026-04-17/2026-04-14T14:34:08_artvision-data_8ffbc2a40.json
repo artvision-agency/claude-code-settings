@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-14T14:34:08",
+  "repo": "artvision-data",
+  "commit": "8ffbc2a40",
+  "message": "chore: save session prompts before compact 2026-04-14_14:34",
+  "signal_type": "workaround",
+  "detail": "workaround: +     - Fixed by retrying with due_on=2026-04-21 placeholder + notation \"\u26a0\ufe0f \u0422\u041e\u0427\u041d\u0410\u042f \u0414\u0410\u0422\u0410 \u2014 \u0423\u0422\u041e\u0427\u041d\u0418\u0422\u042c \u0423",
+  "files": ["prompts/2026-04-14_session_da718979.md"]
+}

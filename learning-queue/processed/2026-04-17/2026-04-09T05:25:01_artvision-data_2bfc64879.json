@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-09T05:25:01",
+  "repo": "artvision-data",
+  "commit": "2bfc64879",
+  "message": "fix: avtoworld SEO \u2014 \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u044b 7 \u043e\u0448\u0438\u0431\u043e\u043a \u043f\u0440\u0435\u0434\u044b\u0434\u0443\u0449\u0438\u0445 \u0430\u043d\u0430\u043b\u0438\u0437\u043e\u0432 + BEFORE\u2192AFTER",
+  "signal_type": "error_resolution",
+  "detail": "fix: avtoworld SEO \u2014 \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u044b 7 \u043e\u0448\u0438\u0431\u043e\u043a \u043f\u0440\u0435\u0434\u044b\u0434\u0443\u0449\u0438\u0445 \u0430\u043d\u0430\u043b\u0438\u0437\u043e\u0432 + BEFORE\u2192AFTER",
+  "files": ["clients/avtoworld/seo/action-plan-2026-04-09.md", "clients/avtoworld/seo/competitive-analysis-2026-04-09.md"]
+}

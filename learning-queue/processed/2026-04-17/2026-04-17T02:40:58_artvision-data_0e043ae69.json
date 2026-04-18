@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T02:40:58",
+  "repo": "artvision-data",
+  "commit": "0e043ae69",
+  "message": "feat(ops-crm): batch 4 \u2014 SSE + move endpoint + tests + docs (steps 8-9)",
+  "signal_type": "workaround",
+  "detail": "workaround: +| `GET`    | `/api/events` | Server-Sent Events stream of `task_history` rows. Honours `Last-Event-",
+  "files": ["dashboards/README.md"]
+}

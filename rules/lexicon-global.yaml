@@ -1,0 +1,49 @@
+# Global lexicon — правила для ВСЕХ клиентских документов
+# Подключается pre-client-lexicon.sh + pre-outbound-gate.sh
+# Применяется к файлам в /clients/**, /presale/**, /kp/**
+
+forbidden:
+  # AI/нейросети в публичных материалах (CONFIRM-уровень)
+  - pattern: '(?i)\b(нейросет\w*|neural|GPT-\d|Claude|LLM|искусственн\w+ интеллект|AI-генера\w+)\b'
+    reason: "AI/нейросети запрещены в публичных материалах клиента. Замена: 'авторская методология', 'аналитическая система', 'экспертный анализ'"
+    severity: critical
+    scope: [kp, client_page, public]
+
+  # Обещания/KPI в КП
+  - pattern: '(?i)(бесплатн\w+ месяц|free month|гарант\w+ KPI|гарант\w+ результат\w*|возврат денег)'
+    reason: "НИКОГДА не обещать бесплатный месяц или KPI в договоре/КП (feedback_no_free_month_kpi)"
+    severity: critical
+    scope: [kp]
+
+  # Клише
+  - pattern: '(?i)(качественн\w+ услуги|индивидуальн\w+ подход|команда профессионал\w+|лидер рынка|более \d+ лет на рынке)'
+    reason: "Продающие клише запрещены — конкретный живой язык (feedback_no_cliches)"
+    severity: warning
+    scope: [kp, content]
+
+replace:
+  # Бренд написание
+  - from: '\bArtvision\b'
+    to: 'artvision.pro'
+    reason: "Всегда маленькими + .pro (feedback_artvision_naming)"
+    severity: warning
+    exclude_context: ['Artvision Radar', 'Artvision Flow', 'Artvision Scout', 'Artvision LinkForge', 'Artvision Content Lab', 'Artvision Pulse', 'Artvision Insight', 'Artvision Leads']
+
+  - from: 'ARTVISION'
+    to: 'artvision.pro'
+    severity: warning
+
+  # Бабуров/presale
+  - from: '(?i)безвозмездн\w+'
+    to: 'пилотный период / рамочное сотрудничество'
+    reason: "feedback_baburov_framing"
+    severity: warning
+    scope: [presale, baburov]
+
+require:
+  # В КП должны быть — warning если нет
+  - pattern: '(https?://[^\s"<)]+)'
+    min_count: 3
+    reason: "КП без прямых ссылок на источники (feedback_kp_source_links)"
+    severity: warning
+    scope: [kp]

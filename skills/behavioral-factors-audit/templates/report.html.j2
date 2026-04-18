@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ client_name }} — Аудит поведенческих факторов | artvision.pro Pulse</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --av-black: #181818;
+    --av-pure-black: #000000;
+    --av-white: #ffffff;
+    --av-text-primary: #181818;
+    --av-text-secondary: #636663;
+    --av-text-dark: #323232;
+    --av-green: #059856;
+    --av-green-light: #1a7d52;
+    --av-pink: #d82b63;
+    --av-orange: #e07c1d;
+    --av-red: #c33648;
+
+    --av-bg-light: #f3f3f3;
+    --av-bg-white: #ffffff;
+    --av-bg-footer: #e1e1e1;
+    --av-border: #c8c8c8;
+    --av-border-dark: #000000;
+
+    --av-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--av-font);
+    color: var(--av-text-primary);
+    background: #e8e8e8;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+.report {
+    max-width: 1040px;
+    margin: 0 auto;
+    background: var(--av-bg-white);
+    box-shadow: 0 2px 40px rgba(0,0,0,0.12);
+}
+.page {
+    padding: 56px 64px;
+    border-bottom: 1px solid var(--av-border);
+}
+.page:last-child { border-bottom: none; }
+.page-dark {
+    padding: 56px 64px;
+    background: var(--av-pure-black);
+    color: var(--av-white);
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 32px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+}
+.header-top .brand { font-weight: 600; color: var(--av-white); }
+
+h1 { font-size: 42px; line-height: 1.15; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.015em; }
+h2 { font-size: 28px; line-height: 1.2; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.01em; }
+h3 { font-size: 20px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 16px; font-weight: 600; margin: 20px 0 8px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--av-text-secondary); }
+p { margin-bottom: 14px; color: var(--av-text-dark); font-size: 15px; }
+
+.subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    max-width: 620px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+}
+.stat {
+    background: var(--av-bg-light);
+    padding: 20px 18px;
+    border-radius: 10px;
+    border-left: 4px solid var(--av-green);
+}
+.stat.warn { border-left-color: var(--av-orange); }
+.stat.fail { border-left-color: var(--av-red); }
+.stat.manual { border-left-color: var(--av-text-secondary); }
+.stat.na { border-left-color: #b0b0b0; }
+.stat .value { font-size: 34px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.stat .label { font-size: 12px; color: var(--av-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 20px 0 28px;
+}
+.kpi-card {
+    background: var(--av-bg-light);
+    padding: 18px 16px;
+    border-radius: 8px;
+    border-left: 3px solid var(--av-green-light);
+}
+.kpi-card .kpi-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--av-text-primary);
+    line-height: 1.1;
+}
+.kpi-card .kpi-label {
+    font-size: 11px;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+}
+
+.score-block {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    background: var(--av-bg-light);
+    padding: 28px;
+    border-radius: 12px;
+    margin: 20px 0 28px;
+}
+.score-big {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--av-green);
+    min-width: 160px;
+}
+.score-big.low { color: var(--av-red); }
+.score-big.mid { color: var(--av-orange); }
+.score-caption h3 { margin-top: 0; }
+
+.toc {
+    background: var(--av-bg-light);
+    padding: 24px 28px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+.toc ol { padding-left: 22px; }
+.toc li { margin: 6px 0; font-size: 15px; }
+.toc a {
+    color: var(--av-text-primary);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--av-border);
+}
+.toc a:hover { border-bottom-color: var(--av-green); color: var(--av-green); }
+
+.factor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 14px;
+}
+.factor-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--av-bg-light);
+    border-bottom: 2px solid var(--av-border-dark);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--av-text-dark);
+}
+.factor-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--av-border);
+    vertical-align: top;
+}
+.factor-table tr:hover td { background: #fafafa; }
+.factor-table .col-status { width: 90px; }
+.factor-table .col-id { width: 48px; color: var(--av-text-secondary); }
+.factor-table .col-sev { width: 90px; }
+.factor-table .col-name { width: 230px; font-weight: 600; }
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.status-pass { background: #d8f0e4; color: var(--av-green-light); }
+.status-warn { background: #fde4cc; color: var(--av-orange); }
+.status-fail { background: #f8d4d9; color: var(--av-red); }
+.status-manual { background: #e4e4e4; color: var(--av-text-secondary); }
+.status-na { background: #f0f0f0; color: var(--av-text-secondary); }
+
+.sev-critical { color: var(--av-red); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+.sev-high { color: var(--av-orange); font-weight: 600; text-transform: uppercase; font-size: 11px; }
+.sev-medium { color: var(--av-text-dark); text-transform: uppercase; font-size: 11px; }
+.sev-low { color: var(--av-text-secondary); text-transform: uppercase; font-size: 11px; }
+
+.evidence {
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    line-height: 1.5;
+}
+.recommendation {
+    font-size: 13px;
+    color: var(--av-text-dark);
+    line-height: 1.5;
+    margin-top: 6px;
+    padding: 8px 12px;
+    background: #f9fafb;
+    border-left: 3px solid var(--av-green);
+    border-radius: 0 4px 4px 0;
+}
+
+.critical-list {
+    background: #fff5f6;
+    border-left: 4px solid var(--av-red);
+    padding: 18px 22px;
+    border-radius: 6px;
+    margin: 16px 0 24px;
+}
+.critical-list ol { padding-left: 22px; }
+.critical-list li { margin: 8px 0; font-size: 15px; color: var(--av-text-dark); }
+.critical-list li strong { color: var(--av-red); }
+
+.meta-block {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 10px 18px;
+    margin: 24px 0;
+    font-size: 14px;
+    color: var(--av-text-dark);
+}
+.meta-block .key {
+    font-weight: 600;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding-top: 2px;
+}
+.meta-block .value { word-break: break-word; }
+.meta-block a { color: var(--av-green-light); }
+
+.data-sources {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+.data-source {
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--av-border);
+    font-size: 13px;
+}
+.data-source.ok { border-color: var(--av-green); background: #f0faf5; }
+.data-source.missing { border-color: #d0d0d0; background: #fafafa; color: var(--av-text-secondary); }
+.data-source .ds-name { font-weight: 600; margin-bottom: 4px; }
+.data-source .ds-status { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+section.category { scroll-margin-top: 20px; }
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid var(--av-border-dark);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
+.category-stats { font-size: 13px; color: var(--av-text-secondary); }
+
+.chart-block {
+    margin: 24px 0;
+    padding: 20px;
+    background: var(--av-bg-light);
+    border-radius: 10px;
+}
+.chart-block img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+.chart-caption { font-size: 12px; color: var(--av-text-secondary); text-align: center; margin-top: 8px; }
+
+footer {
+    background: var(--av-bg-footer);
+    padding: 28px 64px;
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    text-align: center;
+}
+footer a { color: var(--av-green-light); text-decoration: none; }
+
+@media (max-width: 768px) {
+    .page, .page-dark { padding: 36px 24px; }
+    h1 { font-size: 30px; }
+    h2 { font-size: 22px; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .data-sources { grid-template-columns: 1fr; }
+    .score-block { flex-direction: column; gap: 12px; text-align: center; }
+    .score-big { min-width: unset; font-size: 56px; }
+    .factor-table, .factor-table thead, .factor-table tbody, .factor-table tr, .factor-table td, .factor-table th { display: block; }
+    .factor-table thead { display: none; }
+    .factor-table td { border: none; padding: 4px 0; }
+    .factor-table tr { border-bottom: 1px solid var(--av-border); padding: 12px 0; }
+    .meta-block { grid-template-columns: 1fr; gap: 4px; }
+    .meta-block .key { margin-top: 10px; }
+}
+
+@media print {
+    body { background: white; }
+    .report { box-shadow: none; max-width: none; }
+    .page, .page-dark { padding: 24px; page-break-inside: avoid; }
+    section.category { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="report">
+
+<!-- ===== COVER ===== -->
+<div class="page-dark">
+    <div class="header-top">
+        <span class="brand">artvision.pro</span>
+        <span>Pulse · Поведенческие факторы · {{ audited_at_display }}</span>
+    </div>
+    <h1>Аудит поведенческих факторов</h1>
+    <p class="subtitle">
+        {{ client_name }} — анализ поведения аудитории на сайте и в выдаче Яндекса
+        по методике artvision.pro. {{ total_count }} проверок по шести блокам: вовлечённость,
+        выдача, взаимодействие, сегменты, конверсии, техническое здоровье.
+    </p>
+    <div style="margin-top: 28px; font-size: 14px; color: rgba(255,255,255,0.85);">
+        <strong>Сайт:</strong> <a href="{{ target_url }}" style="color: #76e0a8;">{{ target_url }}</a><br>
+        <strong>Период анализа:</strong> {{ period_days }} дней<br>
+        <strong>Дата проверки:</strong> {{ audited_at_display }}
+    </div>
+</div>
+
+<!-- ===== EXECUTIVE SUMMARY ===== -->
+<div class="page">
+    <h2>Резюме</h2>
+
+    <div class="score-block">
+        <div class="score-big {{ score_class }}">{{ score }}%</div>
+        <div class="score-caption">
+            <h3>{{ pass_count }} из {{ pass_count + warn_count + fail_count }} измеримых факторов в зелёной зоне</h3>
+            <p>
+                Поведенческие факторы — прямой сигнал качества для Яндекса.
+                {% if critical_count %}Критичных разрывов: <strong>{{ critical_count }}</strong>. {% endif %}
+                Высокая важность: <strong>{{ high_count }}</strong>. Фокус на них даёт максимальный
+                прирост позиций и конверсии.
+            </p>
+        </div>
+    </div>
+
+    {% if kpi_cards %}
+    <h3>Ключевые метрики</h3>
+    <div class="kpi-grid">
+        {% for kpi in kpi_cards %}
+        <div class="kpi-card">
+            <div class="kpi-value">{{ kpi.value }}</div>
+            <div class="kpi-label">{{ kpi.label }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="summary-grid">
+        <div class="stat">
+            <div class="value">{{ pass_count }}</div>
+            <div class="label">В норме</div>
+        </div>
+        <div class="stat fail">
+            <div class="value">{{ fail_count }}</div>
+            <div class="label">Разрывы</div>
+        </div>
+        <div class="stat warn">
+            <div class="value">{{ warn_count }}</div>
+            <div class="label">Внимание</div>
+        </div>
+        <div class="stat manual">
+            <div class="value">{{ manual_count + na_count }}</div>
+            <div class="label">Ручная / Нет данных</div>
+        </div>
+    </div>
+
+    {% if critical_fails %}
+    <h3>Топ критичных разрывов</h3>
+    <div class="critical-list">
+        <ol>
+        {% for cf in critical_fails %}
+            <li>
+                <strong>{{ cf.name }}</strong>
+                <span style="color: var(--av-text-secondary); font-size: 13px;">
+                    ({{ category_labels.get(cf.category, cf.category) }}, важность: {{ cf.severity }})
+                </span>
+                {% if cf.evidence %}
+                <br><span style="font-size: 13px; color: var(--av-text-secondary);">{{ cf.evidence }}</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ol>
+    </div>
+    {% endif %}
+
+    <h3 id="toc">Содержание</h3>
+    <div class="toc">
+        <ol>
+            <li><a href="#meta">Параметры проверки и источники данных</a></li>
+            {% if sources_chart or device_chart %}
+            <li><a href="#charts">Графики по данным Метрики</a></li>
+            {% endif %}
+            {% for cat_id, cat_label in categories_ordered %}
+            <li><a href="#cat-{{ cat_id }}">{{ cat_label }}</a> ({{ category_stats[cat_id].total }})</li>
+            {% endfor %}
+            <li><a href="#recommendations">Рекомендации и следующие шаги</a></li>
+        </ol>
+    </div>
+</div>
+
+<!-- ===== META ===== -->
+<section class="page" id="meta">
+    <h2>Параметры проверки</h2>
+    <div class="meta-block">
+        <div class="key">URL сайта</div>
+        <div class="value"><a href="{{ target_url }}" target="_blank">{{ target_url }}</a></div>
+
+        <div class="key">Период анализа</div>
+        <div class="value">{{ period_days }} дней (данные Метрики и Вебмастера)</div>
+
+        <div class="key">Counter ID Метрики</div>
+        <div class="value">{{ counter_id if counter_id else 'не передан — Метрика-факторы в статусе «нет данных»' }}</div>
+
+        <div class="key">Дата проверки</div>
+        <div class="value">{{ audited_at_display }} (UTC)</div>
+
+        <div class="key">Всего факторов</div>
+        <div class="value">{{ total_count }}</div>
+
+        <div class="key">Инструмент</div>
+        <div class="value">artvision.pro Pulse — авторская методика анализа поведенческих сигналов Яндекса</div>
+    </div>
+
+    <h3>Источники данных</h3>
+    <div class="data-sources">
+        <div class="data-source {{ 'ok' if has_metrika else 'missing' }}">
+            <div class="ds-name">Яндекс.Метрика API</div>
+            <div class="ds-status">{{ 'Подключено' if has_metrika else 'Нет данных' }}</div>
+            <div style="margin-top: 6px; font-size: 12px;">
+                Вовлечённость, сегменты, цели, источники трафика
+            </div>
+        </div>
+        <div class="data-source {{ 'ok' if has_webmaster else 'missing' }}">
+            <div class="ds-name">Яндекс.Вебмастер API</div>
+            <div class="ds-status">{{ 'Подключено' if has_webmaster else 'Нет данных' }}</div>
+            <div style="margin-top: 6px; font-size: 12px;">
+                CTR, позиции, поисковые запросы, показы
+            </div>
+        </div>
+        <div class="data-source {{ 'ok' if has_pagespeed else 'missing' }}">
+            <div class="ds-name">Google PageSpeed API</div>
+            <div class="ds-status">{{ 'Подключено' if has_pagespeed else 'Нет данных' }}</div>
+            <div style="margin-top: 6px; font-size: 12px;">
+                Core Web Vitals (LCP, CLS, INP), Performance Score
+            </div>
+        </div>
+    </div>
+
+    {% if not has_metrika or not has_webmaster %}
+    <p style="font-size: 13px; color: var(--av-text-secondary); margin-top: 16px;">
+        <strong>Для полного отчёта нужно:</strong>
+        {% if not has_metrika %} доступ к счётчику Метрики (counter_id) и OAuth-токен API;{% endif %}
+        {% if not has_webmaster %} токен Вебмастера (user_id + OAuth) с правами на сайт.{% endif %}
+        Без них часть факторов отмечена как «нет данных».
+    </p>
+    {% endif %}
+</section>
+
+{% if sources_chart or device_chart %}
+<!-- ===== CHARTS ===== -->
+<section class="page" id="charts">
+    <h2>Ключевые графики</h2>
+
+    {% if device_chart %}
+    <div class="chart-block">
+        <img src="data:image/png;base64,{{ device_chart }}" alt="Отказы по устройствам">
+        <div class="chart-caption">
+            Сравнение отказов по типу устройства. Разница более 10 п.п. — сигнал проблемы адаптивности.
+        </div>
+    </div>
+    {% endif %}
+
+    {% if sources_chart %}
+    <div class="chart-block">
+        <img src="data:image/png;base64,{{ sources_chart }}" alt="Источники трафика">
+        <div class="chart-caption">
+            Топ-7 источников трафика за период. Здоровый микс: органика ≥ 30%, без перекосов в один канал.
+        </div>
+    </div>
+    {% endif %}
+</section>
+{% endif %}
+
+<!-- ===== CATEGORIES ===== -->
+{% for cat_id, cat_label in categories_ordered %}
+<section class="page category" id="cat-{{ cat_id }}">
+    <div class="category-header">
+        <h2>{{ loop.index }}. {{ cat_label }}</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">{{ category_stats[cat_id].pass }} в норме</span> ·
+            <span style="color: var(--av-red);">{{ category_stats[cat_id].fail }} разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">{{ category_stats[cat_id].manual + category_stats[cat_id].na }} ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for f in factors_by_category[cat_id] %}
+            <tr>
+                <td class="col-id">{{ f.id }}</td>
+                <td><span class="status-badge status-{{ f.status }}">{{ status_labels.get(f.status, f.status) }}</span></td>
+                <td><span class="sev-{{ f.severity }}">{{ f.severity }}</span></td>
+                <td class="col-name">{{ f.name }}</td>
+                <td>
+                    <div class="evidence">{{ f.evidence }}</div>
+                    {% if f.description %}
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        {{ f.description }}
+                    </div>
+                    {% endif %}
+                    {% if f.status in ('fail', 'warn', 'manual') and f.recommendation %}
+                    <div class="recommendation">
+                        <strong>Что делать:</strong> {{ f.recommendation }}
+                    </div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endfor %}
+
+<!-- ===== RECOMMENDATIONS ===== -->
+<section class="page" id="recommendations">
+    <h2>Рекомендации и следующие шаги</h2>
+
+    <h3>Порядок работ</h3>
+    <ol style="padding-left: 24px;">
+        {% if critical_count %}
+        <li style="margin: 10px 0;">
+            <strong>Критичные разрывы ({{ critical_count }})</strong> — самые болезненные для Яндекса
+            сигналы. Обычно это отказы, CTR в выдаче и отсутствие настроенных целей.
+            Закрываются в первые 2-3 недели.
+        </li>
+        {% endif %}
+        {% if high_count %}
+        <li style="margin: 10px 0;">
+            <strong>Факторы высокой важности ({{ high_count }})</strong> — среднее время, глубина,
+            Core Web Vitals, поведение mobile vs desktop. Работа на 4-8 недель.
+        </li>
+        {% endif %}
+        <li style="margin: 10px 0;">
+            <strong>Ручная проверка ({{ manual_count }})</strong> — карты скроллинга, тепловые карты,
+            вебвизор, аналитика форм. Требует часовой сессии в интерфейсе Метрики с выводами.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Повторный аудит через 6-8 недель</strong> — замер динамики, пересбор данных
+            из API, обновление рекомендаций на основе свежих сигналов.
+        </li>
+    </ol>
+
+    <h3>Что делает artvision.pro</h3>
+    <p>
+        Команда закрывает поведенческие факторы системно: настройка целей Метрики,
+        переписывание title/description для топ-запросов, ускорение сайта (Core Web Vitals),
+        улучшение форм и первых экранов. Формат — абонентское сопровождение с ежемесячной
+        отчётностью и повторным прогоном аудита раз в квартал.
+    </p>
+    <p>
+        Связь: <a href="mailto:info@artvision.pro" style="color: var(--av-green-light);">info@artvision.pro</a>
+        · <a href="https://artvision.pro" style="color: var(--av-green-light);">artvision.pro</a>
+    </p>
+</section>
+
+<footer>
+    artvision.pro Pulse · Поведенческие факторы · Отчёт сгенерирован {{ audited_at_display }} ·
+    <a href="https://artvision.pro">artvision.pro</a>
+</footer>
+
+</div>
+</body>
+</html>

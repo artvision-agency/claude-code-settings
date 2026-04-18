@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-18T17:12:25",
+  "repo": "artvision-data",
+  "commit": "fa14e3ef9",
+  "message": "fix: vps-backup.sh \u2014 trap cleanup + retention 14d",
+  "signal_type": "error_resolution",
+  "detail": "fix: vps-backup.sh \u2014 trap cleanup + retention 14d",
+  "files": ["scripts/vps-backup.sh"]
+}

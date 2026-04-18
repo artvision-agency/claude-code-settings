@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T02:09:49",
+  "repo": "artvision-data",
+  "commit": "32cc8f56a",
+  "message": "sync: session state 2026-04-17_02:09",
+  "signal_type": "workaround",
+  "detail": "workaround: +                # 429 / 5xx -> retry with exponential backoff.",
+  "files": ["dashboards/data/artvision.db", "dashboards/engine/modules/tasks_asana_sync.py", "dashboards/frontend/tasks.json", "gantt-data.json", "presale/TODO.md", "sessions/2026-04-17.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

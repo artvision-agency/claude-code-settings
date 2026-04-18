@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-09T14:18:02",
+  "repo": "artvision-data",
+  "commit": "ff7558ff4",
+  "message": "sync: session state 2026-04-09_14:17",
+  "signal_type": "workaround",
+  "detail": "workaround: +      // Fallback: use the canvas direct parent",
+  "files": ["clients/mirbir/dashboard-combined.html", "clients/mirbir/inject-methodology.py", "sessions/2026-04-09.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

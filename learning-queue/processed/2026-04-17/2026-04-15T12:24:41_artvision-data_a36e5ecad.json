@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-15T12:24:41",
+  "repo": "artvision-data",
+  "commit": "a36e5ecad",
+  "message": "chore: save session prompts before compact 2026-04-15_12:24",
+  "signal_type": "workaround",
+  "detail": "workaround: +   - Subagent spawning: Agent tool with subagent_type (strict-factchecker NOT registered, fallback ",
+  "files": ["prompts/2026-04-15_session_2be66804.md"]
+}

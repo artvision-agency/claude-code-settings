@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T01:14:43",
+  "repo": "artvision-data",
+  "commit": "b030c75b7",
+  "message": "sync: session state 2026-04-17_01:14",
+  "signal_type": "workaround",
+  "detail": "workaround: +| **\u0425\u0440\u0430\u043d\u0435\u043d\u0438\u0435 `tasks.json`** | **\u041e\u0441\u0442\u0430\u0432\u043b\u044f\u0435\u043c \u043a\u0430\u043a fallback \u0434\u043b\u044f `file://`**, \u043d\u043e GET `/api/tasks` \u2014 prima",
+  "files": ["docs/plans/2026-04-15-ops-crm-upgrade.md", "sessions/2026-04-17.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

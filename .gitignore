@@ -78,3 +78,5 @@ agents-artvision
 #   session-aliases.json — алиасы сессий
 #   statusline.sh     — статусбар
 # ═══════════════════════════════════════════════
+voice/venv/
+__pycache__/

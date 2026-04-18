@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ client_name }} — Аудит ссылочного профиля | artvision.pro LinkForge</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --av-black: #181818;
+    --av-pure-black: #000000;
+    --av-white: #ffffff;
+    --av-text-primary: #181818;
+    --av-text-secondary: #636663;
+    --av-text-dark: #323232;
+    --av-green: #059856;
+    --av-green-light: #1a7d52;
+    --av-pink: #d82b63;
+    --av-orange: #e07c1d;
+    --av-red: #c33648;
+
+    --av-bg-light: #f3f3f3;
+    --av-bg-white: #ffffff;
+    --av-bg-footer: #e1e1e1;
+    --av-border: #c8c8c8;
+    --av-border-dark: #000000;
+
+    --av-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--av-font);
+    color: var(--av-text-primary);
+    background: #e8e8e8;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+.report {
+    max-width: 1040px;
+    margin: 0 auto;
+    background: var(--av-bg-white);
+    box-shadow: 0 2px 40px rgba(0,0,0,0.12);
+}
+.page {
+    padding: 56px 64px;
+    border-bottom: 1px solid var(--av-border);
+}
+.page:last-child { border-bottom: none; }
+.page-dark {
+    padding: 56px 64px;
+    background: var(--av-pure-black);
+    color: var(--av-white);
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 32px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+}
+.header-top .brand { font-weight: 600; color: var(--av-white); }
+
+h1 {
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: -0.015em;
+}
+h2 {
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+}
+h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 24px 0 12px;
+}
+h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--av-text-secondary);
+}
+p { margin-bottom: 14px; color: var(--av-text-dark); font-size: 15px; }
+
+.subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    max-width: 620px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+}
+.stat {
+    background: var(--av-bg-light);
+    padding: 20px 18px;
+    border-radius: 10px;
+    border-left: 4px solid var(--av-green);
+}
+.stat.warn { border-left-color: var(--av-orange); }
+.stat.fail { border-left-color: var(--av-red); }
+.stat.manual { border-left-color: var(--av-text-secondary); }
+.stat .value {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.stat .label {
+    font-size: 12px;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.score-block {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    background: var(--av-bg-light);
+    padding: 28px;
+    border-radius: 12px;
+    margin: 20px 0 28px;
+}
+.score-big {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--av-green);
+    min-width: 160px;
+}
+.score-big.low { color: var(--av-red); }
+.score-big.mid { color: var(--av-orange); }
+.score-caption h3 { margin-top: 0; }
+
+.toc {
+    background: var(--av-bg-light);
+    padding: 24px 28px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+.toc ol { padding-left: 22px; }
+.toc li {
+    margin: 6px 0;
+    font-size: 15px;
+}
+.toc a {
+    color: var(--av-text-primary);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--av-border);
+}
+.toc a:hover { border-bottom-color: var(--av-green); color: var(--av-green); }
+
+.factor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 14px;
+}
+.factor-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--av-bg-light);
+    border-bottom: 2px solid var(--av-border-dark);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--av-text-dark);
+}
+.factor-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--av-border);
+    vertical-align: top;
+}
+.factor-table tr:hover td { background: #fafafa; }
+.factor-table .col-status { width: 72px; }
+.factor-table .col-id { width: 48px; color: var(--av-text-secondary); }
+.factor-table .col-sev { width: 90px; }
+.factor-table .col-name { width: 220px; font-weight: 600; }
+.factor-table .col-value { width: 130px; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.status-pass { background: #d8f0e4; color: var(--av-green-light); }
+.status-warn { background: #fde4cc; color: var(--av-orange); }
+.status-fail { background: #f8d4d9; color: var(--av-red); }
+.status-manual { background: #e4e4e4; color: var(--av-text-secondary); }
+.status-na { background: #f0f0f0; color: var(--av-text-secondary); }
+
+.sev-critical { color: var(--av-red); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+.sev-high { color: var(--av-orange); font-weight: 600; text-transform: uppercase; font-size: 11px; }
+.sev-medium { color: var(--av-text-dark); text-transform: uppercase; font-size: 11px; }
+.sev-low { color: var(--av-text-secondary); text-transform: uppercase; font-size: 11px; }
+
+.evidence {
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    line-height: 1.5;
+}
+
+.critical-list {
+    background: #fff5f6;
+    border-left: 4px solid var(--av-red);
+    padding: 18px 22px;
+    border-radius: 6px;
+    margin: 16px 0 24px;
+}
+.critical-list ol { padding-left: 22px; }
+.critical-list li {
+    margin: 8px 0;
+    font-size: 15px;
+    color: var(--av-text-dark);
+}
+.critical-list li strong { color: var(--av-red); }
+
+.meta-block {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 10px 18px;
+    margin: 24px 0;
+    font-size: 14px;
+    color: var(--av-text-dark);
+}
+.meta-block .key {
+    font-weight: 600;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding-top: 2px;
+}
+.meta-block .value { word-break: break-word; }
+.meta-block a { color: var(--av-green-light); }
+
+section.group { scroll-margin-top: 20px; }
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid var(--av-border-dark);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
+.group-stats {
+    font-size: 13px;
+    color: var(--av-text-secondary);
+}
+
+.chart-block {
+    background: var(--av-bg-light);
+    padding: 16px 20px 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    text-align: center;
+}
+.chart-block img {
+    max-width: 100%;
+    height: auto;
+}
+
+.provider-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+}
+.provider {
+    background: var(--av-bg-light);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 13px;
+}
+.provider.on { border-top: 3px solid var(--av-green); }
+.provider.off { border-top: 3px solid var(--av-border); color: var(--av-text-secondary); }
+.provider .name { font-weight: 600; }
+.provider .status { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+.provider.on .status { color: var(--av-green-light); }
+.provider.off .status { color: var(--av-text-secondary); }
+
+footer {
+    background: var(--av-bg-footer);
+    padding: 28px 64px;
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    text-align: center;
+}
+footer a { color: var(--av-green-light); text-decoration: none; }
+
+@media (max-width: 768px) {
+    .page, .page-dark { padding: 36px 24px; }
+    h1 { font-size: 30px; }
+    h2 { font-size: 22px; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .score-block { flex-direction: column; gap: 12px; text-align: center; }
+    .score-big { min-width: unset; font-size: 56px; }
+    .factor-table, .factor-table thead, .factor-table tbody, .factor-table tr, .factor-table td, .factor-table th { display: block; }
+    .factor-table thead { display: none; }
+    .factor-table td { border: none; padding: 4px 0; }
+    .factor-table tr { border-bottom: 1px solid var(--av-border); padding: 12px 0; }
+    .meta-block { grid-template-columns: 1fr; gap: 4px; }
+    .meta-block .key { margin-top: 10px; }
+    .provider-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media print {
+    body { background: white; }
+    .report { box-shadow: none; max-width: none; }
+    .page, .page-dark { padding: 24px; page-break-inside: avoid; }
+    section.group { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="report">
+
+<!-- ===== COVER ===== -->
+<div class="page-dark">
+    <div class="header-top">
+        <span class="brand">artvision.pro</span>
+        <span>LinkForge · {{ audited_at_display }}</span>
+    </div>
+    <h1>Аудит ссылочного профиля</h1>
+    <p class="subtitle">
+        {{ client_name }} — сканирование сайта по 27 параметрам ссылочного ранжирования
+        Яндекса и наработкам агентства artvision.pro.
+    </p>
+    <div style="margin-top: 28px; font-size: 14px; color: rgba(255,255,255,0.85);">
+        <strong>Домен:</strong> <a href="https://{{ target_domain }}" style="color: #76e0a8;">{{ target_domain }}</a><br>
+        {% if competitors %}
+        <strong>Конкуренты:</strong>
+        {% for c in competitors %}<a href="https://{{ c }}" style="color: #76e0a8;">{{ c }}</a>{% if not loop.last %}, {% endif %}{% endfor %}<br>
+        {% endif %}
+        <strong>Дата проверки:</strong> {{ audited_at_display }}
+    </div>
+</div>
+
+<!-- ===== EXECUTIVE SUMMARY ===== -->
+<div class="page">
+    <h2>Резюме</h2>
+
+    <div class="score-block">
+        <div class="score-big {{ score_class }}">{{ score }}%</div>
+        <div class="score-caption">
+            <h3>{{ pass_count }} из {{ automated_count }} автоматических факторов в норме</h3>
+            <p>
+                Всего проверено {{ total_count }} факторов. Остальные — потенциал для роста массы,
+                снижения токсичности и закрытия разрыва с конкурентами. Фокус на критичных
+                пунктах даёт максимальный прирост трафика на первом этапе.
+            </p>
+        </div>
+    </div>
+
+    <div class="summary-grid">
+        <div class="stat">
+            <div class="value">{{ pass_count }}</div>
+            <div class="label">В норме</div>
+        </div>
+        <div class="stat fail">
+            <div class="value">{{ fail_count }}</div>
+            <div class="label">Разрывы</div>
+        </div>
+        <div class="stat warn">
+            <div class="value">{{ warn_count }}</div>
+            <div class="label">Внимание</div>
+        </div>
+        <div class="stat manual">
+            <div class="value">{{ manual_count }}</div>
+            <div class="label">Ручная проверка</div>
+        </div>
+    </div>
+
+    {% if critical_fails %}
+    <h3>Топ критичных разрывов</h3>
+    <div class="critical-list">
+        <ol>
+        {% for cf in critical_fails %}
+            <li>
+                <strong>{{ cf.name }}</strong>
+                <span style="color: var(--av-text-secondary); font-size: 13px;">
+                    ({{ group_labels.get(cf.group, cf.group) }}, severity: {{ cf.severity }})
+                </span>
+                {% if cf.evidence %}
+                <div class="evidence" style="margin-top: 4px;">{{ cf.evidence }}</div>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ol>
+    </div>
+    {% endif %}
+
+    <h3 id="toc">Содержание</h3>
+    <div class="toc">
+        <ol>
+            <li><a href="#meta">Параметры проверки</a></li>
+            {% for gid, glabel in groups_ordered %}
+            <li><a href="#grp-{{ gid }}">{{ glabel }}</a> ({{ group_stats[gid].total }})</li>
+            {% endfor %}
+            <li><a href="#recommendations">Рекомендации и следующие шаги</a></li>
+        </ol>
+    </div>
+</div>
+
+<!-- ===== META ===== -->
+<section class="page" id="meta">
+    <h2>Параметры проверки</h2>
+    <div class="meta-block">
+        <div class="key">Домен сайта</div>
+        <div class="value"><a href="https://{{ target_domain }}" target="_blank">{{ target_domain }}</a></div>
+
+        <div class="key">Дата проверки</div>
+        <div class="value">{{ audited_at_display }} (UTC)</div>
+
+        <div class="key">Всего факторов</div>
+        <div class="value">{{ total_count }} (автоматических: {{ automated_count }}, ручных: {{ manual_count }})</div>
+
+        <div class="key">Инструмент</div>
+        <div class="value">artvision.pro LinkForge — авторская методика аудита ссылочного профиля</div>
+
+        {% if crawl_meta and crawl_meta.pages_count %}
+        <div class="key">Краул сайта</div>
+        <div class="value">
+            Обработано страниц: <strong>{{ crawl_meta.pages_count }}</strong>
+            {% if crawl_meta.orphans_sample %}<br>Сирот (пример): {{ crawl_meta.orphans_sample|length }}{% endif %}
+            {% if crawl_meta.broken_sample %}<br>Битых (пример): {{ crawl_meta.broken_sample|length }}{% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <h3>Источники данных</h3>
+    <div class="provider-grid">
+        {% for name, on in providers_display.items() %}
+        <div class="provider {{ 'on' if on else 'off' }}">
+            <div class="name">{{ name }}</div>
+            <div class="status">{{ 'подключён' if on else 'не подключён' }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    <p style="font-size: 13px; color: var(--av-text-secondary);">
+        Недоступные провайдеры отмечают свои факторы как «ручная проверка».
+        Для полного покрытия добавьте токен в <code>tokens.json</code>.
+    </p>
+</section>
+
+<!-- ===== GROUPS ===== -->
+{% for gid, glabel in groups_ordered %}
+<section class="page group" id="grp-{{ gid }}">
+    <div class="group-header">
+        <h2>{{ loop.index }}. {{ glabel }}</h2>
+        <div class="group-stats">
+            <span style="color: var(--av-green);">{{ group_stats[gid].pass }} в норме</span> ·
+            <span style="color: var(--av-red);">{{ group_stats[gid].fail }} разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">{{ group_stats[gid].manual }} ручных</span>
+        </div>
+    </div>
+
+    {# Чарты по группам #}
+    {% if gid == 'anchor_toxicity' and charts.anchor_distribution %}
+    <div class="chart-block">
+        <img src="data:image/png;base64,{{ charts.anchor_distribution }}" alt="Распределение анкоров">
+    </div>
+    {% endif %}
+
+    {% if gid == 'external_profile' %}
+        {% if charts.follow_breakdown %}
+        <div class="chart-block">
+            <img src="data:image/png;base64,{{ charts.follow_breakdown }}" alt="Типы ссылок">
+        </div>
+        {% endif %}
+        {% if charts.dr_histogram %}
+        <div class="chart-block">
+            <img src="data:image/png;base64,{{ charts.dr_histogram }}" alt="DR-распределение">
+        </div>
+        {% endif %}
+    {% endif %}
+
+    {% if gid == 'dynamics_age' and charts.velocity_12m %}
+    <div class="chart-block">
+        <img src="data:image/png;base64,{{ charts.velocity_12m }}" alt="Прирост ссылок">
+    </div>
+    {% endif %}
+
+    {% if gid == 'competitor_gap' and charts.competitor_comparison %}
+    <div class="chart-block">
+        <img src="data:image/png;base64,{{ charts.competitor_comparison }}" alt="Сравнение с конкурентами">
+    </div>
+    {% endif %}
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th class="col-value">Значение</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for f in factors_by_group[gid] %}
+            <tr>
+                <td class="col-id">{{ f.id }}</td>
+                <td><span class="status-badge status-{{ f.status }}">{{ status_labels.get(f.status, f.status) }}</span></td>
+                <td><span class="sev-{{ f.severity }}">{{ f.severity }}</span></td>
+                <td class="col-name">{{ f.name }}</td>
+                <td class="col-value">
+                    {% if f.value is mapping %}—
+                    {% elif f.value is none %}—
+                    {% else %}{{ f.value }}{% endif %}
+                </td>
+                <td>
+                    <div class="evidence">{{ f.evidence }}</div>
+                    {% if f.description %}
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        {{ f.description }}
+                    </div>
+                    {% endif %}
+                    {% if f.source and f.source != 'stub' %}
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>{{ f.source }}</strong>
+                    </div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endfor %}
+
+<!-- ===== RECOMMENDATIONS ===== -->
+<section class="page" id="recommendations">
+    <h2>Рекомендации и следующие шаги</h2>
+
+    <h3>Порядок работ</h3>
+    <ol style="padding-left: 24px;">
+        <li style="margin: 10px 0;">
+            <strong>Снять риск Минусинска</strong> — если переспам точных анкоров &gt; 20% или
+            доля токсичных донаров &gt; 5%, первый шаг — disavow или замена анкоров. Это блокирует рост.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Закрыть критичные разрывы</strong> — {{ critical_fails|length }} пунктов
+            из топа дают базу доверия. Обычно решаются в первый месяц.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Закрыть пункты высокой важности</strong> — {{ high_count }} факторов
+            со статусом severity: high. Вторая волна работ, 4-6 недель.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Закрыть ссылочный разрыв</strong> — если отставание от конкурентов &gt; 50%,
+            планируем линкбилдинг-стратегию (аутрич, гостевые, отраслевые площадки).
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Пункты ручной проверки</strong> — {{ manual_count }} факторов требуют
+            данных из платных API (Ahrefs, Serpstat premium) или ручного анализа донаров.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Повторный аудит через квартал</strong> — замеряем динамику: рост ref domains,
+            снижение токсичности, закрытие разрыва с конкурентами.
+        </li>
+    </ol>
+
+    <h3>Что делает artvision.pro</h3>
+    <p>
+        Команда закрывает ссылочные задачи поэтапно: чистка токсичных донаров, наращивание
+        качественной массы через аутрич и гостевые, работа с анкор-листом, улучшение
+        внутренней перелинковки. Формат — абонентское сопровождение с ежемесячной
+        отчётностью и повторным прогоном аудита раз в квартал.
+    </p>
+    <p>
+        Связь:
+        <a href="mailto:info@artvision.pro" style="color: var(--av-green-light);">info@artvision.pro</a>
+        ·
+        <a href="https://artvision.pro" style="color: var(--av-green-light);">artvision.pro</a>
+    </p>
+</section>
+
+<footer>
+    artvision.pro LinkForge · Отчёт сгенерирован {{ audited_at_display }} ·
+    <a href="https://artvision.pro">artvision.pro</a>
+</footer>
+
+</div>
+</body>
+</html>

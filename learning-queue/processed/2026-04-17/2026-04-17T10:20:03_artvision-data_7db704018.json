@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T10:20:03",
+  "repo": "artvision-data",
+  "commit": "7db704018",
+  "message": "auto-sync: 5 new,3 modified [2026-04-17 10:20]",
+  "signal_type": "workaround",
+  "detail": "workaround: +                    await ss(page, \"login_form_retry\")",
+  "files": ["clients/avtoworld/linkbuilding/screenshots/v4_02_more_opened.png", "clients/avtoworld/linkbuilding/screenshots/v4_03_after_login_option.png", "clients/avtoworld/linkbuilding/screenshots/v4_04_no_login.png", "clients/avtoworld/linkbuilding/screenshots/v4_05_auth_done.png", "clients/avtoworld/linkbuilding/scripts/yandex_sprav_v4.py", "sessions/2026-04-17.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

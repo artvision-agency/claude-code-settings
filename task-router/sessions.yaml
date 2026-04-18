@@ -1,0 +1,138 @@
+# Реестр сессий Claude Code — привязка навсегда (до ручного изменения)
+# Каждая сессия = набор ключевых слов для маршрутизации задач
+# Формат: имя сессии → keywords (триггеры), todo_file (где хранятся задачи)
+
+sessions:
+  artvision-ops:
+    description: "Операционка агентства, клиенты, отчёты, брифинги"
+    keywords:
+      - artvision
+      - клиент
+      - отчёт
+      - брифинг
+      - операционка
+      - SOP
+      - СБИС
+      - Asana
+      - оплата
+      - счёт
+      - акт
+      - договор
+      - NDA
+      - revenue
+      - upsell
+      - встреча
+      - звонок
+      - линкбилдинг
+      - GEO
+      - eLama
+      - Clutch
+      - vc.ru
+      - парсинг
+      - 2ГИС
+      - стоматолог
+      - BluMart
+      - OTIDO
+      - Atribeaute
+      - VLPCo
+      - ANT
+      - Madwave
+      - Burenie
+      - Geely
+      - AdvertMed
+      - Esenina
+      - Mirulidi
+      - Extru
+    todo_file: "/Users/antonk/artvision-data/TODO.md"
+    cwd: "/Users/antonk/artvision-data"
+
+  artvision-bot:
+    description: "TG-боты: @avportal_bot, @tvorims_bot, разработка"
+    keywords:
+      - бот
+      - bot
+      - telegram
+      - tvorims
+      - avportal
+      - aiogram
+      - grammY
+      - webhook
+      - handler
+      - FSM
+      - middleware
+      - inline
+      - callback
+      - deep link
+      - review flow
+      - отзыв бот
+    todo_file: "/Users/antonk/artvision-tg-bot/TODO.md"
+    cwd: "/Users/antonk/artvision-tg-bot"
+
+  devops:
+    description: "VPS, сервер, деплой, мониторинг, инфраструктура"
+    keywords:
+      - VPS
+      - сервер
+      - nginx
+      - SSL
+      - деплой
+      - deploy
+      - backup
+      - бэкап
+      - мониторинг
+      - LaunchAgent
+      - cron
+      - SSH
+      - pm2
+      - docker
+      - healthcheck
+      - DNS
+    todo_file: "/Users/antonk/devops-agent/TODO.md"
+    cwd: "/Users/antonk/devops-agent"
+
+  products:
+    description: "Продукты: AIvision, ArtSync, Cardwell, Lead Auction, Direct Radar"
+    keywords:
+      - продукт
+      - product
+      - AIvision
+      - ArtSync
+      - Cardwell
+      - card duel
+      - Lead Auction
+      - станок
+      - радар
+      - Direct Radar
+      - MVP
+      - Suno
+      - игра
+      - game
+      - Стас
+    todo_file: "/Users/antonk/artvision-data/products/TODO.md"
+    cwd: "/Users/antonk/artvision-data"
+
+  presale:
+    description: "Presale: КП, новые клиенты, встречи"
+    keywords:
+      - presale
+      - КП
+      - коммерческое предложение
+      - новый клиент
+      - онбординг
+      - Бабуров
+      - yacht
+      - Яков
+      - Hypercare
+      - ivan dental
+      - Mirbir
+    todo_file: "/Users/antonk/artvision-data/presale/TODO.md"
+    cwd: "/Users/antonk/artvision-data"
+
+# Правила:
+# - При конфликте (задача подходит 2+ сессиям) — побеждает та с наивысшим score
+# - При равном score побеждает первая по порядку в этом файле
+# - Задачи без совпадений остаются где есть
+# - Задачи с [routed] НИКОГДА не перемещаются повторно (защита от пинг-понга)
+# - Ручная метка [session:xxx] в задаче = принудительный роутинг
+# - ВАЖНО: keywords НЕ должны дублироваться между сессиями (presale, КП → только в presale)
+# - Изменять этот файл ТОЛЬКО вручную (Антон)

@@ -1,0 +1,24 @@
+{
+  "_comment": "Merge devDependencies and scripts into your package.json. Upper bounds prevent surprise breakage.",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "all": "npm run typecheck && npm run lint && npm run test:cov"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.0 <3",
+    "@vitest/coverage-v8": "^2.1.0 <3",
+    "typescript": "^5.4.0 <6",
+    "tsx": "^4.19.0 <5",
+    "eslint": "^9.10.0 <10",
+    "@typescript-eslint/parser": "^8.6.0 <9",
+    "@typescript-eslint/eslint-plugin": "^8.6.0 <9",
+    "prettier": "^3.3.0 <4"
+  }
+}

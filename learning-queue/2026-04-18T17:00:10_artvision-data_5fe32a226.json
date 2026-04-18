@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-18T17:00:10",
+  "repo": "artvision-data",
+  "commit": "5fe32a226",
+  "message": "auto-sync: 4 new,12 modified [2026-04-18 17:00]",
+  "signal_type": "workaround",
+  "detail": "workaround: +- _send_doctor_card: text-only when no photo; send_photo when photo is set; fallback on photo error",
+  "files": ["clients/tvorimsovershenstvo/survey-bot/data/funnel.db", "clients/tvorimsovershenstvo/survey-bot/handlers/reviews.py", "clients/tvorimsovershenstvo/survey-bot/handlers/survey.py", "clients/tvorimsovershenstvo/survey-bot/tests/test_booking.py", "clients/tvorimsovershenstvo/survey-bot/tests/test_bot.py", "clients/tvorimsovershenstvo/survey-bot/tests/test_doctors.py", "clients/tvorimsovershenstvo/survey-bot/tests/test_funnel.py", "clients/tvorimsovershenstvo/survey-bot/tests/test_qr_lobby.py", "clients/tvorimsovershenstvo/survey-bot/tests/test_waitlist.py", "dashboards/data/artvision.db", "gantt-data.json", "logs/vps-recovery.md", "sessions/2026-04-18.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md", "tokens.json"]
+}

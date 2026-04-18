@@ -1,0 +1,544 @@
+{
+  "target_url": "https://avto.world",
+  "audited_at": "2026-04-17T07:47:30+00:00",
+  "keyword": null,
+  "lsi_words": [],
+  "pages_crawled": {
+    "home": "https://www.avto.world/"
+  },
+  "factors": [
+    {
+      "id": 1,
+      "category": "meta_tags",
+      "name": "Title в диапазоне 50-70 символов",
+      "status": "warn",
+      "severity": "critical",
+      "weight": 9,
+      "evidence": "Длина title: 49 (ожидается 50-70). Текст: «Медные тормозные трубки купить в СПб — Авто Ворлд»",
+      "url_checked": "https://www.avto.world/",
+      "description": "Длина title — баланс между полнотой и отображением в сниппете. Короткий title = упущенные ключи, длинный = обрезается."
+    },
+    {
+      "id": 2,
+      "category": "meta_tags",
+      "name": "Description в диапазоне 150-170 символов",
+      "status": "warn",
+      "severity": "high",
+      "weight": 8,
+      "evidence": "Длина description: 111 (ожидается 150-170)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Description отображается в сниппете Яндекса. Оптимум: 150-170 символов с призывом к действию."
+    },
+    {
+      "id": 3,
+      "category": "meta_tags",
+      "name": "Ключ в meta title",
+      "status": "manual",
+      "severity": "critical",
+      "weight": 10,
+      "evidence": "Не задан --keyword",
+      "url_checked": "https://www.avto.world/",
+      "description": "Основной запрос кластера должен присутствовать в title (точно или морфологически)."
+    },
+    {
+      "id": 4,
+      "category": "meta_tags",
+      "name": "Призыв к действию в description",
+      "status": "warn",
+      "severity": "medium",
+      "weight": 6,
+      "evidence": "В description нет явного призыва к действию",
+      "url_checked": "https://www.avto.world/",
+      "description": "Description с призывом (узнайте, закажите, получите) повышает CTR в выдаче."
+    },
+    {
+      "id": 5,
+      "category": "meta_tags",
+      "name": "OG-теги заполнены (og:title, og:description, og:image)",
+      "status": "pass",
+      "severity": "medium",
+      "weight": 5,
+      "evidence": "Все OG-теги заполнены: og:title, og:description, og:image",
+      "url_checked": "https://www.avto.world/",
+      "description": "Open Graph теги нужны для корректного отображения при репостах в соцсетях и мессенджерах."
+    },
+    {
+      "id": 6,
+      "category": "structure",
+      "name": "Ровно один H1 на странице",
+      "status": "pass",
+      "severity": "high",
+      "weight": 9,
+      "evidence": "Найден ровно один H1: «Медные тормозные трубки для авто — производство и продажа в Санкт-Петербурге»",
+      "url_checked": "https://www.avto.world/",
+      "description": "На странице должен быть один и только один H1 — главный заголовок. Два H1 размывают релевантность."
+    },
+    {
+      "id": 7,
+      "category": "structure",
+      "name": "Ключ в H1",
+      "status": "manual",
+      "severity": "critical",
+      "weight": 10,
+      "evidence": "Не задан --keyword",
+      "url_checked": "https://www.avto.world/",
+      "description": "H1 содержит основной запрос страницы — морфологически или точно."
+    },
+    {
+      "id": 8,
+      "category": "structure",
+      "name": "H1 длиной до 70 символов",
+      "status": "warn",
+      "severity": "medium",
+      "weight": 6,
+      "evidence": "H1 длиной 76 — превышает 70. «Медные тормозные трубки для авто — производство и продажа в Санкт-Петербурге»",
+      "url_checked": "https://www.avto.world/",
+      "description": "Краткий и ёмкий заголовок — до 70 символов. Длинные H1 теряют фокус."
+    },
+    {
+      "id": 9,
+      "category": "structure",
+      "name": "Не менее 3 заголовков H2 на длинной странице",
+      "status": "na",
+      "severity": "high",
+      "weight": 7,
+      "evidence": "Текст 752 слов < порога 1000 — проверка неприменима",
+      "url_checked": "https://www.avto.world/",
+      "description": "Для страниц с body >1000 слов — минимум 3 H2 для структурирования контента."
+    },
+    {
+      "id": 10,
+      "category": "structure",
+      "name": "Иерархия заголовков соблюдена (h1→h2→h3)",
+      "status": "pass",
+      "severity": "medium",
+      "weight": 5,
+      "evidence": "Иерархия заголовков корректна",
+      "url_checked": "https://www.avto.world/",
+      "description": "Нарушение иерархии (h2 без h1, h4 после h2) снижает оценку структуры документа."
+    },
+    {
+      "id": 11,
+      "category": "structure",
+      "name": "Абзацы по 2-4 предложения",
+      "status": "warn",
+      "severity": "medium",
+      "weight": 5,
+      "evidence": "Средняя длина абзаца: 1.3 предложений (ожидается 2-5)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Средняя длина абзаца 2-4 предложения улучшает читаемость и время на сайте."
+    },
+    {
+      "id": 12,
+      "category": "structure",
+      "name": "Наличие маркированных или нумерованных списков",
+      "status": "pass",
+      "severity": "medium",
+      "weight": 5,
+      "evidence": "Списков на странице: 8",
+      "url_checked": "https://www.avto.world/",
+      "description": "Списки структурируют информацию, повышают читаемость и шансы попасть в быстрые ответы Яндекса."
+    },
+    {
+      "id": 13,
+      "category": "structure",
+      "name": "Использование таблиц для структурированных данных",
+      "status": "warn",
+      "severity": "low",
+      "weight": 4,
+      "evidence": "Таблиц: 0 (требуется 1)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Таблицы для сравнений, цен, характеристик — плюс к полноте и шансу на featured snippet."
+    },
+    {
+      "id": 14,
+      "category": "volume",
+      "name": "Объём текста от 1500 слов (коммерческая страница)",
+      "status": "fail",
+      "severity": "high",
+      "weight": 8,
+      "evidence": "Объём текста: 752 слов, требуется минимум 1500",
+      "url_checked": "https://www.avto.world/",
+      "description": "Для коммерческих страниц с конкуренцией в топе оптимум 1500+ слов. Тонкий контент проигрывает."
+    },
+    {
+      "id": 15,
+      "category": "volume",
+      "name": "Объём текста от 2500 слов (блог / экспертная статья)",
+      "status": "fail",
+      "severity": "medium",
+      "weight": 7,
+      "evidence": "Объём текста: 752 слов, требуется минимум 2500",
+      "url_checked": "https://www.avto.world/",
+      "description": "Информационные статьи в ТОП-10 Яндекса обычно имеют 2500+ слов с раскрытием темы."
+    },
+    {
+      "id": 16,
+      "category": "volume",
+      "name": "Тонкий контент < 300 слов отсутствует",
+      "status": "pass",
+      "severity": "high",
+      "weight": 6,
+      "evidence": "Объём текста: 752 слов (>= 300)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Страницы с body < 300 слов (кроме контактов / корзины) — кандидат на thin content штраф."
+    },
+    {
+      "id": 17,
+      "category": "density",
+      "name": "Плотность главного ключа 2-4%",
+      "status": "manual",
+      "severity": "high",
+      "weight": 9,
+      "evidence": "Не задан --keyword для проверки TF",
+      "url_checked": "https://www.avto.world/",
+      "description": "Оптимальная term frequency для основного запроса — 2-4%. Ниже = недооптимизация, выше = переспам."
+    },
+    {
+      "id": 18,
+      "category": "density",
+      "name": "Классическая тошнота не более 7",
+      "status": "pass",
+      "severity": "high",
+      "weight": 8,
+      "evidence": "Классическая тошнота: 4.0 (топ-слово «штуцер»)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Классическая тошнота = sqrt(max_word_frequency). Выше 7 — переспам ключами."
+    },
+    {
+      "id": 19,
+      "category": "density",
+      "name": "Академическая тошнота 5-9%",
+      "status": "warn",
+      "severity": "medium",
+      "weight": 7,
+      "evidence": "Академическая тошнота: 14.76% (диапазон 5.0-9.0%)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Академическая тошнота (суммарная доля повторов самых частых слов) — оптимум 5-9%."
+    },
+    {
+      "id": 20,
+      "category": "density",
+      "name": "Водность не более 30%",
+      "status": "pass",
+      "severity": "medium",
+      "weight": 7,
+      "evidence": "Водность: 14.36% (<= 30.0%)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Водность — доля стоп-слов (предлоги, союзы, местоимения). Больше 30% — много воды, низкая ценность."
+    },
+    {
+      "id": 21,
+      "category": "density",
+      "name": "Ключ в первом абзаце (top 100 слов)",
+      "status": "manual",
+      "severity": "high",
+      "weight": 8,
+      "evidence": "Не задан --keyword",
+      "url_checked": "https://www.avto.world/",
+      "description": "Основной запрос должен встречаться в первых 100 словах страницы — усиливает релевантность."
+    },
+    {
+      "id": 22,
+      "category": "semantics",
+      "name": "LSI-покрытие не менее 60%",
+      "status": "manual",
+      "severity": "high",
+      "weight": 8,
+      "evidence": "Не задан --lsi-words (через запятую) для проверки LSI-покрытия",
+      "url_checked": "https://www.avto.world/",
+      "description": "Доля LSI-синонимов (задаются вручную через --lsi-words) в тексте. 60%+ = полное раскрытие темы."
+    },
+    {
+      "id": 23,
+      "category": "semantics",
+      "name": "Семантическая полнота кластера",
+      "status": "manual",
+      "severity": "high",
+      "weight": 8,
+      "evidence": "Требуется ручная проверка",
+      "url_checked": "https://www.avto.world/",
+      "description": "Страница покрывает основные подтемы кластера (проверяется вручную через список кластерных ключей)."
+    },
+    {
+      "id": 24,
+      "category": "uniqueness",
+      "name": "Уникальность текста не менее 85%",
+      "status": "manual",
+      "severity": "critical",
+      "weight": 10,
+      "evidence": "Автопроверка невозможна — API-ключ уникальности не настроен (нет ключей text_ru / content_watch в tokens.json)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Проверка через text.ru / content-watch.ru API. Для коммерческих страниц минимум 85%, для блога — 90%+."
+    },
+    {
+      "id": 25,
+      "category": "uniqueness",
+      "name": "Внутренние дубли текста отсутствуют",
+      "status": "na",
+      "severity": "high",
+      "weight": 8,
+      "evidence": "Одна страница — внутренние дубли проверить нельзя",
+      "url_checked": null,
+      "description": "Simhash-сравнение страниц сайта. Дубли выше 85% сходства — кандидаты на канонизацию."
+    },
+    {
+      "id": 26,
+      "category": "uniqueness",
+      "name": "Каннибализация ключей отсутствует",
+      "status": "na",
+      "severity": "high",
+      "weight": 8,
+      "evidence": "Одна страница",
+      "url_checked": null,
+      "description": "Два URL с одинаковым title / близкими интентами конкурируют между собой в выдаче."
+    },
+    {
+      "id": 27,
+      "category": "readability",
+      "name": "Индекс Флеша-Кинкейда в диапазоне 60-80",
+      "status": "warn",
+      "severity": "medium",
+      "weight": 6,
+      "evidence": "Индекс Флеша: 53.6 — текст сложен для восприятия (нужно 60-80)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Русская адаптация Оборневой. 60-80 = читаемо, ниже = сложно, выше = примитивно."
+    },
+    {
+      "id": 28,
+      "category": "antispam",
+      "name": "Нет слов целиком в CAPS LOCK в теле",
+      "status": "warn",
+      "severity": "medium",
+      "weight": 6,
+      "evidence": "Слов в CAPS LOCK: 8 (> 2). Примеры: EXCTECL, ЛАДА, ГРАНТА, КАМАЗ, AVTO",
+      "url_checked": "https://www.avto.world/",
+      "description": "Слова ЦЕЛИКОМ КАПСОМ (более 3 символов) в теле страницы — признак спама по Яндексу."
+    },
+    {
+      "id": 29,
+      "category": "antispam",
+      "name": "Нет множественных восклицаний и emoji-bombing",
+      "status": "pass",
+      "severity": "medium",
+      "weight": 5,
+      "evidence": "Множественные «!!!» не найдены",
+      "url_checked": "https://www.avto.world/",
+      "description": "!!! или серии emoji подряд в коммерческом тексте — признак низкого качества."
+    },
+    {
+      "id": 30,
+      "category": "images",
+      "name": "Все картинки имеют атрибут alt",
+      "status": "pass",
+      "severity": "high",
+      "weight": 7,
+      "evidence": "Alt есть у 90% картинок (21 всего)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Alt у картинок — обязательный атрибут для SEO (поиск по картинкам) и доступности."
+    },
+    {
+      "id": 31,
+      "category": "images",
+      "name": "Alt содержит ключевое слово хотя бы у одной картинки",
+      "status": "manual",
+      "severity": "medium",
+      "weight": 5,
+      "evidence": "Не задан --keyword",
+      "url_checked": "https://www.avto.world/",
+      "description": "Минимум у одной картинки alt содержит основной ключ страницы."
+    },
+    {
+      "id": 32,
+      "category": "links",
+      "name": "Внутренние ссылки в теле текста не менее 3",
+      "status": "pass",
+      "severity": "high",
+      "weight": 7,
+      "evidence": "Внутренних ссылок: 90 (>= 3)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Внутренняя перелинковка усиливает распределение веса и удержание пользователя."
+    },
+    {
+      "id": 33,
+      "category": "links",
+      "name": "Разнообразие анкоров (не все анкоры 'тут'/'здесь')",
+      "status": "pass",
+      "severity": "medium",
+      "weight": 6,
+      "evidence": "Generic-анкоров: 1% (1/76)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Анкоры должны быть релевантны контенту: включать ключи и описание. Голые 'тут'/'здесь' бесполезны."
+    },
+    {
+      "id": 34,
+      "category": "links",
+      "name": "Исходящие внешние ссылки на авторитетные источники",
+      "status": "pass",
+      "severity": "low",
+      "weight": 4,
+      "evidence": "Внешних ссылок: 1 (в диапазоне 1-5)",
+      "url_checked": "https://www.avto.world/",
+      "description": "1-3 ссылки на авторитетные внешние ресурсы (ГОСТ, Минздрав, официальные сайты) повышают E-E-A-T."
+    },
+    {
+      "id": 35,
+      "category": "freshness",
+      "name": "Дата публикации или обновления указана",
+      "status": "warn",
+      "severity": "medium",
+      "weight": 6,
+      "evidence": "Дата публикации/обновления не найдена (нет article:modified_time)",
+      "url_checked": "https://www.avto.world/",
+      "description": "Свежесть контента — фактор для информационных запросов. В meta article:modified_time или на странице."
+    },
+    {
+      "id": 36,
+      "category": "commercial_triggers",
+      "name": "Упоминание цены / стоимости в тексте",
+      "status": "pass",
+      "severity": "medium",
+      "weight": 6,
+      "evidence": "Найдены триггеры: руб",
+      "url_checked": "https://www.avto.world/",
+      "description": "Слова 'цена', 'стоимость', 'от X руб' с коммерческой страницы — сигнал коммерческого интента."
+    },
+    {
+      "id": 37,
+      "category": "commercial_triggers",
+      "name": "Упоминание гарантии / возврата",
+      "status": "fail",
+      "severity": "medium",
+      "weight": 5,
+      "evidence": "Не найдено ни одного из: гарантия, возврат, обмен, гарантируем",
+      "url_checked": "https://www.avto.world/",
+      "description": "'Гарантия', 'возврат', 'обмен' — коммерческие триггеры доверия в тексте."
+    },
+    {
+      "id": 38,
+      "category": "commercial_triggers",
+      "name": "Упоминание доставки в тексте",
+      "status": "fail",
+      "severity": "medium",
+      "weight": 5,
+      "evidence": "Не найдено ни одного из: доставка, самовывоз, курьер, доставим",
+      "url_checked": "https://www.avto.world/",
+      "description": "'Доставка', 'самовывоз', 'курьер' — триггеры e-commerce интента."
+    }
+  ],
+  "meta": {
+    "tokens_discovered": {
+      "metrika": true,
+      "webmaster": true,
+      "topvisor": true,
+      "text_ru": false,
+      "content_watch": false
+    },
+    "metrika_counter_id": "70690585",
+    "factors_total": 38,
+    "summary": {
+      "counts": {
+        "pass": 13,
+        "warn": 10,
+        "fail": 4,
+        "manual": 8,
+        "na": 3
+      },
+      "by_category": {
+        "meta_tags": {
+          "pass": 1,
+          "warn": 3,
+          "fail": 0,
+          "manual": 1,
+          "na": 0
+        },
+        "structure": {
+          "pass": 3,
+          "warn": 3,
+          "fail": 0,
+          "manual": 1,
+          "na": 1
+        },
+        "volume": {
+          "pass": 1,
+          "warn": 0,
+          "fail": 2,
+          "manual": 0,
+          "na": 0
+        },
+        "density": {
+          "pass": 2,
+          "warn": 1,
+          "fail": 0,
+          "manual": 2,
+          "na": 0
+        },
+        "semantics": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 2,
+          "na": 0
+        },
+        "uniqueness": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 1,
+          "na": 2
+        },
+        "readability": {
+          "pass": 0,
+          "warn": 1,
+          "fail": 0,
+          "manual": 0,
+          "na": 0
+        },
+        "antispam": {
+          "pass": 1,
+          "warn": 1,
+          "fail": 0,
+          "manual": 0,
+          "na": 0
+        },
+        "images": {
+          "pass": 1,
+          "warn": 0,
+          "fail": 0,
+          "manual": 1,
+          "na": 0
+        },
+        "links": {
+          "pass": 3,
+          "warn": 0,
+          "fail": 0,
+          "manual": 0,
+          "na": 0
+        },
+        "freshness": {
+          "pass": 0,
+          "warn": 1,
+          "fail": 0,
+          "manual": 0,
+          "na": 0
+        },
+        "commercial_triggers": {
+          "pass": 1,
+          "warn": 0,
+          "fail": 2,
+          "manual": 0,
+          "na": 0
+        }
+      },
+      "critical_fails_top": [
+        {
+          "id": "14",
+          "name": "Объём текста от 1500 слов (коммерческая страница)",
+          "severity": "high",
+          "category": "volume"
+        }
+      ],
+      "score": 66.4
+    }
+  }
+}

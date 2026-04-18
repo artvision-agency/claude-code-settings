@@ -1,0 +1,1110 @@
+{
+  "target_url": "https://avto.world",
+  "audited_at": "2026-04-17T07:48:15+00:00",
+  "counter_id": "70690585",
+  "period_days": 30,
+  "factors": [
+    {
+      "id": 1,
+      "category": "engagement",
+      "name": "Среднее время на сайте",
+      "status": "warn",
+      "severity": "high",
+      "evidence": "Среднее время визита: 88 сек",
+      "value": 88.1,
+      "recommendation": "Нарастить глубину контента: расширить тексты, добавить видео, интерактивные элементы. Улучшить внутреннюю перелинковку.",
+      "description": "Среднее время, которое пользователь проводит на сайте за визит. Индикатор качества контента и релевантности выдачи."
+    },
+    {
+      "id": 2,
+      "category": "engagement",
+      "name": "Глубина просмотра (pages per session)",
+      "status": "warn",
+      "severity": "high",
+      "evidence": "Глубина: 2.41 стр/визит",
+      "value": 2.41,
+      "recommendation": "Добавить блоки «похожие статьи», «с этим товаром покупают», сквозные CTA на смежные страницы.",
+      "description": "Среднее число страниц за визит. Поведенческий сигнал Яндекса: чем больше — тем лучше."
+    },
+    {
+      "id": 3,
+      "category": "engagement",
+      "name": "Процент отказов (15-секундное правило)",
+      "status": "fail",
+      "severity": "critical",
+      "evidence": "Отказы (15-сек правило): 49.0%",
+      "value": 49.0,
+      "recommendation": "Проверить соответствие title/H1 контенту, скорость загрузки первого экрана, наличие очевидного ответа на запрос выше линии сгиба.",
+      "description": "Доля визитов длительностью менее 15 секунд (стандарт Яндекса). Критичный сигнал низкой релевантности."
+    },
+    {
+      "id": 4,
+      "category": "engagement",
+      "name": "Возвраты в SERP (косвенно через среднюю сессию)",
+      "status": "warn",
+      "severity": "high",
+      "evidence": "Отказы 49.0% + время 88с → косвенный сигнал dwell time",
+      "value": {
+        "bounce": 49.0,
+        "duration": 88.1
+      },
+      "recommendation": "Усилить первый экран посадочной: явный ответ на запрос, кликабельный оффер, видео/инфографика.",
+      "description": "Dwell time: если пользователь быстро возвращается в выдачу — сигнал нерелевантности. Оцениваем через сочетание короткой сессии и отказа."
+    },
+    {
+      "id": 5,
+      "category": "engagement",
+      "name": "Возвратные пользователи",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Новых: 94.7%, возвратных: 5.3%",
+      "value": 5.3,
+      "recommendation": "Подписки на уведомления/рассылку, ретаргетинг, полезный контент-хаб, брендированные кампании.",
+      "description": "Доля возвратных посетителей — индикатор ценности сайта и запоминаемости бренда."
+    },
+    {
+      "id": 6,
+      "category": "serp",
+      "name": "Средний CTR в выдаче Яндекса",
+      "status": "fail",
+      "severity": "critical",
+      "evidence": "Средний CTR: 0.00% (клики: 0 / показы: 0)",
+      "value": 0,
+      "recommendation": "Переписать title/description для топ-20 запросов: добавить УТП, цифры, эмодзи-маркеры, призыв к действию.",
+      "description": "Отношение кликов к показам в органической выдаче Яндекса. Влияет на ранжирование как поведенческий сигнал."
+    },
+    {
+      "id": 7,
+      "category": "serp",
+      "name": "Позиции по ключевым запросам",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: Нет данных о позициях",
+      "value": null,
+      "recommendation": "Для топ-20 (но не топ-10) — улучшить на уровне контента и ПФ. Для топ-50 — разобраться с технической оптимизацией и семантикой.",
+      "description": "Средняя позиция в органической выдаче Яндекса по запросам с показами."
+    },
+    {
+      "id": 8,
+      "category": "serp",
+      "name": "Запросы без кликов (impressions > 10, clicks = 0)",
+      "status": "pass",
+      "severity": "high",
+      "evidence": "Запросов с показами но без кликов: 0 (0.0%)",
+      "value": 0.0,
+      "recommendation": "Собрать список запросов без кликов → проверить сниппеты → переписать title/description с учётом интента.",
+      "description": "Доля запросов, по которым сайт показывается, но не получает кликов. Прямой индикатор проблем со сниппетом."
+    },
+    {
+      "id": 9,
+      "category": "serp",
+      "name": "Поисковые фразы в Метрике",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Расширить семантическое ядро: добавить посадочные под фразы из Wordstat и search console, LSI-тексты.",
+      "description": "Разнообразие поискового трафика — индикатор семантического охвата сайта."
+    },
+    {
+      "id": 10,
+      "category": "interaction",
+      "name": "Микроконверсии: клики по телефону",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Настроить цель в Метрике на клики по tel:. Добавить кнопку-телефон в шапке и плавающую кнопку на мобильном.",
+      "description": "Клики по tel:-ссылке — индикатор готовности к контакту. Настраивается как цель в Метрике."
+    },
+    {
+      "id": 11,
+      "category": "interaction",
+      "name": "Микроконверсии: клики по email",
+      "status": "manual",
+      "severity": "low",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Заменить mailto: на форму обратной связи с отправкой на email. Email держать видимым, но форма — главный CTA.",
+      "description": "Клики по mailto:-ссылке. Хоть и слабее чем формы, но всё ещё индикатор интереса."
+    },
+    {
+      "id": 12,
+      "category": "interaction",
+      "name": "Scroll depth (карта скроллинга)",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "В Метрике → Карты → Карта скроллинга. Проанализировать топ-5 посадочных. CTA и ключевые УТП — выше 50% линии.",
+      "description": "Карта скроллинга в Метрике показывает до какой глубины страницы доходит пользователь. Ключевые блоки должны быть выше 50%-й линии."
+    },
+    {
+      "id": 13,
+      "category": "interaction",
+      "name": "Тепловая карта кликов",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "В Метрике → Карты → Карта кликов. Проверить топ-3 посадочных. Если жмут по некликабельным элементам — сделать их кликабельными.",
+      "description": "Карта кликов показывает куда реально жмут пользователи. Несоответствие CTA и кликов — сигнал UX-проблемы."
+    },
+    {
+      "id": 14,
+      "category": "interaction",
+      "name": "Аналитика форм",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "В Метрике → Карты → Аналитика форм. Убрать/сделать опциональными поля с drop-off > 30%. Добавить валидацию в реальном времени.",
+      "description": "Карта форм показывает где пользователи бросают заполнение, какие поля вызывают проблемы."
+    },
+    {
+      "id": 15,
+      "category": "interaction",
+      "name": "Вебвизор — ручной разбор сессий",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Вебвизор → фильтр по посадочным с высоким bounce. Посмотреть 10-20 сессий. Выписать паттерны проблем.",
+      "description": "Выборочный просмотр реальных сессий пользователей. Находит UX-проблемы, которые не видны в метриках."
+    },
+    {
+      "id": 16,
+      "category": "segmentation",
+      "name": "Поведение Mobile vs Desktop",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: Нет данных по mobile или desktop сегменту",
+      "value": null,
+      "recommendation": "Проверить мобильную вёрстку на реальных устройствах. Увеличить тап-таргеты (минимум 44px), читаемость шрифта, скорость.",
+      "description": "Сравнение отказов mobile vs desktop. Большая разница (>10 п.п.) — проблема адаптивности."
+    },
+    {
+      "id": 17,
+      "category": "segmentation",
+      "name": "Источники трафика — распределение",
+      "status": "warn",
+      "severity": "medium",
+      "evidence": "Органика: 20.9%. Топ-3 источника: Direct traffic (61%), Search engine traffic (21%), Internal traffic (16%)",
+      "value": {
+        "Direct traffic": 61.09413202933985,
+        "Search engine traffic": 20.904645476772615,
+        "Internal traffic": 16.320293398533007,
+        "Link traffic": 1.4975550122249388,
+        "Ad traffic": 0.09168704156479218,
+        "Social network traffic": 0.09168704156479218
+      },
+      "recommendation": "Если перекос в рекламу — усилить SEO. Если перекос в прямой — работать над узнаваемостью бренда.",
+      "description": "Здоровый микс источников: поиск, прямой, соцсети, реферальный. Перекос в один источник — риск зависимости."
+    },
+    {
+      "id": 18,
+      "category": "segmentation",
+      "name": "Качество источника: отказы по каналам",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Каналов с bounce > 40%: 1 → Direct traffic (71%)",
+      "value": [
+        [
+          "Direct traffic",
+          70.63531766
+        ]
+      ],
+      "recommendation": "Для каналов с высоким bounce — проверить UTM-таргетинг, посадочные страницы, соответствие обещания контенту.",
+      "description": "Отказы в разбивке по источникам. Высокий bounce по одному каналу — проблема с настройкой кампании или релевантностью."
+    },
+    {
+      "id": 19,
+      "category": "segmentation",
+      "name": "География: регион и отказы",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Проверить: упомянут ли регион в title/H1. Есть ли филиал/доставка в регион. Нет ли блокировок по IP.",
+      "description": "Поведение по регионам. Если приоритетный регион даёт высокий bounce — проблема с локализацией/релевантностью."
+    },
+    {
+      "id": 20,
+      "category": "segmentation",
+      "name": "Топ посадочных страниц (entry pages)",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Расширять набор ранжирующихся страниц. Каждая страница с >100 визитов/мес = повод для оптимизации.",
+      "description": "Какие страницы первые в визите. Концентрация в 2-3 страницах = узкий фронт SEO."
+    },
+    {
+      "id": 21,
+      "category": "segmentation",
+      "name": "Exit pages — откуда уходят",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Страницы с высоким exit rate и низкой конверсией — добавить CTA, внутренние ссылки, связанный контент.",
+      "description": "Какие страницы последние в визите. Аномальные exit rates — проблема UX/контента на конкретной странице."
+    },
+    {
+      "id": 22,
+      "category": "conversions",
+      "name": "Цели в Метрике настроены",
+      "status": "pass",
+      "severity": "critical",
+      "evidence": "Настроено целей: 5. Примеры: Клик по номеру телефона, Клик по email, Отправка формы, Отправка формы с Контакты (Конверсия), Корзина (Конверсия)",
+      "value": 5,
+      "recommendation": "Настроить минимум: 1) заявка с формы 2) клик по телефону 3) корзина/добавление в избранное 4) составная цель (посещение +N страниц + время >2 мин).",
+      "description": "Количество настроенных целей в Метрике. Без целей невозможно измерить эффективность канала."
+    },
+    {
+      "id": 23,
+      "category": "conversions",
+      "name": "Конверсия по ключевой цели",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Аудит посадочных: УТП на первом экране, упрощение формы, социальные доказательства, гарантии. CRO-тест.",
+      "description": "Конверсия в ключевое целевое действие (заявка/звонок/покупка)."
+    },
+    {
+      "id": 24,
+      "category": "conversions",
+      "name": "Конверсия по источникам — качественные каналы",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Усиливать каналы с высокой конверсией. Для каналов с низкой — пересмотреть таргетинг или отказаться.",
+      "description": "Разбивка конверсии по каналам. Выявить, какой канал приносит качественный трафик, а какой — шум."
+    },
+    {
+      "id": 25,
+      "category": "technical",
+      "name": "Core Web Vitals: LCP (Largest Contentful Paint)",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351",
+      "value": null,
+      "recommendation": "Оптимизировать изображения (WebP, lazy-load), убрать блокирующий CSS/JS, включить preload для hero-image.",
+      "description": "Время до отрисовки крупнейшего элемента. Ключевой UX-показатель, прямой сигнал ранжирования."
+    },
+    {
+      "id": 26,
+      "category": "technical",
+      "name": "Core Web Vitals: CLS (Cumulative Layout Shift)",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351",
+      "value": null,
+      "recommendation": "Задать width/height у всех изображений и видео. Выделить пространство под баннеры/рекламу через aspect-ratio.",
+      "description": "Смещение элементов верстки во время загрузки. Высокий CLS = раздражающий опыт."
+    },
+    {
+      "id": 27,
+      "category": "technical",
+      "name": "Core Web Vitals: INP (Interaction to Next Paint)",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351",
+      "value": null,
+      "recommendation": "Разбить долгие JS-задачи на микротаски, отложить неиспользуемые скрипты, минимизировать third-party.",
+      "description": "Отзывчивость сайта на действия пользователя (клик, ввод). Заменил FID с 2024 года."
+    },
+    {
+      "id": 28,
+      "category": "technical",
+      "name": "Время до первого байта (TTFB)",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351",
+      "value": null,
+      "recommendation": "Включить серверный кэш (Redis/Memcached), CDN для статики, оптимизация БД-запросов, HTTP/2 или HTTP/3.",
+      "description": "Время серверного отклика. Влияет на LCP и общее восприятие скорости."
+    },
+    {
+      "id": 29,
+      "category": "technical",
+      "name": "Мобильный Speed Score (PageSpeed)",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351",
+      "value": null,
+      "recommendation": "Приоритет #1 для Яндекса — мобильная версия. Оптимизация картинок, JS, CSS, критический путь рендеринга.",
+      "description": "Общая оценка производительности мобильной версии по Lighthouse."
+    },
+    {
+      "id": 30,
+      "category": "technical",
+      "name": "Доля 404 в трафике",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Доля просмотров на 404-страницах: 14.46% (1142.0 из 7896.0)",
+      "value": 14.46,
+      "recommendation": "Собрать 404 в Метрике → настроить 301-редиректы на релевантные страницы. Для навсегда удалённого контента — кастомная 404-страница с поиском и навигацией.",
+      "description": "Процент посещений на страницы-404. Сигнал битых ссылок, потери ссылочного веса, плохого UX."
+    },
+    {
+      "id": 31,
+      "category": "technical",
+      "name": "JS-ошибки на странице",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "В Метрике → Отчёты → JS-ошибки. Топ-10 ошибок исправить. Настроить Sentry или аналог для постоянного мониторинга.",
+      "description": "Критичные JS-ошибки ломают интерактив, формы, CTA. Метрика регистрирует хиты с ошибками."
+    },
+    {
+      "id": 32,
+      "category": "technical",
+      "name": "Adblock usage — доля посетителей с блокировщиками",
+      "status": "manual",
+      "severity": "low",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Если доля высокая — не полагаться только на клиентскую Метрику. Дополнить server-side трекингом (Measurement Protocol).",
+      "description": "Доля аудитории с adblock. Если >30% — часть трекинга теряется, нужны server-side аналоги."
+    }
+  ],
+  "meta": {
+    "factors_total": 32,
+    "summary": {
+      "counts": {
+        "pass": 2,
+        "warn": 4,
+        "fail": 5,
+        "manual": 14,
+        "na": 7
+      },
+      "by_category": {
+        "engagement": {
+          "pass": 0,
+          "warn": 3,
+          "fail": 2,
+          "manual": 0,
+          "na": 0
+        },
+        "serp": {
+          "pass": 1,
+          "warn": 0,
+          "fail": 1,
+          "manual": 1,
+          "na": 1
+        },
+        "interaction": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 6,
+          "na": 0
+        },
+        "segmentation": {
+          "pass": 0,
+          "warn": 1,
+          "fail": 1,
+          "manual": 3,
+          "na": 1
+        },
+        "conversions": {
+          "pass": 1,
+          "warn": 0,
+          "fail": 0,
+          "manual": 2,
+          "na": 0
+        },
+        "technical": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 1,
+          "manual": 2,
+          "na": 5
+        }
+      },
+      "critical_fails_top": [
+        {
+          "id": "3",
+          "name": "Процент отказов (15-секундное правило)",
+          "severity": "critical",
+          "category": "engagement",
+          "evidence": "Отказы (15-сек правило): 49.0%"
+        },
+        {
+          "id": "6",
+          "name": "Средний CTR в выдаче Яндекса",
+          "severity": "critical",
+          "category": "serp",
+          "evidence": "Средний CTR: 0.00% (клики: 0 / показы: 0)"
+        },
+        {
+          "id": "30",
+          "name": "Доля 404 в трафике",
+          "severity": "high",
+          "category": "technical",
+          "evidence": "Доля просмотров на 404-страницах: 14.46% (1142.0 из 7896.0)"
+        }
+      ],
+      "score": 18.2
+    }
+  },
+  "raw_data": {
+    "metrika": {
+      "visits": 3275.0,
+      "bounceRate": 49.00763359,
+      "pageDepth": 2.41129771,
+      "avgVisitDurationSeconds": 88.10534351,
+      "percentNewVisitors": 94.68802698,
+      "by_device": {
+        "PC": {
+          "visits": 2712.0,
+          "bounceRate": 53.57669617
+        },
+        "Smartphones": {
+          "visits": 559.0,
+          "bounceRate": 27.01252236
+        },
+        "Tablets": {
+          "visits": 4.0,
+          "bounceRate": 25.0
+        }
+      },
+      "by_source": {
+        "Direct traffic": {
+          "visits": 1999.0,
+          "bounceRate": 70.63531766
+        },
+        "Search engine traffic": {
+          "visits": 684.0,
+          "bounceRate": 21.6374269
+        },
+        "Internal traffic": {
+          "visits": 534.0,
+          "bounceRate": 5.05617978
+        },
+        "Link traffic": {
+          "visits": 49.0,
+          "bounceRate": 22.44897959
+        },
+        "Ad traffic": {
+          "visits": 3.0,
+          "bounceRate": 100.0
+        },
+        "Social network traffic": {
+          "visits": 3.0,
+          "bounceRate": 66.66666667
+        }
+      },
+      "total_source_visits": 3272.0,
+      "search_phrases_count": 235,
+      "goals_list": [
+        {
+          "id": 151239436,
+          "name": "Клик по номеру телефона",
+          "type": "phone",
+          "default_price": 0.0,
+          "is_retargeting": 0,
+          "goal_source": "user",
+          "is_favorite": 0,
+          "status": "Active",
+          "labels": [],
+          "conditions": [],
+          "prev_goal_id": 0,
+          "hide_phone_number": false
+        },
+        {
+          "id": 151239529,
+          "name": "Клик по email",
+          "type": "email",
+          "default_price": 0.0,
+          "is_retargeting": 0,
+          "goal_source": "user",
+          "is_favorite": 0,
+          "status": "Active",
+          "labels": [],
+          "conditions": [],
+          "prev_goal_id": 0
+        },
+        {
+          "id": 151239556,
+          "name": "Отправка формы",
+          "type": "form",
+          "default_price": 0.0,
+          "is_retargeting": 0,
+          "goal_source": "user",
+          "is_favorite": 0,
+          "status": "Active",
+          "labels": [],
+          "conditions": [],
+          "prev_goal_id": 0,
+          "price_locations": []
+        },
+        {
+          "id": 324506525,
+          "name": "Отправка формы с Контакты (Конверсия)",
+          "type": "form",
+          "default_price": 0.0,
+          "is_retargeting": 0,
+          "goal_source": "user",
+          "is_favorite": 0,
+          "status": "Active",
+          "labels": [],
+          "conditions": [
+            {
+              "type": "form_xpath",
+              "url": "FAA4A1AAAA"
+            }
+          ],
+          "prev_goal_id": 0,
+          "price_locations": []
+        },
+        {
+          "id": 324507574,
+          "name": "Корзина (Конверсия)",
+          "type": "form",
+          "default_price": 0.0,
+          "is_retargeting": 0,
+          "goal_source": "user",
+          "is_favorite": 0,
+          "status": "Active",
+          "labels": [],
+          "conditions": [
+            {
+              "type": "form_id",
+              "url": "shopOrderForm"
+            },
+            {
+              "type": "form_xpath",
+              "url": "FA1AAAA"
+            }
+          ],
+          "prev_goal_id": 0,
+          "price_locations": []
+        }
+      ],
+      "goals_count": 5,
+      "pv_404": 1142.0,
+      "pv_total": 7896.0,
+      "share_404": 14.463019250253293
+    },
+    "webmaster": {
+      "host_id": "https:www.avto.world:443",
+      "top_queries": [
+        {
+          "query_id": "e1eeb3f316f3c09c",
+          "query_text": "какие тормозные трубки лучше медные или стальные",
+          "indicators": {
+            "TOTAL_SHOWS": 45.0,
+            "TOTAL_CLICKS": 13.0,
+            "AVG_SHOW_POSITION": 2.4444444444444446,
+            "AVG_CLICK_POSITION": 2.076923076923077
+          }
+        },
+        {
+          "query_id": "698be1dcf4ea2c79",
+          "query_text": "тормозная трубка",
+          "indicators": {
+            "TOTAL_SHOWS": 37.0,
+            "TOTAL_CLICKS": 0.0,
+            "AVG_SHOW_POSITION": 9.567567567567568,
+            "AVG_CLICK_POSITION": null
+          }
+        },
+        {
+          "query_id": "99bdba5e5bafef62",
+          "query_text": "тормозные трубки",
+          "indicators": {
+            "TOTAL_SHOWS": 29.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 7.275862068965517,
+            "AVG_CLICK_POSITION": 7.25
+          }
+        },
+        {
+          "query_id": "fd07396565b78f68",
+          "query_text": "медная трубка для тормозной системы 5мм avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 27.0,
+            "TOTAL_CLICKS": 3.0,
+            "AVG_SHOW_POSITION": 2.5925925925925926,
+            "AVG_CLICK_POSITION": 1.6666666666666667
+          }
+        },
+        {
+          "query_id": "617e07af0a9cfcc2",
+          "query_text": "пресс масленка м8 avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 27.0,
+            "TOTAL_CLICKS": 6.0,
+            "AVG_SHOW_POSITION": 2.037037037037037,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "9107359dcf651d9d",
+          "query_text": "купить медную трубку 5мм avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 24.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.1666666666666665,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "167f1ece4ad51b01",
+          "query_text": "медная трубка купить магазин avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 20.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.5,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "54f67f48b157dc94",
+          "query_text": "медная трубка 15мм купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 20.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 1.75,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "7443de2243db6b5d",
+          "query_text": "медные трубки купить оптом avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 20.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.7,
+            "AVG_CLICK_POSITION": 1.2
+          }
+        },
+        {
+          "query_id": "cc95f9d5be27796d",
+          "query_text": "купить медную трубку 12мм avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 19.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.0526315789473686,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "852eaeaeec8e8496",
+          "query_text": "купить медные трубки avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 18.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.4444444444444446,
+            "AVG_CLICK_POSITION": 1.2
+          }
+        },
+        {
+          "query_id": "ad54562add5eebdb",
+          "query_text": "медные тормозные трубки wp avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 18.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 2.8333333333333335,
+            "AVG_CLICK_POSITION": 1.5
+          }
+        },
+        {
+          "query_id": "af62b377115d5cbe",
+          "query_text": "купить трубку тормозную медную 4.75 метражом avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 18.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.0555555555555554,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "d980557738ba0542",
+          "query_text": "купить тормозную трубку wp avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 18.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 2.0,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "dc159c31e359b80f",
+          "query_text": "медная трубка для тормозной системы диаметром 4.75 avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 18.0,
+            "TOTAL_CLICKS": 6.0,
+            "AVG_SHOW_POSITION": 1.8888888888888888,
+            "AVG_CLICK_POSITION": 1.1666666666666667
+          }
+        },
+        {
+          "query_id": "6314224520dacedb",
+          "query_text": "купить медную трубку 8мм avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 18.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 2.0,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "ab2800854d13484e",
+          "query_text": "трубка тормозная медная 4.75 бухта купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 17.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.176470588235294,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "d610a11f0b0efbe4",
+          "query_text": "какая тормозная трубка лучше медная или стальная",
+          "indicators": {
+            "TOTAL_SHOWS": 17.0,
+            "TOTAL_CLICKS": 2.0,
+            "AVG_SHOW_POSITION": 3.411764705882353,
+            "AVG_CLICK_POSITION": 3.5
+          }
+        },
+        {
+          "query_id": "3055f16651acce2e",
+          "query_text": "пресс масленка м6 avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 17.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 1.8235294117647058,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "a19136c8d9536100",
+          "query_text": "бухта медной тормозной трубки avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 16.0,
+            "TOTAL_CLICKS": 6.0,
+            "AVG_SHOW_POSITION": 2.3125,
+            "AVG_CLICK_POSITION": 3.3333333333333335
+          }
+        },
+        {
+          "query_id": "b84267ae4b88c45b",
+          "query_text": "медная трубка 4.75 для тормозных систем купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 16.0,
+            "TOTAL_CLICKS": 6.0,
+            "AVG_SHOW_POSITION": 2.0,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "cefde496c4320e05",
+          "query_text": "медные трубки фитинги купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 16.0,
+            "TOTAL_CLICKS": 0.0,
+            "AVG_SHOW_POSITION": 2.125,
+            "AVG_CLICK_POSITION": null
+          }
+        },
+        {
+          "query_id": "fb527488df50d2ac",
+          "query_text": "трубка медная 4.75 мм тормозная купить бухта avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 16.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 1.5625,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "1490932a71222a32",
+          "query_text": "купить медные трубки для тормозной системы rigaplast",
+          "indicators": {
+            "TOTAL_SHOWS": 16.0,
+            "TOTAL_CLICKS": 0.0,
+            "AVG_SHOW_POSITION": 3.125,
+            "AVG_CLICK_POSITION": null
+          }
+        },
+        {
+          "query_id": "251426699c435fa4",
+          "query_text": "медная трубка 4.75 для тормозных систем avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 16.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 1.6875,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "57142e1b733de6de",
+          "query_text": "трубка тормозная медная 4.75 avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 16.0,
+            "TOTAL_CLICKS": 6.0,
+            "AVG_SHOW_POSITION": 1.625,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "8c2bf6636c82676f",
+          "query_text": "wp каталог штуцеров",
+          "indicators": {
+            "TOTAL_SHOWS": 15.0,
+            "TOTAL_CLICKS": 0.0,
+            "AVG_SHOW_POSITION": 11.133333333333333,
+            "AVG_CLICK_POSITION": null
+          }
+        },
+        {
+          "query_id": "ab97a04ee1711861",
+          "query_text": "медная трубка 6мм купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 15.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 2.0,
+            "AVG_CLICK_POSITION": 1.75
+          }
+        },
+        {
+          "query_id": "c8d90c72c3a15175",
+          "query_text": "трубка тормозная медная 5мм купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 15.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 2.6666666666666665,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "cb381df7cd36e6aa",
+          "query_text": "где можно купить медную трубку avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 15.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.2666666666666666,
+            "AVG_CLICK_POSITION": 1.2
+          }
+        },
+        {
+          "query_id": "da69a70f3163c821",
+          "query_text": "медная трубка гомель купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 15.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.066666666666667,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "eef53b4c2567229f",
+          "query_text": "трубки тормозные",
+          "indicators": {
+            "TOTAL_SHOWS": 15.0,
+            "TOTAL_CLICKS": 0.0,
+            "AVG_SHOW_POSITION": 8.6,
+            "AVG_CLICK_POSITION": null
+          }
+        },
+        {
+          "query_id": "00ede1a7485c43eb",
+          "query_text": "медные трубки оптом avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 15.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 2.533333333333333,
+            "AVG_CLICK_POSITION": 1.75
+          }
+        },
+        {
+          "query_id": "06114e61f2a80d85",
+          "query_text": "медная трубка 1 мм купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 15.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.1333333333333333,
+            "AVG_CLICK_POSITION": 1.6
+          }
+        },
+        {
+          "query_id": "4b17448c00a403ab",
+          "query_text": "диаметр тормозной трубки",
+          "indicators": {
+            "TOTAL_SHOWS": 15.0,
+            "TOTAL_CLICKS": 2.0,
+            "AVG_SHOW_POSITION": 2.4,
+            "AVG_CLICK_POSITION": 3.0
+          }
+        },
+        {
+          "query_id": "84f1d62d04014e0b",
+          "query_text": "медная трубка 8 купить в спб avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 14.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 1.9285714285714286,
+            "AVG_CLICK_POSITION": 1.6
+          }
+        },
+        {
+          "query_id": "dc2303f2a970cb2d",
+          "query_text": "медная тормозная трубка иномарка avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 14.0,
+            "TOTAL_CLICKS": 0.0,
+            "AVG_SHOW_POSITION": 1.9285714285714286,
+            "AVG_CLICK_POSITION": null
+          }
+        },
+        {
+          "query_id": "16b547d508618048",
+          "query_text": "трубка медная 4.75 мм купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 14.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 1.7857142857142858,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "6523057fc12c10f4",
+          "query_text": "медные трубки для пайки купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 14.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.0,
+            "AVG_CLICK_POSITION": 1.2
+          }
+        },
+        {
+          "query_id": "822afbb1a5d92980",
+          "query_text": "медная трубка 16 мм купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 13.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 1.8461538461538463,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "82ac38ca326da27e",
+          "query_text": "медная трубка купить по метрам avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 13.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.0,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "9b6bb363e10f1ba1",
+          "query_text": "пресс масленка м10 avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 13.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 1.6923076923076923,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "ae52f371a3e4b232",
+          "query_text": "трубка медная 4.75 мм тормозная купить метражом avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 13.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 1.6923076923076923,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "bc2a5cceae5e7547",
+          "query_text": "трубка тормозная 4 75 купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 13.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.3076923076923075,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "c2fefdce3066dba6",
+          "query_text": "где купить медную трубку avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 13.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 2.1538461538461537,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "dda53313ebe04dae",
+          "query_text": "медная трубка 8 мм купить avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 13.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 1.8461538461538463,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "161bd99cd55827a8",
+          "query_text": "тормозная трубка медная wp avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 13.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 2.3076923076923075,
+            "AVG_CLICK_POSITION": 1.2
+          }
+        },
+        {
+          "query_id": "1957193dd3b65c5a",
+          "query_text": "купить медную трубку 16мм avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 13.0,
+            "TOTAL_CLICKS": 5.0,
+            "AVG_SHOW_POSITION": 1.8461538461538463,
+            "AVG_CLICK_POSITION": 2.2
+          }
+        },
+        {
+          "query_id": "2688d5fbc3a98375",
+          "query_text": "тормозная трубка медная 4.75 со штуцерами м10х1 avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 13.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 2.0,
+            "AVG_CLICK_POSITION": 1.0
+          }
+        },
+        {
+          "query_id": "5125ecf8283eab13",
+          "query_text": "тормозные трубки медные 4.75 метражом avto.world",
+          "indicators": {
+            "TOTAL_SHOWS": 13.0,
+            "TOTAL_CLICKS": 4.0,
+            "AVG_SHOW_POSITION": 2.0,
+            "AVG_CLICK_POSITION": 1.25
+          }
+        }
+      ],
+      "queries_count": 500,
+      "total_shows": 0,
+      "total_clicks": 0,
+      "overall_ctr": 0,
+      "avg_position": 0,
+      "no_click_queries": 0,
+      "no_click_share": 0.0
+    },
+    "pagespeed": {
+      "_error": "PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351"
+    }
+  }
+}

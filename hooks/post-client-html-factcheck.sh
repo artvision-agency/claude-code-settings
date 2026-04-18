@@ -1,0 +1,1 @@
+/Users/antonk/artvision-data/.claude-shared/hooks/post-client-html-factcheck.sh

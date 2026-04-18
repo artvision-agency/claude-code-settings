@@ -1,0 +1,71 @@
+#!/bin/bash
+set -euo pipefail
+# Voice Relay: VPS voice_inbox.jsonl → Claude Code session OR standalone reply
+# Mode: "session" = output for active cron, "auto" = claude -p → reply to TG
+# Usage: called by Claude Code cron every 30s-1min
+
+MODE="${1:-session}"  # session | auto
+PROCESSED="/Users/antonk/.claude_temp_scripts/voice_processed.txt"
+VPS="root@80.90.181.152"
+BOT_TOKEN="8399522625:AAGeVvP1WeyijXTcRByiynPOXncBFUwLKQ4"
+
+# Pull new entries from VPS
+NEW=$(ssh -o ConnectTimeout=5 "$VPS" "cat /root/voice_inbox.jsonl 2>/dev/null" 2>/dev/null || echo "")
+
+if [ -z "$NEW" ]; then
+    exit 0
+fi
+
+# Check what we already processed
+mkdir -p "$(dirname "$PROCESSED")"
+touch "$PROCESSED"
+
+# Function to send reply back to TG
+send_tg_reply() {
+    local chat_id="$1"
+    local text="$2"
+    # Truncate to 4000 chars for TG limit
+    text="${text:0:4000}"
+    curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+        -d "chat_id=${chat_id}" \
+        -d "parse_mode=HTML" \
+        --data-urlencode "text=${text}" > /dev/null 2>&1 || true
+}
+
+while IFS= read -r line; do
+    [ -z "$line" ] && continue
+
+    # Extract msg_id as unique key
+    MSG_ID=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('msg_id',''))" 2>/dev/null || echo "")
+    [ -z "$MSG_ID" ] && continue
+
+    # Skip if already processed
+    grep -q "^${MSG_ID}$" "$PROCESSED" 2>/dev/null && continue
+
+    # Extract text, user_id, mode override
+    TEXT=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('text',''))" 2>/dev/null || echo "")
+    USER_ID=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('user_id',''))" 2>/dev/null || echo "")
+    MSG_MODE=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('mode','session'))" 2>/dev/null || echo "session")
+    [ -z "$TEXT" ] && continue
+
+    # Mark as processed
+    echo "$MSG_ID" >> "$PROCESSED"
+
+    # Determine effective mode (message-level override > script arg)
+    EFFECTIVE_MODE="${MSG_MODE:-$MODE}"
+
+    if [ "$EFFECTIVE_MODE" = "auto" ]; then
+        # Auto mode: Claude CLI answers directly → reply to TG
+        send_tg_reply "$USER_ID" "🧠 Обрабатываю..."
+
+        # Run claude in print mode with project context
+        REPLY=$(cd /Users/antonk/artvision-data && claude -p "$TEXT" --max-turns 10 2>/dev/null || echo "Ошибка обработки")
+
+        # Send reply back to TG
+        send_tg_reply "$USER_ID" "🤖 Claude:\n\n${REPLY}"
+    else
+        # Session mode: output for active cron in Claude Code
+        send_tg_reply "$USER_ID" "⚡ Получено Claude Code: <code>${TEXT}</code>"
+        echo "🎤 VOICE: $TEXT"
+    fi
+done <<< "$NEW"

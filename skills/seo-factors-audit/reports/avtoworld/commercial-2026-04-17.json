@@ -1,0 +1,1313 @@
+{
+  "target_url": "https://avto.world",
+  "audited_at": "2026-04-17T07:47:07+00:00",
+  "pages_crawled": {
+    "home": "https://www.avto.world/",
+    "catalog": "https://avto.world/catalog",
+    "blog": "https://avto.world/novosti"
+  },
+  "factors": [
+    {
+      "id": 1,
+      "category": "navigation_company",
+      "name": "История компании",
+      "status": "pass",
+      "severity": "medium",
+      "evidence": "Найдено 'о компани' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Описаны этапы развития компании, рост, увеличение товарных предложений"
+    },
+    {
+      "id": 2,
+      "category": "navigation_company",
+      "name": "Информация о персонале",
+      "status": "pass",
+      "severity": "medium",
+      "evidence": "Найдено 'персонал' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Информация о сотрудниках, работающих в компании, их опыте, достижениях"
+    },
+    {
+      "id": 3,
+      "category": "navigation_company",
+      "name": "Структура сайта",
+      "status": "pass",
+      "severity": "high",
+      "evidence": "Найден элемент 'nav' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "У сайта есть проработанная структура навигации"
+    },
+    {
+      "id": 4,
+      "category": "navigation_company",
+      "name": "Оборудование, техника, материалы",
+      "status": "pass",
+      "severity": "low",
+      "evidence": "Найдено 'производств' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Блок-схема структуры компании, отделы, департаменты, бизнес-процессы, используемое оборудование"
+    },
+    {
+      "id": 5,
+      "category": "navigation_company",
+      "name": "Вакансии",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "URL/пункт меню не найден: /vacancies, /careers, /jobs, /rabota, вакансии",
+      "url_checked": null,
+      "description": "Раздел с вакансиями"
+    },
+    {
+      "id": 6,
+      "category": "navigation_company",
+      "name": "Партнеры",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: партнер, поставщик, partners",
+      "url_checked": null,
+      "description": "Кто является партнером компании, поставщики"
+    },
+    {
+      "id": 7,
+      "category": "navigation_company",
+      "name": "Контакты и обратная связь",
+      "status": "pass",
+      "severity": "critical",
+      "evidence": "Найдена ссылка/пункт меню: 'контакты'",
+      "url_checked": "https://www.avto.world/",
+      "description": "Полные контакты с индексом, больше упоминаний на сайте"
+    },
+    {
+      "id": 8,
+      "category": "navigation_company",
+      "name": "Телефон в шапке",
+      "status": "pass",
+      "severity": "critical",
+      "evidence": "Найден элемент 'header a[href^='tel:']' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Обязательное упоминание в шапке сайта, на странице Контакты и в футере"
+    },
+    {
+      "id": 9,
+      "category": "navigation_company",
+      "name": "Реквизиты",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Не найдено ни одного из: реквизит, ИНН, ОГРН, КПП, юридический адрес...",
+      "url_checked": null,
+      "description": "Раздел с реквизитами компании"
+    },
+    {
+      "id": 10,
+      "category": "navigation_company",
+      "name": "Филиалы",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: филиал, наши офисы, отделени, branches",
+      "url_checked": null,
+      "description": "Контакты всех филиалов. Можно со структурой, персоналом"
+    },
+    {
+      "id": 11,
+      "category": "navigation_company",
+      "name": "Представители",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Не найдено ни одного из: представител, дилер, региональные менеджеры, дистрибьютор",
+      "url_checked": null,
+      "description": "Представители компании в других регионах, странах"
+    },
+    {
+      "id": 12,
+      "category": "navigation_company",
+      "name": "Новости",
+      "status": "pass",
+      "severity": "medium",
+      "evidence": "Найдена ссылка/пункт меню: '/novosti'",
+      "url_checked": "https://www.avto.world/",
+      "description": "Раздел со свежими новостями компании"
+    },
+    {
+      "id": 13,
+      "category": "navigation_company",
+      "name": "Портфолио",
+      "status": "pass",
+      "severity": "medium",
+      "evidence": "Найдена ссылка/пункт меню: 'работы'",
+      "url_checked": "https://www.avto.world/",
+      "description": "Раздел с примерами работ, товаров, продукции"
+    },
+    {
+      "id": 14,
+      "category": "navigation_company",
+      "name": "Оптовикам",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "URL/пункт меню не найден: /opt, /wholesale, /optom, оптом, оптовикам",
+      "url_checked": null,
+      "description": "Раздел с информацией по работе с оптовыми клиентами, партнерами"
+    },
+    {
+      "id": 15,
+      "category": "navigation_company",
+      "name": "Корпоративным клиентам",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "URL/пункт меню не найден: /corporate, /b2b, /business, корпоративн, юрлицам",
+      "url_checked": null,
+      "description": "Раздел с информацией для корпоративных клиентов"
+    },
+    {
+      "id": 16,
+      "category": "navigation_company",
+      "name": "График работы",
+      "status": "pass",
+      "severity": "high",
+      "evidence": "Найдено 'график работы' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Детальная информация по графику работы компании, основного офиса, филиалов"
+    },
+    {
+      "id": 17,
+      "category": "navigation_company",
+      "name": "Слоган",
+      "status": "manual",
+      "severity": "low",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Наличие слогана в шапке сайта, желательно в левом верхнем углу"
+    },
+    {
+      "id": 18,
+      "category": "navigation_company",
+      "name": "Логотип",
+      "status": "pass",
+      "severity": "critical",
+      "evidence": "Найден элемент 'header img' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Наличие логотипа в шапке сайта, желательно в левом верхнем углу"
+    },
+    {
+      "id": 19,
+      "category": "navigation_company",
+      "name": "Выбор региона",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: ваш город, выбор города, ваш регион, город доставки, выберите регион",
+      "url_checked": null,
+      "description": "Если работаете в нескольких регионах и есть поддомены — добавить выбор нужного региона"
+    },
+    {
+      "id": 20,
+      "category": "navigation_company",
+      "name": "Телефоны — региональный/8-800",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: 8 800, 8-800, 8(800), +7 800",
+      "url_checked": null,
+      "description": "Региональный или бесплатный 8-800. Мобильный лучше не использовать"
+    },
+    {
+      "id": 21,
+      "category": "navigation_company",
+      "name": "Поиск по сайту",
+      "status": "pass",
+      "severity": "high",
+      "evidence": "Найден элемент '[class*='search'] input' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Наличие формы поиска на видном месте"
+    },
+    {
+      "id": 22,
+      "category": "navigation_company",
+      "name": "Email в контактах",
+      "status": "pass",
+      "severity": "high",
+      "evidence": "Найден элемент 'a[href^='mailto:']' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Email-адрес для связи"
+    },
+    {
+      "id": 23,
+      "category": "trust",
+      "name": "Отзывы, рекомендации, благодарности",
+      "status": "pass",
+      "severity": "high",
+      "evidence": "Найдена ссылка/пункт меню: 'отзывы'",
+      "url_checked": "https://www.avto.world/",
+      "description": "Раздел с отзывами и рекомендациями"
+    },
+    {
+      "id": 24,
+      "category": "trust",
+      "name": "Наши клиенты",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: наши клиенты, clients, с нами работают, нам доверяют",
+      "url_checked": null,
+      "description": "Информация о клиентах компании (логотипы, кейсы)"
+    },
+    {
+      "id": 25,
+      "category": "trust",
+      "name": "Сертификаты и лицензии",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "URL/пункт меню не найден: /certificates, /litsenzii, /sertifikaty, сертификат, лицензи",
+      "url_checked": null,
+      "description": "Раздел-галерея с фотографиями и сканами официальных документов"
+    },
+    {
+      "id": 26,
+      "category": "trust",
+      "name": "Достижения",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: достижения, награды, премии, грамоты, патенты...",
+      "url_checked": null,
+      "description": "Раздел с фотографиями грамот, достижений, патентов, публикаций"
+    },
+    {
+      "id": 27,
+      "category": "trust",
+      "name": "Видимость в интернете (соцсети)",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Элементы не найдены: a[href*='vk.com'], a[href*='t.me'], a[href*='instagram']",
+      "url_checked": null,
+      "description": "Активные страницы компании во всех соцсетях"
+    },
+    {
+      "id": 28,
+      "category": "trust",
+      "name": "Преимущества",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Не найдено ни одного из: наши преимущества, почему мы, почему выбирают, why us, advantages",
+      "url_checked": null,
+      "description": "Наличие блока Наши преимущества"
+    },
+    {
+      "id": 29,
+      "category": "trust",
+      "name": "Элементы доверия",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: visa, mastercard, мир, сбербанк, тинькофф...",
+      "url_checked": null,
+      "description": "Размещение логотипов авторитетных сервисов (платежные системы, партнеры)"
+    },
+    {
+      "id": 30,
+      "category": "trust",
+      "name": "Виджет карты и схема проезда",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Элементы не найдены: iframe[src*='yandex'], iframe[src*='maps'], [class*='map']",
+      "url_checked": null,
+      "description": "Схема проезда по актуальному адресу компании"
+    },
+    {
+      "id": 31,
+      "category": "trust",
+      "name": "Корпоративный блог",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "URL/пункт меню не найден: /blog, /articles, /статьи, блог, журнал",
+      "url_checked": null,
+      "description": "В блоге актуальная, регулярно обновляющаяся информация"
+    },
+    {
+      "id": 32,
+      "category": "trust",
+      "name": "Фото и видео-отчёты",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Не найдено ни одного из: фото отчет, видео отчет, фотоотчет, видеоотчет, отчет о работе",
+      "url_checked": null,
+      "description": "Фото и/или видео-отчеты по каждой услуге"
+    },
+    {
+      "id": 33,
+      "category": "trust",
+      "name": "Видеообращение директора",
+      "status": "manual",
+      "severity": "low",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Видеообращение руководителя повышает доверие клиента"
+    },
+    {
+      "id": 34,
+      "category": "trust",
+      "name": "Отсутствие сторонней рекламы",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Сайт должен продавать свой товар, без баннеров чужих компаний"
+    },
+    {
+      "id": 35,
+      "category": "trust",
+      "name": "Видео / канал на YouTube",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Элементы не найдены: a[href*='youtube.com'], iframe[src*='youtube'], iframe[src*='rutube']",
+      "url_checked": null,
+      "description": "Наличие видео-роликов или собственного канала"
+    },
+    {
+      "id": 36,
+      "category": "trust",
+      "name": "Репутация и возраст домена",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Работа по репутации на сторонних сайтах отзывов о компании"
+    },
+    {
+      "id": 37,
+      "category": "trust",
+      "name": "Яндекс Справочник / Google Мой Бизнес",
+      "status": "manual",
+      "severity": "critical",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Компания зарегистрирована в справочниках (ручная проверка)"
+    },
+    {
+      "id": 38,
+      "category": "trust",
+      "name": "Сервисы Яндекса",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Участие в сервисах Яндекса (Маркет, Дзен, Карты, Услуги)"
+    },
+    {
+      "id": 39,
+      "category": "trust",
+      "name": "Узнаваемость бренда",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Упоминания названия бренда в интернете, особенно СМИ + брендованный трафик"
+    },
+    {
+      "id": 40,
+      "category": "trust",
+      "name": "Отзывы на отзовиках",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Отзывы на сторонних сайтах (flamp.ru, otzovik.com, yandex отзывы)"
+    },
+    {
+      "id": 41,
+      "category": "trust",
+      "name": "Отзывы на агрегаторах",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Отзывы на агрегаторах (Яндекс.Маркет, Ozon, Wildberries)"
+    },
+    {
+      "id": 42,
+      "category": "trust",
+      "name": "Ссылки на авторитетных ресурсах",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Работа по простановке ссылок с авторитетных ресурсов"
+    },
+    {
+      "id": 43,
+      "category": "trust",
+      "name": "Упоминания бренда на форумах",
+      "status": "manual",
+      "severity": "low",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Работа над упоминаниями бренда в интернете"
+    },
+    {
+      "id": 44,
+      "category": "ecommerce",
+      "name": "Калькулятор стоимости",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: калькулятор, рассчитать стоимость, calculator, расчет стоимости",
+      "url_checked": null,
+      "description": "Онлайн расчет стоимости услуг, товаров, доставки"
+    },
+    {
+      "id": 45,
+      "category": "ecommerce",
+      "name": "Сравнение товаров",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Не найдено ни одного из: сравнить, сравнение, compare",
+      "url_checked": null,
+      "description": "Возможность сравнить товары"
+    },
+    {
+      "id": 46,
+      "category": "ecommerce",
+      "name": "Прайс-лист (скачать)",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: скачать прайс, прайс-лист, price list, скачать каталог, .pdf...",
+      "url_checked": null,
+      "description": "Возможность скачать прайс-лист в удобном формате"
+    },
+    {
+      "id": 47,
+      "category": "ecommerce",
+      "name": "Сервис и ремонт",
+      "status": "pass",
+      "severity": "low",
+      "evidence": "Найдено 'сервис' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Осуществляется ли обслуживание/ремонт компанией, условия"
+    },
+    {
+      "id": 48,
+      "category": "ecommerce",
+      "name": "Обслуживание клиента",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: персональный менеджер, горячая линия, бесплатный телефон, консультация бесплатно",
+      "url_checked": null,
+      "description": "Персональный менеджер, бесплатный телефон горячей линии"
+    },
+    {
+      "id": 49,
+      "category": "ecommerce",
+      "name": "Доставка",
+      "status": "pass",
+      "severity": "critical",
+      "evidence": "Найдена ссылка/пункт меню: 'доставка'",
+      "url_checked": "https://www.avto.world/",
+      "description": "Описаны условия доставки и возможные варианты"
+    },
+    {
+      "id": 50,
+      "category": "ecommerce",
+      "name": "Условия оферты",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Не найдено ни одного из: оферт, договор оферты, публичная оферта, пользовательское соглашение",
+      "url_checked": null,
+      "description": "Описание договора публичной оферты"
+    },
+    {
+      "id": 51,
+      "category": "ecommerce",
+      "name": "FAQ",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "URL/пункт меню не найден: /faq, /voprosy, /help, faq, вопрос-ответ",
+      "url_checked": null,
+      "description": "Подробный раздел вопрос-ответ"
+    },
+    {
+      "id": 52,
+      "category": "ecommerce",
+      "name": "Франчайзинг",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "URL/пункт меню не найден: /franchise, /franchising, франшиз, franchise",
+      "url_checked": null,
+      "description": "Возможность представления франшизы"
+    },
+    {
+      "id": 53,
+      "category": "ecommerce",
+      "name": "Гарантии, возврат, оплата",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Не найдено ни одного из: гарантия, возврат, способы оплаты, warranty, refund",
+      "url_checked": null,
+      "description": "Подробно описано что гарантируем и способы возврата"
+    },
+    {
+      "id": 54,
+      "category": "ecommerce",
+      "name": "Личный кабинет",
+      "status": "pass",
+      "severity": "medium",
+      "evidence": "Найдена ссылка/пункт меню: 'личный кабинет'",
+      "url_checked": "https://www.avto.world/",
+      "description": "С информацией по бонусам, истории покупок"
+    },
+    {
+      "id": 55,
+      "category": "ecommerce",
+      "name": "Ссылка на корзину в шапке",
+      "status": "pass",
+      "severity": "high",
+      "evidence": "Найден элемент '[class*='cart']' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "При добавлении товара в корзину отображается количество и сумма"
+    },
+    {
+      "id": 56,
+      "category": "ecommerce",
+      "name": "Корзина — правильный URL",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "URL/пункт меню не найден: /cart, /order, /checkout",
+      "url_checked": null,
+      "description": "Адрес корзины должен быть /cart или /order, но не /korzina (Яндекс не распознает)"
+    },
+    {
+      "id": 57,
+      "category": "ecommerce",
+      "name": "Оплата через Сбербанк Онлайн",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: сбербанк, sberbank, sberpay, сберпей",
+      "url_checked": null,
+      "description": "Второй по популярности способ оплаты"
+    },
+    {
+      "id": 58,
+      "category": "ecommerce",
+      "name": "Самовывоз",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: самовывоз, pickup, забрать из магазина, забрать на складе",
+      "url_checked": null,
+      "description": "Возможность самовывоза"
+    },
+    {
+      "id": 59,
+      "category": "ecommerce",
+      "name": "Адреса сервисных центров",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Не найдено ни одного из: сервисный центр, сервисные центры, сервисные точки, service center",
+      "url_checked": null,
+      "description": "Адреса сервисных центров для клиентов"
+    },
+    {
+      "id": 60,
+      "category": "ecommerce",
+      "name": "Информация об оплате (иконки)",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Элементы не найдены: [class*='payment'] img, [class*='pay-systems'] img, footer img[alt*='visa' i]",
+      "url_checked": null,
+      "description": "Дубль иконками и логотипами платежных систем"
+    },
+    {
+      "id": 61,
+      "category": "ecommerce",
+      "name": "Срок доставки",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Не найдено ни одного из: срок доставки, дн. доставка, доставим за, delivery time, в течение",
+      "url_checked": null,
+      "description": "Упоминание примерного срока доставки товара"
+    },
+    {
+      "id": 62,
+      "category": "ecommerce",
+      "name": "Доп информация по заказу",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: в кредит, рассрочка, бонусы, кэшбек, cashback",
+      "url_checked": null,
+      "description": "Покупка в кредит, бонусы, рассрочка"
+    },
+    {
+      "id": 63,
+      "category": "engagement",
+      "name": "Формы связи",
+      "status": "pass",
+      "severity": "critical",
+      "evidence": "Найдено 'обратный звонок' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Кнопки Обратный звонок, Перезвонить"
+    },
+    {
+      "id": 64,
+      "category": "engagement",
+      "name": "Онлайн-консультация",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Элементы не найдены: [class*='jivo'], [class*='talk-me'], [class*='livechat']",
+      "url_checked": null,
+      "description": "Наличие виджета онлайн-консультант"
+    },
+    {
+      "id": 65,
+      "category": "engagement",
+      "name": "Сервисы захвата посетителя",
+      "status": "pass",
+      "severity": "medium",
+      "evidence": "Найден элемент '[class*='popup']' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Виджеты типа CallbackHunter, Envybox и аналоги"
+    },
+    {
+      "id": 66,
+      "category": "engagement",
+      "name": "Этапы взаимодействия с клиентом",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: этапы работы, как мы работаем, процесс работы, как заказать, шаг 1",
+      "url_checked": null,
+      "description": "Описан процесс консультации и работы с клиентом"
+    },
+    {
+      "id": 67,
+      "category": "engagement",
+      "name": "Push-уведомления",
+      "status": "manual",
+      "severity": "low",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Рассылка подписавшимся клиентам о новостях, товарах, акциях"
+    },
+    {
+      "id": 68,
+      "category": "engagement",
+      "name": "Виджеты связи через чат соцсетей",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Элементы не найдены: a[href*='wa.me'], a[href*='whatsapp'], a[href*='t.me']",
+      "url_checked": null,
+      "description": "В один клик перейти к диалогу в соцсети/мессенджере"
+    },
+    {
+      "id": 69,
+      "category": "engagement",
+      "name": "Глубина вложенности страниц",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Важные страницы не дальше третьего уровня вложенности (проверять вручную через SF)"
+    },
+    {
+      "id": 70,
+      "category": "engagement",
+      "name": "Всплывающие окна",
+      "status": "pass",
+      "severity": "low",
+      "evidence": "Найден элемент '[class*='popup']' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Скидки, заказ обратного звонка через всплывающие окна"
+    },
+    {
+      "id": 71,
+      "category": "engagement",
+      "name": "Слайдер на главной",
+      "status": "pass",
+      "severity": "medium",
+      "evidence": "Найден элемент '[class*='slider']' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Слайдер с главной информацией, желательно с формой захвата"
+    },
+    {
+      "id": 72,
+      "category": "engagement",
+      "name": "Комментарии",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Не найдено ни одного из: комментарии, оставить комментарий, добавить комментарий, comments",
+      "url_checked": null,
+      "description": "Наличие формы с комментариями"
+    },
+    {
+      "id": 73,
+      "category": "engagement",
+      "name": "Кнопки шаринга",
+      "status": "pass",
+      "severity": "low",
+      "evidence": "Найден элемент '[class*='share']' на blog",
+      "url_checked": "https://www.avto.world/novosti",
+      "description": "Кнопки Поделиться в соцсетях"
+    },
+    {
+      "id": 74,
+      "category": "engagement",
+      "name": "Сообщить о поступлении",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Не найдено ни одного из: сообщить о поступлении, уведомить о поступлении, notify when available",
+      "url_checked": null,
+      "description": "Если товара нет в наличии — функционал Сообщить о поступлении"
+    },
+    {
+      "id": 75,
+      "category": "engagement",
+      "name": "Обратный отсчёт",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Элементы не найдены: [class*='countdown'], [class*='timer'], [class*='counter-time']",
+      "url_checked": null,
+      "description": "Формы с обратным отсчётом срока действия предложения"
+    },
+    {
+      "id": 76,
+      "category": "content_seo",
+      "name": "HTTPS (SSL сертификат)",
+      "status": "pass",
+      "severity": "critical",
+      "evidence": "Сайт работает на HTTPS: https://avto.world",
+      "url_checked": "https://avto.world",
+      "description": "Сайт работает на HTTPS, настроен SSL сертификат"
+    },
+    {
+      "id": 77,
+      "category": "content_seo",
+      "name": "Читабельность домена",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Доменное имя читаемо и легко диктуется по телефону"
+    },
+    {
+      "id": 78,
+      "category": "content_seo",
+      "name": "Адаптация под мобильные",
+      "status": "pass",
+      "severity": "critical",
+      "evidence": "Найден элемент 'meta[name='viewport']' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Адаптивная или мобильная версия, AMP или Яндекс.Турбо"
+    },
+    {
+      "id": 79,
+      "category": "content_seo",
+      "name": "Визуализация контента (инфографика, иконки)",
+      "status": "pass",
+      "severity": "medium",
+      "evidence": "Найден элемент '[class*='icon']' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Инфографика, иконки с преимуществами и кратким описанием"
+    },
+    {
+      "id": 80,
+      "category": "content_seo",
+      "name": "Инфографика (процессы)",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Не найдено ни одного из: инфографик, схема работы, процесс доставки",
+      "url_checked": null,
+      "description": "Важные процессы описаны инфографикой (процесс доставки и т.д.)"
+    },
+    {
+      "id": 81,
+      "category": "content_seo",
+      "name": "Советы / инструкции",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: совет, инструкция, рекомендаци, как выбрать, руководство",
+      "url_checked": null,
+      "description": "Раздел с советами по выбору продукции или услуг"
+    },
+    {
+      "id": 82,
+      "category": "content_seo",
+      "name": "Инструкции к товарам",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Не найдено ни одного из: инструкция, мануал, скачать инструкцию, manual, user guide",
+      "url_checked": null,
+      "description": "Инструкции к товарам с возможностью скачивания"
+    },
+    {
+      "id": 83,
+      "category": "content_seo",
+      "name": "ЧПУ (человекочитаемые URL)",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "В URL карточек товаров — уровень /catalog/ + название категории"
+    },
+    {
+      "id": 84,
+      "category": "content_seo",
+      "name": "Meta title / description",
+      "status": "pass",
+      "severity": "critical",
+      "evidence": "Найден элемент 'title' на home",
+      "url_checked": "https://www.avto.world/",
+      "description": "Прописаны title и description на главной странице"
+    },
+    {
+      "id": 85,
+      "category": "content_seo",
+      "name": "Structured data (schema.org)",
+      "status": "pass",
+      "severity": "high",
+      "evidence": "JSON-LD: 3 блок(ов); типы: BreadcrumbList, LocalBusiness, Organization",
+      "url_checked": "https://www.avto.world/",
+      "description": "Микроразметка schema.org (Organization, Product, Breadcrumb)"
+    },
+    {
+      "id": 86,
+      "category": "sales_tools",
+      "name": "Скидки",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Не найдено ни одного из: скидка, скидки, discount, -10%, -20%...",
+      "url_checked": null,
+      "description": "Системы скидок, накопительные системы"
+    },
+    {
+      "id": 87,
+      "category": "sales_tools",
+      "name": "Акции",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "URL/пункт меню не найден: /actions, /akcii, /promo, /sale, акции",
+      "url_checked": null,
+      "description": "Регулярная информация об акциях компании"
+    },
+    {
+      "id": 88,
+      "category": "sales_tools",
+      "name": "Распродажа",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "URL/пункт меню не найден: /sale, /rasprodazha, /clearance, распродажа",
+      "url_checked": null,
+      "description": "Раздел Распродажа"
+    },
+    {
+      "id": 89,
+      "category": "sales_tools",
+      "name": "Бонусы",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: бонус, бонусная программа, накопительная система, cashback, кэшбек",
+      "url_checked": null,
+      "description": "Собственная бонусная программа"
+    },
+    {
+      "id": 90,
+      "category": "sales_tools",
+      "name": "УТП (уникальное торговое предложение)",
+      "status": "manual",
+      "severity": "critical",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Наличие в видимой части экрана уникального торгового предложения"
+    },
+    {
+      "id": 91,
+      "category": "sales_tools",
+      "name": "Дополнительные предложения",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: с этим товаром, рекомендуем, также купили, upsell",
+      "url_checked": null,
+      "description": "Услуги, в которых может возникнуть необходимость при покупке основного"
+    },
+    {
+      "id": 92,
+      "category": "sales_tools",
+      "name": "Cross-sell (с этим покупают)",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: с этим покупают, вместе с этим, похожие товары, related products",
+      "url_checked": null,
+      "description": "Формы допродаж — с этим покупают и т.д."
+    },
+    {
+      "id": 93,
+      "category": "sales_tools",
+      "name": "Цена со скидкой (старая/новая)",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Элементы не найдены: [class*='old-price'], [class*='discount-price'], [class*='price-old']",
+      "url_checked": null,
+      "description": "Старая/новая цена — визуальное выделение скидки"
+    },
+    {
+      "id": 94,
+      "category": "product_info",
+      "name": "Детализация услуги/товара",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Что включает услуга: замер, проектирование, доставка, монтаж"
+    },
+    {
+      "id": 95,
+      "category": "product_info",
+      "name": "Артикул",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: артикул, sku, код товара",
+      "url_checked": null,
+      "description": "Наличие артикула товара"
+    },
+    {
+      "id": 96,
+      "category": "product_info",
+      "name": "Наличие товара (кол-во на складе)",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: в наличии, на складе, шт. в наличии, осталось, in stock",
+      "url_checked": null,
+      "description": "Количество штук на складе, а не только В наличии"
+    },
+    {
+      "id": 97,
+      "category": "product_info",
+      "name": "Товарный ассортимент",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Не менее 50% от среднего среди 20 конкурентов"
+    },
+    {
+      "id": 98,
+      "category": "product_info",
+      "name": "Характеристики товара",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Не найдено ни одного из: характеристики, описание, технические параметры, specs, specifications",
+      "url_checked": null,
+      "description": "Подробные технические характеристики товара"
+    },
+    {
+      "id": 99,
+      "category": "product_info",
+      "name": "Фотографии товара",
+      "status": "fail",
+      "severity": "critical",
+      "evidence": "Элементы не найдены: [class*='product'] img, [class*='gallery'] img, .product img",
+      "url_checked": null,
+      "description": "Обязательное наличие фотографий товара"
+    },
+    {
+      "id": 100,
+      "category": "product_info",
+      "name": "Обзоры на товар",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Не найдено ни одного из: обзор, видеообзор, review, video review",
+      "url_checked": null,
+      "description": "Видео-обзоры от лица магазина или покупателя"
+    },
+    {
+      "id": 101,
+      "category": "product_info",
+      "name": "Отзывы о товаре / рейтинг",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Не найдено ни одного из: отзыв, рейтинг, оценка, звезд, rating",
+      "url_checked": null,
+      "description": "Отзывы о товаре, услуге на сайте, рейтинг"
+    },
+    {
+      "id": 102,
+      "category": "product_info",
+      "name": "Размерный ряд",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: размер, размерная сетка, размерный ряд, size chart",
+      "url_checked": null,
+      "description": "Информация о доступных для заказа размерах"
+    },
+    {
+      "id": 103,
+      "category": "product_info",
+      "name": "3D-модель",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Элементы не найдены: [class*='3d'], [class*='sketchfab'], iframe[src*='3d']",
+      "url_checked": null,
+      "description": "3D-модель объекта (строительство домов и т.п.)"
+    },
+    {
+      "id": 104,
+      "category": "product_info",
+      "name": "Быстрый просмотр товара",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Не найдено ни одного из: быстрый просмотр, quick view, быстрый просмотр товара",
+      "url_checked": null,
+      "description": "Функционал быстрого просмотра товара во всплывающем окне"
+    },
+    {
+      "id": 105,
+      "category": "product_info",
+      "name": "Фильтр перед каталогом",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Элементы не найдены: [class*='filter'], [class*='catalog-filter'], .filters",
+      "url_checked": null,
+      "description": "Фильтр по цене, популярности"
+    },
+    {
+      "id": 106,
+      "category": "product_info",
+      "name": "Расширенный фильтр",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: цвет, размер, бренд, материал, производитель",
+      "url_checked": null,
+      "description": "Фильтр по параметрам (цвет, размер, бренд)"
+    },
+    {
+      "id": 107,
+      "category": "product_info",
+      "name": "Ссылки на тегирование",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Элементы не найдены: [class*='tag'], [class*='tags'] a, .tag-cloud a",
+      "url_checked": null,
+      "description": "Страницы тегов для тематической перелинковки"
+    },
+    {
+      "id": 108,
+      "category": "product_info",
+      "name": "Выбор комплектации",
+      "status": "fail",
+      "severity": "low",
+      "evidence": "Не найдено ни одного из: комплектация, выбор комплектации, варианты, configuration",
+      "url_checked": null,
+      "description": "Возможность выбора комплектации товара"
+    },
+    {
+      "id": 109,
+      "category": "product_info",
+      "name": "Купить в 1 клик",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: купить в 1 клик, купить в один клик, быстрый заказ, заказать в один клик",
+      "url_checked": null,
+      "description": "Кнопка быстрого заказа"
+    },
+    {
+      "id": 110,
+      "category": "product_info",
+      "name": "Перенаправление с карточки",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Клик по изображению в каталоге ведёт на карточку товара"
+    },
+    {
+      "id": 111,
+      "category": "product_info",
+      "name": "Рейтинг товара в каталоге",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Элементы не найдены: [class*='rating'], [class*='stars'], .rating",
+      "url_checked": null,
+      "description": "Рейтинг товара отображается в каталоге и карточке"
+    },
+    {
+      "id": 112,
+      "category": "product_info",
+      "name": "Отметки (Новинка, Хит, Распродажа)",
+      "status": "pass",
+      "severity": "medium",
+      "evidence": "Найдено 'sale' на catalog",
+      "url_checked": "https://www.avto.world/catalog",
+      "description": "Отметки Новинка, Хит продаж, Распродажа в каталоге"
+    },
+    {
+      "id": 113,
+      "category": "product_info",
+      "name": "Цена в рублях (руб., не ₽)",
+      "status": "pass",
+      "severity": "medium",
+      "evidence": "Найдено 'руб' на catalog",
+      "url_checked": "https://www.avto.world/catalog",
+      "description": "Цена выражается в рублёвом эквиваленте: 2000 руб. (не 2000 ₽)"
+    },
+    {
+      "id": 114,
+      "category": "product_info",
+      "name": "Название товара с категорией",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Название товара содержит название категории, в единственном числе"
+    },
+    {
+      "id": 115,
+      "category": "product_info",
+      "name": "Кнопка Купить (текстовая)",
+      "status": "pass",
+      "severity": "high",
+      "evidence": "Найден элемент 'button' на catalog",
+      "url_checked": "https://www.avto.world/catalog",
+      "description": "Кнопка Купить — текстовая, а не только иконка"
+    },
+    {
+      "id": 116,
+      "category": "product_info",
+      "name": "CTA-кнопки (не ссылки)",
+      "status": "fail",
+      "severity": "high",
+      "evidence": "Элементы не найдены: button[class*='cart'], button[class*='buy'], button[type='submit']",
+      "url_checked": null,
+      "description": "Купить, добавить в корзину — должны быть кнопками, а не ссылками"
+    },
+    {
+      "id": 117,
+      "category": "product_info",
+      "name": "Название и страна производителя",
+      "status": "fail",
+      "severity": "medium",
+      "evidence": "Не найдено ни одного из: производитель, страна производства, бренд, made in",
+      "url_checked": null,
+      "description": "В карточках товаров"
+    },
+    {
+      "id": 118,
+      "category": "product_info",
+      "name": "Цена товара (наличие)",
+      "status": "manual",
+      "severity": "critical",
+      "evidence": "Требуется ручная проверка",
+      "url_checked": null,
+      "description": "Цена присутствует на карточке товара и в каталоге"
+    },
+    {
+      "id": 119,
+      "category": "content_seo",
+      "name": "Счётчик Яндекс.Метрики (API-проверка)",
+      "status": "pass",
+      "severity": "high",
+      "evidence": "Счётчик #70690585 активен, сайт: avto.world",
+      "url_checked": null,
+      "description": "Счётчик Яндекс.Метрики установлен, активен и собирает данные (проверка через API). Без tokens.json — проверка ручная"
+    },
+    {
+      "id": 120,
+      "category": "content_seo",
+      "name": "Цели конверсии в Метрике",
+      "status": "pass",
+      "severity": "high",
+      "evidence": "5 целей (e-commerce цель обнаружена): Клик по номеру телефона, Клик по email, Отправка формы, Отправка формы с Контакты (Конверсия), Корзина (Конверсия)",
+      "url_checked": null,
+      "description": "В Яндекс.Метрике настроены цели конверсии (заказ, корзина, форма). E-commerce цель — приоритет. Без tokens.json — проверка ручная"
+    }
+  ],
+  "meta": {
+    "tokens_loaded": true,
+    "tokens_available": [
+      "yandex.metrika.token",
+      "counter_id=70690585",
+      "topvisor.api_key"
+    ],
+    "factors_total": 120,
+    "summary": {
+      "counts": {
+        "pass": 32,
+        "warn": 0,
+        "fail": 67,
+        "manual": 21,
+        "na": 0
+      },
+      "by_category": {
+        "navigation_company": {
+          "pass": 12,
+          "warn": 0,
+          "fail": 9,
+          "manual": 1,
+          "na": 0
+        },
+        "trust": {
+          "pass": 1,
+          "warn": 0,
+          "fail": 10,
+          "manual": 10,
+          "na": 0
+        },
+        "ecommerce": {
+          "pass": 4,
+          "warn": 0,
+          "fail": 15,
+          "manual": 0,
+          "na": 0
+        },
+        "engagement": {
+          "pass": 5,
+          "warn": 0,
+          "fail": 6,
+          "manual": 2,
+          "na": 0
+        },
+        "content_seo": {
+          "pass": 7,
+          "warn": 0,
+          "fail": 3,
+          "manual": 2,
+          "na": 0
+        },
+        "sales_tools": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 7,
+          "manual": 1,
+          "na": 0
+        },
+        "product_info": {
+          "pass": 3,
+          "warn": 0,
+          "fail": 17,
+          "manual": 5,
+          "na": 0
+        }
+      },
+      "critical_fails_top": [
+        {
+          "id": "99",
+          "name": "Фотографии товара",
+          "severity": "critical",
+          "category": "product_info"
+        },
+        {
+          "id": "9",
+          "name": "Реквизиты",
+          "severity": "high",
+          "category": "navigation_company"
+        },
+        {
+          "id": "25",
+          "name": "Сертификаты и лицензии",
+          "severity": "high",
+          "category": "trust"
+        },
+        {
+          "id": "27",
+          "name": "Видимость в интернете (соцсети)",
+          "severity": "high",
+          "category": "trust"
+        },
+        {
+          "id": "28",
+          "name": "Преимущества",
+          "severity": "high",
+          "category": "trust"
+        }
+      ],
+      "score": 26.7
+    }
+  }
+}

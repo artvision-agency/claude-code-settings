@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-15T12:26:44",
+  "repo": "artvision-data",
+  "commit": "5de02f637",
+  "message": "chore: save session prompts before compact 2026-04-15_12:26",
+  "signal_type": "workaround",
+  "detail": "workaround: +   - Cloudflare as potential fallback DNS (not used in final solution)",
+  "files": ["prompts/2026-04-15_session_91357ab0.md"]
+}

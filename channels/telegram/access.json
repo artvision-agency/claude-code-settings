@@ -1,0 +1,16 @@
+{
+  "dmPolicy": "allowlist",
+  "allowFrom": [
+    "161261562",
+    "1857522687",
+    "356640470"
+  ],
+  "groups": {
+    "-4273200821": {
+      "name": "Artvision Team",
+      "allowFrom": ["161261562", "1857522687"]
+    }
+  },
+  "ackReaction": "👀",
+  "pending": {}
+}

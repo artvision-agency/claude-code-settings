@@ -1,0 +1,24 @@
+{
+  "_comment": "Merge scripts + devDependencies into your package.json.",
+  "scripts": {
+    "test": "vitest run",
+    "test:cov": "vitest run --coverage",
+    "test:e2e": "playwright test --project=desktop-1440",
+    "test:e2e:all": "playwright test",
+    "test:a11y": "playwright test tests/a11y",
+    "test:visual": "playwright test tests/visual",
+    "test:visual:update": "playwright test tests/visual --update-snapshots",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx --max-warnings 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.0 <3",
+    "@vitest/coverage-v8": "^2.1.0 <3",
+    "@playwright/test": "^1.47.0 <2",
+    "@axe-core/playwright": "^4.10.0 <5",
+    "typescript": "^5.4.0 <6",
+    "eslint": "^9.10.0 <10",
+    "@typescript-eslint/parser": "^8.6.0 <9",
+    "@typescript-eslint/eslint-plugin": "^8.6.0 <9"
+  }
+}
