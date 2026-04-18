@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T14:31:59",
+  "repo": "artvision-data",
+  "commit": "c7f00a6d0",
+  "message": "sync: session state 2026-04-17_14:31",
+  "signal_type": "rule_update,workaround",
+  "detail": "rules: knowledge-system.md, | workaround: +4. **Fallback** \u2014 WhatsApp, VK, email",
+  "files": [".claude/rules/knowledge-system.md", "TODO.md", "knowledge/INDEX.md", "knowledge/clients/hypotheses.md", "knowledge/clients/knowledge.md", "knowledge/clients/rules.md", "knowledge/experiment-karpathy-ab.md", "knowledge/infrastructure/hypotheses.md", "knowledge/infrastructure/knowledge.md", "knowledge/infrastructure/rules.md", "knowledge/kp-presale/hypotheses.md", "knowledge/kp-presale/knowledge.md", "knowledge/kp-presale/rules.md", "knowledge/music/hypotheses.md", "knowledge/music/knowledge.md", "knowledge/music/rules.md", "knowledge/products/hypotheses.md", "knowledge/products/rules.md", "knowledge/seo/hypotheses.md", "knowledge/seo/knowledge.md", "knowledge/seo/rules.md", "sessions/2026-04-17.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

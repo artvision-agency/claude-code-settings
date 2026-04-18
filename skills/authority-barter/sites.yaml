@@ -1,0 +1,104 @@
+# Реестр площадок для authority-barter
+# Обновлять при каждом использовании скилла. Source of truth.
+# Tier = приоритет, DR = Ahrefs Domain Rating, ИКС = Яндекс
+# Данные на 2026-04-18 (для IntelSteel/agro niche)
+
+niches:
+  agro:
+    tier_1:
+      - domain: agroinvestor.ru
+        name: "Агроинвестор + Агротехника и технологии"
+        dr: 60
+        iks: null  # проверить
+        url_ads: "/reklama/"
+        format: "редакторская статья + автор-бокс, печатный журнал"
+        permanent: true  # печатный журнал = евершгрин
+        contact: "n.lomova@agroinvestor.ru"
+        audience: "Инвесторы в АПК, руководители компаний"
+        editorial_notes: "Профильный для инвестиций в технику"
+
+      - domain: agrobook.ru
+        name: "Агробук (ИД Крестьянин)"
+        dr: 50
+        iks: null
+        url_ads: "https://agrobook.ru/reklamodatelyam"
+        format: "партнёрский контент, корпоративный блог, карточка в АПК-каталоге"
+        permanent: true  # карточка в каталоге = постоянная
+        contact: "reklama@agrobook.ru, +7 863 282-83-15"
+        audience: "~70 000 уник/мес, практики-агрономы, Юг России"
+        editorial_notes: "Сердце АПК Юга. Email 4300 подписчиков."
+
+    tier_2:
+      - domain: agroxxi.ru
+        name: "АгроXXI"
+        dr: 45
+        iks: null
+        url_ads: "https://www.agroxxi.ru/mediakit"
+        format: "брендированный раздел, SEO-статьи, email, Telegram"
+        permanent: false  # nofollow по умолчанию
+        contact: "shapovalova@agroxxi.ru, +7 910 439-62-10"
+        audience: "~4.14 млн уник/год [self-reported]"
+        editorial_notes: "nofollow default. Массовая аудитория."
+
+      - domain: rosng.ru
+        name: "Нацагроагентство (KAMPUS)"
+        dr: 42
+        iks: null
+        url_ads: "https://kampus.rosng.ru/page/pr"
+        format: "баннеры, информ-партнёрство, Я.Новости"
+        permanent: false  # на срок
+        contact: "info@rosng.ru, +7 938 100-09-40"
+        audience: "~233K/мес"
+        editorial_notes: "Прайс публичный (редкость)"
+
+      - domain: agbz.ru
+        name: "Журнал Агробизнес (печатный)"
+        dr: 40
+        iks: null
+        url_ads: "https://agbz.ru/advertisers/"
+        format: "печатный журнал 10К экз + онлайн"
+        permanent: true  # печатный = евершгрин
+        contact: "pressa@agbz.ru, +7 800 500-35-90"
+        audience: "Агропроизводители, фермеры, агрохолдинги"
+        editorial_notes: "Один рекламодатель на разворот = премиум"
+
+    tier_3:
+      - domain: apej.ru
+        name: "Агропродовольственная экономика"
+        dr: 25
+        iks: null
+        url_ads: null  # не найден
+        format: "научная статья в журнале РИНЦ"
+        permanent: true  # статья навсегда в РИНЦ
+        contact: "через форму сайта + scipro.ru (Н.А. Краснова)"
+        audience: "Экономисты АПК, аспиранты, руководители СХП"
+        editorial_notes: "РИНЦ да, ВАК нет. ISSN 2412-2521. Роскомнадзор ФС77-67047 (2016). Стоимость публикации UNCONFIRMED — запросить."
+
+    catalogs:
+      - domain: agrobook.ru
+        url: "https://agrobook.ru/firms/"
+        cost: "бесплатно (модерация)"
+        permanent: true
+
+      - domain: agroserver.ru
+        url: "https://agroserver.ru/portal/tarif/"
+        cost: "тарифы для ИП/компаний"
+        permanent: true
+
+      - domain: agroru.com
+        url: "https://agroru.com/"
+        cost: "бесплатно + платные тарифы"
+        permanent: true
+
+  # Добавлять ниши по мере использования скилла:
+  # fintech: ...
+  # retail: ...
+  # education: ...
+  # construction: ...
+  # logistics: ...
+
+# Метаданные
+meta:
+  last_updated: "2026-04-18"
+  maintainer: "authority-barter skill"
+  validation_note: "Все аудитория/DR помечены [self-reported] — перед использованием в КП клиенту перепроверить SimilarWeb+Ahrefs"

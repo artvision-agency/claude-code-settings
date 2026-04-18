@@ -1,0 +1,236 @@
+# TODO — Ops (брифинги, отчёты, операционка)
+
+> Контекст: `artvision-data` — операционные задачи агентства
+> Обновлено: 2026-03-18
+
+## В работе
+
+### Knowledge System — активный цикл улучшения (консилиум 2026-04-17)
+
+**Контекст:** консилиум AI-engineer + architect + round_table признал что наша связка rules/memory/skills/hooks имеет инфраструктуру автоулучшения, но она **не запущена**. Learning-queue накопила 108 файлов с 08.04 без обработки. MEMORY.md вырос до 136 файлов, 23KB, деградация близко. AutoResearch (Karpathy) = не наш стек (ML, GPU), но концепция автономного цикла улучшений — применима к skills/rules/memory.
+
+- [x] **Обработать learning-queue (110 файлов)** [internal:knowledge-system] [priority:high] [assignee:anton] (17.04: queue processed → archived в learning-queue/processed/2026-04-17/. Ключевой insight: Karpathy Wiki уже пробовали 06-14.04, отключили commit 5648365b2 как 80% дубль memory. Записано feedback_karpathy_wiki_rejected.md)
+- [x] **Lint-скрипт для memory/ и rules/** [internal:knowledge-system] [priority:high] [assignee:anton] (17.04: scripts/memory-lint.py + hooks/pre-memory-lint.sh зарегистрирован в PreToolUse.Bash. 136 files, CRITICAL 0, WARN 28 dangling/no-frontmatter. Fix auto-applied через --fix-orphans)
+- [x] **Cron еженедельно для ai-evolve skill** [internal:knowledge-system] [priority:high] [assignee:anton] (17.04: scripts/ai-evolve-prep.sh + LaunchAgent pro.artvision.ai-evolve-prep (Sunday 10:30) + hook start-ai-evolve-alert.sh. Cron собирает сигналы в ~/.claude/ai-evolve-suggestions/YYYY-Www.md, SessionStart алертит в следующей сессии → ручной /ai-evolve. Избегаем автозапуска Claude CLI (cost+risk))
+- [x] **Auto-dedup при создании memory** [internal:knowledge-system] [priority:medium] [assignee:anton] (17.04: hooks/pre-memory-write.sh + scripts/memory-dedup-check.py зарегистрирован в PreToolUse.Write. WARN режим (не блок). Сравнивает basename без type-префикса (порог 0.65) + frontmatter name+description (0.45))
+- [~] **Hypothesis lifecycle в memory** — ОТМЕНЕНО (часть отключённого Karpathy Wiki, см. feedback_karpathy_wiki_rejected.md)
+
+### Synamica (брендинговое агентство СПб) — контент-план блога
+
+- [x] **Synamica: кластеры тем и услуг** [client:synamica] [result:clusters.md] [priority:high] (10.04: 7 кластеров + 3 бонус)
+- [x] **Synamica: семантика по кластерам через Wordstat** [client:synamica] [result:keywords.csv] [priority:high] (12.04: 3020 ключей, 10 кластеров)
+- [x] **Synamica: трендовые темы из vc.ru/habr/TG** [client:synamica] [result:trending_topics.csv] [priority:high] (12.04: 35 тем, 7 источников)
+- [x] **Synamica: SERP-анализ топ-50 ключей** [client:synamica] [result:serp_analysis.csv] [priority:high] (13.04: 79cbe8054)
+- [x] **Synamica: топ-20 тем с обоснованием тренда + источники** [client:synamica] [result:top-20-topics-2026-04-12.md] [priority:high] (13.04: bbb80bb2d — factcheck 168-ФЗ CONFIRMED)
+
+- [ ] **[routed]** Потенциальные клиенты: ANT Partners (юристы), Advertmed, медклиники, HR
+- [ ] **[routed]** Тест batch-asana.py --create на реальных клиентах (после подтверждения)
+- [ ] **[routed]** Предложить GEO-аудит (ArtRadar) как upsell
+- [ ] **[routed]** ANT карточки организации (Я.Бизнес, 2ГИС) — Андрею (до 14.03)
+- [ ] **[routed]** ArtRadar (GEO) — предложить после Mirulidi пилота
+- [ ] **[routed]** Outreach: обновить питч + приложить GEO-аудит vlpco.ru
+- [ ] **[routed]** Upsell виджет "Калькулятор на сайт" для клиентов-клиник (recurring 2-5K/мес)
+### Che-Group (presale, рестораны СПб) — обновлено 2026-04-16
+
+- [x] **Ресерч Che-Group СПб: бренды, сайты, приложение, ЛПР** [client:che-group] [result:presale/che-group/research.md] [priority:high] (16.04: 18 заведений, 7 брендов, Фурсов/Казначеев, iOS+Android confirmed)
+- [x] **Аудит веб-ресурсов Che-Group: SEO/UX/скорость/мобилка** [client:che-group] [result:presale/che-group/audit.md] [priority:high] (16.04: SF crawl 27 URL, SPA без SSR, 0 meta)
+- [x] **HoReCa контекст** [client:che-group] [result:presale/che-group/horeca-context.md] [priority:high] (16.04: Грелка-Гуделка = единственный эталон, продаём методологию)
+- [x] **Юрлица/ЛПР** [client:che-group] [result:presale/che-group/legal.md] [priority:high] (16.04: 2 ООО Чабрец + Континенталь, Фурсов 30% = приоритет ЛПР)
+- [x] **SERP-конкуренты** [client:che-group] [result:presale/che-group/serp-competitors.md] [priority:high] (16.04)
+- [x] **Дизайн-система chegroup.ru** [client:che-group] [result:presale/che-group/design-system.md] [priority:high] (16.04)
+
+### Инфра / команда
+
+- [ ] **SF CLI (`sf` wrapper) — установить Андрею и Стасу** [client:internal] [result:все используют sf] [priority:medium] [assignee:anton] [due:2026-04-18]
+- [x] **KP Che-Group HTML** [client:che-group] [result:presale/che-group/kp/che-group_kp.html] [priority:high] (16.04: задеплоен artvision.pro/kp/che-group/)
+- [ ] **Портфолио свежее (окт+): МАКФА, Закваски.рус, Pencil визуалы** [result:portfolio-2026-04.md] [priority:high]
+- [ ] **Аудит портфолио: curl -sI всех URL → 404 заменить** [result:portfolio-status.csv] [priority:medium]
+- [x] ~~Найти что такое MSG/MS Box~~ — это НАШ продукт `products/msgbox/`
+- [ ] **Миграция почт artvision.pro: app-passwords** [result:email-archive/] [priority:high] [blocked-by:app-passwords от Антона]
+- [ ] **Outreach-таблица контактов Che-Group** [client:che-group] [result:outreach-contacts.csv] [priority:medium]
+- [ ] **NAP-проверка 18 точек × 6 каталогов** [client:che-group] [result:nap-audit.md] [priority:medium]
+- [ ] **Полный ЕГРЮЛ Казначеева (checko/list-org)** [client:che-group] [result:legal.md update] [priority:medium]
+
+### Ops CRM / Dashboards — парковка 2026-04-15
+
+- [ ] **Ops CRM v1: Kanban + popup + sticky header** [product:ops] [result:dashboards/frontend/ops-crm.html+engine] [priority:high] [skill:ui-ux-pro-max] — клик по задаче → popup (title, дедлайн, описание, assignee, reporter, client, priority); drag-drop между колонками (TODO/Doing/Blocked/Done); шапка с счётчиками sticky при прокрутке. Источник данных: TODO*.md + Asana (MCP). Референсы: Linear/Trello/Notion. База: расширить `dashboards/frontend/dashboard.html` или отдельный `ops-crm.html`. Движок: новый модуль `engine/modules/tasks.py` (парсинг TODO.md → SQLite таблица `tasks`, sync с Asana).
+- [ ] **План апгрейда dashboards → Ops CRM** [product:ops] [result:docs/plans/2026-04-15-ops-crm-upgrade.md] [priority:high] — пошаговый план: (1) schema tasks в init_db.py, (2) parser TODO.md → Silver layer, (3) Asana sync (MCP), (4) REST endpoint /api/tasks, (5) frontend Kanban (SortableJS или нативный HTML5 DnD), (6) popup modal, (7) sticky header.
+
+### Инфраструктура / дизайн — парковка 2026-04-15
+
+- [ ] **Рефакторинг структуры: clients/<client>/{projects,presale,kp,meetings} — убрать top-level projects/** [result:migration-plan+dry-run] [priority:medium]
+- [ ] **Склонировать дизайн-систему "amnesia" с https://m-1-15-3w5hsuiikq-ez.a.run.app/ru/premium — токены+компоненты в design-systems/amnesia/** [result:design-systems/amnesia/] [priority:medium]
+- [ ] **Ростер дизайн-систем: каталог с кодовыми именами (cameo, amnesia, ...) + когда применять** [result:design-systems/README.md] [priority:medium]
+- [ ] **Ресерч сервисов решения Яндекс-капчи: форумы (Zennoposter и др.), API, цены, лицензии** [result:captcha-research.md] [priority:medium] — Антон даст доступы к форумам
+- [ ] **Проверить есть ли у нас лицензия Zennoposter / их капча-проект (API)** [result:note] [priority:low]
+
+### Еженедельный разбор (созвон Антон/Андрей) — из чата av.pro ИИ для задач, 13.04
+
+- [ ] **Проливы: перевести 5к** [assignee:andrey] [result:payment] [priority:high] — Otido 2к, Ant 1к, Madwave 1к, Geely 1к, Extru 1к. Еженедельно. (Андрей подтвердил Otido/Ant/Extru 13.04)
+- [ ] **Avto.world: слайдер акции на главной + финализация плана** [assignee:andrey] [client:avtoworld] [priority:high] — https://artvision.pro/avtoworld-plan_topvisor/, оптимизация до 14.04, прогон 14.04 (1-2к)
+- [ ] **Geely: прогон 14.04 (1к)** [assignee:andrey] [client:geely-a2auto] [priority:high]
+- [ ] **Топвизор 200** [priority:medium] — уточнить что (тариф/запросы/проверки)
+- [ ] **Есенина: согласовать финал v8 + аудит** [client:esenina] [priority:high] — https://artvision.pro/esenina-v8, https://artvision.pro/esenina-audit-2026-04-10.html
+- [ ] **Творим: уточнить дату прогона** [client:tvorimsovershenstvo] [priority:medium]
+- [ ] **Extru: проверить что отчёт отправлен (1-е число)** [client:extru] [priority:medium]
+- Источник: `processes/weekly-sync/avpro-ii-chat-2026-04-13.md`
+
+#### Доп. задачи из оперативного созвона 13.04 (20 мин)
+
+Саммари: `clients/artvision-pro/meetings/2026-04-13-kiselev-ops.md`. Инсайт: каждый пролив даёт ~20% подъёма в топе (Extru кейс).
+
+- [ ] **Extru: возобновить стандартный ежемесячный отчёт** [client:extru] [assignee:andrey] [priority:high] — перестали отправлять, возобновить с ближайшего отчётного периода
+- [x] **ANT Partners: починить битую ссылку на отчёт за март в Asana-таблице** [client:ant-partners] [assignee:anton] [priority:medium] — 14.04: перегенерил отчёт (был пустой 0%, стал 100%), ссылка в Asana 1213896018705538 теперь кликабельна
+- [ ] **Avto.world: прилепить готовые статьи на сайт** [client:avtoworld] [assignee:andrey] [priority:high] — статьи есть, не размещены
+- [ ] **Avto.world: расширить семантическое поле (трубки + др. модели)** [client:avtoworld] [assignee:andrey] [priority:high] — текущее поле узкое, christmas-tree подход
+- [ ] **Avto.world: сравнить семантику с прямыми конкурентами ×1.5–×2** [client:avtoworld] [assignee:andrey] [priority:high] — собрать запросы конкурентов, добить недостающее
+- [ ] **Avto.world: проверить исполнение плана 60 доноров** [client:avtoworld] [assignee:andrey] [priority:high] — риск: отчитались, но по факту не сделано. Через LinkBuilder/Checktrust
+- [ ] **Есенина: дизайн-ревью сайта + фактчек ТЗ** [client:esenina] [assignee:anton] [priority:medium] — композиция, лацканы, детали интерфейса перед v8 финалом
+- [ ] **Yandex доменная почта: проверить доставку на domain@** [assignee:anton] [priority:medium] — отваливалась, Андрей сообщил 13.04
+- [ ] **Activate понедельничный запуск «Еженедельный разбор»** [product:ops] [assignee:anton] [priority:medium] — задача в Asana есть, cron/напоминание на пн не сработало
+
+### Marilav (клиника красоты Москва) — КП по образцу raduga-full
+
+**Артефакты:** `presales/marilav/` (reports/, kp/marilav_kp.html, HANDOFF.md). Все 5 reports готовы: seo-audit 38/100, geo-audit 28/100, serp-competitors (2/10 Google), wordstat-demand (503K base / 25K exact), roi-model (3 тарифа).
+
+Слайды для перезаписи в `kp/marilav_kp.html`:
+- [x] **Marilav #1:** Title-слайд → "Клиника красоты МариЛав" [client:marilav] [priority:high]
+- [x] **Marilav #2:** Слайд аудита 38/100 + 6 критичных проблем [client:marilav] [priority:high]
+- [x] **Marilav #3:** SERP + конкуренты (2/10 Google, BeautyWay/СМ/GMT) [client:marilav] [priority:high]
+- [x] **Marilav #4:** Wordstat спрос 503K/25K + 5 кластеров [client:marilav] [priority:high]
+- [x] **Marilav #5:** 🆕 НОВЫЙ слайд "Градус видимости в ИИ" 28/100 (GEO, Artvision Radar) [client:marilav] [priority:high]
+- [x] **Marilav #6:** ROI слайд (Tariff 2 break-even мес 6, ROI +206%, +2.97M₽) [client:marilav] [priority:high]
+- [x] **Marilav #7:** Тарифы 65K/120K/180K (адаптированы под beauty) [client:marilav] [priority:high]
+- [x] **Marilav #8:** Глобальная замена — 30× AdvertMed → МариЛав, 10× слуховые → косметология/стоматология, 10× Bitrix → WordPress+Yoast, 6× radugazvukov → marilav [client:marilav] [priority:high]
+- [x] **Marilav #9:** factcheck-v2.py + code-reviewer agent (QA gate) [client:marilav] [priority:high]
+- [x] **Marilav #10:** Playwright 3 breakpoints (1280/768/375) [client:marilav] [priority:high]
+- [x] **Marilav #11:** Деплой artvision.pro/kp/marilav-full/ (scp + curl -sI) [client:marilav] [result:url] [priority:high]
+
+### Клиенты — текущие задачи
+- [x] **BluMart: зачистить ВСЕ данные Ростокиных из договора + NDA** (выполнено 18-19.03, замена на ИП Камеристый, оригинал в _archive/)
+- [x] OTIDO: подписать акты №203, №204 в СБИС и отправить на OTIDO Group (выполнено 01.04)
+- [x] OTIDO: подтвердить получение писем от OTIDO (spb@otido-group.ru) (закрыто 03.04)
+- [x] Альфа-банк: отправлены 2 письма на moyplatej@alfabank.ru — каникулы (ФЗ-76) + реструктуризация (02.04.2026). Ждём ответ до 16.04
+
+### Продукты
+- [ ] МедВижн: дизайн-док — как калькуляторы встраиваются в SEO/PPC-кампании клиентов
+- [ ] Автоматизация мониторинга: cron/webhooks для позиций + GEO + алерты
+
+### artvision.pro — сайт
+- [x] Контакты /contacts/ — убран некорректный 301 на /#kontakty, страница WP восстановлена (18.03)
+- [x] **МИГРАЦИЯ НА WP:** 201 страница опубликована, Fluxi/Elementor, mu-plugin CSS (24.03)
+- [x] nginx static interception отключён, все URL через WordPress (24.03)
+- [x] Yoast sitemap: 199 URL в page-sitemap.xml (24.03)
+- [x] artvision.pro/contacts/ — LiteSpeed кэш сброшен, страница работает (03.04)
+- [x] Schema markup: аудит готов (seo/artvision-pro/schema-markup-2026-03.md), CRITICAL: Москва вместо СПб на /razrabotka-saytov/. Деплой → отдельная задача
+- [ ] CRO: переписать CTA ("Получить стратегию"), упростить формы до 3 полей, WhatsApp/TG
+- [x] Удалить дубль geo-sitemap.xml из sitemap_index (проверено 03.04 — дубля нет, 404)
+- [ ] QR на страницах услуг artvision.pro
+- [ ] Профиль Clutch.co + 3 кейса на EN
+
+### Revenue — возврат и upsell
+- [ ] **Вернуть Atribeaute** — follow-up (510K/мес потенциал, 30%)
+- [ ] **Вернуть VLPCo** — outreach
+- [ ] PBN upsell 4 клиентам — КП LinkForge (140K/мес, 70%)
+- [ ] eLama партнёрка — заявка отправлена, проверить статус 20.04.2026 (40K/мес, 80%)
+- [ ] GEO upsell 6 текущим клиентам (+80K ср. чек)
+- [ ] GEO-аудит 20 компаний — показать «ИИ о вас молчит»
+- [ ] Публикация на vc.ru про GEO-оптимизацию как лидген
+- [ ] 5 стоматологий из Яндекс.Карт → бесплатный аудит → КП
+- [ ] Парсинг 2ГИС: автосервисы китайских авто без SEO
+
+### Автоматизация
+- [ ] TG→Asana pipeline: хэштег #з в чате → задача в Asana
+- [ ] Еженедельная таблица: скрипт генерации из Asana API
+
+### SOPs
+- [x] SOP: ФИНАНС — процесс получения оплаты (19.03) → `sops/sop-finance.md`
+- [x] SOP: РЕКЛАМА — процесс PPC-кампаний (19.03) → `sops/sop-ppc.md`
+- [x] SOP: РАЗРАБ — процесс от ТЗ до деплоя (19.03) → `sops/sop-dev.md`
+- [x] SOP: ПБН — процесс работы с доменами (19.03) → `sops/sop-pbn.md`
+- [x] SOP: ЗВОНОК — протокол звонка клиенту (19.03) → `sops/sop-call.md`
+- [x] SOP: КОММ — протокол коммуникации с клиентом (19.03) → `sops/sop-comms.md`
+
+### Скиллы и инфраструктура
+- [x] /cons — добавлен inter-agent debate (шаг 1.5: перекрёстный допрос агентов) (18.03)
+- [x] **tg-read-post.sh — проверено: бага нет, heredoc << 'PYEOF' корректен, bash -n SYNTAX OK**
+- [x] Telethon: сессия активна, авторизована, обновлялась 03.04 — переавторизация не нужна
+- [ ] СБИС: всё готово (Рутокен подключён, сертификат до 28.05.2026, скрипты есть) — нужен запуск Яндекс.Браузера для логина
+- [x] fastbrowser/ = scripts/lib/fast_browser.py, 519 строк, 20+ скриптов используют, всё ок (03.04)
+
+### Борисова (личное)
+- [x] HTML план мировой — mirovaya-plan.html создан (18.03)
+- [x] Собрать доказательства содержания ребёнка (чеки, переводы, сад) (выполнено 01.04)
+- [x] Нотариальное соглашение: неактуально (03.04)
+- [ ] Закрыть исполнительное производство в ФССП (после отмены судебного приказа)
+
+### Линкбилдинг — план прогона бэклинков (ANT Partners + Artvision)
+
+**Алгоритм выбора доменов-доноров:**
+
+1. **Собрать пул кандидатов**
+   - [x] Бесплатные доноры из `clients/ant-partners/linkbuilding/free-donors-2026-03-07.md` (67+) (05.04)
+   - [ ] Доноры из SEMrush Backlink Gap (конкуренты ant.partners)
+   - [ ] UGC-площадки из parasitic-seo скилла (vc.ru, Spark, Klerk, Дзен)
+
+2. **Фильтрация (отсеять мусор)**
+   - [x] Проверить каждого донора: ИКС (Яндекс), DR/DA (Ahrefs/SEMrush), трафик (05.04)
+   - [x] Отсечь: ИКС < 100, DR < 10, трафик = 0, спам-маркеры (05.04: 20 отсеяно)
+   - [x] Проверить тематическую релевантность (05.04)
+   - [x] Проверить индексацию донора (05.04: 4 мёртвых найдено)
+
+3. **Приоритизация**
+   - [x] Формула: `Score = DR * Relevance(0-1) * TrafficFactor * LinkType` (05.04)
+   - [x] Отсортировать по Score, взять топ-30 (05.04: `donors-filtered-2026-04-05.md`)
+
+4. **Распределение по типам размещения**
+   - [ ] Tier 1-4 по плану
+
+5. **График прогона**
+   - [ ] 5 недель поэтапно (геосервисы → каталоги → статьи → dofollow)
+
+6. **Анкорная стратегия + мониторинг**
+   - [ ] 40% брендовые, 30% URL, 20% ключевые, 10% разбавление
+
+### OTIDO: UTM-трекинг TG-канала @OtidoGroup (14.04)
+
+Цель: автопометка ссылок в постах канала UTM → сбор лидов из Метрики → daily отчёт.
+UTM-схема: `utm_source=telegram&utm_medium=channel&utm_campaign=otidogroup&utm_content=<message_id>`
+Архитектура: бот-админ канала → editMessageText с UTM → SQLite реестр постов → Метрика API по utm_content → таблица в TG Антону (пока).
+
+- [ ] **OTIDO UTM #1: Запрос доступов** [client:otido] [assignee:anton] [priority:high] [result:admin+crm] — админка @OtidoGroup боту + подтвердить что целей Метрики достаточно (Calltouch уже проброшен). CRM нет.
+- [x] **OTIDO UTM #2: Бот-редактор UTM** [client:otido] [priority:high] [result:bot-on-vps] — @OTIDO_utm_bot задеплоен на VPS 80.90.181.152, PM2 id=15, полноценный dialog-flow через личку (15.04.2026)
+- [x] **OTIDO UTM #3: SQLite реестр постов** [client:otido] [priority:medium] [result:posts.db] — db.py + posts.db инициализированы, пишутся при каждом обработанном посте (15.04.2026)
+- [ ] **OTIDO UTM #4: Сборщик лидов из Метрики** [client:otido] [priority:high] [result:collect_leads.py] [blocked-by:#1] — Метрика API (visits + goals + Calltouch-цели), группировка по utm_content, cron 10:00.
+- [ ] **OTIDO UTM #5: Daily отчёт в TG Антону** [client:otido] [priority:high] [result:tg-daily] [blocked-by:#4] — таблица: пост / дата / переходы / цели / звонки. В личку Антону (тестовый период), потом перевести в рабочий чат.
+- [ ] **OTIDO UTM #6 (опц): Backfill исторических постов** [client:otido] [priority:low] [result:backfill_utm.py] [blocked-by:#2] — пройтись по старым постам канала, пометить UTM задним числом.
+- [ ] **OTIDO UTM #7 (этап 2): Google Sheet сделок** [client:otido] [priority:low] [result:sheet+join] — после проверки этапа 1, добавить ручной ввод сделок менеджером Отидо → join с Метрикой → монетизация канала.
+
+## Завершено (март 2026)
+
+- [x] BluMart: договор ИП Камеристый + NDA — реквизиты заменены, приложение убрано, задеплоено (18.03)
+- [x] BluMart: SERM-анализ 5 конкурентов — competitor-reviews-analysis (18.03)
+- [x] /serm-monitor скилл + продукт Artvision Pulse (18.03)
+- [x] artvision.pro /contacts/ — убран 301 редирект на /#kontakty (18.03)
+- [x] /cons — inter-agent debate (18.03)
+- [x] Борисова: HTML план мировой (18.03)
+- [x] eLama партнёрка — заявка подана (16.03)
+- [x] Обновить рейтинги клиентов (16.03)
+- [x] geo-sitemap.xml задеплоен + добавлен в robots.txt (16.03)
+- [x] Mirulidi КП отправлено Игонину (11.03)
+- [x] 113 страниц artvision.pro задеплоены (09.03)
+- [x] OTIDO TG-лендинг + РСЯ кампания (09-10.03)
+- [x] VPS бэкап + Plan/Fact в TG бот (08.03)
+- [x] Branded product names — 8 продуктов (07.03)
+
+## Блокеры Антона (2026-04-17, требуют его действия)
+
+- [ ] **Cardwell: подтвердить email Adsgram + GameAnalytics + CrazyGames** [assignee:anton] [priority:high] — Gmail MCP expired, проверить вручную. Submit билда CrazyGames заблокирован Cloudflare (itch.io)
+- [ ] **OTIDO UTM #1: запросить у клиента доступ в админку @OtidoGroup боту** [assignee:anton] [priority:high] [blocks:OTIDO #4 #5]
+- [ ] **Миграция почт artvision.pro: создать app-passwords в Yandex 360** [assignee:anton] [priority:high] [blocks:email-archive]
+- [ ] **Re-auth Gmail MCP** [assignee:anton] [priority:medium] — `/mcp` → claude.ai Gmail (token expired)
+- [ ] **Fix pre-outbound-gate.sh: добавить -4273200821 в TEAM_CHAT_IDS whitelist** [assignee:anton] [priority:medium] — сейчас блокирует AUTO-отправку в team chat, требует one-shot ACK файл
+
+## Backlog (activate by trigger)
+
+- [ ] **Skill `captcha-solver`** [product:internal] [priority:medium] [skill:python-developer] [trigger:5+ блоков от Андрея ИЛИ 2+ клиента одновременно регятся в Я.Бизнес ИЛИ регулярный парсинг блокируется] — унифицированный модуль (rucaptcha/capsolver/2captcha API), интеграция в `clients/avtoworld/linkbuilding/scripts/yandex_sprav_v*.py`. Время: 2-3ч. Цена: $0.5-2/1000 решений. Подготовка: проверить Zennoposter лицензию Антона (может быть бесплатное API)

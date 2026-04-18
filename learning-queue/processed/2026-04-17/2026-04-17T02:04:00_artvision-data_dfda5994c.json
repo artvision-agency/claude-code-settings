@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T02:04:00",
+  "repo": "artvision-data",
+  "commit": "dfda5994c",
+  "message": "chore: save session prompts before compact 2026-04-17_02:04",
+  "signal_type": "workaround",
+  "detail": "workaround: +   - Asana API on Free plan: search API returns 402, workaround = iterate all projects (~38 request",
+  "files": ["prompts/2026-04-17_session_d4fe17b6.md"]
+}

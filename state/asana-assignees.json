@@ -1,0 +1,2185 @@
+{
+  "updated_at": "2026-03-16T22:02:49+0300",
+  "tasks": {
+    "1213680180005186": {
+      "name": "FastBrowser: ускорить position_tracker (3 запроса параллельно)",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213691616585806": {
+      "name": "FastBrowser: ускорить Метрику (скриншоты + отчёты за 1 команду)",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213691616639080": {
+      "name": "FastBrowser: ускорить SEMrush скрипты (backlink gap + top pages)",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213684571466499": {
+      "name": "Линкбилдинг: собрать доноров для Avtoworld (Claude делает)",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213683404329014": {
+      "name": "Паразитное SEO: опубликовать манифест Artvision на vc.ru",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213691611776883": {
+      "name": "NAP: регистрация ANT Partners в 22 каталогах (план готов)",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213680174963828": {
+      "name": "NAP: регистрация Geely A2Auto в 6 каталогах",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213691611635985": {
+      "name": "NAP: регистрация Artvision в 6 каталогах (Claude готовит, Андрей проверяет)",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213686298778253": {
+      "name": "Кластеры + ТЗ + контент: до 25 кластеров по Geely, ANT и другим",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213680101058727": {
+      "name": "[Session] 2026-03-16: update products TODO — session 16.03 results",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213681442724436": {
+      "name": "[Session] 2026-03-16: update products TODO — session 16.03 results",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213655010542207": {
+      "name": "[Session] 2026-03-16: update products TODO — session 16.03 results",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213680100693725": {
+      "name": "[Session] Есенина — проверка файлов и статуса",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213683171884689": {
+      "name": "[Session] Симметрон — доделка",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213680100688683": {
+      "name": "[Session] Комбайн — настройка параллельной работы 2 аккаунтов Claude",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213682930356388": {
+      "name": "[Session] Массовое выполнение задач PROJECTS.md — OTIDO, Mirulidi, Extru, рейтинги, бот, AIvision",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213654185415757": {
+      "name": "Транспортные услуги — отправить КП",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213679757467776": {
+      "name": "Камео — получить фидбек по КП",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213654184922968": {
+      "name": "[Session] 2026-03-16: client ratings report 2026-03-16",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213682153165545": {
+      "name": "Александра Ленинский — клиника, предложить SEO",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213680098090198": {
+      "name": "Symmetron — добавить DNS запись symmetron.artvision.pro",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213682153168264": {
+      "name": "Зыков — найти переписку в Google Drive (justtrance)",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213681439951842": {
+      "name": "UNO Trans / Зыков — подготовить КП на возврат",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213654184576801": {
+      "name": "Новый лид: Александра — клиника на Ленинском, SEO",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213680098090666": {
+      "name": "Согласовать встречу — Роман Двери",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213680098043710": {
+      "name": "Симметрон — отправить результат перевода",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213654184469303": {
+      "name": "Бабурову отправить КП",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213682398705645": {
+      "name": "Набрать Наташу Ген",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213682152655266": {
+      "name": "VR Gallery — выставка с Алиной",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213681439198011": {
+      "name": "[Session] 2026-03-15: SEO check hook + design-system extractor + pre-task protocol",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213680097306500": {
+      "name": "[Session] 2026-03-15: move vps_healer state_file from /tmp to ~/.artvision-cache",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213680096765892": {
+      "name": "[Session] 2026-03-15: move vps_healer state_file from /tmp to ~/.artvision-cache",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213679755222098": {
+      "name": "[Session] 2026-03-15: move vps_healer state_file from /tmp to ~/.artvision-cache",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213651921543893": {
+      "name": "[Session] 2026-03-15: move vps_healer state_file from /tmp to ~/.artvision-cache",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213651797555034": {
+      "name": "Проверить Зыкова: что сделали + предложить дальнейшую работу + убедиться что сделали картинку",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213652350730708": {
+      "name": "Напомнить: BOT_TOKEN от Max для бота Евразия",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213651888566709": {
+      "name": "Cardwell: ревью последних изменений",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213651888536584": {
+      "name": "VPN: покупка для СПб",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213651888527076": {
+      "name": "Cardwell: ревью последних изменений",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213651888549548": {
+      "name": "Symmetron: доработка",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213652350637969": {
+      "name": "Есенина: деплой + аудит соответствия ТЗ + фото-фиксы",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213651797280436": {
+      "name": "[Session] Esenina — работа по файлам",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213651920620639": {
+      "name": "PROJECTS.md — единый source of truth создан",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213675827143085": {
+      "name": "[Session] 2026-03-15: move vps_healer state_file from /tmp to ~/.artvision-cache",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213647619060102": {
+      "name": "[Session] 2026-03-14: sync: session 2026-03-14",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213638561991128": {
+      "name": "Созвон с Бабуровым — 16:00",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213638400575528": {
+      "name": "Dental Experts — стратегия продвижения (без лицензии)",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213638294440084": {
+      "name": "Dental Experts — 3 лендинга задеплоены, нужны правки",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213636862654351": {
+      "name": "[Session] 2026-03-13: sync: memory+rules 2026-03-12_19:00",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213632470538735": {
+      "name": "Созвон с Александрой YES Dental — 14:00",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625900901897": {
+      "name": "VPS мониторинг — проверить LaunchAgent",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625879887393": {
+      "name": "SSH ключ для деплоя — настроить",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625924497432": {
+      "name": "Bot: прогон 50 тестов после фиксов",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625955938347": {
+      "name": "Bot: фикс модулей — news-flow, clinic-audit, planfact",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625924488193": {
+      "name": "Bot: фикс HIGH — HTML injection, Asana check, broadcast rate limit",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625879838877": {
+      "name": "Bot: фикс CRITICAL — memory leak, throttle, GROQ check",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625924506309": {
+      "name": "Линкбилдинг ANT + Artvision — полный план прогона",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625955667263": {
+      "name": "Уникализация гео-страниц artvision.pro (92.6% дублей)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625955948818": {
+      "name": "Контент услуг artvision.pro до 1500+ слов (12 страниц)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625955847804": {
+      "name": "Деплой artvision.pro — перегенерация 113 страниц + geo-sitemap",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213626003753630": {
+      "name": "МедВижн дизайн-док — архитектура интеграции",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625924473266": {
+      "name": "МедВижн автоматизация — мониторинг позиций + GEO",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625955779417": {
+      "name": "МедВижн калькуляторы — интеграция в экосистему лидов",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625879793381": {
+      "name": "Статья про ссылочный профиль",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213626003727352": {
+      "name": "Обновить рейтинги клиентов",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625879796843": {
+      "name": "eLama партнёрка — подать заявку",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213625900760711": {
+      "name": "Подтвердить получение писем от OTIDO (spb@otido-group.ru)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213621747024280": {
+      "name": "[Session] 2026-03-12: EMD retargeting network Phase 1 implementation plan",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213621493849484": {
+      "name": "Интервью: каталог алгоритмов → скиллы для комбайнов",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213621454076249": {
+      "name": "[Session] 2026-03-12: EMD retargeting network Phase 1 implementation plan",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213621453946011": {
+      "name": "КП CAMEO: ревью — цель → задача → результат → % соответствия",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213620977229388": {
+      "name": "🌐 Ретаргетинг-сеть: 50 EMD-сайтов → единый пиксель + баннеры + лидогенерация",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213620663350929": {
+      "name": "[Session] 2026-03-12: архитектура комбайнов (операционный, аналитический, произ...",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213620808918919": {
+      "name": "Аналитический комбайн: Mediascope + интернет-статистика в дашборды",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213619105144959": {
+      "name": "Linkbuilding прогон ANT Partners + Artvision (8 шагов)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213619105100890": {
+      "name": "Перелинковка artvision.pro (кейсы→кейсы, услуги→отрасли)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213619611528201": {
+      "name": "Контент artvision.pro: нарастить до 1500+ слов (12 страниц услуг)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213619611604139": {
+      "name": "Перегенерировать 113 страниц artvision.pro (форма, гарантии, industry links)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213619143040737": {
+      "name": "МедВижн дизайн-док — калькуляторы + экосистема лидов",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213619143051211": {
+      "name": "Статья про ссылочный профиль",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213619611523707": {
+      "name": "eLama партнёрка — подать заявку (акция 9%, ~22.5K/мес)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213619142861454": {
+      "name": "Выставить счета Tvorim + Burenie ⚠️ ПРОСРОЧЕНО",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213619672111569": {
+      "name": "Подтвердить получение писем от OTIDO (spb@otido-group.ru)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213615946124023": {
+      "name": "🔗 Artvision линкбилдинг: размещения 7-8",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213616017829308": {
+      "name": "🔗 Artvision линкбилдинг: размещения 5-6",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213615946332087": {
+      "name": "🔗 Artvision линкбилдинг: размещения 3-4",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213615946325270": {
+      "name": "🔗 Artvision линкбилдинг: размещения 1-2",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213616062366371": {
+      "name": "📝 Artvision блог: статья 9-10",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213616017829292": {
+      "name": "📝 Artvision блог: статья 7-8",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213615946291815": {
+      "name": "📝 Artvision блог: статья 5-6",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213616017824347": {
+      "name": "📝 Artvision блог: статья 3-4",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213616062515719": {
+      "name": "📝 Artvision блог: статья 1-2 (AIvision, GEO, SEO)",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213610795844033": {
+      "name": "4/5] 📝 Ответить клиенту на вопрос о сроке оценки результатов наших стараний, запросав дополнительную информацию о том, какие具体ные результаты ей хотелось бы оценить.",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213606466024966": {
+      "name": "Новый продукт: HR-поиск специалистов (МедВижн + универсальный)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213609841586956": {
+      "name": "МирБир: добавить снятие данных юрлиц (xfirm)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213607207147156": {
+      "name": "Собрать инсайты из всех встреч Варикознет",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213610764374446": {
+      "name": "Artvision: недорогие консультации + калькулятор на сайте",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213606465943782": {
+      "name": "Новый продукт: игра для пациентов в очереди (МедВижн)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213607207105541": {
+      "name": "Новый продукт: оценка присутствия на маркетплейсах",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213607910008537": {
+      "name": "МирБир: добавить маркетплейсы в дашборд",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213607206933462": {
+      "name": "Thai↔RU↔EN бот (@thai_russian_bot) — voice clone",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213607202739742": {
+      "name": "[Session] 2026-03-11: sync: memory 2026-03-11_01:19",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213607740131580": {
+      "name": "ANT Partners: кластер НДС УСН 2026 — 12 статей блога",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213602194430842": {
+      "name": "[Session] 2026-03-10: sync: memory 2026-03-10_00:00",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213598377426804": {
+      "name": "Аналитика рынка Hop-On Hop-Off автобусов + КП для Натальи",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213569740092626": {
+      "name": "ANT Partners — ускорить раскрутку: 29 страниц + блог + каталоги",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213598336755059": {
+      "name": "Geely A2Auto — SEO аудит + план раскрутки",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213569461886574": {
+      "name": "Вечерний аудит: проверить ВСЕ процессы + вопросы Антону",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213566905802079": {
+      "name": "[Session] 2026-03-09: update TODO with artvision.pro audit results (4 agents)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213560220933166": {
+      "name": "ANT Partners — онлайн-консультант (чат-виджет) на сайт",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213563063109302": {
+      "name": "Пресейл: МирБир + Atribeaute — маркетинговый дашборд (MVP)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213543046250137": {
+      "name": "Выставить счёт Burenie — 84 000 ₽ (себес 25К)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213552667007646": {
+      "name": "Найти сервис для написания ТЗ",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213550468703044": {
+      "name": "Webmaster: исправить 6 проблемных URL на https://www.otido-group.ru/",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213550468701600": {
+      "name": "Webmaster: исправить 18 проблемных URL на https://www.mirbeer.ru/",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213550468701309": {
+      "name": "Webmaster: исправить 7 проблемных URL на https://www.legalfy.eu/",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213550468700701": {
+      "name": "Webmaster: исправить 38 проблемных URL на https://vlpco.ru/",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213531902512740": {
+      "name": "Webmaster: исправить 5 проблемных URL на https://tvorimsovershenstvo.ru/",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213531902506237": {
+      "name": "Webmaster: исправить 19 проблемных URL на https://artvision.pro/",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213557411034681": {
+      "name": "Лид Яков: концепция туристического сайта (TourCard)",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213557411025534": {
+      "name": "Евразия: демо Max-бота виртуальной очереди для директора",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213539272834397": {
+      "name": "SUNO: Киркоров + Телефон Детка — мешап/кавер трек",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213557406213142": {
+      "name": "Выставить счета: Tvorim (7.03) + Burenie-skv (7.03)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213529450226080": {
+      "name": "GEO Optimizer: скрипт geo_audit.py — автоопрос AI-моделей",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213539269520136": {
+      "name": "Настроить eLama партнёрку — комиссия 15-20% от Авито/Директ",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213546505731253": {
+      "name": "Follow-up Atribeaute — результат встречи 3.03, решение о продолжении",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213555263118974": {
+      "name": "🤖 Автоматизация: скрипт поиска дроп-доменов (expired.ru + Wayback check)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213528308028798": {
+      "name": "📝 Статья artvision.pro: «Как усилить ссылочный профиль через тематические ресурсы»",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213557403943256": {
+      "name": "🔗 Запуск услуги «Укрепление ссылочного профиля» — PBN pipeline",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213557403697895": {
+      "name": "eLama — настроить партнёрку в существующем аккаунте (комиссия 15-20%)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213542750453110": {
+      "name": "AV: Партнёрства с CMS",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213527732093823": {
+      "name": "AV: Telegram-канал с кейсами",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213527732114439": {
+      "name": "AV: GitHub — открытые SEO-инструменты",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213527732113223": {
+      "name": "AV: Pressfeed — комментарии по digital",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213576958782588": {
+      "name": "AV: Бесплатный инструмент SEO аудита на сайте",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213576958782492": {
+      "name": "ANT: Гостевые статьи на юр.порталах",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213576958782332": {
+      "name": "AV: Блог — 2 статьи/неделю (AIvision, GEO, SEO)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213542750452533": {
+      "name": "ANT: Внутренняя перелинковка хабов",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213556637381868": {
+      "name": "AV: Обновить профили в рейтингах",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213576958778931": {
+      "name": "ANT: Собрать 10+ отзывов клиентов",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213556637381597": {
+      "name": "ANT: Создать канал на Дзен",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213527732111358": {
+      "name": "AV: Статья на VC.ru — кейс продвижения юрфирмы",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213576958766381": {
+      "name": "ANT: Регистрация на Pravoved.ru + 9111.ru",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213538261743342": {
+      "name": "ANT: 3 кейса на VC.ru",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213538261753956": {
+      "name": "AV: Страницы услуг по нишам",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213538261753173": {
+      "name": "ANT: Регистрация на Pressfeed.ru",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213542750449316": {
+      "name": "AV: Кейсы клиентов на сайт artvision.pro",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213576958773444": {
+      "name": "ANT: Экспертный блог на Klerk.ru",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213542750430890": {
+      "name": "ANT: 2 статьи на Spark.ru (dofollow)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213576958760776": {
+      "name": "ANT: Создать блог на Zakon.ru (dofollow)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213554780879509": {
+      "name": "ANT: Карточки на Zoon + Yell + Flamp",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213527732107097": {
+      "name": "ANT: Внедрить Schema.org на все страницы",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213554780882976": {
+      "name": "ANT: Зарегистрировать в Яндекс.Бизнес + Google Business + 2GIS",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213538261750591": {
+      "name": "ANT: Опубликовать 17 статей блога",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213554780879188": {
+      "name": "ANT: Опубликовать 29 страниц v7 на сайт",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213542749751358": {
+      "name": "[Session] 2026-03-07: navigate to Backlink Gap via sidebar instead of direct URL",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213528959961728": {
+      "name": "Plan/Fact система — добавить /план команду в бот",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213532807481641": {
+      "name": "VPS бэкап — скачать на Mac + ссылка Андрею и Стасу",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213528958695379": {
+      "name": "Sales Psychology Analytics — brainstorming",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213557736614325": {
+      "name": "Услуга: переезд TG/WA/VK на MAX мессенджер (от 35К)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213557417630884": {
+      "name": "Варикоз КП — 35 или 40 городов?",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213557401731392": {
+      "name": "VPS SSH-ключ — добавить в панель Timeweb",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213557398131567": {
+      "name": "DentalPRO API — отправить письмо от клиники",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213557419301963": {
+      "name": "Бот-сборщик отзывов для Творим — как часть @avportal_bot",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213532801858808": {
+      "name": "Timeweb API-токен — получить и добавить в tokens.json",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213557396948223": {
+      "name": "NDA AdvertMed — заполнить ОГРНИП/ИНН, отправить клиенту",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213538294028987": {
+      "name": "Есенина: агрегировать переговоры и документы, закоммитить в git",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213512434412140": {
+      "name": "от них",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213439220714603": {
+      "name": "от клиники (Творим Совершенство):",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213510383931331": {
+      "name": "RESEARCH: AIvision — SERP-анализ Яндекс+Google по AI-автоматизации",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213510346048686": {
+      "name": "GEO: дофиксить 7 статей + опубликовать на WP",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213437712839829": {
+      "name": "GEO: добавить AI-ботов в robots.txt — Avto.World",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213435835967406": {
+      "name": "Telegram — мониторинг чатов ботами",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213509369952505": {
+      "name": "Аудит YouTube фич — проверка используемых возможностей",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213434904317259": {
+      "name": "Ситидрайв — сбор доказательств и претензия",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213509201326632": {
+      "name": "Проверка YouTube фич — все ли используем",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213434904321827": {
+      "name": "TG-бот мониторинг чатов — настройка прослушивания",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213507514868743": {
+      "name": "[Session] 2026-03-03: КП varikozanet77 — SEO pipeline с нумерацией, допы отдельно",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213504545804362": {
+      "name": "Symmetron v6: Ensemble Translation + Text Reflow",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213504520829278": {
+      "name": "[Session] 2026-03-03: KP v5 — Старт 100K → 150K, CPL и дельты пересчитаны",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213504178712459": {
+      "name": "Запросить API-доступ к DentalPRO для @tvorims_bot",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213503458210424": {
+      "name": "@tvorims_bot v6 — 6 новых фич для уникальности клиники",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213502154392358": {
+      "name": "[Session] 2026-03-03: add channel reviews with admin moderation (text/video/voi...",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213496530615008": {
+      "name": "Финальная сверка — таблица покрытия видео по площадкам",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213496530006484": {
+      "name": "Загрузить все 58 видео в YouTube Shorts",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213496528904491": {
+      "name": "Кросс-пост TG → VK (видео которых нет в VK)",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213496530622679": {
+      "name": "Кросс-пост VK → TG (10 видео)",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434855350527": {
+      "name": "Создать YouTube канал Творим Совершенство",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213496528676680": {
+      "name": "Творим Совершенство — кросс-постинг 58 видео (VK + TG + YouTube Shorts)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213434819504477": {
+      "name": "Директ Отидо: добавить ссылки на TG канал в активные группы",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213484772072251": {
+      "name": "[Session] 2026-03-02: remove orphan root HTML files, fix heading hierarchy H4→H...",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213478964269697": {
+      "name": "Итоги недели — собрать отчёт по Asana",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213478686863226": {
+      "name": "Ведение Телеграм / Макс на автомате — Extru Tech",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213477208844042": {
+      "name": "Отправить пример PDF отчёта завода для Нелли",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213475411782703": {
+      "name": "Деплой нейро-страниц на CMS — реализация для artvision.pro",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213475397951441": {
+      "name": "Metrica + Telegram: объединение посетителей сайта и подписчиков канала",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213475179069027": {
+      "name": "ANT Partners: согласовать тестовые страницы с клиентом → перенос на боевой",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213468307153501": {
+      "name": "GEO: внедрить llms.txt и настроить robots.txt на artvision.pro",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213468257189224": {
+      "name": "Робот-мониторинг конкурентов: разработка и запуск",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213468237753852": {
+      "name": "GEO-блог: опубликовать 6 статей с перелинковкой",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213468280558754": {
+      "name": "GEO-оптимизация: создать страницу услуги на artvision.pro",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213467145394795": {
+      "name": "WordPress на tvorimsovershenstvo.ru — установка и миграция с Tilda",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213467145304912": {
+      "name": "TG-бот: еженедельные отчёты позиций клиентам через @avportal_bot",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213435013089849": {
+      "name": "SEO аудиты Taller + Анже Клиник — позиции и динамика",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213465802716733": {
+      "name": "Пресейл: DentalExport — предложение по автоматизации",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213465283077567": {
+      "name": "Паразитное SEO — план продвижения через чужие площадки",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213465283406602": {
+      "name": "План бесплатного ссылочного продвижения",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213434413192814": {
+      "name": "50 статей для блога artvision.pro — ТЗ + написание",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213464550035439": {
+      "name": "🤖 Stammit — загрузить спикеров в бот",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213464267656891": {
+      "name": "🚀 Пролив + позиции — 31.08",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464274379513": {
+      "name": "🚀 Пролив + позиции — 24.08",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464275167311": {
+      "name": "🚀 Пролив + позиции — 17.08",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464267670690": {
+      "name": "🚀 Пролив + позиции — 10.08",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266134641": {
+      "name": "🚀 Пролив + позиции — 03.08",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464255301557": {
+      "name": "🚀 Пролив + позиции — 27.07",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464275167295": {
+      "name": "🚀 Пролив + позиции — 20.07",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434660059545": {
+      "name": "🚀 Пролив + позиции — 13.07",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434660064263": {
+      "name": "🚀 Пролив + позиции — 06.07",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464273903425": {
+      "name": "🚀 Пролив + позиции — 29.06",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266134623": {
+      "name": "🚀 Пролив + позиции — 22.06",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464269367692": {
+      "name": "🚀 Пролив + позиции — 15.06",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464269379600": {
+      "name": "🚀 Пролив + позиции — 08.06",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213435004038657": {
+      "name": "🚀 Пролив + позиции — 01.06",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464270436113": {
+      "name": "🚀 Пролив + позиции — 25.05",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464270288475": {
+      "name": "🚀 Пролив + позиции — 18.05",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464255760850": {
+      "name": "🚀 Пролив + позиции — 11.05",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464273885136": {
+      "name": "🚀 Пролив + позиции — 04.05",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434660075621": {
+      "name": "🚀 Пролив + позиции — 27.04",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464270251884": {
+      "name": "🚀 Пролив + позиции — 20.04",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464269387343": {
+      "name": "🚀 Пролив + позиции — 13.04",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464267656872": {
+      "name": "🚀 Пролив + позиции — 06.04",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266134607": {
+      "name": "🚀 Пролив + позиции — 30.03",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434306758112": {
+      "name": "🚀 Пролив + позиции — 23.03",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266863046": {
+      "name": "🚀 Пролив + позиции — 16.03",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266544298": {
+      "name": "🚀 Пролив + позиции — 09.03",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464250393445": {
+      "name": "🚀 Пролив + позиции — 02.03",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464267670751": {
+      "name": "🔄 Мониторинг позиций — 31.08",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464269396601": {
+      "name": "🔄 Мониторинг позиций — 24.08",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464269245630": {
+      "name": "🔄 Мониторинг позиций — 17.08",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434395936477": {
+      "name": "🔄 Мониторинг позиций — 10.08",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464264322959": {
+      "name": "🔄 Мониторинг позиций — 03.08",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266827247": {
+      "name": "🔄 Мониторинг позиций — 27.07",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464256124687": {
+      "name": "🔄 Мониторинг позиций — 20.07",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464264322943": {
+      "name": "🔄 Мониторинг позиций — 13.07",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434660075776": {
+      "name": "🔄 Мониторинг позиций — 06.07",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266544138": {
+      "name": "🔄 Мониторинг позиций — 29.06",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266840503": {
+      "name": "🔄 Мониторинг позиций — 22.06",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434660064229": {
+      "name": "🔄 Мониторинг позиций — 15.06",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464261468097": {
+      "name": "🔄 Мониторинг позиций — 08.06",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434660064129": {
+      "name": "🔄 Мониторинг позиций — 01.06",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266134590": {
+      "name": "🔄 Мониторинг позиций — 25.05",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266089702": {
+      "name": "🔄 Мониторинг позиций — 18.05",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434395928723": {
+      "name": "🔄 Мониторинг позиций — 11.05",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464269216258": {
+      "name": "🔄 Мониторинг позиций — 04.05",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434306723436": {
+      "name": "🔄 Мониторинг позиций — 27.04",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434306756928": {
+      "name": "🔄 Мониторинг позиций — 20.04",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266101041": {
+      "name": "🔄 Мониторинг позиций — 13.04",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213434306665708": {
+      "name": "🔄 Мониторинг позиций — 06.04",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464264322426": {
+      "name": "🔄 Мониторинг позиций — 30.03",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266811323": {
+      "name": "🔄 Мониторинг позиций — 23.03",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464266854003": {
+      "name": "🔄 Мониторинг позиций — 16.03",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213464254163171": {
+      "name": "🔄 Мониторинг позиций — 09.03",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213435004007233": {
+      "name": "🔄 Мониторинг позиций — 02.03",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213460807069101": {
+      "name": "🔴 Утро 27 фев: Расставить даты и статусы по всем просроченным задачам",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213453903032934": {
+      "name": "Интегрировать travel-bot в stammit-bot (после недельного теста)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213453704931174": {
+      "name": "Безопасность: Кодовое слово для авторизации любых расходов",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213453661627514": {
+      "name": "Artvision: Паразитное SEO — применить стратегию для агентства",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213453669113822": {
+      "name": "СТАММИТ: Загрузить спикеров в бот + отправить приглашения",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213434579047703": {
+      "name": "СТАММИТ: Видео-контент с пресс-конференции (кружки, нарезки)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213453661121297": {
+      "name": "СТАММИТ: Паразитное SEO + размещения в отраслевых СМИ",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213434213976882": {
+      "name": "Madwave: SEO-фиксы — проверить выполнение ТЗ разработчиками",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213448099002962": {
+      "name": "Отправить клиентам результаты после проливов по проектам (понедельник)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213434155703399": {
+      "name": "Telegram-червь: автопросмотр Stories + автопостинг контента",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213435343873194": {
+      "name": "Звонок Есенина 12:30",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213430857138275": {
+      "name": "Gorko.ru PRO — регистрация профиля Есениной",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213368506021308": {
+      "name": "Звонок Advertmed 13:15",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213430768554383": {
+      "name": "Звонок Есенина 12:30",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213425871072087": {
+      "name": "🤖 Auto-проверка в Claude skills (валидация ссылок, частотностей, данных)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213425871055020": {
+      "name": "🚫 Правило «не отправлять первую версию» клиенту",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213425871036940": {
+      "name": "✅ Чеклист верификации AI-артефактов (аудиты, ТЗ, КП)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213425866264781": {
+      "name": "⚡ Минимизация контекста в Claude API вызовах",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213425854647205": {
+      "name": "📄 STATE.md в каждый pipeline (сохранять прогресс между шагами)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213425858743050": {
+      "name": "🔄 Subagents для semantic-pipeline (разбить на этапы с чистым контекстом)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213369738132844": {
+      "name": "Asana Dispatcher — система автозапуска процессов по датам",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213424058768032": {
+      "name": "Перенос домена a2auto-geely.ru с nic.ru на reg.ru",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213424019050034": {
+      "name": "Иван стоматология: отправить КП",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213424019093468": {
+      "name": "Лендинг для бразильца (Бабуров)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213424012359582": {
+      "name": "Отидо: аналитика позиций по регионам (скрипт seo_position_monitor.py)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213423963005635": {
+      "name": "Продажи/Задачи 25.02: Симметрон / AVGaxle / Катера / Иван стома / Лика стома / Атрибьют / Музыка",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213370194394497": {
+      "name": "Symmetron: пополнить OpenRouter для работы переводчика на VPS",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213423734620842": {
+      "name": "Atribeaute: получить фидбек по КП (пакеты контента + таблица цен)",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213406715654507": {
+      "name": "Оспорить штраф за парковку (Citydrive, ул. Вавиловых 19, СПб)",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213399169468776": {
+      "name": "Написать Мише — как дела с дизайном HyperCare",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213368389147531": {
+      "name": "Сравнить конфигурации Claude Code (Антон vs Стас vs Андрей)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213395397554425": {
+      "name": "Авторизовать Claude adw на VPS (второй аккаунт)",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213370019319798": {
+      "name": "[ANT] Подготовить хаб-страницы: proverki, spory, riski",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213370019241507": {
+      "name": "[ANT] Загрузить тестовые страницы на FTP в /test/service/",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213369556114914": {
+      "name": "[ant-partners] Опубликовать 17 статей блога (HTML с картинами Айвазовского)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213370010563821": {
+      "name": "[ant-partners] Загрузить 29 сервисных страниц на тест-сервер (CSS risks-grid обновлён)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213372969463528": {
+      "name": "Семейная ипотека: выполнение плана (прописка, банки, объекты)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213372937030085": {
+      "name": "Установить и настроить OpenAI Codex CLI",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213368011022358": {
+      "name": "Скрипт разведки ниш через Яндекс.Вебмастер API",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213366992490418": {
+      "name": "Сергей Атрибьют — ответить по статьям (варианты)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213366990674473": {
+      "name": "MadWave — оценка Яндекс.Директ аккаунта",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213366964940457": {
+      "name": "Яков MadWave — уточнить до-задачи по КП",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213338573652208": {
+      "name": "Яков — запросить фидбек по яхтам",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213338573653469": {
+      "name": "Яков — запросить фидбек по кинотеатру",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213366973974936": {
+      "name": "Роман — запросить фидбек",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213340740402715": {
+      "name": "Ортодентал: запросить встречу с Иваном на завтра",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213366393477617": {
+      "name": "Ортодентал: запросить фидбек по КП у Ивана",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213343769322578": {
+      "name": "Идея: ретаргетинг-баннеры для клиентов которые долго думают",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213323554226038": {
+      "name": "Timeweb/VDS: отправить инструкции Андрею",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213323538187702": {
+      "name": "Покраска дисков: деплой на artvision.pro + адаптив",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213323552444874": {
+      "name": "Больница/ХОБЛ: ревизия плана действий + анализ сайта Елизаветинской",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213309715557910": {
+      "name": "📞 Позвонить Пете Казанскому — договориться о встрече",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213277434740972": {
+      "name": "Настроить уведомление о балансе eLama при 15К — Отидо",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213297308783444": {
+      "name": "📸 Есенина — Скачать фото из VK и Instagram",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1213262950814261": {
+      "name": "A&K релиз — выложить на YouTube (видео с обложкой)",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213262950807819": {
+      "name": "A&K релиз — выложить на SoundCloud (бесплатно, напрямую)",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213221105265287": {
+      "name": "A&K релиз — скачать WAV из Suno + переименовать артиста на A&K",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213205170944143": {
+      "name": "позвонить",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213221099402943": {
+      "name": "🟡 og:image главной и /services/ — заменить",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213262121685389": {
+      "name": "🟡 56 коротких title — переписать через Yoast",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213262121241120": {
+      "name": "🔴 JS/CSS 318 КБ лишнего — Autoptimize",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213262105198125": {
+      "name": "🔴 Performance 28/100 — установить кэш-плагин WP",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213221073725764": {
+      "name": "Проверить лендинг artvision.pro — формы работают?",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213251566456175": {
+      "name": "Найти email/контакты ЛПР первых 5 компаний",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213251303456110": {
+      "name": "✉️ Отправить первые 5 КП (email)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213251310150772": {
+      "name": "🔧 SEO-фиксы критические (noindex КП, title /ceny/, og:image)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213201121032263": {
+      "name": "⭐ Подать заявку в Рейтинг Рунета + Workspace",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213242737347990": {
+      "name": "Роман: спросить клиента об отмене проверки статей",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213238812857330": {
+      "name": "Логирование действий агента (observability)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213238821615944": {
+      "name": "Написать тесты для ключевых скриптов (agent-first)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213238812258957": {
+      "name": "Аудит 41 скилла — удалить устаревшие, обновить актуальные",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213177254118669": {
+      "name": "Onboarding-скрипт: полная настройка Claude Code для нового человека",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213200470342655": {
+      "name": "Фаза 5: Таргет VK + Сдача проекта (05-08.03)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213198008391288": {
+      "name": "Фаза 4: Агрегаторы (01-04.03)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213174650508202": {
+      "name": "ДОПРОДАЖА: Закрыть пресейл Coop-Tech (+80-200K/мес)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213087398284088": {
+      "name": "[Понедельник] Андрей: Geely — начать писать статьи (приоритет 1)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213152824445537": {
+      "name": "[Понедельник] Андрей: OTIDO — добавить 27 страниц в sitemap",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213087398370312": {
+      "name": "[Понедельник] Андрей: Schema JSON-LD — внедрить на 3 сайта",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213152851232255": {
+      "name": "[Понедельник] Антон: Решение по ООО для IT-аккредитации Минцифры",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213083793828213": {
+      "name": "[Инфра] Настроить мониторинг email: Telegram алерты + HetrixTools",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213083793895629": {
+      "name": "[Инфра] Настроить DKIM+DMARC для всех клиентских доменов",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213148888155040": {
+      "name": "[Инфра] Установить MTA на VPS или настроить SMTP relay через Яндекс",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213148886323934": {
+      "name": "[Инфра] extru-tech-tpk.ru: DKIM/DMARC записи содержат мусор — исправить",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213148813183596": {
+      "name": "[Инфра] Расследование: не приходят письма — найти причину и решение",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213115430176478": {
+      "name": "[Artvision.pro] Ревизия страниц — исправить дизайн + тесты",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213144674203524": {
+      "name": "📧 Инструмент массовых писем медцентрам для продаж",
+      "assignee_gid": "1212367692929434",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1213122869504637": {
+      "name": "Система публикации контента на CMS клиентов",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213062425753170": {
+      "name": "Контент-план для глобального органического трафика Artvision",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213055998572566": {
+      "name": "🎨 KidsArt — платформа \"Рисунок → Продукт\"",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1212985015486650": {
+      "name": "🎬 AI-рилсы для блога — кинометафоры",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212979808595362": {
+      "name": "[Otido] Calltouch — проблема подмены номеров (Москва/СПб)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212979622143714": {
+      "name": "🔴 Регистрация на Gorko.ru PRO (требует баланс 15К от клиента)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212944157446194": {
+      "name": "[DEV] Artvision CRM Mini App v7.0 + Reports Agent",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1212955175902147": {
+      "name": "Экстру — отправить тексты для размещения",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212955038532182": {
+      "name": "[AI-Search] Внедрить Schema JSON-LD: Artvision.pro",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212955038495041": {
+      "name": "[AI-Search] Внедрить Schema JSON-LD: ANT Partners",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212955038769747": {
+      "name": "[AI-Search] Внедрить Schema JSON-LD: Madwave",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212955038528303": {
+      "name": "[AI-Search] Внедрить Schema JSON-LD: Творим Совершенство",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212955038805973": {
+      "name": "[AI-Search] Внедрить Schema JSON-LD: Бурение СКВ",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212944135019157": {
+      "name": "Telegram-бот: Генератор КП и мини-аудитов для канала Artvision",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212937918082788": {
+      "name": "Написать Якову по поводу доступа к Директ",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212937731750259": {
+      "name": "[artvision.pro] Неделя 4: Проверить позиции (Topvisor)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212913098868127": {
+      "name": "[artvision.pro] Неделя 4: Подать заявку в Рейтинг Рунета",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212937743513523": {
+      "name": "[artvision.pro] Неделя 4: Создать /kontekst/spb/",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212937750351067": {
+      "name": "[artvision.pro] Неделя 4: Создать /kontekst/moskva/",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212937738952664": {
+      "name": "[artvision.pro] Неделя 2: Обновить sitemap + Вебмастер",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212937738931995": {
+      "name": "[artvision.pro] Неделя 1: Удалить дубли страниц",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212937489465571": {
+      "name": "[artvision.pro] Внедрить калькулятор стоимости",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212913098280271": {
+      "name": "[artvision.pro] Добавить 5 кейсов с ROI",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212937484586310": {
+      "name": "[artvision.pro] Устранить каннибализацию ключей",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212932782804864": {
+      "name": "[SEO] artvision.pro: Убрать рубрику \"Без рубрики\" в блоге",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212886742196093": {
+      "name": "[SEO] artvision.pro: Улучшить H1 на /services/",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212932782299774": {
+      "name": "[SEO] artvision.pro: Добавить Service schema на страницы услуг",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212932775923065": {
+      "name": "[SEO] artvision.pro: Проверить Core Web Vitals",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212932775475492": {
+      "name": "[SEO] artvision.pro: Добавить Open Graph теги",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212932775794964": {
+      "name": "[SEO] artvision.pro: Исправить двойной H1 на главной",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212881196653944": {
+      "name": "Кристина Спецтранс — КП на разработку + реклама",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212924370420907": {
+      "name": "Фаза 3: SEO-оптимизация (24-28.02)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212924373058856": {
+      "name": "Фаза 2: Функционал (21-23.02)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212924371103864": {
+      "name": "Фаза 1: Дизайн + Вёрстка 8 страниц (11-20.02)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212924283363959": {
+      "name": "🎯 Екатерина Есенина — Разработка сайта (тариф Расширенный)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212923995553748": {
+      "name": "🎨 Творим Совершенство — Обновление дизайна + новые фото",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212895674236044": {
+      "name": "[Otido] 2 лендинга под застройку + рекламные кампании",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1212883459644140": {
+      "name": "[Atribeaute] 17 ТЗ (регулярно: ср, пт)",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1212894767781355": {
+      "name": "Artvision Portal Bot v7.0 — CRM Integration + Personal Cabinets",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212894010965373": {
+      "name": "✅ Настроено автологирование терминала VPS → GitHub",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212880595928045": {
+      "name": "Symmetron — Перевод таможенной документации",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212877497664505": {
+      "name": "MCP-серверы для Artvision: настройка на Claude Code",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212816978733292": {
+      "name": "ТЗ: Система перевода таможенной документации — Symmetron",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212800220408924": {
+      "name": "🏥 MedMarketplace: Smart Vacancy Alerts — MVP",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212800219537502": {
+      "name": "MedMarketplace MVP — Разработка платформы",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212847718395314": {
+      "name": "🧒 Сказочник MVP — развернуть агента на VPS",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212800540021458": {
+      "name": "ANT Partners: показать клиенту шаблон \"Камеральная проверка\" v11",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212802724700016": {
+      "name": "Extra-Tag: Оптимизация страниц по интентам (окутка vs ламинация МДФ)",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212779057590560": {
+      "name": "📞 Экструдек ТПК — связь с Натальей",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212774850800651": {
+      "name": "Аукцион лидов - концепция и MVP",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212761274105199": {
+      "name": "🦷 [SEO] Творим Совершенство — Комплексное продвижение",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212752294893007": {
+      "name": "[Tido/Otido] SEO-фиксы: редирект www, robots.txt, sitemap",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212748870196475": {
+      "name": "Экстру - Добавить фоток к карточкам",
+      "assignee_gid": "11616861546187",
+      "assignee_name": "boss@artvision.pro"
+    },
+    "1212745805813945": {
+      "name": "Исследовать API СБИС (Saby) для интеграции ЭДО",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212745798091639": {
+      "name": "Исследовать API Точка Банк для интеграции",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212685548041626": {
+      "name": "Завершить систематизацию скриптов и карту репозиториев",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1212733185575215": {
+      "name": "🔍 Competitor Intelligence System — мониторинг конкурентов",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1212728957243496": {
+      "name": "Патент 2026: проверить статус заявления и сроки оплаты",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212717118461981": {
+      "name": "SmartShare: разработка MVP Telegram Mini App",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212619849542116": {
+      "name": "VoiceBlog MVP - запуск продукта",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212650913201536": {
+      "name": "MVP Бот мониторинга каршеринга — Этап 1: Исследование API",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1212646430082265": {
+      "name": "DPS Radar — деплой и тестирование",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212619814853327": {
+      "name": "🎪 FamilyFun Bot — MVP разработка",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212625868501422": {
+      "name": "📞 Челябинск AVG Axle — продолжить переговоры",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212643202574862": {
+      "name": "📞 Саудат — стоматология (контекст + лэнды)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212643076139636": {
+      "name": "Микроблог в Портале — MVP",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212639913212223": {
+      "name": "🔥 HotTripBot — Запуск MVP",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212608178751298": {
+      "name": "🔍 Адвокаты — проверить индексацию и метаданные новых страниц",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212581180829961": {
+      "name": "🗺️ Дорожная карта: Artvision CRM + Боты + API",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212571209734505": {
+      "name": "Портал: форма сбора идей по автоматизации от клиентов",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212438967751959": {
+      "name": "Улучшение уникальности контента",
+      "assignee_gid": "860693669618957",
+      "assignee_name": "Anton Kameristyi"
+    },
+    "1212305885444185": {
+      "name": "Творим - добавление статей в сайт, согласование новых (вкл. аксиография)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1212305873287355": {
+      "name": "Тексты ANT - добавить проверенные заказчиком",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213123303039143": {
+      "name": "[ОТЧЁТ] Ежемесячный отчёт — Февраль 2026",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213115339264228": {
+      "name": "[СЧЁТ] Счёт за Февраль 2026",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213077014724790": {
+      "name": "🎯 Отчёт за Февраль 2026",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213478770086730": {
+      "name": "🎯 Отчёт за Март 2026",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213510485402632": {
+      "name": "[AIvision] Обновить ROADMAP-2026-Q1.md — новая стратегия AIvision (гибрид)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213510493943611": {
+      "name": "[AIvision] Поставить aivision.ru и ai-vision.ru на мониторинг/перехват",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213449480010605": {
+      "name": "[AIvision] Собрать 3 кейса из пилотных GEO-аудитов → страница кейсов",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213510496205846": {
+      "name": "[AIvision] Разработать ai_radar.py — мониторинг упоминаний в AI-ответах",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213510493933509": {
+      "name": "[AIvision] Создать Telegram-канал AIvision + первые 5 постов",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213437095752410": {
+      "name": "[AIvision] Подготовить мини-КП для upsell AI-услуг текущим клиентам",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213449479962004": {
+      "name": "[AIvision] Провести бесплатный GEO-аудит для 3 текущих клиентов (Madwave, OTIDO, ANT)",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213510485743678": {
+      "name": "[AIvision] Разработать MVP скрипт geo_audit.py — проверка видимости в AI-поиске",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213510493420479": {
+      "name": "[AIvision] Написать статью-манифест 'AI меняет правила поиска' для блога + vc.ru",
+      "assignee_gid": null,
+      "assignee_name": null
+    },
+    "1213449479689148": {
+      "name": "[AIvision] Создать лендинг ai.artvision.pro — стек AI-услуг для бизнеса",
+      "assignee_gid": null,
+      "assignee_name": null
+    }
+  }
+}

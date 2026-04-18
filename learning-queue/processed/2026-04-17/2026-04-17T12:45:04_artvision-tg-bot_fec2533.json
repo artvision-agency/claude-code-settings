@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T12:45:04",
+  "repo": "artvision-tg-bot",
+  "commit": "fec2533",
+  "message": "sync: session state 2026-04-17_12:44",
+  "signal_type": "workaround",
+  "detail": "workaround: +# C2 retry/DLQ: SMTP \u043f\u0435\u0440\u0438\u043e\u0434\u0438\u0447\u0435\u0441\u043a\u0438 \u0444\u043b\u0430\u043f\u0430\u0435\u0442 (\u0441\u0435\u0442\u044c, timeout, auth throttle).",
+  "files": ["tvorim-opros-bot/email_notify.py", "tvorim-opros-bot/tests/test_wave3_email_retry.py"]
+}

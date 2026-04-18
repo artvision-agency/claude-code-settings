@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T12:14:26",
+  "repo": "artvision-tg-bot",
+  "commit": "d135482",
+  "message": "sync: session state 2026-04-17_12:13",
+  "signal_type": "workaround",
+  "detail": "workaround: +**\u0421\u0443\u0442\u044c:** `query.answer()` \u2192 `split/int parse` \u2192 `expected = user_data.get(\"q_idx\", 0)` \u2192 guard `if",
+  "files": ["tvorim-opros-bot/CODE_REVIEW_2026-04-17.md"]
+}

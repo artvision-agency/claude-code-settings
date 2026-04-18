@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-10T21:46:49",
+  "repo": "artvision-data",
+  "commit": "1ea3f3b65",
+  "message": "fix: replace Sociate/Epicstars with generic in KP (brand rules)",
+  "signal_type": "error_resolution",
+  "detail": "fix: replace Sociate/Epicstars with generic in KP (brand rules)",
+  "files": ["clients/grelka-gudelka/presale/kp/grelka_kp.html"]
+}

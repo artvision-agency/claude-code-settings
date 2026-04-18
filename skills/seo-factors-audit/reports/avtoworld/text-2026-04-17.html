@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>avtoworld — Аудит текстовых факторов | artvision.pro Pulse</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --av-black: #181818;
+    --av-pure-black: #000000;
+    --av-white: #ffffff;
+    --av-text-primary: #181818;
+    --av-text-secondary: #636663;
+    --av-text-dark: #323232;
+    --av-green: #059856;
+    --av-green-light: #1a7d52;
+    --av-pink: #d82b63;
+    --av-orange: #e07c1d;
+    --av-red: #c33648;
+
+    --av-bg-light: #f3f3f3;
+    --av-bg-white: #ffffff;
+    --av-bg-footer: #e1e1e1;
+    --av-border: #c8c8c8;
+    --av-border-dark: #000000;
+
+    --av-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--av-font);
+    color: var(--av-text-primary);
+    background: #e8e8e8;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+.report {
+    max-width: 1040px;
+    margin: 0 auto;
+    background: var(--av-bg-white);
+    box-shadow: 0 2px 40px rgba(0,0,0,0.12);
+}
+.page {
+    padding: 56px 64px;
+    border-bottom: 1px solid var(--av-border);
+}
+.page:last-child { border-bottom: none; }
+.page-dark {
+    padding: 56px 64px;
+    background: var(--av-pure-black);
+    color: var(--av-white);
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 32px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+}
+.header-top .brand { font-weight: 600; color: var(--av-white); }
+
+h1 {
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: -0.015em;
+}
+h2 {
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+}
+h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 24px 0 12px;
+}
+h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--av-text-secondary);
+}
+p { margin-bottom: 14px; color: var(--av-text-dark); font-size: 15px; }
+
+.subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    max-width: 620px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+}
+.stat {
+    background: var(--av-bg-light);
+    padding: 20px 18px;
+    border-radius: 10px;
+    border-left: 4px solid var(--av-green);
+}
+.stat.warn { border-left-color: var(--av-orange); }
+.stat.fail { border-left-color: var(--av-red); }
+.stat.manual { border-left-color: var(--av-text-secondary); }
+.stat .value {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.stat .label {
+    font-size: 12px;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.score-block {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    background: var(--av-bg-light);
+    padding: 28px;
+    border-radius: 12px;
+    margin: 20px 0 28px;
+}
+.score-big {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--av-green);
+    min-width: 160px;
+}
+.score-big.low { color: var(--av-red); }
+.score-big.mid { color: var(--av-orange); }
+.score-caption h3 { margin-top: 0; }
+
+.toc {
+    background: var(--av-bg-light);
+    padding: 24px 28px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+.toc ol { padding-left: 22px; }
+.toc li {
+    margin: 6px 0;
+    font-size: 15px;
+}
+.toc a {
+    color: var(--av-text-primary);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--av-border);
+}
+.toc a:hover { border-bottom-color: var(--av-green); color: var(--av-green); }
+
+.factor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 14px;
+}
+.factor-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--av-bg-light);
+    border-bottom: 2px solid var(--av-border-dark);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--av-text-dark);
+}
+.factor-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--av-border);
+    vertical-align: top;
+}
+.factor-table tr:hover td { background: #fafafa; }
+.factor-table .col-status { width: 80px; }
+.factor-table .col-id { width: 48px; color: var(--av-text-secondary); }
+.factor-table .col-sev { width: 96px; }
+.factor-table .col-weight { width: 54px; color: var(--av-text-secondary); text-align: center; }
+.factor-table .col-name { width: 220px; font-weight: 600; }
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.status-pass { background: #d8f0e4; color: var(--av-green-light); }
+.status-warn { background: #fde4cc; color: var(--av-orange); }
+.status-fail { background: #f8d4d9; color: var(--av-red); }
+.status-manual { background: #e4e4e4; color: var(--av-text-secondary); }
+.status-na { background: #f0f0f0; color: var(--av-text-secondary); }
+
+.sev-critical { color: var(--av-red); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+.sev-high { color: var(--av-orange); font-weight: 600; text-transform: uppercase; font-size: 11px; }
+.sev-medium { color: var(--av-text-dark); text-transform: uppercase; font-size: 11px; }
+.sev-low { color: var(--av-text-secondary); text-transform: uppercase; font-size: 11px; }
+
+.evidence {
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    line-height: 1.5;
+}
+
+.critical-list {
+    background: #fff5f6;
+    border-left: 4px solid var(--av-red);
+    padding: 18px 22px;
+    border-radius: 6px;
+    margin: 16px 0 24px;
+}
+.critical-list ol { padding-left: 22px; }
+.critical-list li {
+    margin: 8px 0;
+    font-size: 15px;
+    color: var(--av-text-dark);
+}
+.critical-list li strong { color: var(--av-red); }
+
+.meta-block {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 10px 18px;
+    margin: 24px 0;
+    font-size: 14px;
+    color: var(--av-text-dark);
+}
+.meta-block .key {
+    font-weight: 600;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding-top: 2px;
+}
+.meta-block .value { word-break: break-word; }
+.meta-block a { color: var(--av-green-light); }
+
+section.category {
+    scroll-margin-top: 20px;
+}
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid var(--av-border-dark);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
+.category-stats {
+    font-size: 13px;
+    color: var(--av-text-secondary);
+}
+
+.notice {
+    background: #fff8e6;
+    border-left: 4px solid var(--av-orange);
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 16px 0;
+    font-size: 14px;
+    color: var(--av-text-dark);
+}
+
+footer {
+    background: var(--av-bg-footer);
+    padding: 28px 64px;
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    text-align: center;
+}
+footer a { color: var(--av-green-light); text-decoration: none; }
+
+@media (max-width: 768px) {
+    .page, .page-dark { padding: 36px 24px; }
+    h1 { font-size: 30px; }
+    h2 { font-size: 22px; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .score-block { flex-direction: column; gap: 12px; text-align: center; }
+    .score-big { min-width: unset; font-size: 56px; }
+    .factor-table, .factor-table thead, .factor-table tbody, .factor-table tr, .factor-table td, .factor-table th { display: block; }
+    .factor-table thead { display: none; }
+    .factor-table td {
+        border: none;
+        padding: 4px 0;
+    }
+    .factor-table tr {
+        border-bottom: 1px solid var(--av-border);
+        padding: 12px 0;
+    }
+    .meta-block { grid-template-columns: 1fr; gap: 4px; }
+    .meta-block .key { margin-top: 10px; }
+}
+
+@media print {
+    body { background: white; }
+    .report { box-shadow: none; max-width: none; }
+    .page, .page-dark { padding: 24px; page-break-inside: avoid; }
+    section.category { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="report">
+
+<!-- ===== COVER ===== -->
+<div class="page-dark">
+    <div class="header-top">
+        <span class="brand">artvision.pro</span>
+        <span>Pulse · Text · 17.04.2026 07:47</span>
+    </div>
+    <h1>Аудит текстовых факторов</h1>
+    <p class="subtitle">
+        avtoworld — глубокий разбор текстовых параметров страницы
+        по методике Яндекса: уникальность, тошнота, семантика,
+        структура, читаемость и антиспам.
+    </p>
+    <div style="margin-top: 28px; font-size: 14px; color: rgba(255,255,255,0.85);">
+        <strong>Страница:</strong> <a href="https://avto.world" style="color: #76e0a8;">https://avto.world</a><br>
+        <strong>Дата проверки:</strong> 17.04.2026 07:47
+    </div>
+</div>
+
+<!-- ===== EXECUTIVE SUMMARY ===== -->
+<div class="page">
+    <h2>Резюме</h2>
+
+    <div class="score-block">
+        <div class="score-big mid">66.4%</div>
+        <div class="score-caption">
+            <h3>13 из 38 факторов выполнены (взвешенный балл)</h3>
+            <p>
+                Оценка учитывает вес каждого фактора — критичные недочёты
+                сильнее снижают балл. Фокус на красных строках даёт максимальный
+                прирост в позициях и трафике.
+            </p>
+        </div>
+    </div>
+
+    <div class="summary-grid">
+        <div class="stat">
+            <div class="value">13</div>
+            <div class="label">Выполнено</div>
+        </div>
+        <div class="stat fail">
+            <div class="value">4</div>
+            <div class="label">Не выполнено</div>
+        </div>
+        <div class="stat warn">
+            <div class="value">10</div>
+            <div class="label">Требует внимания</div>
+        </div>
+        <div class="stat manual">
+            <div class="value">8</div>
+            <div class="label">Ручная проверка</div>
+        </div>
+    </div>
+
+
+    <h3>Топ критичных разрывов</h3>
+    <div class="critical-list">
+        <ol>
+            <li>
+                <strong>Объём текста от 1500 слов (коммерческая страница)</strong>
+                <span style="color: var(--av-text-secondary); font-size: 13px;">
+                    (Объём и длина текста, важность: high)
+                </span>
+            </li>
+        </ol>
+    </div>
+
+    <h3 id="toc">Содержание</h3>
+    <div class="toc">
+        <ol>
+            <li><a href="#meta">Параметры проверки</a></li>
+            <li><a href="#cat-meta_tags">Мета-теги и сниппет</a> (5)</li>
+            <li><a href="#cat-structure">Структура и заголовки</a> (8)</li>
+            <li><a href="#cat-volume">Объём и длина текста</a> (3)</li>
+            <li><a href="#cat-density">Плотность ключей, тошнота, водность</a> (5)</li>
+            <li><a href="#cat-semantics">LSI и семантическая полнота</a> (2)</li>
+            <li><a href="#cat-uniqueness">Уникальность и дубли</a> (3)</li>
+            <li><a href="#cat-readability">Читаемость текста</a> (1)</li>
+            <li><a href="#cat-antispam">Антиспам</a> (2)</li>
+            <li><a href="#cat-images">Изображения и alt-тексты</a> (2)</li>
+            <li><a href="#cat-links">Ссылки в тексте</a> (3)</li>
+            <li><a href="#cat-freshness">Свежесть контента</a> (1)</li>
+            <li><a href="#cat-commercial_triggers">Коммерческие триггеры</a> (3)</li>
+            <li><a href="#recommendations">Рекомендации и следующие шаги</a></li>
+        </ol>
+    </div>
+</div>
+
+<!-- ===== META ===== -->
+<section class="page" id="meta">
+    <h2>Параметры проверки</h2>
+    <div class="meta-block">
+        <div class="key">URL страницы</div>
+        <div class="value"><a href="https://avto.world" target="_blank">https://avto.world</a></div>
+
+        <div class="key">Дата и время</div>
+        <div class="value">17.04.2026 07:47 (UTC)</div>
+
+
+
+        <div class="key">Страниц обследовано</div>
+        <div class="value">
+                <strong>home:</strong> <a href="https://www.avto.world/" target="_blank">https://www.avto.world/</a><br>
+        </div>
+
+        <div class="key">Всего факторов</div>
+        <div class="value">38</div>
+
+        <div class="key">Инструмент</div>
+        <div class="value">artvision.pro Pulse — текстовый модуль, авторская методика на основе параметров Яндекса</div>
+
+        <div class="key">Ограничения</div>
+        <div class="value">
+            Аудит проводится без JavaScript-рендеринга. Проверка уникальности требует
+            API-ключа text.ru или content-watch.ru; при отсутствии ключа пункт помечен
+            как «ручная проверка». Морфологические проверки ключа задействуют
+            pymorphy3, если он установлен.
+        </div>
+    </div>
+</section>
+
+<!-- ===== CATEGORIES ===== -->
+<section class="page category" id="cat-meta_tags">
+    <div class="category-header">
+        <h2>1. Мета-теги и сниппет</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">1 выполнено</span> ·
+            <span style="color: var(--av-red);">0 не выполнено</span> ·
+            <span style="color: var(--av-orange);">3 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">1 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">1</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-weight">9</td>
+                <td class="col-name">Title в диапазоне 50-70 символов</td>
+                <td>
+                    <div class="evidence">Длина title: 49 (ожидается 50-70). Текст: «Медные тормозные трубки купить в СПб — Авто Ворлд»</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Длина title — баланс между полнотой и отображением в сниппете. Короткий title = упущенные ключи, длинный = обрезается.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">2</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">8</td>
+                <td class="col-name">Description в диапазоне 150-170 символов</td>
+                <td>
+                    <div class="evidence">Длина description: 111 (ожидается 150-170)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Description отображается в сниппете Яндекса. Оптимум: 150-170 символов с призывом к действию.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">4</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">6</td>
+                <td class="col-name">Призыв к действию в description</td>
+                <td>
+                    <div class="evidence">В description нет явного призыва к действию</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Description с призывом (узнайте, закажите, получите) повышает CTR в выдаче.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">5</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">5</td>
+                <td class="col-name">OG-теги заполнены (og:title, og:description, og:image)</td>
+                <td>
+                    <div class="evidence">Все OG-теги заполнены: og:title, og:description, og:image</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Open Graph теги нужны для корректного отображения при репостах в соцсетях и мессенджерах.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">3</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-weight">10</td>
+                <td class="col-name">Ключ в meta title</td>
+                <td>
+                    <div class="evidence">Не задан --keyword</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Основной запрос кластера должен присутствовать в title (точно или морфологически).
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-structure">
+    <div class="category-header">
+        <h2>2. Структура и заголовки</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">3 выполнено</span> ·
+            <span style="color: var(--av-red);">0 не выполнено</span> ·
+            <span style="color: var(--av-orange);">3 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">1 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">8</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">6</td>
+                <td class="col-name">H1 длиной до 70 символов</td>
+                <td>
+                    <div class="evidence">H1 длиной 76 — превышает 70. «Медные тормозные трубки для авто — производство и продажа в Санкт-Петербурге»</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Краткий и ёмкий заголовок — до 70 символов. Длинные H1 теряют фокус.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">11</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">5</td>
+                <td class="col-name">Абзацы по 2-4 предложения</td>
+                <td>
+                    <div class="evidence">Средняя длина абзаца: 1.3 предложений (ожидается 2-5)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Средняя длина абзаца 2-4 предложения улучшает читаемость и время на сайте.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">13</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-weight">4</td>
+                <td class="col-name">Использование таблиц для структурированных данных</td>
+                <td>
+                    <div class="evidence">Таблиц: 0 (требуется 1)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Таблицы для сравнений, цен, характеристик — плюс к полноте и шансу на featured snippet.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">6</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">9</td>
+                <td class="col-name">Ровно один H1 на странице</td>
+                <td>
+                    <div class="evidence">Найден ровно один H1: «Медные тормозные трубки для авто — производство и продажа в Санкт-Петербурге»</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        На странице должен быть один и только один H1 — главный заголовок. Два H1 размывают релевантность.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">10</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">5</td>
+                <td class="col-name">Иерархия заголовков соблюдена (h1→h2→h3)</td>
+                <td>
+                    <div class="evidence">Иерархия заголовков корректна</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Нарушение иерархии (h2 без h1, h4 после h2) снижает оценку структуры документа.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">12</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">5</td>
+                <td class="col-name">Наличие маркированных или нумерованных списков</td>
+                <td>
+                    <div class="evidence">Списков на странице: 8</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Списки структурируют информацию, повышают читаемость и шансы попасть в быстрые ответы Яндекса.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">9</td>
+                <td><span class="status-badge status-na">n/a</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">7</td>
+                <td class="col-name">Не менее 3 заголовков H2 на длинной странице</td>
+                <td>
+                    <div class="evidence">Текст 752 слов &lt; порога 1000 — проверка неприменима</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Для страниц с body &gt;1000 слов — минимум 3 H2 для структурирования контента.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">7</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-weight">10</td>
+                <td class="col-name">Ключ в H1</td>
+                <td>
+                    <div class="evidence">Не задан --keyword</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        H1 содержит основной запрос страницы — морфологически или точно.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-volume">
+    <div class="category-header">
+        <h2>3. Объём и длина текста</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">1 выполнено</span> ·
+            <span style="color: var(--av-red);">2 не выполнено</span> ·
+            <span style="color: var(--av-orange);">0 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">0 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">14</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">8</td>
+                <td class="col-name">Объём текста от 1500 слов (коммерческая страница)</td>
+                <td>
+                    <div class="evidence">Объём текста: 752 слов, требуется минимум 1500</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Для коммерческих страниц с конкуренцией в топе оптимум 1500+ слов. Тонкий контент проигрывает.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">15</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">7</td>
+                <td class="col-name">Объём текста от 2500 слов (блог / экспертная статья)</td>
+                <td>
+                    <div class="evidence">Объём текста: 752 слов, требуется минимум 2500</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Информационные статьи в ТОП-10 Яндекса обычно имеют 2500+ слов с раскрытием темы.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">16</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">6</td>
+                <td class="col-name">Тонкий контент &lt; 300 слов отсутствует</td>
+                <td>
+                    <div class="evidence">Объём текста: 752 слов (&gt;= 300)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Страницы с body &lt; 300 слов (кроме контактов / корзины) — кандидат на thin content штраф.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-density">
+    <div class="category-header">
+        <h2>4. Плотность ключей, тошнота, водность</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">2 выполнено</span> ·
+            <span style="color: var(--av-red);">0 не выполнено</span> ·
+            <span style="color: var(--av-orange);">1 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">2 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">19</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">7</td>
+                <td class="col-name">Академическая тошнота 5-9%</td>
+                <td>
+                    <div class="evidence">Академическая тошнота: 14.76% (диапазон 5.0-9.0%)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Академическая тошнота (суммарная доля повторов самых частых слов) — оптимум 5-9%.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">18</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">8</td>
+                <td class="col-name">Классическая тошнота не более 7</td>
+                <td>
+                    <div class="evidence">Классическая тошнота: 4.0 (топ-слово «штуцер»)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Классическая тошнота = sqrt(max_word_frequency). Выше 7 — переспам ключами.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">20</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">7</td>
+                <td class="col-name">Водность не более 30%</td>
+                <td>
+                    <div class="evidence">Водность: 14.36% (&lt;= 30.0%)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Водность — доля стоп-слов (предлоги, союзы, местоимения). Больше 30% — много воды, низкая ценность.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">17</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">9</td>
+                <td class="col-name">Плотность главного ключа 2-4%</td>
+                <td>
+                    <div class="evidence">Не задан --keyword для проверки TF</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Оптимальная term frequency для основного запроса — 2-4%. Ниже = недооптимизация, выше = переспам.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">21</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">8</td>
+                <td class="col-name">Ключ в первом абзаце (top 100 слов)</td>
+                <td>
+                    <div class="evidence">Не задан --keyword</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Основной запрос должен встречаться в первых 100 словах страницы — усиливает релевантность.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-semantics">
+    <div class="category-header">
+        <h2>5. LSI и семантическая полнота</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 выполнено</span> ·
+            <span style="color: var(--av-red);">0 не выполнено</span> ·
+            <span style="color: var(--av-orange);">0 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">2 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">22</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">8</td>
+                <td class="col-name">LSI-покрытие не менее 60%</td>
+                <td>
+                    <div class="evidence">Не задан --lsi-words (через запятую) для проверки LSI-покрытия</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Доля LSI-синонимов (задаются вручную через --lsi-words) в тексте. 60%+ = полное раскрытие темы.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">23</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">8</td>
+                <td class="col-name">Семантическая полнота кластера</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Страница покрывает основные подтемы кластера (проверяется вручную через список кластерных ключей).
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-uniqueness">
+    <div class="category-header">
+        <h2>6. Уникальность и дубли</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 выполнено</span> ·
+            <span style="color: var(--av-red);">0 не выполнено</span> ·
+            <span style="color: var(--av-orange);">0 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">1 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">25</td>
+                <td><span class="status-badge status-na">n/a</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">8</td>
+                <td class="col-name">Внутренние дубли текста отсутствуют</td>
+                <td>
+                    <div class="evidence">Одна страница — внутренние дубли проверить нельзя</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Simhash-сравнение страниц сайта. Дубли выше 85% сходства — кандидаты на канонизацию.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">26</td>
+                <td><span class="status-badge status-na">n/a</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">8</td>
+                <td class="col-name">Каннибализация ключей отсутствует</td>
+                <td>
+                    <div class="evidence">Одна страница</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Два URL с одинаковым title / близкими интентами конкурируют между собой в выдаче.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">24</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-weight">10</td>
+                <td class="col-name">Уникальность текста не менее 85%</td>
+                <td>
+                    <div class="evidence">Автопроверка невозможна — API-ключ уникальности не настроен (нет ключей text_ru / content_watch в tokens.json)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Проверка через text.ru / content-watch.ru API. Для коммерческих страниц минимум 85%, для блога — 90%+.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-readability">
+    <div class="category-header">
+        <h2>7. Читаемость текста</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 выполнено</span> ·
+            <span style="color: var(--av-red);">0 не выполнено</span> ·
+            <span style="color: var(--av-orange);">1 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">0 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">27</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">6</td>
+                <td class="col-name">Индекс Флеша-Кинкейда в диапазоне 60-80</td>
+                <td>
+                    <div class="evidence">Индекс Флеша: 53.6 — текст сложен для восприятия (нужно 60-80)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Русская адаптация Оборневой. 60-80 = читаемо, ниже = сложно, выше = примитивно.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-antispam">
+    <div class="category-header">
+        <h2>8. Антиспам</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">1 выполнено</span> ·
+            <span style="color: var(--av-red);">0 не выполнено</span> ·
+            <span style="color: var(--av-orange);">1 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">0 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">28</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">6</td>
+                <td class="col-name">Нет слов целиком в CAPS LOCK в теле</td>
+                <td>
+                    <div class="evidence">Слов в CAPS LOCK: 8 (&gt; 2). Примеры: EXCTECL, ЛАДА, ГРАНТА, КАМАЗ, AVTO</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Слова ЦЕЛИКОМ КАПСОМ (более 3 символов) в теле страницы — признак спама по Яндексу.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">29</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">5</td>
+                <td class="col-name">Нет множественных восклицаний и emoji-bombing</td>
+                <td>
+                    <div class="evidence">Множественные «!!!» не найдены</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        !!! или серии emoji подряд в коммерческом тексте — признак низкого качества.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-images">
+    <div class="category-header">
+        <h2>9. Изображения и alt-тексты</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">1 выполнено</span> ·
+            <span style="color: var(--av-red);">0 не выполнено</span> ·
+            <span style="color: var(--av-orange);">0 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">1 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">30</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">7</td>
+                <td class="col-name">Все картинки имеют атрибут alt</td>
+                <td>
+                    <div class="evidence">Alt есть у 90% картинок (21 всего)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Alt у картинок — обязательный атрибут для SEO (поиск по картинкам) и доступности.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">31</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">5</td>
+                <td class="col-name">Alt содержит ключевое слово хотя бы у одной картинки</td>
+                <td>
+                    <div class="evidence">Не задан --keyword</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Минимум у одной картинки alt содержит основной ключ страницы.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-links">
+    <div class="category-header">
+        <h2>10. Ссылки в тексте</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">3 выполнено</span> ·
+            <span style="color: var(--av-red);">0 не выполнено</span> ·
+            <span style="color: var(--av-orange);">0 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">0 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">32</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-weight">7</td>
+                <td class="col-name">Внутренние ссылки в теле текста не менее 3</td>
+                <td>
+                    <div class="evidence">Внутренних ссылок: 90 (&gt;= 3)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Внутренняя перелинковка усиливает распределение веса и удержание пользователя.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">33</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">6</td>
+                <td class="col-name">Разнообразие анкоров (не все анкоры &#39;тут&#39;/&#39;здесь&#39;)</td>
+                <td>
+                    <div class="evidence">Generic-анкоров: 1% (1/76)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Анкоры должны быть релевантны контенту: включать ключи и описание. Голые &#39;тут&#39;/&#39;здесь&#39; бесполезны.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">34</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-weight">4</td>
+                <td class="col-name">Исходящие внешние ссылки на авторитетные источники</td>
+                <td>
+                    <div class="evidence">Внешних ссылок: 1 (в диапазоне 1-5)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        1-3 ссылки на авторитетные внешние ресурсы (ГОСТ, Минздрав, официальные сайты) повышают E-E-A-T.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-freshness">
+    <div class="category-header">
+        <h2>11. Свежесть контента</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 выполнено</span> ·
+            <span style="color: var(--av-red);">0 не выполнено</span> ·
+            <span style="color: var(--av-orange);">1 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">0 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">35</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">6</td>
+                <td class="col-name">Дата публикации или обновления указана</td>
+                <td>
+                    <div class="evidence">Дата публикации/обновления не найдена (нет article:modified_time)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Свежесть контента — фактор для информационных запросов. В meta article:modified_time или на странице.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-commercial_triggers">
+    <div class="category-header">
+        <h2>12. Коммерческие триггеры</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">1 выполнено</span> ·
+            <span style="color: var(--av-red);">2 не выполнено</span> ·
+            <span style="color: var(--av-orange);">0 внимание</span> ·
+            <span style="color: var(--av-text-secondary);">0 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-weight">Вес</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">37</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">5</td>
+                <td class="col-name">Упоминание гарантии / возврата</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: гарантия, возврат, обмен, гарантируем</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        &#39;Гарантия&#39;, &#39;возврат&#39;, &#39;обмен&#39; — коммерческие триггеры доверия в тексте.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">38</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">5</td>
+                <td class="col-name">Упоминание доставки в тексте</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: доставка, самовывоз, курьер, доставим</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        &#39;Доставка&#39;, &#39;самовывоз&#39;, &#39;курьер&#39; — триггеры e-commerce интента.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">36</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-weight">6</td>
+                <td class="col-name">Упоминание цены / стоимости в тексте</td>
+                <td>
+                    <div class="evidence">Найдены триггеры: руб</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Слова &#39;цена&#39;, &#39;стоимость&#39;, &#39;от X руб&#39; с коммерческой страницы — сигнал коммерческого интента.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://www.avto.world/" target="_blank" style="color: var(--av-green-light);">https://www.avto.world/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ===== RECOMMENDATIONS ===== -->
+<section class="page" id="recommendations">
+    <h2>Рекомендации и следующие шаги</h2>
+
+    <h3>Порядок работ</h3>
+    <ol style="padding-left: 24px;">
+        <li style="margin: 10px 0;">
+            <strong>Закрыть критичные разрывы</strong> — 1 пунктов
+            из топа. Это мета-теги, структура H1, ключ в title и H1, уникальность —
+            база для ранжирования.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Проработать блок высокой важности</strong> — 1 факторов
+            со статусом severity: high: объём текста, тошнота, плотность ключа,
+            LSI, внутренняя перелинковка. Обычно 2-3 недели работ.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Закрыть пункты ручной проверки</strong> — 8 факторов
+            требуют решений редактора: семантическая полнота, уникальность (если
+            не настроен API-ключ), сравнение с конкурентами.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Повторный прогон через 4-6 недель</strong> — замеряем динамику
+            метрик, фиксируем прогресс по шкале 0-100%, корректируем план.
+        </li>
+    </ol>
+
+    <h3>Что делает artvision.pro</h3>
+    <p>
+        Команда закрывает текстовые факторы поэтапно: переписываем мета-теги,
+        добиваем семантику под кластер, чистим тошноту и воду, выстраиваем
+        внутреннюю перелинковку. Формат — абонентское сопровождение контент-отдела
+        с ежемесячной отчётностью и повторным аудитом.
+    </p>
+    <p>
+        Связь: <a href="mailto:info@artvision.pro" style="color: var(--av-green-light);">info@artvision.pro</a>
+        · <a href="https://artvision.pro" style="color: var(--av-green-light);">artvision.pro</a>
+    </p>
+</section>
+
+<footer>
+    artvision.pro Pulse · Текстовый модуль · Отчёт сгенерирован 17.04.2026 07:47 ·
+    <a href="https://artvision.pro">artvision.pro</a>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-13T04:53:32",
+  "repo": "artvision-data",
+  "commit": "bbb80bb2d",
+  "message": "fix: synamica top-20 \u2014 factcheck 168-FZ sources CONFIRMED",
+  "signal_type": "error_resolution",
+  "detail": "fix: synamica top-20 \u2014 factcheck 168-FZ sources CONFIRMED",
+  "files": ["clients/synamica/content/top-20-topics-2026-04-13.md"]
+}

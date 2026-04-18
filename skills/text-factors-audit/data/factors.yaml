@@ -1,0 +1,489 @@
+# Text Factors Audit — каталог текстовых факторов Яндекса
+# Структура: id, category, name, description, weight (1-10), severity, check_type, patterns, pages
+#
+# check_type значения:
+#   meta_title          — длина, вхождение ключа, уникальность
+#   meta_description    — длина, призыв, вхождение ключа
+#   og_tags             — наличие og:title / og:description / og:image
+#   h1_count            — ровно один H1
+#   h1_content          — длина, вхождение ключа
+#   h2_count            — H2 >= N
+#   headings_hierarchy  — структура h1→h2→h3 корректная
+#   paragraph_length    — средняя длина абзаца в предложениях
+#   body_length         — длина текста (слов)
+#   tf_density          — плотность главного ключа (term frequency)
+#   stopwords_ratio     — доля стоп-слов (водность классическая)
+#   academic_nausea     — академическая тошнота (sqrt(max_freq))
+#   classic_nausea      — классическая тошнота (max_freq)
+#   lsi_coverage        — % LSI-синонимов из заданного списка
+#   readability_flesch  — индекс Флеша-Кинкейда (русская адаптация Оборневой)
+#   caps_spam           — слова ЦЕЛИКОМ CAPS в тексте
+#   exclamation_spam    — множественные "!!!" и emoji
+#   alt_images          — alt у картинок
+#   alt_keyword         — alt содержит ключ
+#   internal_links      — внутренние ссылки в тексте
+#   external_links      — внешние ссылки
+#   anchor_diversity    — разнообразие анкоров (не все "тут"/"здесь")
+#   lists_count         — наличие ul/ol
+#   tables_count        — наличие table
+#   key_in_first_para   — ключ в первом абзаце (top 100 слов)
+#   key_in_title        — ключ в title
+#   key_in_h1           — ключ в H1
+#   key_exact_match     — точное вхождение
+#   key_morph_match     — морфологическое вхождение (через pymorphy3)
+#   uniqueness_api      — text.ru или content-watch.ru
+#   duplicate_internal  — дубли внутри сайта (Simhash)
+#   canibalization      — два URL под один интент (title близость)
+#   freshness           — lastmod, дата публикации
+#   manual              — ручная проверка
+
+factors:
+  # =========================================================
+  # 1. МЕТА-ТЕГИ (уникальность, длина, содержание)
+  # =========================================================
+  - id: 1
+    category: meta_tags
+    name: "Title в диапазоне 50-70 символов"
+    description: "Длина title — баланс между полнотой и отображением в сниппете. Короткий title = упущенные ключи, длинный = обрезается."
+    weight: 9
+    severity: critical
+    check_type: meta_title
+    params:
+      min_length: 50
+      max_length: 70
+    pages: [home, product, blog, catalog]
+
+  - id: 2
+    category: meta_tags
+    name: "Description в диапазоне 150-170 символов"
+    description: "Description отображается в сниппете Яндекса. Оптимум: 150-170 символов с призывом к действию."
+    weight: 8
+    severity: high
+    check_type: meta_description
+    params:
+      min_length: 150
+      max_length: 170
+    pages: [home, product, blog, catalog]
+
+  - id: 3
+    category: meta_tags
+    name: "Ключ в meta title"
+    description: "Основной запрос кластера должен присутствовать в title (точно или морфологически)."
+    weight: 10
+    severity: critical
+    check_type: key_in_title
+    pages: [home, product, blog, catalog]
+
+  - id: 4
+    category: meta_tags
+    name: "Призыв к действию в description"
+    description: "Description с призывом (узнайте, закажите, получите) повышает CTR в выдаче."
+    weight: 6
+    severity: medium
+    check_type: meta_description
+    params:
+      cta_patterns: ["узнайте", "закажите", "получите", "позвоните", "рассчитайте", "скачайте", "запишитесь", "оставьте заявку"]
+    pages: [home, product]
+
+  - id: 5
+    category: meta_tags
+    name: "OG-теги заполнены (og:title, og:description, og:image)"
+    description: "Open Graph теги нужны для корректного отображения при репостах в соцсетях и мессенджерах."
+    weight: 5
+    severity: medium
+    check_type: og_tags
+    pages: [home, product, blog]
+
+  # =========================================================
+  # 2. СТРУКТУРА (заголовки, абзацы, списки)
+  # =========================================================
+  - id: 6
+    category: structure
+    name: "Ровно один H1 на странице"
+    description: "На странице должен быть один и только один H1 — главный заголовок. Два H1 размывают релевантность."
+    weight: 9
+    severity: high
+    check_type: h1_count
+    params:
+      expected: 1
+    pages: [home, product, blog, catalog]
+
+  - id: 7
+    category: structure
+    name: "Ключ в H1"
+    description: "H1 содержит основной запрос страницы — морфологически или точно."
+    weight: 10
+    severity: critical
+    check_type: key_in_h1
+    pages: [home, product, blog]
+
+  - id: 8
+    category: structure
+    name: "H1 длиной до 70 символов"
+    description: "Краткий и ёмкий заголовок — до 70 символов. Длинные H1 теряют фокус."
+    weight: 6
+    severity: medium
+    check_type: h1_content
+    params:
+      max_length: 70
+    pages: [home, product, blog]
+
+  - id: 9
+    category: structure
+    name: "Не менее 3 заголовков H2 на длинной странице"
+    description: "Для страниц с body >1000 слов — минимум 3 H2 для структурирования контента."
+    weight: 7
+    severity: high
+    check_type: h2_count
+    params:
+      min_count: 3
+      min_body_words: 1000
+    pages: [home, product, blog]
+
+  - id: 10
+    category: structure
+    name: "Иерархия заголовков соблюдена (h1→h2→h3)"
+    description: "Нарушение иерархии (h2 без h1, h4 после h2) снижает оценку структуры документа."
+    weight: 5
+    severity: medium
+    check_type: headings_hierarchy
+    pages: [home, product, blog]
+
+  - id: 11
+    category: structure
+    name: "Абзацы по 2-4 предложения"
+    description: "Средняя длина абзаца 2-4 предложения улучшает читаемость и время на сайте."
+    weight: 5
+    severity: medium
+    check_type: paragraph_length
+    params:
+      min_sentences: 2
+      max_sentences: 5
+    pages: [home, blog, product]
+
+  - id: 12
+    category: structure
+    name: "Наличие маркированных или нумерованных списков"
+    description: "Списки структурируют информацию, повышают читаемость и шансы попасть в быстрые ответы Яндекса."
+    weight: 5
+    severity: medium
+    check_type: lists_count
+    params:
+      min_count: 1
+    pages: [home, product, blog]
+
+  - id: 13
+    category: structure
+    name: "Использование таблиц для структурированных данных"
+    description: "Таблицы для сравнений, цен, характеристик — плюс к полноте и шансу на featured snippet."
+    weight: 4
+    severity: low
+    check_type: tables_count
+    params:
+      min_count: 1
+    pages: [product, blog]
+
+  # =========================================================
+  # 3. ДЛИНА И ОБЪЁМ
+  # =========================================================
+  - id: 14
+    category: volume
+    name: "Объём текста от 1500 слов (коммерческая страница)"
+    description: "Для коммерческих страниц с конкуренцией в топе оптимум 1500+ слов. Тонкий контент проигрывает."
+    weight: 8
+    severity: high
+    check_type: body_length
+    params:
+      min_words: 1500
+    pages: [home, product]
+
+  - id: 15
+    category: volume
+    name: "Объём текста от 2500 слов (блог / экспертная статья)"
+    description: "Информационные статьи в ТОП-10 Яндекса обычно имеют 2500+ слов с раскрытием темы."
+    weight: 7
+    severity: medium
+    check_type: body_length
+    params:
+      min_words: 2500
+    pages: [blog]
+
+  - id: 16
+    category: volume
+    name: "Тонкий контент < 300 слов отсутствует"
+    description: "Страницы с body < 300 слов (кроме контактов / корзины) — кандидат на thin content штраф."
+    weight: 6
+    severity: high
+    check_type: body_length
+    params:
+      min_words: 300
+    pages: [home, product, blog, catalog]
+
+  # =========================================================
+  # 4. ПЛОТНОСТЬ КЛЮЧЕЙ, ТОШНОТА, ВОДНОСТЬ
+  # =========================================================
+  - id: 17
+    category: density
+    name: "Плотность главного ключа 2-4%"
+    description: "Оптимальная term frequency для основного запроса — 2-4%. Ниже = недооптимизация, выше = переспам."
+    weight: 9
+    severity: high
+    check_type: tf_density
+    params:
+      min_percent: 2.0
+      max_percent: 4.0
+    pages: [home, product, blog]
+
+  - id: 18
+    category: density
+    name: "Классическая тошнота не более 7"
+    description: "Классическая тошнота = sqrt(max_word_frequency). Выше 7 — переспам ключами."
+    weight: 8
+    severity: high
+    check_type: classic_nausea
+    params:
+      max_value: 7.0
+    pages: [home, product, blog]
+
+  - id: 19
+    category: density
+    name: "Академическая тошнота 5-9%"
+    description: "Академическая тошнота (суммарная доля повторов самых частых слов) — оптимум 5-9%."
+    weight: 7
+    severity: medium
+    check_type: academic_nausea
+    params:
+      min_percent: 5.0
+      max_percent: 9.0
+    pages: [home, product, blog]
+
+  - id: 20
+    category: density
+    name: "Водность не более 30%"
+    description: "Водность — доля стоп-слов (предлоги, союзы, местоимения). Больше 30% — много воды, низкая ценность."
+    weight: 7
+    severity: medium
+    check_type: stopwords_ratio
+    params:
+      max_percent: 30.0
+    pages: [home, product, blog]
+
+  - id: 21
+    category: density
+    name: "Ключ в первом абзаце (top 100 слов)"
+    description: "Основной запрос должен встречаться в первых 100 словах страницы — усиливает релевантность."
+    weight: 8
+    severity: high
+    check_type: key_in_first_para
+    params:
+      first_words: 100
+    pages: [home, product, blog]
+
+  # =========================================================
+  # 5. LSI И СЕМАНТИКА
+  # =========================================================
+  - id: 22
+    category: semantics
+    name: "LSI-покрытие не менее 60%"
+    description: "Доля LSI-синонимов (задаются вручную через --lsi-words) в тексте. 60%+ = полное раскрытие темы."
+    weight: 8
+    severity: high
+    check_type: lsi_coverage
+    params:
+      min_percent: 60.0
+    pages: [home, product, blog]
+
+  - id: 23
+    category: semantics
+    name: "Семантическая полнота кластера"
+    description: "Страница покрывает основные подтемы кластера (проверяется вручную через список кластерных ключей)."
+    weight: 8
+    severity: high
+    check_type: manual
+    pages: [home, product, blog]
+
+  # =========================================================
+  # 6. УНИКАЛЬНОСТЬ И ДУБЛИ
+  # =========================================================
+  - id: 24
+    category: uniqueness
+    name: "Уникальность текста не менее 85%"
+    description: "Проверка через text.ru / content-watch.ru API. Для коммерческих страниц минимум 85%, для блога — 90%+."
+    weight: 10
+    severity: critical
+    check_type: uniqueness_api
+    params:
+      min_percent: 85.0
+    pages: [home, product, blog]
+
+  - id: 25
+    category: uniqueness
+    name: "Внутренние дубли текста отсутствуют"
+    description: "Simhash-сравнение страниц сайта. Дубли выше 85% сходства — кандидаты на канонизацию."
+    weight: 8
+    severity: high
+    check_type: duplicate_internal
+    params:
+      similarity_threshold: 0.85
+    pages: [all]
+
+  - id: 26
+    category: uniqueness
+    name: "Каннибализация ключей отсутствует"
+    description: "Два URL с одинаковым title / близкими интентами конкурируют между собой в выдаче."
+    weight: 8
+    severity: high
+    check_type: canibalization
+    pages: [all]
+
+  # =========================================================
+  # 7. ЧИТАЕМОСТЬ
+  # =========================================================
+  - id: 27
+    category: readability
+    name: "Индекс Флеша-Кинкейда в диапазоне 60-80"
+    description: "Русская адаптация Оборневой. 60-80 = читаемо, ниже = сложно, выше = примитивно."
+    weight: 6
+    severity: medium
+    check_type: readability_flesch
+    params:
+      min_score: 60
+      max_score: 80
+    pages: [home, product, blog]
+
+  # =========================================================
+  # 8. АНТИСПАМ
+  # =========================================================
+  - id: 28
+    category: antispam
+    name: "Нет слов целиком в CAPS LOCK в теле"
+    description: "Слова ЦЕЛИКОМ КАПСОМ (более 3 символов) в теле страницы — признак спама по Яндексу."
+    weight: 6
+    severity: medium
+    check_type: caps_spam
+    params:
+      max_caps_words: 2
+    pages: [home, product, blog]
+
+  - id: 29
+    category: antispam
+    name: "Нет множественных восклицаний и emoji-bombing"
+    description: "!!! или серии emoji подряд в коммерческом тексте — признак низкого качества."
+    weight: 5
+    severity: medium
+    check_type: exclamation_spam
+    pages: [home, product, blog]
+
+  # =========================================================
+  # 9. ИЗОБРАЖЕНИЯ
+  # =========================================================
+  - id: 30
+    category: images
+    name: "Все картинки имеют атрибут alt"
+    description: "Alt у картинок — обязательный атрибут для SEO (поиск по картинкам) и доступности."
+    weight: 7
+    severity: high
+    check_type: alt_images
+    params:
+      min_coverage: 0.9
+    pages: [home, product, blog]
+
+  - id: 31
+    category: images
+    name: "Alt содержит ключевое слово хотя бы у одной картинки"
+    description: "Минимум у одной картинки alt содержит основной ключ страницы."
+    weight: 5
+    severity: medium
+    check_type: alt_keyword
+    pages: [home, product]
+
+  # =========================================================
+  # 10. ССЫЛКИ В ТЕКСТЕ
+  # =========================================================
+  - id: 32
+    category: links
+    name: "Внутренние ссылки в теле текста не менее 3"
+    description: "Внутренняя перелинковка усиливает распределение веса и удержание пользователя."
+    weight: 7
+    severity: high
+    check_type: internal_links
+    params:
+      min_count: 3
+    pages: [home, product, blog]
+
+  - id: 33
+    category: links
+    name: "Разнообразие анкоров (не все анкоры 'тут'/'здесь')"
+    description: "Анкоры должны быть релевантны контенту: включать ключи и описание. Голые 'тут'/'здесь' бесполезны."
+    weight: 6
+    severity: medium
+    check_type: anchor_diversity
+    params:
+      max_generic_ratio: 0.3
+      generic_anchors: ["тут", "здесь", "сюда", "ссылка", "подробнее", "читать далее"]
+    pages: [home, product, blog]
+
+  - id: 34
+    category: links
+    name: "Исходящие внешние ссылки на авторитетные источники"
+    description: "1-3 ссылки на авторитетные внешние ресурсы (ГОСТ, Минздрав, официальные сайты) повышают E-E-A-T."
+    weight: 4
+    severity: low
+    check_type: external_links
+    params:
+      min_count: 1
+      max_count: 5
+    pages: [blog]
+
+  # =========================================================
+  # 11. СВЕЖЕСТЬ И ДАТЫ
+  # =========================================================
+  - id: 35
+    category: freshness
+    name: "Дата публикации или обновления указана"
+    description: "Свежесть контента — фактор для информационных запросов. В meta article:modified_time или на странице."
+    weight: 6
+    severity: medium
+    check_type: freshness
+    params:
+      max_age_days: 365
+    pages: [blog]
+
+  # =========================================================
+  # 12. КОММЕРЧЕСКИЕ ТРИГГЕРЫ В ТЕКСТЕ
+  # =========================================================
+  - id: 36
+    category: commercial_triggers
+    name: "Упоминание цены / стоимости в тексте"
+    description: "Слова 'цена', 'стоимость', 'от X руб' с коммерческой страницы — сигнал коммерческого интента."
+    weight: 6
+    severity: medium
+    check_type: text_contains
+    params:
+      patterns: ["цена", "стоимость", "руб", "₽", "от 1", "от 2", "от 3", "от 5", "прайс"]
+      min_matches: 1
+    pages: [home, product]
+
+  - id: 37
+    category: commercial_triggers
+    name: "Упоминание гарантии / возврата"
+    description: "'Гарантия', 'возврат', 'обмен' — коммерческие триггеры доверия в тексте."
+    weight: 5
+    severity: medium
+    check_type: text_contains
+    params:
+      patterns: ["гарантия", "возврат", "обмен", "гарантируем"]
+      min_matches: 1
+    pages: [home, product]
+
+  - id: 38
+    category: commercial_triggers
+    name: "Упоминание доставки в тексте"
+    description: "'Доставка', 'самовывоз', 'курьер' — триггеры e-commerce интента."
+    weight: 5
+    severity: medium
+    check_type: text_contains
+    params:
+      patterns: ["доставка", "самовывоз", "курьер", "доставим"]
+      min_matches: 1
+    pages: [home, product]

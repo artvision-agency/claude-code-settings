@@ -1,0 +1,279 @@
+# 27 факторов ссылочного профиля — методика artvision.pro LinkForge
+# Обновлено: 2026-04-17
+#
+# Поля:
+#   id           — порядковый номер
+#   group        — одна из 5 групп
+#   name         — краткое название фактора
+#   metric       — какую цифру/структуру измеряем
+#   method       — как считаем: api_checktrust | api_serpstat | api_ahrefs | api_majestic |
+#                  yandex_webmaster | crawl_internal | serp_parse | manual
+#   thresholds   — пороги для pass/warn/fail (в формате зависящем от метрики)
+#   severity     — critical | high | medium | low
+#   description  — пояснение
+#
+# Группы:
+#   1. external_profile   — Внешний ссылочный профиль (объём, качество)
+#   2. anchor_toxicity    — Анкор-лист и токсичность
+#   3. dynamics_age       — Динамика и возраст ссылочной
+#   4. internal_linking   — Внутренняя перелинковка
+#   5. competitor_gap     — Конкурентный разрыв
+
+factors:
+  # ============================================================
+  # ГРУППА 1: ВНЕШНИЙ ССЫЛОЧНЫЙ ПРОФИЛЬ (12)
+  # ============================================================
+  - id: 1
+    group: external_profile
+    name: "Ссылочная масса"
+    metric: "total_backlinks"
+    method: api_checktrust
+    thresholds: { warn_below: 100, fail_below: 10 }
+    severity: high
+    description: "Общее количество входящих ссылок (dofollow+nofollow). Абсолют по нише."
+
+  - id: 2
+    group: external_profile
+    name: "Ссылающиеся домены"
+    metric: "referring_domains"
+    method: api_checktrust
+    thresholds: { warn_below: 30, fail_below: 5 }
+    severity: critical
+    description: "Количество уникальных доменов-донаров. Ключевая метрика для Яндекса."
+
+  - id: 3
+    group: external_profile
+    name: "Уникальность доноров"
+    metric: "new_vs_returning_donors_pct"
+    method: api_serpstat
+    thresholds: { warn_below: 20, fail_below: 10 }
+    severity: medium
+    description: "Доля новых донаров за последние 6 мес. <10% = стагнация ссылочной."
+
+  - id: 4
+    group: external_profile
+    name: "DR-распределение доноров"
+    metric: "dr_histogram"
+    method: api_checktrust
+    thresholds: { warn_if_high_dr_below_pct: 5 }
+    severity: high
+    description: "Гистограмма DR (0-20, 20-40, 40-60, 60-80, 80+). Нужно >=5% high-DR."
+
+  - id: 5
+    group: external_profile
+    name: "Тематичность доноров"
+    metric: "thematic_relevance_pct"
+    method: api_checktrust
+    thresholds: { warn_below: 30, fail_below: 15 }
+    severity: high
+    description: "Доля донаров в тематике клиента (категория сайта совпадает)."
+
+  - id: 6
+    group: external_profile
+    name: "TLD-распределение"
+    metric: "tld_breakdown"
+    method: api_checktrust
+    thresholds: { warn_if_ru_below_pct: 40 }
+    severity: medium
+    description: ".ru/.рф vs .com/.net. Для рунета нужно >40% ru-доменов."
+
+  - id: 7
+    group: external_profile
+    name: "Типы ссылок (follow)"
+    metric: "link_attributes"
+    method: api_checktrust
+    thresholds: { warn_if_dofollow_pct_below: 50 }
+    severity: medium
+    description: "dofollow / nofollow / UGC / sponsored разбивка."
+
+  - id: 8
+    group: external_profile
+    name: "Ссылки с главных vs внутренних"
+    metric: "homepage_vs_inner_pct"
+    method: api_serpstat
+    thresholds: { warn_if_inner_above_pct: 80 }
+    severity: low
+    description: "% ссылок с homepage доноров vs внутренние страницы. Гомо-баланс лучше."
+
+  - id: 9
+    group: external_profile
+    name: "Rel=canonical на внешних"
+    metric: "canonical_cites_count"
+    method: api_serpstat
+    thresholds: { warn_below: 0 }
+    severity: low
+    description: "Внешние страницы, указывающие canonical на нас (редкий паттерн цитирования)."
+
+  - id: 10
+    group: external_profile
+    name: "gov/edu доноры"
+    metric: "gov_edu_donors_count"
+    method: api_checktrust
+    thresholds: { warn_below: 1 }
+    severity: low
+    description: "Количество ссылок с .gov/.edu/.academy — редкие, но дают сильный траст."
+
+  - id: 11
+    group: external_profile
+    name: "Социальные сигналы"
+    metric: "social_mentions_count"
+    method: serp_parse
+    thresholds: { warn_below: 10 }
+    severity: low
+    description: "Упоминания в соцсетях (VK/TG/OK) — парсим через SERP-оператор."
+
+  - id: 12
+    group: external_profile
+    name: "Brand mentions без ссылки"
+    metric: "unlinked_brand_mentions"
+    method: serp_parse
+    thresholds: { warn_below: 5 }
+    severity: medium
+    description: "Упоминания бренда в тексте без гиперссылки — потенциал к аутричу."
+
+  # ============================================================
+  # ГРУППА 2: АНКОР-ЛИСТ И ТОКСИЧНОСТЬ (5)
+  # ============================================================
+  - id: 13
+    group: anchor_toxicity
+    name: "Распределение анкоров"
+    metric: "anchor_distribution"
+    method: api_checktrust
+    thresholds: { warn_if_exact_above_pct: 20 }
+    severity: critical
+    description: "Brand / exact / partial / naked-url / generic. Нужен баланс, не >20% exact."
+
+  - id: 14
+    group: anchor_toxicity
+    name: "Переспам точных анкоров"
+    metric: "exact_match_anchor_pct"
+    method: api_checktrust
+    thresholds: { warn_above_pct: 20, fail_above_pct: 35 }
+    severity: critical
+    description: "% анкоров с точным коммерческим вхождением. >35% = высокий риск Минусинска."
+
+  - id: 15
+    group: anchor_toxicity
+    name: "Токсичные доноры"
+    metric: "toxic_donors_pct"
+    method: api_checktrust
+    thresholds: { warn_above_pct: 5, fail_above_pct: 15 }
+    severity: critical
+    description: "PBN-паттерны, дропы, спамные каталоги. Используем Checktrust X-Spam."
+
+  - id: 16
+    group: anchor_toxicity
+    name: "Авторские ссылки (footprint)"
+    metric: "author_footprint_count"
+    method: api_ahrefs
+    thresholds: { warn_above: 30 }
+    severity: high
+    description: "Один автор = много доноров. >30 доноров от одного автора = red flag."
+
+  - id: 17
+    group: anchor_toxicity
+    name: "Нулевой анкор"
+    metric: "empty_anchor_pct"
+    method: api_checktrust
+    thresholds: { warn_above_pct: 40 }
+    severity: low
+    description: "% ссылок без анкора (наг URL или img). Ок до 40%."
+
+  # ============================================================
+  # ГРУППА 3: ДИНАМИКА И ВОЗРАСТ (3)
+  # ============================================================
+  - id: 18
+    group: dynamics_age
+    name: "Возраст ссылочной массы"
+    metric: "median_link_age_months"
+    method: api_ahrefs
+    thresholds: { warn_below: 6, fail_below: 3 }
+    severity: high
+    description: "Медианный возраст ссылки. Молодая масса (<3 мес) = слабый траст."
+
+  - id: 19
+    group: dynamics_age
+    name: "Динамика прироста (12 мес)"
+    metric: "link_velocity_12m"
+    method: api_serpstat
+    thresholds: { warn_if_spike_above_pct: 300 }
+    severity: high
+    description: "График прироста по месяцам. Спайк >300% за месяц = подозрение на покупку."
+
+  - id: 20
+    group: dynamics_age
+    name: "Потерянные ссылки (lost)"
+    metric: "lost_backlinks_30d"
+    method: api_ahrefs
+    thresholds: { warn_above_pct: 10, fail_above_pct: 25 }
+    severity: medium
+    description: "% ссылок, пропавших за последние 30 дней. >25% = разваливается донор-пул."
+
+  # ============================================================
+  # ГРУППА 4: ВНУТРЕННЯЯ ПЕРЕЛИНКОВКА (5)
+  # ============================================================
+  - id: 21
+    group: internal_linking
+    name: "Внутренняя перелинковка"
+    metric: "avg_internal_links_per_page"
+    method: crawl_internal
+    thresholds: { warn_below: 3, fail_below: 1 }
+    severity: high
+    description: "Среднее кол-во внутренних ссылок НА страницу. Нужно >=3."
+
+  - id: 22
+    group: internal_linking
+    name: "Сиротские страницы"
+    metric: "orphan_pages_count"
+    method: crawl_internal
+    thresholds: { warn_above: 5, fail_above: 20 }
+    severity: high
+    description: "Страницы без входящих внутренних ссылок. >20 = провал архитектуры."
+
+  - id: 23
+    group: internal_linking
+    name: "Глубина кликов"
+    metric: "max_click_depth"
+    method: crawl_internal
+    thresholds: { warn_above: 4, fail_above: 6 }
+    severity: medium
+    description: "Максимальная глубина до важных страниц. >6 кликов = Яндекс не увидит."
+
+  - id: 24
+    group: internal_linking
+    name: "Битые внутренние ссылки"
+    metric: "broken_internal_count"
+    method: crawl_internal
+    thresholds: { warn_above: 5, fail_above: 20 }
+    severity: high
+    description: "404 по внутренним ссылкам. Фикс через редиректы или удаление."
+
+  - id: 25
+    group: internal_linking
+    name: "Редиректы в ссылочной"
+    metric: "redirect_chains_count"
+    method: crawl_internal
+    thresholds: { warn_above: 10 }
+    severity: medium
+    description: "301-цепочки из внешних ссылок (теряем PR на каждом шаге)."
+
+  # ============================================================
+  # ГРУППА 5: КОНКУРЕНТНЫЙ РАЗРЫВ (2)
+  # ============================================================
+  - id: 26
+    group: competitor_gap
+    name: "Ссылочный разрыв vs конкуренты"
+    metric: "backlink_gap_pct"
+    method: api_serpstat
+    thresholds: { warn_above_pct: 50, fail_above_pct: 80 }
+    severity: critical
+    description: "% разрыв по ref domains. >80% = догнать за год невозможно, нужна стратегия."
+
+  - id: 27
+    group: competitor_gap
+    name: "Уникальные доноры конкурентов"
+    metric: "competitor_only_donors"
+    method: api_serpstat
+    thresholds: { warn_above: 10 }
+    severity: high
+    description: "Доноры, которые ссылаются на конкурентов, но не на нас. Pool для аутрича."

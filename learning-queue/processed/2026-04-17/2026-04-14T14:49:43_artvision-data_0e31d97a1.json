@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-14T14:49:43",
+  "repo": "artvision-data",
+  "commit": "0e31d97a1",
+  "message": "sync: session state 2026-04-14_14:49",
+  "signal_type": "workaround",
+  "detail": "workaround: +    <tr><td>\u041c\u0435\u0442\u0440\u0438\u043a\u0430 API \u043e\u0442\u0434\u0430\u043b\u0430 401/429</td><td>Retry 3x \u0441 exponential backoff + \u0430\u043b\u0435\u0440\u0442</td></tr>",
+  "files": ["clients/otido/otido-utm-bot-spec.html", "clients/unotrans/kp/unotrans-kp-2026-04.html", "sessions/2026-04-14.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

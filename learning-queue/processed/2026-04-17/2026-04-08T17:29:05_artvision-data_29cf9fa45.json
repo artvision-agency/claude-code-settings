@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-08T17:29:05",
+  "repo": "artvision-data",
+  "commit": "29cf9fa45",
+  "message": "fix: Content Lab \u2014 sanitize exports, fix cloud save, lower share threshold",
+  "signal_type": "error_resolution",
+  "detail": "fix: Content Lab \u2014 sanitize exports, fix cloud save, lower share threshold",
+  "files": ["clients/atribeaute/content-lab/index.html"]
+}

@@ -1,0 +1,405 @@
+# Поведенческие факторы Яндекса — структурированный справочник
+# Источник: методичка Яндекса (Поведенческие факторы) + наработки artvision.pro
+# Обновлено: 2026-04-17
+#
+# Поля:
+#   id           — порядковый номер
+#   category     — одна из 6 категорий (см. ниже)
+#   name         — краткое название фактора
+#   check_type   — как проверять: metrika_api | webmaster_api | pagespeed_api |
+#                  html_check | manual
+#   metric       — метрика/измерение из API (dimension:metric для Метрики)
+#   thresholds   — пороги pass/warn/fail (формат зависит от check_type)
+#   description  — пояснение что проверяем и зачем
+#   recommendation — что делать, если fail
+#   severity     — critical | high | medium | low
+#
+# Категории:
+#   1. engagement     — вовлечённость (время, глубина, отказы, возвраты)
+#   2. serp           — поведение в выдаче (CTR, позиции, dwell time)
+#   3. interaction    — взаимодействие с элементами (клики, формы, скролл)
+#   4. segmentation   — сегменты (мобильные/десктоп, источники, гео, возврат)
+#   5. conversions    — цели и воронка
+#   6. technical      — скорость, Core Web Vitals, ошибки
+
+factors:
+  # ============================================================
+  # КАТЕГОРИЯ 1: ENGAGEMENT (вовлечённость)
+  # ============================================================
+  - id: 1
+    category: engagement
+    name: "Среднее время на сайте"
+    check_type: metrika_api
+    metric: "ym:s:avgVisitDurationSeconds"
+    thresholds:
+      pass_min: 120   # >= 2 минут
+      warn_min: 60    # 1-2 минуты
+      # < 60 секунд = fail
+    description: "Среднее время, которое пользователь проводит на сайте за визит. Индикатор качества контента и релевантности выдачи."
+    recommendation: "Нарастить глубину контента: расширить тексты, добавить видео, интерактивные элементы. Улучшить внутреннюю перелинковку."
+    severity: high
+
+  - id: 2
+    category: engagement
+    name: "Глубина просмотра (pages per session)"
+    check_type: metrika_api
+    metric: "ym:s:pageDepth"
+    thresholds:
+      pass_min: 2.5
+      warn_min: 1.8
+    description: "Среднее число страниц за визит. Поведенческий сигнал Яндекса: чем больше — тем лучше."
+    recommendation: "Добавить блоки «похожие статьи», «с этим товаром покупают», сквозные CTA на смежные страницы."
+    severity: high
+
+  - id: 3
+    category: engagement
+    name: "Процент отказов (15-секундное правило)"
+    check_type: metrika_api
+    metric: "ym:s:bounceRate"
+    thresholds:
+      pass_max: 20    # <= 20% отказов
+      warn_max: 35    # 20-35% среднее
+      # > 35% = fail
+    description: "Доля визитов длительностью менее 15 секунд (стандарт Яндекса). Критичный сигнал низкой релевантности."
+    recommendation: "Проверить соответствие title/H1 контенту, скорость загрузки первого экрана, наличие очевидного ответа на запрос выше линии сгиба."
+    severity: critical
+
+  - id: 4
+    category: engagement
+    name: "Возвраты в SERP (косвенно через среднюю сессию)"
+    check_type: metrika_api
+    metric: "ym:s:bounceRate+avgVisitDurationSeconds"
+    thresholds:
+      # комбинированная проверка — длительная сессия + низкий bounce = хорошо
+      combined: true
+    description: "Dwell time: если пользователь быстро возвращается в выдачу — сигнал нерелевантности. Оцениваем через сочетание короткой сессии и отказа."
+    recommendation: "Усилить первый экран посадочной: явный ответ на запрос, кликабельный оффер, видео/инфографика."
+    severity: high
+
+  - id: 5
+    category: engagement
+    name: "Возвратные пользователи"
+    check_type: metrika_api
+    metric: "ym:s:percentNewVisitors"
+    thresholds:
+      pass_max: 70    # <= 70% новых (т.е. >= 30% возвратных)
+      warn_max: 85
+    description: "Доля возвратных посетителей — индикатор ценности сайта и запоминаемости бренда."
+    recommendation: "Подписки на уведомления/рассылку, ретаргетинг, полезный контент-хаб, брендированные кампании."
+    severity: medium
+
+  # ============================================================
+  # КАТЕГОРИЯ 2: SERP (поведение в выдаче)
+  # ============================================================
+  - id: 6
+    category: serp
+    name: "Средний CTR в выдаче Яндекса"
+    check_type: webmaster_api
+    metric: "search_queries:ctr"
+    thresholds:
+      pass_min: 5.0   # >= 5% CTR
+      warn_min: 2.5
+    description: "Отношение кликов к показам в органической выдаче Яндекса. Влияет на ранжирование как поведенческий сигнал."
+    recommendation: "Переписать title/description для топ-20 запросов: добавить УТП, цифры, эмодзи-маркеры, призыв к действию."
+    severity: critical
+
+  - id: 7
+    category: serp
+    name: "Позиции по ключевым запросам"
+    check_type: webmaster_api
+    metric: "search_queries:position"
+    thresholds:
+      pass_max: 10    # топ-10
+      warn_max: 20    # топ-20
+    description: "Средняя позиция в органической выдаче Яндекса по запросам с показами."
+    recommendation: "Для топ-20 (но не топ-10) — улучшить на уровне контента и ПФ. Для топ-50 — разобраться с технической оптимизацией и семантикой."
+    severity: high
+
+  - id: 8
+    category: serp
+    name: "Запросы без кликов (impressions > 10, clicks = 0)"
+    check_type: webmaster_api
+    metric: "search_queries:impressions_no_clicks"
+    thresholds:
+      pass_max: 20    # <= 20% запросов без кликов
+      warn_max: 40
+    description: "Доля запросов, по которым сайт показывается, но не получает кликов. Прямой индикатор проблем со сниппетом."
+    recommendation: "Собрать список запросов без кликов → проверить сниппеты → переписать title/description с учётом интента."
+    severity: high
+
+  - id: 9
+    category: serp
+    name: "Поисковые фразы в Метрике"
+    check_type: metrika_api
+    metric: "ym:s:searchPhrase:visits"
+    thresholds:
+      pass_min: 50    # >= 50 уникальных фраз с трафиком
+      warn_min: 20
+    description: "Разнообразие поискового трафика — индикатор семантического охвата сайта."
+    recommendation: "Расширить семантическое ядро: добавить посадочные под фразы из Wordstat и search console, LSI-тексты."
+    severity: medium
+
+  # ============================================================
+  # КАТЕГОРИЯ 3: INTERACTION (взаимодействие с элементами)
+  # ============================================================
+  - id: 10
+    category: interaction
+    name: "Микроконверсии: клики по телефону"
+    check_type: metrika_api
+    metric: "goal:phone_click"
+    thresholds:
+      pass_min: 1.0   # >= 1% от визитов
+      warn_min: 0.3
+    description: "Клики по tel:-ссылке — индикатор готовности к контакту. Настраивается как цель в Метрике."
+    recommendation: "Настроить цель в Метрике на клики по tel:. Добавить кнопку-телефон в шапке и плавающую кнопку на мобильном."
+    severity: high
+
+  - id: 11
+    category: interaction
+    name: "Микроконверсии: клики по email"
+    check_type: metrika_api
+    metric: "goal:email_click"
+    thresholds:
+      pass_min: 0.5
+      warn_min: 0.1
+    description: "Клики по mailto:-ссылке. Хоть и слабее чем формы, но всё ещё индикатор интереса."
+    recommendation: "Заменить mailto: на форму обратной связи с отправкой на email. Email держать видимым, но форма — главный CTA."
+    severity: low
+
+  - id: 12
+    category: interaction
+    name: "Scroll depth (карта скроллинга)"
+    check_type: manual
+    metric: "scroll_map"
+    description: "Карта скроллинга в Метрике показывает до какой глубины страницы доходит пользователь. Ключевые блоки должны быть выше 50%-й линии."
+    recommendation: "В Метрике → Карты → Карта скроллинга. Проанализировать топ-5 посадочных. CTA и ключевые УТП — выше 50% линии."
+    severity: medium
+
+  - id: 13
+    category: interaction
+    name: "Тепловая карта кликов"
+    check_type: manual
+    metric: "click_map"
+    description: "Карта кликов показывает куда реально жмут пользователи. Несоответствие CTA и кликов — сигнал UX-проблемы."
+    recommendation: "В Метрике → Карты → Карта кликов. Проверить топ-3 посадочных. Если жмут по некликабельным элементам — сделать их кликабельными."
+    severity: medium
+
+  - id: 14
+    category: interaction
+    name: "Аналитика форм"
+    check_type: manual
+    metric: "form_analytics"
+    description: "Карта форм показывает где пользователи бросают заполнение, какие поля вызывают проблемы."
+    recommendation: "В Метрике → Карты → Аналитика форм. Убрать/сделать опциональными поля с drop-off > 30%. Добавить валидацию в реальном времени."
+    severity: high
+
+  - id: 15
+    category: interaction
+    name: "Вебвизор — ручной разбор сессий"
+    check_type: manual
+    metric: "webvisor"
+    description: "Выборочный просмотр реальных сессий пользователей. Находит UX-проблемы, которые не видны в метриках."
+    recommendation: "Вебвизор → фильтр по посадочным с высоким bounce. Посмотреть 10-20 сессий. Выписать паттерны проблем."
+    severity: medium
+
+  # ============================================================
+  # КАТЕГОРИЯ 4: SEGMENTATION (сегменты)
+  # ============================================================
+  - id: 16
+    category: segmentation
+    name: "Поведение Mobile vs Desktop"
+    check_type: metrika_api
+    metric: "ym:s:deviceCategory:bounceRate"
+    thresholds:
+      # разница между mobile и desktop по bounce не должна превышать 10 п.п.
+      max_delta: 10
+    description: "Сравнение отказов mobile vs desktop. Большая разница (>10 п.п.) — проблема адаптивности."
+    recommendation: "Проверить мобильную вёрстку на реальных устройствах. Увеличить тап-таргеты (минимум 44px), читаемость шрифта, скорость."
+    severity: high
+
+  - id: 17
+    category: segmentation
+    name: "Источники трафика — распределение"
+    check_type: metrika_api
+    metric: "ym:s:trafficSource:visits"
+    thresholds:
+      # здоровый микс: organic >= 30%, не более 70% одного источника
+      max_single_share: 70
+      min_organic_share: 30
+    description: "Здоровый микс источников: поиск, прямой, соцсети, реферальный. Перекос в один источник — риск зависимости."
+    recommendation: "Если перекос в рекламу — усилить SEO. Если перекос в прямой — работать над узнаваемостью бренда."
+    severity: medium
+
+  - id: 18
+    category: segmentation
+    name: "Качество источника: отказы по каналам"
+    check_type: metrika_api
+    metric: "ym:s:trafficSource:bounceRate"
+    thresholds:
+      pass_max: 25    # <= 25% отказов по каналу
+      warn_max: 40
+    description: "Отказы в разбивке по источникам. Высокий bounce по одному каналу — проблема с настройкой кампании или релевантностью."
+    recommendation: "Для каналов с высоким bounce — проверить UTM-таргетинг, посадочные страницы, соответствие обещания контенту."
+    severity: medium
+
+  - id: 19
+    category: segmentation
+    name: "География: регион и отказы"
+    check_type: metrika_api
+    metric: "ym:s:regionCity:bounceRate"
+    thresholds:
+      # если регион даёт >10% трафика но bounce > средних +15%
+      geo_anomaly_threshold: 15
+    description: "Поведение по регионам. Если приоритетный регион даёт высокий bounce — проблема с локализацией/релевантностью."
+    recommendation: "Проверить: упомянут ли регион в title/H1. Есть ли филиал/доставка в регион. Нет ли блокировок по IP."
+    severity: medium
+
+  - id: 20
+    category: segmentation
+    name: "Топ посадочных страниц (entry pages)"
+    check_type: metrika_api
+    metric: "ym:s:startURL:visits"
+    thresholds:
+      # топ-10 entry pages должны покрывать не более 80% трафика (иначе концентрация)
+      top10_share_max: 80
+    description: "Какие страницы первые в визите. Концентрация в 2-3 страницах = узкий фронт SEO."
+    recommendation: "Расширять набор ранжирующихся страниц. Каждая страница с >100 визитов/мес = повод для оптимизации."
+    severity: medium
+
+  - id: 21
+    category: segmentation
+    name: "Exit pages — откуда уходят"
+    check_type: metrika_api
+    metric: "ym:s:endURL:visits"
+    description: "Какие страницы последние в визите. Аномальные exit rates — проблема UX/контента на конкретной странице."
+    recommendation: "Страницы с высоким exit rate и низкой конверсией — добавить CTA, внутренние ссылки, связанный контент."
+    severity: medium
+
+  # ============================================================
+  # КАТЕГОРИЯ 5: CONVERSIONS (цели и воронка)
+  # ============================================================
+  - id: 22
+    category: conversions
+    name: "Цели в Метрике настроены"
+    check_type: metrika_api
+    metric: "goals:count"
+    thresholds:
+      pass_min: 3
+      warn_min: 1
+    description: "Количество настроенных целей в Метрике. Без целей невозможно измерить эффективность канала."
+    recommendation: "Настроить минимум: 1) заявка с формы 2) клик по телефону 3) корзина/добавление в избранное 4) составная цель (посещение +N страниц + время >2 мин)."
+    severity: critical
+
+  - id: 23
+    category: conversions
+    name: "Конверсия по ключевой цели"
+    check_type: metrika_api
+    metric: "goal:primary_conversion_rate"
+    thresholds:
+      pass_min: 2.0   # >= 2%
+      warn_min: 0.8
+    description: "Конверсия в ключевое целевое действие (заявка/звонок/покупка)."
+    recommendation: "Аудит посадочных: УТП на первом экране, упрощение формы, социальные доказательства, гарантии. CRO-тест."
+    severity: high
+
+  - id: 24
+    category: conversions
+    name: "Конверсия по источникам — качественные каналы"
+    check_type: metrika_api
+    metric: "goal:conversion_by_source"
+    description: "Разбивка конверсии по каналам. Выявить, какой канал приносит качественный трафик, а какой — шум."
+    recommendation: "Усиливать каналы с высокой конверсией. Для каналов с низкой — пересмотреть таргетинг или отказаться."
+    severity: high
+
+  # ============================================================
+  # КАТЕГОРИЯ 6: TECHNICAL (скорость, CWV, ошибки)
+  # ============================================================
+  - id: 25
+    category: technical
+    name: "Core Web Vitals: LCP (Largest Contentful Paint)"
+    check_type: pagespeed_api
+    metric: "lighthouse:lcp"
+    thresholds:
+      pass_max: 2.5   # <= 2.5 сек
+      warn_max: 4.0
+    description: "Время до отрисовки крупнейшего элемента. Ключевой UX-показатель, прямой сигнал ранжирования."
+    recommendation: "Оптимизировать изображения (WebP, lazy-load), убрать блокирующий CSS/JS, включить preload для hero-image."
+    severity: high
+
+  - id: 26
+    category: technical
+    name: "Core Web Vitals: CLS (Cumulative Layout Shift)"
+    check_type: pagespeed_api
+    metric: "lighthouse:cls"
+    thresholds:
+      pass_max: 0.1
+      warn_max: 0.25
+    description: "Смещение элементов верстки во время загрузки. Высокий CLS = раздражающий опыт."
+    recommendation: "Задать width/height у всех изображений и видео. Выделить пространство под баннеры/рекламу через aspect-ratio."
+    severity: medium
+
+  - id: 27
+    category: technical
+    name: "Core Web Vitals: INP (Interaction to Next Paint)"
+    check_type: pagespeed_api
+    metric: "lighthouse:inp"
+    thresholds:
+      pass_max: 200   # <= 200 мс
+      warn_max: 500
+    description: "Отзывчивость сайта на действия пользователя (клик, ввод). Заменил FID с 2024 года."
+    recommendation: "Разбить долгие JS-задачи на микротаски, отложить неиспользуемые скрипты, минимизировать third-party."
+    severity: medium
+
+  - id: 28
+    category: technical
+    name: "Время до первого байта (TTFB)"
+    check_type: pagespeed_api
+    metric: "lighthouse:ttfb"
+    thresholds:
+      pass_max: 600   # <= 600 мс
+      warn_max: 1500
+    description: "Время серверного отклика. Влияет на LCP и общее восприятие скорости."
+    recommendation: "Включить серверный кэш (Redis/Memcached), CDN для статики, оптимизация БД-запросов, HTTP/2 или HTTP/3."
+    severity: medium
+
+  - id: 29
+    category: technical
+    name: "Мобильный Speed Score (PageSpeed)"
+    check_type: pagespeed_api
+    metric: "lighthouse:performance_mobile"
+    thresholds:
+      pass_min: 80
+      warn_min: 50
+    description: "Общая оценка производительности мобильной версии по Lighthouse."
+    recommendation: "Приоритет #1 для Яндекса — мобильная версия. Оптимизация картинок, JS, CSS, критический путь рендеринга."
+    severity: high
+
+  - id: 30
+    category: technical
+    name: "Доля 404 в трафике"
+    check_type: metrika_api
+    metric: "ym:pv:URLPath+title=404"
+    thresholds:
+      pass_max: 1.0   # <= 1% страниц-404
+      warn_max: 3.0
+    description: "Процент посещений на страницы-404. Сигнал битых ссылок, потери ссылочного веса, плохого UX."
+    recommendation: "Собрать 404 в Метрике → настроить 301-редиректы на релевантные страницы. Для навсегда удалённого контента — кастомная 404-страница с поиском и навигацией."
+    severity: high
+
+  - id: 31
+    category: technical
+    name: "JS-ошибки на странице"
+    check_type: manual
+    metric: "js_errors"
+    description: "Критичные JS-ошибки ломают интерактив, формы, CTA. Метрика регистрирует хиты с ошибками."
+    recommendation: "В Метрике → Отчёты → JS-ошибки. Топ-10 ошибок исправить. Настроить Sentry или аналог для постоянного мониторинга."
+    severity: medium
+
+  - id: 32
+    category: technical
+    name: "Adblock usage — доля посетителей с блокировщиками"
+    check_type: manual
+    metric: "adblock_share"
+    description: "Доля аудитории с adblock. Если >30% — часть трекинга теряется, нужны server-side аналоги."
+    recommendation: "Если доля высокая — не полагаться только на клиентскую Метрику. Дополнить server-side трекингом (Measurement Protocol)."
+    severity: low

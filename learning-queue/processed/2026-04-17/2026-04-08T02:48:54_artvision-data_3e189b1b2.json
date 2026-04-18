@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-08T02:48:54",
+  "repo": "artvision-data",
+  "commit": "3e189b1b2",
+  "message": "chore: save session prompts before compact 2026-04-08_02:48",
+  "signal_type": "workaround",
+  "detail": "workaround: +     - Fix: Added fallback chain: `l.get(\"anchor\", l.get(\"text\", url-derived-title))`",
+  "files": ["prompts/2026-04-08_session_7425080a.md"]
+}

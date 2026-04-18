@@ -1,0 +1,270 @@
+#!/usr/bin/env bash
+# pre-scp-factcheck.sh
+# PreToolUse hook for Bash — intercepts scp commands to VPS with HTML files
+# Blocks deployment if factcheck finds CRITICAL issues
+#
+# Trigger condition: command contains 'scp' AND a .html file path
+# Block condition  : factcheck-v2.py exits with code 1 (CRITICAL issues found)
+# Pass condition   : factcheck exits 0, or file is not HTML, or not an scp to clients/
+#
+# Usage as PreToolUse hook (env var):
+#   CLAUDE_BASH_COMMAND="scp clients/foo/kp.html root@80.90.181.152:/path" ./pre-scp-factcheck.sh
+# Usage standalone:
+#   ./pre-scp-factcheck.sh "scp clients/foo/kp.html root@80.90.181.152:/path"
+#
+# Exit codes:
+#   0  = proceed (PASS or irrelevant command)
+#   2  = BLOCK (factcheck FAILED with CRITICAL issues)
+#
+# To bypass: prefix scp with FACTCHECK_SKIP=1
+#   FACTCHECK_SKIP=1 scp clients/foo/kp.html root@80.90.181.152:/path
+
+set -uo pipefail
+# Note: not using -e so we can handle factcheck exit codes explicitly
+
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
+
+readonly FACTCHECK_V2="/Users/antonk/.claude/scripts/factcheck-v2.py"
+readonly FACTCHECK_STRICT="/Users/antonk/.claude/scripts/factcheck-strict.py"
+readonly FACTCHECK_LEGACY="/Users/antonk/artvision-data/scripts/factcheck-html.py"
+readonly KP_PATH_PATTERN='(presales|clients)/[^/]+/(kp|kp-v[0-9]+)/'
+readonly VPS_PATTERN="80\.90\.181\.152|artvision\.pro"
+readonly REPORT_DIR="/tmp"
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+log_info()  { printf '[pre-scp-factcheck] %s\n' "$*" >&2; }
+log_warn()  { printf '[pre-scp-factcheck] WARNING: %s\n' "$*" >&2; }
+log_block() { printf '[pre-scp-factcheck] BLOCK: %s\n' "$*" >&2; }
+
+# ---------------------------------------------------------------------------
+# Get command to inspect
+# ---------------------------------------------------------------------------
+
+COMMAND="${CLAUDE_BASH_COMMAND:-${1:-}}"
+
+if [[ -z "$COMMAND" ]]; then
+    exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# Check bypass flag
+# ---------------------------------------------------------------------------
+
+if [[ "${FACTCHECK_SKIP:-}" == "1" ]]; then
+    log_warn "FACTCHECK_SKIP=1 — bypassing factcheck (manual override)"
+    exit 0
+fi
+
+# Check for --force in the command itself
+if printf '%s' "$COMMAND" | grep -qE '\-\-factcheck-skip|\-\-force-deploy'; then
+    log_warn "--force-deploy flag detected — bypassing factcheck"
+    exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# Only trigger on scp commands
+# ---------------------------------------------------------------------------
+
+if ! printf '%s' "$COMMAND" | grep -qE '^\s*scp\b'; then
+    exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# Extract .html file path(s) from the scp command
+# scp supports: scp [opts] source... destination
+# We want source files that are .html
+# ---------------------------------------------------------------------------
+
+HTML_FILE=""
+
+# Try to extract first .html file from command
+HTML_FILE=$(printf '%s' "$COMMAND" | grep -oE '[^ ]+\.html' | head -1)
+
+if [[ -z "$HTML_FILE" ]]; then
+    # No HTML file in this scp — not our concern
+    exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# Only proceed if deploying to our VPS
+# (avoid false triggers on local copies, scp from remote, etc.)
+# ---------------------------------------------------------------------------
+
+if ! printf '%s' "$COMMAND" | grep -qE "$VPS_PATTERN"; then
+    # Not going to our VPS — skip
+    # But still check if it's going to a client's server (pre-bash-check handles that)
+    exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# Resolve file path — try absolute and relative
+# ---------------------------------------------------------------------------
+
+# Expand ~ if present
+HTML_FILE="${HTML_FILE/#\~/$HOME}"
+
+if [[ ! -f "$HTML_FILE" ]]; then
+    # Try from artvision-data
+    ALT_PATH="/Users/antonk/artvision-data/$HTML_FILE"
+    if [[ -f "$ALT_PATH" ]]; then
+        HTML_FILE="$ALT_PATH"
+    else
+        log_warn "HTML file not found: $HTML_FILE — skipping factcheck (deploy may fail anyway)"
+        exit 0
+    fi
+fi
+
+# ---------------------------------------------------------------------------
+# Determine factcheck script to use
+# ---------------------------------------------------------------------------
+
+FACTCHECK_SCRIPT=""
+if [[ -f "$FACTCHECK_V2" ]]; then
+    FACTCHECK_SCRIPT="$FACTCHECK_V2"
+elif [[ -f "$FACTCHECK_LEGACY" ]]; then
+    FACTCHECK_SCRIPT="$FACTCHECK_LEGACY"
+else
+    log_warn "No factcheck script found at:"
+    log_warn "  $FACTCHECK_V2"
+    log_warn "  $FACTCHECK_LEGACY"
+    log_warn "Deployment will proceed without factcheck."
+    exit 0
+fi
+
+# ---------------------------------------------------------------------------
+# Extract client name for contextual output
+# ---------------------------------------------------------------------------
+
+CLIENT="unknown"
+if [[ "$HTML_FILE" =~ clients/([^/]+)/ ]]; then
+    CLIENT="${BASH_REMATCH[1]}"
+fi
+
+# ---------------------------------------------------------------------------
+# Collect optional source files for cross-reference
+# ---------------------------------------------------------------------------
+
+SOURCES_ARGS=()
+HTML_DIR="$(cd -- "$(dirname -- "$HTML_FILE")" && pwd -P)"
+
+for candidate in \
+    "$HTML_DIR/config.yaml" \
+    "$HTML_DIR/context-log.md" \
+    "$HTML_DIR/../config.yaml" \
+    "$HTML_DIR/../context-log.md"
+do
+    if [[ -f "$candidate" ]]; then
+        SOURCES_ARGS+=("--source" "$candidate")
+    fi
+done
+
+# patches/corrections-log-*.md
+for corrections in "$HTML_DIR"/patches/corrections-log-*.md "$HTML_DIR"/../patches/corrections-log-*.md; do
+    [[ -f "$corrections" ]] && SOURCES_ARGS+=("--source" "$corrections")
+done
+
+# ---------------------------------------------------------------------------
+# Run factcheck
+# ---------------------------------------------------------------------------
+
+REPORT_FILE="${REPORT_DIR}/factcheck-${CLIENT}-$(date +%Y%m%d-%H%M%S).md"
+FILENAME="$(basename -- "$HTML_FILE")"
+
+# Detect KP path → route to strict mode
+IS_KP=0
+if printf '%s' "$HTML_FILE" | grep -qE "$KP_PATH_PATTERN"; then
+    IS_KP=1
+fi
+
+MODE="quick"
+if [[ $IS_KP -eq 1 && -f "$FACTCHECK_STRICT" ]]; then
+    MODE="strict"
+fi
+
+printf '\n' >&2
+printf '═══════════════════════════════════════════\n' >&2
+printf '  FACTCHECK PRE-SCP: %s\n' "$CLIENT" >&2
+printf '  File: %s\n' "$FILENAME" >&2
+printf '  Mode: %s%s\n' "$MODE" "$([[ $IS_KP -eq 1 ]] && echo ' (KP detected)' || echo '')" >&2
+printf '═══════════════════════════════════════════\n' >&2
+
+FACTCHECK_EXIT=0
+
+if [[ "$MODE" == "strict" ]]; then
+    # KP path — run strict wrapper (v2 --standard + emit agent-spawn prompt)
+    if python3 "$FACTCHECK_STRICT" "$HTML_FILE" "${SOURCES_ARGS[@]}" \
+        --report "$REPORT_FILE" 2>&1; then
+        FACTCHECK_EXIT=0
+    else
+        FACTCHECK_EXIT=$?
+    fi
+elif [[ ${#SOURCES_ARGS[@]} -gt 0 ]]; then
+    if python3 "$FACTCHECK_SCRIPT" "$HTML_FILE" "${SOURCES_ARGS[@]}" \
+        --quick \
+        --report "$REPORT_FILE" \
+        2>&1; then
+        FACTCHECK_EXIT=0
+    else
+        FACTCHECK_EXIT=$?
+    fi
+else
+    if python3 "$FACTCHECK_SCRIPT" "$HTML_FILE" \
+        --quick \
+        --report "$REPORT_FILE" \
+        2>&1; then
+        FACTCHECK_EXIT=0
+    else
+        FACTCHECK_EXIT=$?
+    fi
+fi
+
+# ---------------------------------------------------------------------------
+# Decision
+# ---------------------------------------------------------------------------
+
+if [[ $FACTCHECK_EXIT -eq 0 ]]; then
+    if [[ "$MODE" == "strict" ]]; then
+        printf '  RESULT: Layer 1 PASS — spawn strict-factchecker agent for Layer 2\n' >&2
+        printf '  Report: %s\n' "$REPORT_FILE" >&2
+        printf '  ⚠️  BLOCKING: strict agent must be spawned BEFORE deploy\n' >&2
+        printf '═══════════════════════════════════════════\n\n' >&2
+        printf '{"decision":"block","reason":"KP detected — Layer 1 passed, but Layer 2 (strict-factchecker agent) must run before deploy. Spawn agent via Agent tool with subagent_type=strict-factchecker, file=%s. Or set FACTCHECK_SKIP=1 to bypass."}\n' "$HTML_FILE"
+        exit 2
+    fi
+    printf '  RESULT: PASS — no CRITICAL issues\n' >&2
+    printf '  Report: %s\n' "$REPORT_FILE" >&2
+    printf '═══════════════════════════════════════════\n\n' >&2
+    exit 0
+
+elif [[ $FACTCHECK_EXIT -eq 1 || $FACTCHECK_EXIT -eq 2 ]]; then
+    # CRITICAL issues found — BLOCK deployment
+    printf '\n' >&2
+    printf '  RESULT: FAILED — CRITICAL issues found\n' >&2
+    printf '  Report: %s\n' "$REPORT_FILE" >&2
+    printf '\n' >&2
+    printf '  Деплой ЗАБЛОКИРОВАН.\n' >&2
+    printf '  Исправь CRITICAL ошибки и повтори.\n' >&2
+    printf '\n' >&2
+    printf '  Чтобы просмотреть отчёт:\n' >&2
+    printf '    cat %s\n' "$REPORT_FILE" >&2
+    printf '\n' >&2
+    printf '  Принудительный деплой (на свой риск):\n' >&2
+    printf '    FACTCHECK_SKIP=1 %s\n' "$COMMAND" >&2
+    printf '    # или добавь --factcheck-skip в команду\n' >&2
+    printf '═══════════════════════════════════════════\n\n' >&2
+
+    # Output block decision to stdout for Claude Code hook protocol
+    printf '{"decision":"block","reason":"Factcheck FAILED on %s — CRITICAL issues found. Fix before deploying. Report: %s. To bypass: FACTCHECK_SKIP=1"}\n' \
+        "$FILENAME" "$REPORT_FILE"
+    exit 2
+
+else
+    # Script error (exit 2 from factcheck = bad args, parse error, etc.)
+    log_warn "factcheck script exited with unexpected code $FACTCHECK_EXIT — skipping block"
+    exit 0
+fi

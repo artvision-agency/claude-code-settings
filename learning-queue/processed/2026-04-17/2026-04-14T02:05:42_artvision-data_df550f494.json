@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-14T02:05:42",
+  "repo": "artvision-data",
+  "commit": "df550f494",
+  "message": "sync: auto-sync 2026-04-14 session artefacts",
+  "signal_type": "workaround",
+  "detail": "workaround: +   - **Pending**: Live test with Groq has not yet succeeded (was about to retry when compaction tri",
+  "files": ["clients/unotrans/seo/crawl-2026-04-14/2026.04.14.01.52.44/canonicals_all.csv", "clients/unotrans/seo/crawl-2026-04-14/2026.04.14.01.52.44/crawl.seospider", "clients/unotrans/seo/crawl-2026-04-14/2026.04.14.01.52.44/directives_all.csv", "clients/unotrans/seo/crawl-2026-04-14/2026.04.14.01.52.44/h1_all.csv", "clients/unotrans/seo/crawl-2026-04-14/2026.04.14.01.52.44/h2_all.csv", "clients/unotrans/seo/crawl-2026-04-14/2026.04.14.01.52.44/internal_html.csv", "clients/unotrans/seo/crawl-2026-04-14/2026.04.14.01.52.44/meta_description_all.csv", "clients/unotrans/seo/crawl-2026-04-14/2026.04.14.01.52.44/page_titles_all.csv", "clients/unotrans/seo/crawl-2026-04-14/2026.04.14.01.52.44/response_codes_all.csv", "clients/unotrans/seo/crawl-2026-04-14/2026.04.14.01.52.44/structured_data_all.csv", "prompts/2026-04-14_session_1b023743.md", "prompts/2026-04-14_session_485840e2.md", "sessions/2026-04-14.jsonl", "sync/SYNC_STATUS.md"]
+}

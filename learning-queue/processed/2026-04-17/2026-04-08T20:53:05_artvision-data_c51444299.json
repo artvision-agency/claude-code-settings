@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-08T20:53:05",
+  "repo": "artvision-data",
+  "commit": "c51444299",
+  "message": "fix: remove Google Fonts, clean old competitors from aleksandra KP",
+  "signal_type": "error_resolution",
+  "detail": "fix: remove Google Fonts, clean old competitors from aleksandra KP",
+  "files": ["clients/aleksandra-dental/presale/kp/aleksandra_kp.html"]
+}

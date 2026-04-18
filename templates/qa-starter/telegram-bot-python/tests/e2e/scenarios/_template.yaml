@@ -1,0 +1,39 @@
+# E2E scenario template — copy to flow_<name>.yaml and fill in.
+# Each step is a single-key dict. Steps run sequentially; on first failure the scenario stops.
+
+name: "Basic /start flow with inline button"
+
+steps:
+  # 1. Send a command
+  - send_command: "/start"
+
+  # 2. Assert the welcome text
+  - assert_contains: "Welcome"
+
+  # 3. Assert the inline keyboard is present with expected buttons
+  - assert_keyboard: ["Start", "Help"]
+
+  # 4. Click an inline callback button
+  - click_callback: "Start"
+
+  # 5. Pause briefly if your bot calls external APIs
+  - sleep: 1.0
+
+  # 6. Assert the resulting screen (regex)
+  - assert_matches: "Step\\s*1\\s*of\\s*3"
+
+  # 7. Send a free-text reply
+  - send_text: "Yes"
+
+  # 8. Final state check
+  - assert_contains: "Confirmed"
+
+# Supported step shapes:
+#   send_command:    "/cmd"
+#   send_text:       "arbitrary text"
+#   click_button:    "Reply keyboard label"
+#   click_callback:  "Inline keyboard label"
+#   assert_contains: "substring"
+#   assert_matches:  "regex"
+#   assert_keyboard: ["Label 1", "Label 2"]
+#   sleep:           1.5

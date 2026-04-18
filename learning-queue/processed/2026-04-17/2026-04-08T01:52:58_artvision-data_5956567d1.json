@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-08T01:52:58",
+  "repo": "artvision-data",
+  "commit": "5956567d1",
+  "message": "fix: correct OTIDO Metrika counter ID (26554326, not 44473216)",
+  "signal_type": "error_resolution",
+  "detail": "fix: correct OTIDO Metrika counter ID (26554326, not 44473216)",
+  "files": ["clients/otido/config.yaml"]
+}

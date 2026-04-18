@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-18T14:59:01",
+  "repo": "artvision-data",
+  "commit": "65e6e84dc",
+  "message": "sync: session state 2026-04-18_14:58",
+  "signal_type": "workaround",
+  "detail": "workaround: +| \u0428\u0438\u0440\u0438\u043d\u0430 fallback <1024px \u043f\u0440\u0438 fixed 1600x900 | MEDIUM | .slide max-width:96vw | Tablet 1024-1366px ",
+  "files": ["clients/artvision-pro/presentation-research/design-review-2026-04-18.md", "clients/artvision-pro/presentation-research/ui-review-2026-04-18.md", "clients/zakvaski-rus/presale/screenshots/v3-2026-04-17/desktop-fold.jpg", "clients/zakvaski-rus/presale/screenshots/v3-2026-04-17/desktop-full.jpg", "clients/zakvaski-rus/presale/screenshots/v3-2026-04-17/mobile-fold.jpg", "clients/zakvaski-rus/presale/screenshots/v3-2026-04-17/mobile-full.jpg", "clients/zakvaski-rus/presale/screenshots/v3-2026-04-17/tablet-fold.jpg", "clients/zakvaski-rus/presale/screenshots/v3-2026-04-17/tablet-full.jpg", "clients/zakvaski-rus/presale/screenshots/v3-2026-04-17/zoom-mobile-header-nav.jpg", "clients/zakvaski-rus/presale/screenshots/v3-2026-04-17/zoom-mobile-hero-stats.jpg", "gantt-data.json", "sessions/2026-04-18.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

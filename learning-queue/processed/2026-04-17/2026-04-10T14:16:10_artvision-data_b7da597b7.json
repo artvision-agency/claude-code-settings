@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-10T14:16:10",
+  "repo": "artvision-data",
+  "commit": "b7da597b7",
+  "message": "chore: save session prompts before compact 2026-04-10_14:16",
+  "signal_type": "workaround",
+  "detail": "workaround: +- Wait 60 seconds and retry once",
+  "files": ["prompts/2026-04-10_session_979ad840.md"]
+}

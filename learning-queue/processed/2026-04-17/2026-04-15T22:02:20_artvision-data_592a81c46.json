@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-15T22:02:20",
+  "repo": "artvision-data",
+  "commit": "592a81c46",
+  "message": "chore: save session prompts before compact 2026-04-15_22:02",
+  "signal_type": "workaround",
+  "detail": "workaround: +     - Fix: Created the JSON file properly with Write tool, ready to retry",
+  "files": ["prompts/2026-04-15_session_dc7e6ff3.md"]
+}

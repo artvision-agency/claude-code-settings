@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-08T12:59:51",
+  "repo": "artvision-data",
+  "commit": "fa7942527",
+  "message": "sync: session state 2026-04-08_12:59",
+  "signal_type": "workaround",
+  "detail": "workaround: +        // Fallback to mailto",
+  "files": ["gantt-data.json", "research/massage-vacancies-spb-2026-04.html", "research/send_cv_api.py", "sessions/2026-04-08.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-14T02:29:30",
+  "repo": "artvision-data",
+  "commit": "f2d376fd9",
+  "message": "fix(artvision.pro): disable artvision-cro.php \u2014 rollback AI visual additions",
+  "signal_type": "error_resolution",
+  "detail": "fix(artvision.pro): disable artvision-cro.php \u2014 rollback AI visual additions",
+  "files": ["vps-mu-plugins/artvision-cro/artvision-cro.php.pre-disable-20260414"]
+}

@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-09T04:40:46",
+  "repo": "artvision-data",
+  "commit": "cb2b6ac20",
+  "message": "sync: session state 2026-04-09_04:40",
+  "signal_type": "workaround",
+  "detail": "workaround: +**Observed:** `--font-stack: 'Montserrat', -apple-system...` is declared in CSS root. However, ther",
+  "files": ["clients/aleksandra-dental/site/VISUAL-AUDIT.md", "sessions/2026-04-09.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

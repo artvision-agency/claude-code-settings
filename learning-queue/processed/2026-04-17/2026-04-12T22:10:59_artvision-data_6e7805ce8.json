@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-12T22:10:59",
+  "repo": "artvision-data",
+  "commit": "6e7805ce8",
+  "message": "chore: save session prompts before compact 2026-04-12_22:10",
+  "signal_type": "workaround",
+  "detail": "workaround: +   - **Reg.ru API ACCESS_DENIED_FROM_IP**: `curl api.reg.ru/api/regru2/zone/add_txt` with correct c",
+  "files": ["prompts/2026-04-12_session_ae9173ab.md"]
+}

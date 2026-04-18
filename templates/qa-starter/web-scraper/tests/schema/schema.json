@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://artvision.pro/schema/scrape-product.json",
+  "title": "ScrapedProduct",
+  "type": "object",
+  "required": ["name", "price", "url"],
+  "additionalProperties": true,
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "price": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100000000
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://"
+    },
+    "telephone": {
+      "type": "string",
+      "pattern": "^\\+?[0-9\\-\\s\\(\\)]{7,20}$"
+    },
+    "scraped_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

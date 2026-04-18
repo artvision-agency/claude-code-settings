@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-16T03:50:01",
+  "repo": "artvision-data",
+  "commit": "2f1e6cc0b",
+  "message": "auto-sync: 1 new,2 modified [2026-04-16 03:50]",
+  "signal_type": "workaround",
+  "detail": "workaround: +- **Fallback stack:** `Arial, sans-serif`.",
+  "files": ["clients/che-group/research.md", "presale/che-group/design-system.md", "sessions/2026-04-16.jsonl"]
+}

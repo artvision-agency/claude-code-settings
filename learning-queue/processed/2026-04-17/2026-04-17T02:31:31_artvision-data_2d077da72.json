@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-17T02:31:31",
+  "repo": "artvision-data",
+  "commit": "2d077da72",
+  "message": "sync: session state 2026-04-17_02:31",
+  "signal_type": "workaround",
+  "detail": "workaround: +    invalid due fallback, bare tags into tags JSON, long titles truncated,",
+  "files": ["dashboards/deploy/launchagents/asana-sync-cron.sh", "dashboards/deploy/launchagents/asana-sync-health.sh", "dashboards/deploy/launchagents/pro.artvision.asana-sync.plist", "dashboards/tests/test_tasks_parser.py", "sessions/2026-04-17.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

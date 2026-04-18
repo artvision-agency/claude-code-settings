@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-16T15:53:45",
+  "repo": "artvision-data",
+  "commit": "eb6d48c65",
+  "message": "sync: session state 2026-04-16_15:53",
+  "signal_type": "workaround",
+  "detail": "workaround: +# Fallback: \u0433\u0440\u0443\u043f\u043f\u0430 Artvision",
+  "files": ["clients/tvorim-sovershenstvo/monitoring/tg-export-general-chat-2026.md", "scripts/evening_digest_tg.py", "sessions/2026-04-16.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

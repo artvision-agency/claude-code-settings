@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-18T16:50:03",
+  "repo": "artvision-data",
+  "commit": "0d55ac391",
+  "message": "auto-sync: 6 new,6 modified [2026-04-18 16:50]",
+  "signal_type": "workaround",
+  "detail": "workaround: +Tests for llm.py \u2014 LLM-backed review generator (OpenRouter GLM cascade + fallback).",
+  "files": ["clients/tvorimsovershenstvo/survey-bot/.coverage", "clients/tvorimsovershenstvo/survey-bot/data/funnel.db", "clients/tvorimsovershenstvo/survey-bot/tests/conftest.py", "clients/tvorimsovershenstvo/survey-bot/tests/fixtures/medflex/schedule_empty.json", "clients/tvorimsovershenstvo/survey-bot/tests/fixtures/medflex/schedule_excluded.json", "clients/tvorimsovershenstvo/survey-bot/tests/fixtures/medflex/schedule_malformed.json", "clients/tvorimsovershenstvo/survey-bot/tests/fixtures/medflex/schedule_ok.json", "clients/tvorimsovershenstvo/survey-bot/tests/test_llm.py", "clients/tvorimsovershenstvo/survey-bot/tests/test_medflex.py", "clients/tvorimsovershenstvo/survey-bot/tests/test_state.py", "gantt-data.json", "logs/vps-recovery.md", "sessions/2026-04-18.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
+}

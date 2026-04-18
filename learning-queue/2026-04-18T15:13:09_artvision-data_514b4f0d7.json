@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-04-18T15:13:09",
+  "repo": "artvision-data",
+  "commit": "514b4f0d7",
+  "message": "fix(avtoworld-kp): broken B5-B5 image, closed footer, factcheck + deploy",
+  "signal_type": "error_resolution",
+  "detail": "fix(avtoworld-kp): broken B5-B5 image, closed footer, factcheck + deploy",
+  "files": ["clients/avtoworld/context-log.md"]
+}

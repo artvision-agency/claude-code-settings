@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>avtoworld — Аудит ссылочного профиля | artvision.pro LinkForge</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --av-black: #181818;
+    --av-pure-black: #000000;
+    --av-white: #ffffff;
+    --av-text-primary: #181818;
+    --av-text-secondary: #636663;
+    --av-text-dark: #323232;
+    --av-green: #059856;
+    --av-green-light: #1a7d52;
+    --av-pink: #d82b63;
+    --av-orange: #e07c1d;
+    --av-red: #c33648;
+
+    --av-bg-light: #f3f3f3;
+    --av-bg-white: #ffffff;
+    --av-bg-footer: #e1e1e1;
+    --av-border: #c8c8c8;
+    --av-border-dark: #000000;
+
+    --av-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--av-font);
+    color: var(--av-text-primary);
+    background: #e8e8e8;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+.report {
+    max-width: 1040px;
+    margin: 0 auto;
+    background: var(--av-bg-white);
+    box-shadow: 0 2px 40px rgba(0,0,0,0.12);
+}
+.page {
+    padding: 56px 64px;
+    border-bottom: 1px solid var(--av-border);
+}
+.page:last-child { border-bottom: none; }
+.page-dark {
+    padding: 56px 64px;
+    background: var(--av-pure-black);
+    color: var(--av-white);
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 32px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+}
+.header-top .brand { font-weight: 600; color: var(--av-white); }
+
+h1 {
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: -0.015em;
+}
+h2 {
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+}
+h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 24px 0 12px;
+}
+h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--av-text-secondary);
+}
+p { margin-bottom: 14px; color: var(--av-text-dark); font-size: 15px; }
+
+.subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    max-width: 620px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+}
+.stat {
+    background: var(--av-bg-light);
+    padding: 20px 18px;
+    border-radius: 10px;
+    border-left: 4px solid var(--av-green);
+}
+.stat.warn { border-left-color: var(--av-orange); }
+.stat.fail { border-left-color: var(--av-red); }
+.stat.manual { border-left-color: var(--av-text-secondary); }
+.stat .value {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.stat .label {
+    font-size: 12px;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.score-block {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    background: var(--av-bg-light);
+    padding: 28px;
+    border-radius: 12px;
+    margin: 20px 0 28px;
+}
+.score-big {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--av-green);
+    min-width: 160px;
+}
+.score-big.low { color: var(--av-red); }
+.score-big.mid { color: var(--av-orange); }
+.score-caption h3 { margin-top: 0; }
+
+.toc {
+    background: var(--av-bg-light);
+    padding: 24px 28px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+.toc ol { padding-left: 22px; }
+.toc li {
+    margin: 6px 0;
+    font-size: 15px;
+}
+.toc a {
+    color: var(--av-text-primary);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--av-border);
+}
+.toc a:hover { border-bottom-color: var(--av-green); color: var(--av-green); }
+
+.factor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 14px;
+}
+.factor-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--av-bg-light);
+    border-bottom: 2px solid var(--av-border-dark);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--av-text-dark);
+}
+.factor-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--av-border);
+    vertical-align: top;
+}
+.factor-table tr:hover td { background: #fafafa; }
+.factor-table .col-status { width: 72px; }
+.factor-table .col-id { width: 48px; color: var(--av-text-secondary); }
+.factor-table .col-sev { width: 90px; }
+.factor-table .col-name { width: 220px; font-weight: 600; }
+.factor-table .col-value { width: 130px; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.status-pass { background: #d8f0e4; color: var(--av-green-light); }
+.status-warn { background: #fde4cc; color: var(--av-orange); }
+.status-fail { background: #f8d4d9; color: var(--av-red); }
+.status-manual { background: #e4e4e4; color: var(--av-text-secondary); }
+.status-na { background: #f0f0f0; color: var(--av-text-secondary); }
+
+.sev-critical { color: var(--av-red); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+.sev-high { color: var(--av-orange); font-weight: 600; text-transform: uppercase; font-size: 11px; }
+.sev-medium { color: var(--av-text-dark); text-transform: uppercase; font-size: 11px; }
+.sev-low { color: var(--av-text-secondary); text-transform: uppercase; font-size: 11px; }
+
+.evidence {
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    line-height: 1.5;
+}
+
+.critical-list {
+    background: #fff5f6;
+    border-left: 4px solid var(--av-red);
+    padding: 18px 22px;
+    border-radius: 6px;
+    margin: 16px 0 24px;
+}
+.critical-list ol { padding-left: 22px; }
+.critical-list li {
+    margin: 8px 0;
+    font-size: 15px;
+    color: var(--av-text-dark);
+}
+.critical-list li strong { color: var(--av-red); }
+
+.meta-block {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 10px 18px;
+    margin: 24px 0;
+    font-size: 14px;
+    color: var(--av-text-dark);
+}
+.meta-block .key {
+    font-weight: 600;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding-top: 2px;
+}
+.meta-block .value { word-break: break-word; }
+.meta-block a { color: var(--av-green-light); }
+
+section.group { scroll-margin-top: 20px; }
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid var(--av-border-dark);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
+.group-stats {
+    font-size: 13px;
+    color: var(--av-text-secondary);
+}
+
+.chart-block {
+    background: var(--av-bg-light);
+    padding: 16px 20px 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    text-align: center;
+}
+.chart-block img {
+    max-width: 100%;
+    height: auto;
+}
+
+.provider-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+}
+.provider {
+    background: var(--av-bg-light);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 13px;
+}
+.provider.on { border-top: 3px solid var(--av-green); }
+.provider.off { border-top: 3px solid var(--av-border); color: var(--av-text-secondary); }
+.provider .name { font-weight: 600; }
+.provider .status { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+.provider.on .status { color: var(--av-green-light); }
+.provider.off .status { color: var(--av-text-secondary); }
+
+footer {
+    background: var(--av-bg-footer);
+    padding: 28px 64px;
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    text-align: center;
+}
+footer a { color: var(--av-green-light); text-decoration: none; }
+
+@media (max-width: 768px) {
+    .page, .page-dark { padding: 36px 24px; }
+    h1 { font-size: 30px; }
+    h2 { font-size: 22px; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .score-block { flex-direction: column; gap: 12px; text-align: center; }
+    .score-big { min-width: unset; font-size: 56px; }
+    .factor-table, .factor-table thead, .factor-table tbody, .factor-table tr, .factor-table td, .factor-table th { display: block; }
+    .factor-table thead { display: none; }
+    .factor-table td { border: none; padding: 4px 0; }
+    .factor-table tr { border-bottom: 1px solid var(--av-border); padding: 12px 0; }
+    .meta-block { grid-template-columns: 1fr; gap: 4px; }
+    .meta-block .key { margin-top: 10px; }
+    .provider-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media print {
+    body { background: white; }
+    .report { box-shadow: none; max-width: none; }
+    .page, .page-dark { padding: 24px; page-break-inside: avoid; }
+    section.group { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="report">
+
+<!-- ===== COVER ===== -->
+<div class="page-dark">
+    <div class="header-top">
+        <span class="brand">artvision.pro</span>
+        <span>LinkForge · 17.04.2026 07:47</span>
+    </div>
+    <h1>Аудит ссылочного профиля</h1>
+    <p class="subtitle">
+        avtoworld — сканирование сайта по 27 параметрам ссылочного ранжирования
+        Яндекса и наработкам агентства artvision.pro.
+    </p>
+    <div style="margin-top: 28px; font-size: 14px; color: rgba(255,255,255,0.85);">
+        <strong>Домен:</strong> <a href="https://avto.world" style="color: #76e0a8;">avto.world</a><br>
+        <strong>Конкуренты:</strong>
+<a href="https://vlpco.ru" style="color: #76e0a8;">vlpco.ru</a>, <a href="https://otido.ru" style="color: #76e0a8;">otido.ru</a><br>
+        <strong>Дата проверки:</strong> 17.04.2026 07:47
+    </div>
+</div>
+
+<!-- ===== EXECUTIVE SUMMARY ===== -->
+<div class="page">
+    <h2>Резюме</h2>
+
+    <div class="score-block">
+        <div class="score-big mid">45.5%</div>
+        <div class="score-caption">
+            <h3>5 из 11 автоматических факторов в норме</h3>
+            <p>
+                Всего проверено 27 факторов. Остальные — потенциал для роста массы,
+                снижения токсичности и закрытия разрыва с конкурентами. Фокус на критичных
+                пунктах даёт максимальный прирост трафика на первом этапе.
+            </p>
+        </div>
+    </div>
+
+    <div class="summary-grid">
+        <div class="stat">
+            <div class="value">5</div>
+            <div class="label">В норме</div>
+        </div>
+        <div class="stat fail">
+            <div class="value">2</div>
+            <div class="label">Разрывы</div>
+        </div>
+        <div class="stat warn">
+            <div class="value">4</div>
+            <div class="label">Внимание</div>
+        </div>
+        <div class="stat manual">
+            <div class="value">16</div>
+            <div class="label">Ручная проверка</div>
+        </div>
+    </div>
+
+    <h3>Топ критичных разрывов</h3>
+    <div class="critical-list">
+        <ol>
+            <li>
+                <strong>Ссылающиеся домены</strong>
+                <span style="color: var(--av-text-secondary); font-size: 13px;">
+                    (Внешний ссылочный профиль, severity: critical)
+                </span>
+                <div class="evidence" style="margin-top: 4px;">Ссылающихся хостов (Yandex.Webmaster): 0 (hosts, не доменов 2-го уровня)</div>
+            </li>
+            <li>
+                <strong>Ссылочная масса</strong>
+                <span style="color: var(--av-text-secondary); font-size: 13px;">
+                    (Внешний ссылочный профиль, severity: high)
+                </span>
+                <div class="evidence" style="margin-top: 4px;">Всего внешних ссылок (Yandex.Webmaster): 0 (только видимые Яндексу, реальное число может быть больше)</div>
+            </li>
+        </ol>
+    </div>
+
+    <h3 id="toc">Содержание</h3>
+    <div class="toc">
+        <ol>
+            <li><a href="#meta">Параметры проверки</a></li>
+            <li><a href="#grp-external_profile">Внешний ссылочный профиль</a> (12)</li>
+            <li><a href="#grp-anchor_toxicity">Анкор-лист и токсичность</a> (5)</li>
+            <li><a href="#grp-dynamics_age">Динамика и возраст массы</a> (3)</li>
+            <li><a href="#grp-internal_linking">Внутренняя перелинковка</a> (5)</li>
+            <li><a href="#grp-competitor_gap">Конкурентный разрыв</a> (2)</li>
+            <li><a href="#recommendations">Рекомендации и следующие шаги</a></li>
+        </ol>
+    </div>
+</div>
+
+<!-- ===== META ===== -->
+<section class="page" id="meta">
+    <h2>Параметры проверки</h2>
+    <div class="meta-block">
+        <div class="key">Домен сайта</div>
+        <div class="value"><a href="https://avto.world" target="_blank">avto.world</a></div>
+
+        <div class="key">Дата проверки</div>
+        <div class="value">17.04.2026 07:47 (UTC)</div>
+
+        <div class="key">Всего факторов</div>
+        <div class="value">27 (автоматических: 11, ручных: 16)</div>
+
+        <div class="key">Инструмент</div>
+        <div class="value">artvision.pro LinkForge — авторская методика аудита ссылочного профиля</div>
+
+        <div class="key">Краул сайта</div>
+        <div class="value">
+            Обработано страниц: <strong>74</strong>
+<br>Битых (пример): 10        </div>
+    </div>
+
+    <h3>Источники данных</h3>
+    <div class="provider-grid">
+        <div class="provider off">
+            <div class="name">Checktrust</div>
+            <div class="status">не подключён</div>
+        </div>
+        <div class="provider off">
+            <div class="name">Serpstat</div>
+            <div class="status">не подключён</div>
+        </div>
+        <div class="provider off">
+            <div class="name">Ahrefs</div>
+            <div class="status">не подключён</div>
+        </div>
+        <div class="provider off">
+            <div class="name">Majestic</div>
+            <div class="status">не подключён</div>
+        </div>
+        <div class="provider on">
+            <div class="name">Яндекс.Вебмастер</div>
+            <div class="status">подключён</div>
+        </div>
+    </div>
+    <p style="font-size: 13px; color: var(--av-text-secondary);">
+        Недоступные провайдеры отмечают свои факторы как «ручная проверка».
+        Для полного покрытия добавьте токен в <code>tokens.json</code>.
+    </p>
+</section>
+
+<!-- ===== GROUPS ===== -->
+<section class="page group" id="grp-external_profile">
+    <div class="group-header">
+        <h2>1. Внешний ссылочный профиль</h2>
+        <div class="group-stats">
+            <span style="color: var(--av-green);">1 в норме</span> ·
+            <span style="color: var(--av-red);">2 разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">6 ручных</span>
+        </div>
+    </div>
+
+
+
+
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th class="col-value">Значение</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">2</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Ссылающиеся домены</td>
+                <td class="col-value">
+0                </td>
+                <td>
+                    <div class="evidence">Ссылающихся хостов (Yandex.Webmaster): 0 (hosts, не доменов 2-го уровня)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Количество уникальных доменов-донаров. Ключевая метрика для Яндекса.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>yandex_webmaster</strong>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">1</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Ссылочная масса</td>
+                <td class="col-value">
+0                </td>
+                <td>
+                    <div class="evidence">Всего внешних ссылок (Yandex.Webmaster): 0 (только видимые Яндексу, реальное число может быть больше)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Общее количество входящих ссылок (dofollow+nofollow). Абсолют по нише.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>yandex_webmaster</strong>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">8</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Ссылки с главных vs внутренних</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Homepage: 11 (11%), Inner: 89 (89%) (из 100 сэмплов Webmaster)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        % ссылок с homepage доноров vs внутренние страницы. Гомо-баланс лучше.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>yandex_webmaster</strong>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">10</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">gov/edu доноры</td>
+                <td class="col-value">
+0                </td>
+                <td>
+                    <div class="evidence">gov/edu донаров: 0 (из 100 сэмплов). Примеры: нет</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Количество ссылок с .gov/.edu/.academy — редкие, но дают сильный траст.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>yandex_webmaster</strong>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">11</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Социальные сигналы</td>
+                <td class="col-value">
+1                </td>
+                <td>
+                    <div class="evidence">Упоминаний в соцсетях (SERP-оценка): ~1</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Упоминания в соцсетях (VK/TG/OK) — парсим через SERP-оператор.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>serp_parse</strong>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">6</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">TLD-распределение</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">TLD из 100 сэмплов Webmaster. .ru+.рф: 93.0%. Топ-5: .ru: 93, .com: 4, .info: 2, .wiki: 1</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        .ru/.рф vs .com/.net. Для рунета нужно &gt;40% ru-доменов.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>yandex_webmaster</strong>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">4</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">DR-распределение доноров</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [checktrust]. Добавь токен в tokens.json. Нет Checktrust bulk-вызова по всем донорам.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Гистограмма DR (0-20, 20-40, 40-60, 60-80, 80+). Нужно &gt;=5% high-DR.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">5</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Тематичность доноров</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [checktrust]. Добавь токен в tokens.json. Тематичность требует ручной категоризации донаров.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Доля донаров в тематике клиента (категория сайта совпадает).
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">3</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Уникальность доноров</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [serpstat]. Добавь токен в tokens.json. Нет данных по new/lost.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Доля новых донаров за последние 6 мес. &lt;10% = стагнация ссылочной.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">7</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Типы ссылок (follow)</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [checktrust]. Добавь токен в tokens.json. Нет follow-статистики.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        dofollow / nofollow / UGC / sponsored разбивка.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">12</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Brand mentions без ссылки</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [serp_parse]. Добавь токен в tokens.json. Нужен Ahrefs Content Explorer или Brand24.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Упоминания бренда в тексте без гиперссылки — потенциал к аутричу.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">9</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Rel=canonical на внешних</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [serpstat]. Добавь токен в tokens.json. Нестандартный паттерн, требуется ручная SERP-проверка.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Внешние страницы, указывающие canonical на нас (редкий паттерн цитирования).
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page group" id="grp-anchor_toxicity">
+    <div class="group-header">
+        <h2>2. Анкор-лист и токсичность</h2>
+        <div class="group-stats">
+            <span style="color: var(--av-green);">0 в норме</span> ·
+            <span style="color: var(--av-red);">0 разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">5 ручных</span>
+        </div>
+    </div>
+
+
+
+
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th class="col-value">Значение</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">13</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Распределение анкоров</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [checktrust]. Добавь токен в tokens.json. Нет данных по анкорам.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Brand / exact / partial / naked-url / generic. Нужен баланс, не &gt;20% exact.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">14</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Переспам точных анкоров</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [checktrust]. Добавь токен в tokens.json. Нет данных по анкорам.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        % анкоров с точным коммерческим вхождением. &gt;35% = высокий риск Минусинска.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">15</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Токсичные доноры</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [checktrust]. Добавь токен в tokens.json. Checktrust bulk по всем донорам платный.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        PBN-паттерны, дропы, спамные каталоги. Используем Checktrust X-Spam.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">16</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Авторские ссылки (footprint)</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [ahrefs]. Добавь токен в tokens.json. Нужен Ahrefs Content Explorer для author detection.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Один автор = много доноров. &gt;30 доноров от одного автора = red flag.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">17</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Нулевой анкор</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [checktrust]. Добавь токен в tokens.json. Нет данных по анкорам.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        % ссылок без анкора (наг URL или img). Ок до 40%.
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page group" id="grp-dynamics_age">
+    <div class="group-header">
+        <h2>3. Динамика и возраст массы</h2>
+        <div class="group-stats">
+            <span style="color: var(--av-green);">0 в норме</span> ·
+            <span style="color: var(--av-red);">0 разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">3 ручных</span>
+        </div>
+    </div>
+
+
+
+
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th class="col-value">Значение</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">18</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Возраст ссылочной массы</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [ahrefs]. Добавь токен в tokens.json. Нужен Ahrefs API.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Медианный возраст ссылки. Молодая масса (&lt;3 мес) = слабый траст.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">19</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Динамика прироста (12 мес)</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [serpstat]. Добавь токен в tokens.json. Webmaster history пуст.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        График прироста по месяцам. Спайк &gt;300% за месяц = подозрение на покупку.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">20</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Потерянные ссылки (lost)</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [ahrefs]. Добавь токен в tokens.json. Недостаточно исторических данных в Webmaster.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        % ссылок, пропавших за последние 30 дней. &gt;25% = разваливается донор-пул.
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page group" id="grp-internal_linking">
+    <div class="group-header">
+        <h2>4. Внутренняя перелинковка</h2>
+        <div class="group-stats">
+            <span style="color: var(--av-green);">4 в норме</span> ·
+            <span style="color: var(--av-red);">0 разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">0 ручных</span>
+        </div>
+    </div>
+
+
+
+
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th class="col-value">Значение</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">24</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Битые внутренние ссылки</td>
+                <td class="col-value">
+17                </td>
+                <td>
+                    <div class="evidence">Битых внутренних: 17</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        404 по внутренним ссылкам. Фикс через редиректы или удаление.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>crawl</strong>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">21</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Внутренняя перелинковка</td>
+                <td class="col-value">
+53.2                </td>
+                <td>
+                    <div class="evidence">Среднее внутренних ссылок на страницу: 53.2</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Среднее кол-во внутренних ссылок НА страницу. Нужно &gt;=3.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>crawl</strong>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">22</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Сиротские страницы</td>
+                <td class="col-value">
+0                </td>
+                <td>
+                    <div class="evidence">Сирот: 0 (из 74 страниц)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Страницы без входящих внутренних ссылок. &gt;20 = провал архитектуры.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>crawl</strong>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">23</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Глубина кликов</td>
+                <td class="col-value">
+1                </td>
+                <td>
+                    <div class="evidence">Максимальная глубина: 1 кликов</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Максимальная глубина до важных страниц. &gt;6 кликов = Яндекс не увидит.
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>crawl</strong>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">25</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Редиректы в ссылочной</td>
+                <td class="col-value">
+1                </td>
+                <td>
+                    <div class="evidence">Цепочек редиректов в ссылочной: 1</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        301-цепочки из внешних ссылок (теряем PR на каждом шаге).
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Источник: <strong>crawl</strong>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page group" id="grp-competitor_gap">
+    <div class="group-header">
+        <h2>5. Конкурентный разрыв</h2>
+        <div class="group-stats">
+            <span style="color: var(--av-green);">0 в норме</span> ·
+            <span style="color: var(--av-red);">0 разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">2 ручных</span>
+        </div>
+    </div>
+
+
+
+
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th class="col-value">Значение</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">26</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Ссылочный разрыв vs конкуренты</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [serpstat]. Добавь токен в tokens.json. Нет списка конкурентов или нет Serpstat API.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        % разрыв по ref domains. &gt;80% = догнать за год невозможно, нужна стратегия.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">27</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Уникальные доноры конкурентов</td>
+                <td class="col-value">
+—
+                </td>
+                <td>
+                    <div class="evidence">Требуется API [serpstat]. Добавь токен в tokens.json. Нет списка конкурентов или нет Serpstat API.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Доноры, которые ссылаются на конкурентов, но не на нас. Pool для аутрича.
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ===== RECOMMENDATIONS ===== -->
+<section class="page" id="recommendations">
+    <h2>Рекомендации и следующие шаги</h2>
+
+    <h3>Порядок работ</h3>
+    <ol style="padding-left: 24px;">
+        <li style="margin: 10px 0;">
+            <strong>Снять риск Минусинска</strong> — если переспам точных анкоров &gt; 20% или
+            доля токсичных донаров &gt; 5%, первый шаг — disavow или замена анкоров. Это блокирует рост.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Закрыть критичные разрывы</strong> — 2 пунктов
+            из топа дают базу доверия. Обычно решаются в первый месяц.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Закрыть пункты высокой важности</strong> — 1 факторов
+            со статусом severity: high. Вторая волна работ, 4-6 недель.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Закрыть ссылочный разрыв</strong> — если отставание от конкурентов &gt; 50%,
+            планируем линкбилдинг-стратегию (аутрич, гостевые, отраслевые площадки).
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Пункты ручной проверки</strong> — 16 факторов требуют
+            данных из платных API (Ahrefs, Serpstat premium) или ручного анализа донаров.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Повторный аудит через квартал</strong> — замеряем динамику: рост ref domains,
+            снижение токсичности, закрытие разрыва с конкурентами.
+        </li>
+    </ol>
+
+    <h3>Что делает artvision.pro</h3>
+    <p>
+        Команда закрывает ссылочные задачи поэтапно: чистка токсичных донаров, наращивание
+        качественной массы через аутрич и гостевые, работа с анкор-листом, улучшение
+        внутренней перелинковки. Формат — абонентское сопровождение с ежемесячной
+        отчётностью и повторным прогоном аудита раз в квартал.
+    </p>
+    <p>
+        Связь:
+        <a href="mailto:info@artvision.pro" style="color: var(--av-green-light);">info@artvision.pro</a>
+        ·
+        <a href="https://artvision.pro" style="color: var(--av-green-light);">artvision.pro</a>
+    </p>
+</section>
+
+<footer>
+    artvision.pro LinkForge · Отчёт сгенерирован 17.04.2026 07:47 ·
+    <a href="https://artvision.pro">artvision.pro</a>
+</footer>
+
+</div>
+</body>
+</html>
