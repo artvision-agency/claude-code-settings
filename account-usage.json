@@ -4,18 +4,6 @@
     "justtrance@gmail.com": {
       "sessions": [
         {
-          "date": "2026-04-18 15:07",
-          "turns": 1
-        },
-        {
-          "date": "2026-04-18 15:09",
-          "turns": 1
-        },
-        {
-          "date": "2026-04-18 15:10",
-          "turns": 1
-        },
-        {
           "date": "2026-04-18 15:11",
           "turns": 1
         },
@@ -202,10 +190,22 @@
         {
           "date": "2026-04-18 19:12",
           "turns": 1
+        },
+        {
+          "date": "2026-04-18 19:14",
+          "turns": 1
+        },
+        {
+          "date": "2026-04-18 20:13",
+          "turns": 1
+        },
+        {
+          "date": "2026-04-18 20:13",
+          "turns": 1
         }
       ],
-      "weekly_sessions": 219,
-      "weekly_turns": 219
+      "weekly_sessions": 222,
+      "weekly_turns": 222
     },
     "adw.artvision.pro@gmail.com": {
       "sessions": [
