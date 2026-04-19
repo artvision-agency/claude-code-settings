@@ -166,6 +166,8 @@ BLOCK_PATTERNS = [
     "клиент", "отправить", "позвонить", "написать клиенту", "опубликовать",
     "деплой на прод", "push to prod", "рассылка", "email клиенту",
     "счёт", "оплата", "NDA", "удалить", "drop", "rm -rf", "delete prod",
+    "сотрудничество", "партнёр", "предложение", "переговор", "созвон",
+    "встреча", "лид", "ответить", "написать в", "follow-up", "followup",
 ]
 
 def sanitize(text, max_len=500):
@@ -251,12 +253,12 @@ if [ -f "$TASK_INFO_FILE" ] && [ -s "$TASK_INFO_FILE" ]; then
         CLAUDE_BIN="${CLAUDE_BIN:-$(command -v claude 2>/dev/null || echo /Users/antonk/.local/bin/claude)}"
         if command -v gtimeout &>/dev/null; then
             gtimeout "$MAX_TASK_TIME" "$CLAUDE_BIN" -p "$PROMPT" \
-                --allowedTools "Read,Write,Edit,Glob,Grep" \
+                --allowedTools "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch" \
                 --model sonnet \
                 >> "$LOG" 2>&1 || log "Executor finished with code $?"
         else
             "$CLAUDE_BIN" -p "$PROMPT" \
-                --allowedTools "Read,Write,Edit,Glob,Grep" \
+                --allowedTools "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch" \
                 --model sonnet \
                 >> "$LOG" 2>&1 &
             CLAUDE_PID=$!

@@ -1,105 +1,168 @@
 #!/usr/bin/env python3
-"""
-Audio balance tester — автоматически проверяет равномерность громкости в видео.
+"""Audio balance tester — automatically checks loudness uniformity in video.
 
-Проверки:
-1. Integrated LUFS ±1.5 LU от target (-14 для соцсетей)
-2. Max peak < -1 dBTP (нет клиппинга)
-3. Разница loudness между первой половиной и концом < 3 dB (равномерно)
-4. Конец: трендовая проверка — последние 200мс ДОЛЖНЫ быть тише предыдущих 200-400мс
-   (естественный decay или fade-out), иначе hard-cut mid-word
+Tests:
+  1. Integrated LUFS within tolerance of target (-14 LUFS for socials)
+  2. Max peak below true-peak ceiling (no clipping)
+  3. Loudness difference between first half vs last 2s < THRESHOLD (balanced)
+  4. No hard-cut click at end — last 50ms peak not higher than preceding 500ms peak
 
-Выход: читаемый отчёт + exit code 0=PASS 1=FAIL
+Exit: 0 = PASS (all checks), 1 = FAIL (one or more checks failed).
 """
 from __future__ import annotations
-import subprocess, json, re, sys, argparse
+
+import argparse
+import json
+import re
+import subprocess
+import sys
 from typing import Optional
 
-def run(cmd: list[str]) -> subprocess.CompletedProcess:
-    return subprocess.run(cmd, capture_output=True, text=True)
+# ─── Tunable thresholds ──────────────────────────────────────────────
+LUFS_TARGET = -14.0           # TikTok/IG Reels/YouTube Shorts standard
+LUFS_TOLERANCE = 1.5          # ± deviation considered acceptable
+TRUE_PEAK_MAX = -1.0          # dBTP — stricter than broadcast
+SEGMENT_BALANCE_MAX_DB = 3.0  # max diff between first-half and last-2s mean
+END_SPIKE_MAX_DB = 3.0        # max peak spike in last 50ms vs prior 500ms
+END_WINDOW_SEC = 0.05         # "last" window to detect click
+PRIOR_WINDOW_SEC = 0.50       # "prior" window for comparison
+LAST_SEGMENT_SEC = 2.0        # size of "last segment" for balance check
+FFPROBE_TIMEOUT = 30
+FFMPEG_TIMEOUT = 120
 
-def measure_vol(file: str, ss: Optional[float] = None, t: Optional[float] = None) -> dict:
+# Regex patterns for ffmpeg stderr parsing
+RE_MEAN_VOL = re.compile(r"mean_volume:\s*(-?[\d.]+)\s*dB")
+RE_MAX_VOL = re.compile(r"max_volume:\s*(-?[\d.]+)\s*dB")
+RE_LUFS_INT = re.compile(r"Input Integrated:\s*(-?[\d.]+)\s*LUFS")
+RE_LUFS_TP = re.compile(r"Input True Peak:\s*(-?[\d.]+)\s*dBTP")
+
+
+class FFmpegError(RuntimeError):
+    """Raised when ffmpeg/ffprobe fails or output is unparsable."""
+
+
+# ─── FFmpeg helpers ──────────────────────────────────────────────────
+
+def ffprobe_duration(file: str) -> float:
+    """Get video duration in seconds. Raises FFmpegError on failure."""
+    r = subprocess.run(
+        ["ffprobe", "-v", "quiet", "-show_entries", "format=duration",
+         "-of", "csv=p=0", file],
+        capture_output=True, text=True, timeout=FFPROBE_TIMEOUT, check=False,
+    )
+    stdout = r.stdout.strip()
+    if r.returncode != 0 or not stdout:
+        raise FFmpegError(
+            f"ffprobe failed for {file}: rc={r.returncode} "
+            f"stderr={r.stderr[:200]!r} stdout={stdout!r}"
+        )
+    try:
+        return float(stdout)
+    except ValueError as e:
+        raise FFmpegError(f"ffprobe returned non-numeric duration: {stdout!r}") from e
+
+
+def ffmpeg_filter(file: str, af: str, ss: Optional[float] = None,
+                  t: Optional[float] = None) -> str:
+    """Run ffmpeg with audio filter and return stderr (where ffmpeg prints stats)."""
     cmd = ["ffmpeg", "-i", file]
-    if ss is not None: cmd += ["-ss", str(ss)]
-    if t is not None: cmd += ["-t", str(t)]
-    cmd += ["-af", "volumedetect", "-f", "null", "-"]
-    r = run(cmd)
-    mean = re.search(r"mean_volume:\s*(-?[\d.]+)\s*dB", r.stderr)
-    maxv = re.search(r"max_volume:\s*(-?[\d.]+)\s*dB", r.stderr)
-    return {
-        "mean": float(mean.group(1)) if mean else float("-inf"),
-        "max": float(maxv.group(1)) if maxv else float("-inf"),
-    }
+    if ss is not None:
+        cmd += ["-ss", str(ss)]
+    if t is not None:
+        cmd += ["-t", str(t)]
+    cmd += ["-af", af, "-f", "null", "-"]
+    r = subprocess.run(cmd, capture_output=True, text=True, timeout=FFMPEG_TIMEOUT, check=False)
+    if r.returncode != 0:
+        raise FFmpegError(f"ffmpeg rc={r.returncode}: {r.stderr[-500:]}")
+    return r.stderr
 
-def measure_lufs(file: str) -> dict:
-    r = run(["ffmpeg", "-i", file, "-af", "loudnorm=I=-14:print_format=summary", "-f", "null", "-"])
-    i = re.search(r"Input Integrated:\s*(-?[\d.]+)\s*LUFS", r.stderr)
-    tp = re.search(r"Input True Peak:\s*(-?[\d.]+)\s*dBTP", r.stderr)
-    return {
-        "integrated": float(i.group(1)) if i else 0.0,
-        "true_peak": float(tp.group(1)) if tp else 0.0,
-    }
 
-def test(file: str, target_lufs: float = -14, expect_speech_end: bool = True) -> dict:
-    dur_raw = run(["ffprobe", "-v", "quiet", "-show_entries", "format=duration", "-of", "csv=p=0", file]).stdout.strip()
-    dur = float(dur_raw)
+def parse_kv(stderr: str, patterns: dict[str, re.Pattern]) -> dict[str, float]:
+    """Extract matched values from stderr. Raises if any expected key missing."""
+    out: dict[str, float] = {}
+    for key, pat in patterns.items():
+        m = pat.search(stderr)
+        if not m:
+            raise FFmpegError(f"pattern for {key!r} not found in stderr")
+        out[key] = float(m.group(1))
+    return out
 
+
+# ─── Measurement functions ──────────────────────────────────────────
+
+def measure_vol(file: str, ss: Optional[float] = None,
+                t: Optional[float] = None) -> dict[str, float]:
+    """Measure mean + max volume (dB) in a window."""
+    stderr = ffmpeg_filter(file, "volumedetect", ss=ss, t=t)
+    return parse_kv(stderr, {"mean": RE_MEAN_VOL, "max": RE_MAX_VOL})
+
+
+def measure_lufs(file: str) -> dict[str, float]:
+    """Measure integrated LUFS + true peak dBTP."""
+    stderr = ffmpeg_filter(file, f"loudnorm=I={LUFS_TARGET}:print_format=summary")
+    return parse_kv(stderr, {"integrated": RE_LUFS_INT, "true_peak": RE_LUFS_TP})
+
+
+# ─── Test checks ────────────────────────────────────────────────────
+
+def test(file: str, target_lufs: float = LUFS_TARGET,
+         expect_speech_end: bool = True) -> dict:
+    dur = ffprobe_duration(file)
     results: dict = {"file": file, "duration": dur, "tests": []}
     tests: list = results["tests"]
 
-    # Test 1: Overall LUFS
+    # Test 1: integrated LUFS
     lufs = measure_lufs(file)
-    delta = lufs["integrated"] - target_lufs
     results["lufs"] = lufs
+    delta = lufs["integrated"] - target_lufs
     tests.append({
         "name": "Integrated LUFS",
-        "pass": abs(delta) <= 1.5,
-        "msg": f"{lufs['integrated']:+.1f} LUFS (target {target_lufs} ±1.5)",
+        "pass": abs(delta) <= LUFS_TOLERANCE,
+        "msg": f"{lufs['integrated']:+.1f} LUFS (target {target_lufs} ±{LUFS_TOLERANCE})",
     })
 
-    # Test 2: True peak
+    # Test 2: true peak
     tests.append({
-        "name": "True peak < -1 dBTP",
-        "pass": lufs["true_peak"] < -1.0,
+        "name": f"True peak < {TRUE_PEAK_MAX} dBTP",
+        "pass": lufs["true_peak"] < TRUE_PEAK_MAX,
         "msg": f"TP {lufs['true_peak']:.1f} dBTP",
     })
 
-    # Test 3: Segment balance first-half vs last 2s
+    # Test 3: segment balance (first half vs last 2s)
     half = dur / 2.0
-    last2_start = max(0.0, dur - 2.0)
+    last_start = max(0.0, dur - LAST_SEGMENT_SEC)
     first = measure_vol(file, 0, half)
-    last = measure_vol(file, last2_start, 2.0)
+    last = measure_vol(file, last_start, LAST_SEGMENT_SEC)
     diff = last["mean"] - first["mean"]
     results["first_half"] = first
-    results["last_2s"] = last
+    results["last_segment"] = last
     tests.append({
-        "name": "Segment balance (first vs last 2s)",
-        "pass": abs(diff) <= 3.0,
-        "msg": f"first={first['mean']:.1f}dB  last={last['mean']:.1f}dB  diff {diff:+.1f}dB (max ±3)",
+        "name": f"Segment balance (first vs last {LAST_SEGMENT_SEC}s)",
+        "pass": abs(diff) <= SEGMENT_BALANCE_MAX_DB,
+        "msg": (f"first={first['mean']:.1f}dB  last={last['mean']:.1f}dB  "
+                f"diff {diff:+.1f}dB (max ±{SEGMENT_BALANCE_MAX_DB})"),
     })
 
-    # Test 4: End — check for sudden click/spike at the very end (indicative of hard cut mid-phoneme)
-    # Rule: last 50ms max peak should not exceed prior 500ms max by more than 3 dB.
-    # Loudnorm often compresses fade-outs back, so trend-drop test is unreliable.
-    if expect_speech_end and dur >= 0.6:
-        prior500 = measure_vol(file, max(0, dur - 0.55), 0.5)  # t-550 → t-50
-        last50 = measure_vol(file, dur - 0.05, 0.05)            # t-50 → t-0
-        peak_spike = last50["max"] - prior500["max"]            # positive = spike at end
-        results["end_prior_500ms"] = prior500
-        results["end_last_50ms"] = last50
-        # Hard cut often produces a peak at the very last sample. Natural fade does not.
+    # Test 4: end-click detection
+    if expect_speech_end and dur >= (PRIOR_WINDOW_SEC + END_WINDOW_SEC + 0.1):
+        prior = measure_vol(file, dur - (PRIOR_WINDOW_SEC + END_WINDOW_SEC), PRIOR_WINDOW_SEC)
+        last_ms = measure_vol(file, dur - END_WINDOW_SEC, END_WINDOW_SEC)
+        peak_spike = last_ms["max"] - prior["max"]
+        results["end_prior"] = prior
+        results["end_last"] = last_ms
         tests.append({
             "name": "No hard-cut click at end",
-            "pass": peak_spike <= 3.0,
-            "msg": f"prior500ms peak={prior500['max']:.1f}dB  last50ms peak={last50['max']:.1f}dB  spike {peak_spike:+.1f}dB (max 3)",
+            "pass": peak_spike <= END_SPIKE_MAX_DB,
+            "msg": (f"prior{int(PRIOR_WINDOW_SEC*1000)}ms peak={prior['max']:.1f}dB  "
+                    f"last{int(END_WINDOW_SEC*1000)}ms peak={last_ms['max']:.1f}dB  "
+                    f"spike {peak_spike:+.1f}dB (max {END_SPIKE_MAX_DB})"),
         })
 
     passed = sum(1 for t in tests if t["pass"])
-    total = len(tests)
-    results["passed"] = passed
-    results["total"] = total
-    results["verdict"] = "PASS" if passed == total else "FAIL"
+    results.update(passed=passed, total=len(tests),
+                   verdict="PASS" if passed == len(tests) else "FAIL")
     return results
+
 
 def print_report(r: dict) -> None:
     print(f"\n📁 {r['file']} ({r['duration']:.2f}s)")
@@ -109,10 +172,11 @@ def print_report(r: dict) -> None:
         print(f"   {icon} {t['name']}: {t['msg']}")
     print(f"   → {r['verdict']} ({r['passed']}/{r['total']})")
 
-if __name__ == "__main__":
+
+def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("files", nargs="+")
-    ap.add_argument("--target", type=float, default=-14)
+    ap.add_argument("--target", type=float, default=LUFS_TARGET)
     ap.add_argument("--no-speech-check", action="store_true")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
@@ -124,11 +188,15 @@ if __name__ == "__main__":
             all_results.append(r)
             if not args.json:
                 print_report(r)
-        except Exception as e:
-            print(f"ERR {f}: {e}")
+        except FFmpegError as e:
+            print(f"✗ {f}: {e}", file=sys.stderr)
+            all_results.append({"file": f, "verdict": "ERROR", "error": str(e)})
 
     if args.json:
         print(json.dumps(all_results, indent=2, ensure_ascii=False))
 
-    failed = [r for r in all_results if r["verdict"] == "FAIL"]
-    sys.exit(1 if failed else 0)
+    return 1 if any(r.get("verdict") != "PASS" for r in all_results) else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
