@@ -230,6 +230,11 @@
             "type": "command",
             "command": "~/.claude/hooks/start-ai-evolve-alert.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-todo-tasks.sh",
+            "timeout": 5
           }
         ]
       },
@@ -238,6 +243,16 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SessionStart"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-todo-taskcreate.sh",
+            "timeout": 5
           }
         ]
       }
@@ -404,6 +419,12 @@
             "type": "command",
             "command": "~/.claude/hooks/pre-bash-recap-check.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-push-qa-check.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 180,
+            "statusMessage": "Running QA pipeline before push..."
           }
         ]
       },
@@ -586,6 +607,11 @@
             "type": "command",
             "command": "~/.claude/hooks/authority-barter-trigger.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prompt-taskcreate-nag.sh",
+            "timeout": 3
           }
         ]
       },
