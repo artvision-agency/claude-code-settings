@@ -607,11 +607,6 @@
             "type": "command",
             "command": "~/.claude/hooks/authority-barter-trigger.sh",
             "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/prompt-taskcreate-nag.sh",
-            "timeout": 3
           }
         ]
       },
@@ -620,6 +615,14 @@
           {
             "type": "command",
             "command": "/Users/antonk/.claude/hooks/seo-use-sf-reminder.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.claude/hooks/context-40pct-warn.sh"
           }
         ]
       }
