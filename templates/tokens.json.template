@@ -1,0 +1,127 @@
+{
+  "_comment": "tokens.json template. Сохранить как ~/artvision-data/tokens.json и заполнить реальные значения. НЕ коммитить в git — он в .gitignore.",
+  "_schema_version": "2026-04-21",
+  "_instructions": "Каждая секция — отдельный провайдер. Удали ненужные. Получи токены на указанных URL.",
+
+  "github": {
+    "_url": "https://github.com/settings/tokens",
+    "_scopes": "repo, read:org, workflow (90-day expiry)",
+    "primary": "",
+    "artvision_agency_pat": ""
+  },
+  "anthropic": {
+    "_url": "https://console.anthropic.com",
+    "api_key": ""
+  },
+  "openrouter": {
+    "_url": "https://openrouter.ai/keys",
+    "api_key": ""
+  },
+  "deepseek": {
+    "_url": "https://platform.deepseek.com",
+    "api_key": ""
+  },
+  "groq": {
+    "_url": "https://console.groq.com",
+    "api_key": ""
+  },
+  "gemini": {
+    "_url": "https://aistudio.google.com/apikey",
+    "api_key": ""
+  },
+  "huggingface": {
+    "_url": "https://huggingface.co/settings/tokens",
+    "api_key": ""
+  },
+
+  "telegram": {
+    "_botfather": "@BotFather",
+    "_my_telegram_org": "https://my.telegram.org",
+    "api_id": "",
+    "api_hash": "",
+    "avportal_bot": "",
+    "tvorims_bot": "",
+    "luxmarket_bot": "",
+    "tvorims_auto_bot": "",
+    "admin_id": "161261562"
+  },
+
+  "asana": {
+    "_url": "https://app.asana.com/-/developer_console",
+    "pat": "",
+    "workspace_gid": ""
+  },
+  "supabase": {
+    "_url": "https://supabase.com/dashboard/account/tokens",
+    "access_token": "",
+    "project_ref": "",
+    "anon_key": "",
+    "service_role": ""
+  },
+  "vercel": {
+    "_url": "https://vercel.com/account/tokens",
+    "token": ""
+  },
+
+  "yandex": {
+    "_url": "https://oauth.yandex.ru",
+    "direct_oauth": "",
+    "metrika_oauth": "",
+    "webmaster_oauth": ""
+  },
+  "yandex_360": {
+    "_url": "https://oauth.yandex.ru",
+    "admin_oauth": ""
+  },
+  "yandex_mail": {
+    "_comment": "App passwords, не основной пароль",
+    "boss_app_password": "",
+    "info_app_password": ""
+  },
+  "topvisor": {
+    "_url": "https://topvisor.com/api/",
+    "api_key": "",
+    "user_id": ""
+  },
+  "semrush": {"_url": "https://www.semrush.com/api-analytics/", "api_key": ""},
+  "dataforseo": {"_url": "https://dataforseo.com/apis", "login": "", "password": ""},
+  "google_search": {"_url": "https://console.cloud.google.com", "api_key": "", "cse_id": ""},
+  "google_indexing": {"service_account_json_path": ""},
+  "youtube": {"_url": "Google Cloud Console", "client_id": "", "client_secret": "", "refresh_token": ""},
+
+  "vps": {
+    "_comment": "SSH доступы. Ключи в ~/.ssh/ отдельно",
+    "beget": {"host": "", "user": "", "ssh_key_path": "~/.ssh/beget_key"},
+    "timeweb_healer": {"host": "", "user": "", "ssh_key_path": "~/.ssh/timeweb_healer"},
+    "otido": {"host": "", "user": "", "ssh_key_path": "~/.ssh/otido_key"}
+  },
+  "firstvds_panel": {"login": "", "password": ""},
+  "timeweb_cloud": {"api_key": ""},
+  "regru": {"username": "", "password": "", "api_key": ""},
+
+  "tilda": {"_url": "https://tilda.cc/projects/settings/api/", "public_key": "", "secret_key": ""},
+  "wordpress": {
+    "_sites": "kb.artvision.pro, artvision.pro и др.",
+    "kb_artvision_pro": {"url": "", "user": "", "app_password": ""},
+    "artvision_pro":    {"url": "", "user": "", "app_password": ""}
+  },
+
+  "uptimerobot": {"_url": "https://uptimerobot.com/dashboard#mySettings", "api_key": ""},
+  "healthchecks": {"_url": "https://healthchecks.io", "api_key": ""},
+
+  "remove_bg":     {"_url": "https://www.remove.bg/api", "api_key": ""},
+  "adsgram":       {"email": "", "block_id": ""},
+  "gameanalytics": {"game_key": "", "secret_key": ""},
+  "crazygames":    {"email": "", "password": ""},
+  "instagram":     {"username": "", "password": ""},
+  "vk_workspace":  {"_url": "https://dev.vk.com", "access_token": ""},
+  "2index_ninja":  {"api_key": ""},
+  "expired_domains": {"login": "", "password": ""},
+
+  "clients": {
+    "_comment": "Клиентские доступы (CMS, панели). Не использовать для презейлов — только с явного согласия.",
+    "geely_a2auto":  {"_cms": "Bitrix", "admin_url": "", "login": "", "password": ""},
+    "ant_partners":  {"_cms": "WordPress", "admin_url": "", "login": "", "app_password": ""},
+    "extru_tech":    {"_cms": "Tilda?", "admin_url": "", "login": "", "password": ""}
+  }
+}
