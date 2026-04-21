@@ -31,14 +31,17 @@ trap 'rm -f "$LOCKFILE"' EXIT
 PENDING=$(python3 "$HOME/.claude/scripts/link-inbox-query.py" --pending --limit 1 2>/dev/null || echo "[]")
 COUNT=$(echo "$PENDING" | python3 -c "import sys,json; print(len(json.load(sys.stdin)))" 2>/dev/null || echo "0")
 
+# Early exit: claude-invocation обрабатывает ТОЛЬКО link_inbox --pending.
+# Если там 0 — выходим, независимо от asana-pending (его обработает отдельный механизм).
+# Фикс 2026-04-21: экономия ~50-80K токенов × N вызовов впустую.
 if [ "$COUNT" = "0" ]; then
-    # Проверим asana-pending (пользователь нажал 📌 после обработки)
+    # Лог только для asana-pending сигнала (диагностика), но claude НЕ вызываем
     ASANA_PENDING=$(python3 "$HOME/.claude/scripts/link-inbox-query.py" --asana-pending --limit 1 2>/dev/null || echo "[]")
     A_COUNT=$(echo "$ASANA_PENDING" | python3 -c "import sys,json; print(len(json.load(sys.stdin)))" 2>/dev/null || echo "0")
-    if [ "$A_COUNT" = "0" ]; then
-        exit 0
+    if [ "$A_COUNT" != "0" ]; then
+        log "note: $A_COUNT asana-pending есть, но claude-invocation — только для link_inbox. Skip."
     fi
-    log "found $A_COUNT asana-pending"
+    exit 0
 fi
 
 log "found $COUNT pending link(s) — invoking Claude Code"
