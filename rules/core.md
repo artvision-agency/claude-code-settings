@@ -35,6 +35,8 @@
 - Код на VPS — только через git → deploy script. Прямое редактирование запрещено.
 - После деплоя бота — 5 мин мониторинг логов. 3+ рестарта = алерт.
 - X-Robots-Tag: noindex, nofollow — ОБЯЗАТЕЛЬНО для тестовых страниц. Проверять curl -sI.
+- Бэкап `robots.txt` перед любой правкой: `cp robots.txt robots.txt.bak_$(date +%Y%m%d)`. Confirmed 3+ (OTIDO, Avto.World, Atribeaute).
+- Bitrix: `resize_cache/iblock/` и экспорт XML — бэкап ПЕРЕД bulk update через админку/API.
 - Массовые операции (>5 файлов): dry-run → бэкап → 1-2 → проверка → остальные.
 
 ## Честность (no-smoothing)
