@@ -595,11 +595,6 @@
           },
           {
             "type": "command",
-            "command": "~/.claude/hooks/inject-knowledge.sh",
-            "timeout": 5
-          },
-          {
-            "type": "command",
             "command": "~/.claude/hooks/inject-challenge-reminder.sh",
             "timeout": 5
           },

@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
 # start-todo-tasks.sh — SessionStart hook.
-# Читает все активные TODO.md по контекстам и инжектит pending задачи
-# + ЖЁСТКУЮ инструкцию "создай TaskCreate для каждой" в system-reminder модели.
+# Инжектит top-5 priority:high задач (total, не per-file) из всех TODO.md.
 #
-# Цель: убрать "Я забыл создать TaskCreate" из повторяющихся ошибок.
-# Enforcement через hookSpecificOutput.additionalContext — модель ВИДИТ это
-# в первом system-reminder'е сессии, не опираясь на память/преференсы.
+# Цель: минимальный контекст, максимальный сигнал. Детали — в TODO файлах.
+# История: до 2026-04-22 инжектил top-31 (5h+3o × 5 files) → жрал ~5KB на старте.
 
 set -uo pipefail
 
-# TODO файлы по приоритету
 TODO_FILES=(
   "$HOME/artvision-data/TODO.md"
   "$HOME/artvision-data/presale/TODO.md"
@@ -18,49 +15,41 @@ TODO_FILES=(
   "$HOME/devops-agent/TODO.md"
 )
 
-# Собираем все pending ( `- [ ]` строки, макс 30 на файл — анти-флуд)
-ALL_PENDING=""
-COUNT=0
+# Глобальный счётчик pending (для контекста "5 из N")
 TOTAL=0
 for f in "${TODO_FILES[@]}"; do
   [ -f "$f" ] || continue
-  # Всего pending в файле (для счётчика)
   FILE_TOTAL=$(grep -c '^- \[ \]' "$f" 2>/dev/null || echo 0)
   TOTAL=$((TOTAL + FILE_TOTAL))
-  # Priority:high — max 5 per file
-  HIGH=$(grep '^- \[ \].*priority:high' "$f" 2>/dev/null | head -5)
-  # Остальные без priority:high — max 3 per file
-  OTHER=$(grep '^- \[ \]' "$f" 2>/dev/null | grep -v 'priority:high' | head -3)
-  PENDING=""
-  [ -n "$HIGH" ] && PENDING+="$HIGH"$'\n'
-  [ -n "$OTHER" ] && PENDING+="$OTHER"
-  if [ -n "$PENDING" ]; then
-    FILE_LABEL=$(echo "$f" | sed "s|$HOME/||")
-    ALL_PENDING+=$'\n\n── '"$FILE_LABEL"' ('"$FILE_TOTAL"$' pending) ──\n'"$PENDING"
-    N=$(echo "$PENDING" | grep -c '^- \[' || echo 0)
-    COUNT=$((COUNT + N))
-  fi
 done
 
-if [ "$COUNT" -eq 0 ]; then
-  # Нет pending — тихо выйти
+# Собираем все priority:high со всех файлов, берём top-5 (глобально)
+TOP_HIGH=""
+while IFS= read -r line; do
+  [ -n "$line" ] && TOP_HIGH+="$line"$'\n'
+done < <(
+  for f in "${TODO_FILES[@]}"; do
+    [ -f "$f" ] || continue
+    LABEL=$(echo "$f" | sed "s|$HOME/||" | sed 's|/TODO.md||')
+    grep '^- \[ \].*priority:high' "$f" 2>/dev/null | sed "s|^- \[ \]|- [$LABEL]|"
+  done | head -5
+)
+
+if [ -z "$TOP_HIGH" ]; then
   echo '{}'
   exit 0
 fi
 
-# Генерим JSON с additionalContext (escape-safe через jq)
-jq -n --arg pending "$ALL_PENDING" --arg count "$COUNT" --arg total "$TOTAL" '
+COUNT=$(echo -n "$TOP_HIGH" | grep -c '^-' || echo 0)
+
+jq -n --arg pending "$TOP_HIGH" --arg count "$COUNT" --arg total "$TOTAL" '
 {
   hookSpecificOutput: {
     hookEventName: "SessionStart",
     additionalContext: (
-      "📋 **АКТИВНЫЕ TODO — top " + $count + " из " + $total + " pending (full list в TODO.md файлах):**\n" +
+      "📋 TOP-" + $count + " priority:high (из " + $total + " pending total):\n" +
       $pending +
-      "\n\n**ОБЯЗАТЕЛЬНЫЕ ШАГИ (enforced через SessionStart hook — НЕ полагаться на память):**\n" +
-      "1. Для ВСЕХ задач с `[priority:high]` выше — СРАЗУ вызови TaskCreate (subject + description + relevant context).\n" +
-      "2. Покажи пользователю меню перекрёстка (session-crossroads.md): 1 Комбайн / 2 Интервью / 3 Обзор / 4 Синк / 5 Фикс.\n" +
-      "3. Жди выбор пользователя.\n\n" +
-      "Полный список pending: `cat ~/artvision-data/TODO.md` и связанные файлы."
+      "\nПолный список: TODO.md в контексте. Меню: 1 Комбайн / 2 Интервью / 3 Обзор / 4 Синк / 5 Фикс."
     )
   }
 }
