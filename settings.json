@@ -235,6 +235,11 @@
             "type": "command",
             "command": "~/.claude/hooks/start-todo-tasks.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-handover-pending.sh",
+            "timeout": 5
           }
         ]
       },
@@ -308,6 +313,11 @@
             "command": "~/.claude/hooks/stop-hallucination-detect.sh",
             "timeout": 10,
             "statusMessage": "Detecting hallucinations..."
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-handover-check.sh",
+            "timeout": 10
           }
         ]
       },
