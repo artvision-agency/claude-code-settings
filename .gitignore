@@ -25,6 +25,40 @@ security_warnings_state_*.json
 *.tmp
 .DS_Store
 
+# Auto-generated hook output (никогда не коммитим)
+smoothing-reports/
+learning-queue/
+latency.csv
+.account-alert-sent
+.last_local_session
+account-usage.json
+scheduled_tasks.lock
+
+# Telethon / SQLite session state (эфемерные)
+*.session
+*.session-shm
+*.session-wal
+
+# Backup directories (временные)
+.backups-*/
+settings.json.bak-*
+settings.json.bak_*
+
+# Runtime state / эфемерные каталоги
+handovers/.pending/
+channels/
+exports/
+logs/
+state/*.bak
+state/*.dead-*
+
+# External plugin symlinks (ломаются на другой машине)
+skills/gsap
+skills/hyperframes
+skills/hyperframes-cli
+skills/hyperframes-registry
+skills/website-to-hyperframes
+
 # ── Кэши ──
 cache/
 paste-cache/
