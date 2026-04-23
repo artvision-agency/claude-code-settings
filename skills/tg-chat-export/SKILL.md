@@ -59,7 +59,7 @@ Telethon session: `~/.claude/state/telethon_session`
 
 При ошибке авторизации:
 1. Сообщить пользователю: "Telethon сессия истекла, нужен код из TG"
-2. Запустить авторизацию с `client.start(phone='+79819139908')`
+2. Запустить авторизацию с `client.start(phone='+79110861888')` — телефон Антона (см. `memory/user_phone.md`)
 3. Попросить код у пользователя
 4. Ввести через `code_callback`
 

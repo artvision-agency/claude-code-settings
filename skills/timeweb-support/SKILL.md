@@ -177,7 +177,7 @@ python3 ~/.claude/scripts/tg-chat-export.py --chat-id <ID> --since {дата т�
 2. Запустить:
 ```python
 client = TelegramClient(SESSION, API_ID, API_HASH)
-await client.start(phone='+79819139908')
+await client.start(phone='+79110861888')  # Антон, см. memory/user_phone.md
 ```
 3. Попросить код у пользователя
 4. После авторизации повторить отправку
