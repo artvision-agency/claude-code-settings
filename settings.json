@@ -247,7 +247,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SessionStart"
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SessionStart",
+            "timeout": 5
           }
         ]
       },
@@ -273,11 +274,6 @@
           },
           {
             "type": "command",
-            "command": "~/.claude/hooks/stop-smoothing-check.sh",
-            "timeout": 180
-          },
-          {
-            "type": "command",
             "command": "~/.claude/hooks/stop-sync-all.sh",
             "timeout": 30
           },
@@ -300,16 +296,6 @@
           },
           {
             "type": "command",
-            "command": "~/.claude/hooks/stop-anti-rationalization.sh",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/stop-knowledge-reminder.sh",
-            "timeout": 10
-          },
-          {
-            "type": "command",
             "command": "~/.claude/hooks/stop-hallucination-detect.sh",
             "timeout": 10,
             "statusMessage": "Detecting hallucinations..."
@@ -326,7 +312,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh Stop",
-            "async": true
+            "async": true,
+            "timeout": 5
           }
         ]
       }
@@ -454,7 +441,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh PreToolUse",
-            "async": true
+            "async": true,
+            "timeout": 5
           }
         ]
       }
@@ -541,22 +529,13 @@
         ]
       },
       {
-        "matcher": "WebSearch|WebFetch",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/post-websearch-factcheck.sh",
-            "timeout": 5
-          }
-        ]
-      },
-      {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh PostToolUse",
-            "async": true
+            "async": true,
+            "timeout": 5
           }
         ]
       }
@@ -579,7 +558,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SessionEnd",
-            "async": true
+            "async": true,
+            "timeout": 5
           }
         ]
       }
@@ -590,7 +570,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh Notification",
-            "async": true
+            "async": true,
+            "timeout": 5
           }
         ]
       }
@@ -601,7 +582,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh UserPromptSubmit",
-            "async": true
+            "async": true,
+            "timeout": 5
           },
           {
             "type": "command",
@@ -619,7 +601,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/antonk/.claude/hooks/seo-use-sf-reminder.sh"
+            "command": "/Users/antonk/.claude/hooks/seo-use-sf-reminder.sh",
+            "timeout": 5
           }
         ]
       },
@@ -627,7 +610,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/antonk/.claude/hooks/context-40pct-warn.sh"
+            "command": "/Users/antonk/.claude/hooks/context-40pct-warn.sh",
+            "timeout": 5
           }
         ]
       }
@@ -638,7 +622,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SubagentStart",
-            "async": true
+            "async": true,
+            "timeout": 5
           }
         ]
       }
@@ -649,7 +634,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SubagentStop",
-            "async": true
+            "async": true,
+            "timeout": 5
           }
         ]
       }
@@ -659,7 +645,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh WorktreeCreate"
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh WorktreeCreate",
+            "timeout": 5
           }
         ]
       }
@@ -670,7 +657,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh WorktreeRemove",
-            "async": true
+            "async": true,
+            "timeout": 5
           }
         ]
       }
@@ -681,7 +669,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh TeammateIdle",
-            "async": true
+            "async": true,
+            "timeout": 5
           }
         ]
       }
@@ -692,7 +681,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh TaskCompleted",
-            "async": true
+            "async": true,
+            "timeout": 5
           }
         ]
       }
