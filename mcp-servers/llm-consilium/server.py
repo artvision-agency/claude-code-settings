@@ -27,8 +27,9 @@ from fastmcp import FastMCP
 
 TOKENS_PATH = os.path.expanduser("~/artvision-data/tokens.json")
 
-MASTER_MODEL = "kimi-k2"      # reasoning model for synthesis (Moonshot Kimi K2)
-MASTER_FALLBACK = "llama"      # fast fallback
+MASTER_MODEL = "gpt-oss-groq"  # 120B reasoning, FREE on Groq — stable default
+MASTER_FALLBACK = "llama"       # 70B fast fallback (Groq FREE)
+# Upgrade path: set MASTER_MODEL="kimi-k2-thinking" or "deepseek-r1" when OR credits available
 
 
 def get_tokens() -> dict:
@@ -46,11 +47,36 @@ MODELS = {
         "cost": "FREE",
         "strengths": ["general", "summarization", "creative", "russian"],
     },
+    # kimi-k2 snatched from Groq (2026-04). Now only via OpenRouter (paid).
     "kimi-k2": {
-        "provider": "groq",
-        "model_id": "moonshotai/kimi-k2-instruct",
-        "cost": "FREE",
+        "provider": "openrouter",
+        "model_id": "moonshotai/kimi-k2-thinking",
+        "cost": "PAID (OR credits)",
         "strengths": ["reasoning", "logic", "synthesis", "code", "math"],
+    },
+    "kimi-k2-latest": {
+        "provider": "openrouter",
+        "model_id": "moonshotai/kimi-k2.6",
+        "cost": "PAID (OR credits)",
+        "strengths": ["latest", "reasoning", "long_context"],
+    },
+    "deepseek-r1": {
+        "provider": "openrouter",
+        "model_id": "deepseek/deepseek-r1-0528",
+        "cost": "PAID (OR credits)",
+        "strengths": ["reasoning", "synthesis", "master_synthesizer"],
+    },
+    "deepseek-v4-pro": {
+        "provider": "deepseek",
+        "model_id": "deepseek-v4-pro",
+        "cost": "PAID (DeepSeek credits)",
+        "strengths": ["reasoning", "cheap_than_OR"],
+    },
+    "deepseek-v4-flash": {
+        "provider": "deepseek",
+        "model_id": "deepseek-v4-flash",
+        "cost": "PAID (DeepSeek credits)",
+        "strengths": ["fast", "cheap"],
     },
     "qwen3": {
         "provider": "groq",
@@ -391,7 +417,7 @@ def ask_auto(
 @mcp.tool()
 def round_table(
     prompt: str,
-    models: str = "llama,kimi-k2,qwen3",
+    models: str = "llama,qwen3,gpt-oss-groq",
     system_prompt: str = "",
     synthesize: bool = True,
     master: str = "",
