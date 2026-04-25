@@ -138,7 +138,7 @@ print(f'{len(out)} projects')
 
 Антон в конце сессии: **«это уже не Карта Топов — это общий мониторинг = наш продукт»**.
 
-«Карта Топов» = один из view внутри **Artvision Pulse** (мониторинг) или **Artvision Flow** (SEO-конвейер). Решить в новой сессии.
+«Карта Топов» = один из view внутри **Artvision Flow** (SEO-конвейер). ✅ РЕШЕНО Антоном 2026-04-25 22:30. Целевой путь: `products/flow/regions/` (переименование из `products/karta-topov/` в новой сессии).
 
 ## 🧮 Концепция: Priority Score (Hot Keys)
 
@@ -202,7 +202,7 @@ products/<pulse|flow>/regions/   ← возможно переименовать
 
 (перенумеровать вместе с предыдущими 6 пунктами)
 
-7. **Решение с Антоном:** Pulse или Flow? Одно слово, влияет на путь `products/<name>/`
+7. ~~Решение с Антоном: Pulse или Flow?~~ ✅ **Flow** (зафиксировано 2026-04-25). Переименовать `products/karta-topov/` → `products/flow/regions/`, обновить деплой-путь VPS `/var/www/artvision/flow-demo/regions/` (или оставить `karta-topov-demo` как алиас).
 8. **Pre-flight inventory** — перечитать `scripts/topvisor_serp.py` целиком (есть ли уже частично классификация SERP), `scripts/serp-cluster.py` (можно ли извлечь маркерный ключ из готовой кластеризации)
 9. **`serp_classifier.py`** — список агрегаторных доменов + helper `classify_url(url) → tag` → дополнить `topvisor_serp.py` колонкой типа
 10. **`priority_score.py`** — собирает все готовые куски в одну формулу. ВАЖНО: не дублировать сбор данных, читать готовые JSON из output/ скриптов выше.
