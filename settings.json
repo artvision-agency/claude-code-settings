@@ -312,8 +312,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh Stop",
-            "async": true,
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           }
         ]
       }
@@ -346,6 +346,11 @@
             "type": "command",
             "command": "~/.claude/hooks/pre-client-lexicon.sh",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-tmp-write-guard.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
           }
         ]
       },
@@ -371,6 +376,11 @@
             "type": "command",
             "command": "~/.claude/hooks/pre-memory-write.sh \"$CLAUDE_FILE_PATH\"",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-tmp-write-guard.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
           }
         ]
       },
@@ -422,6 +432,16 @@
             "command": "~/.claude/hooks/pre-push-qa-check.sh \"$CLAUDE_BASH_COMMAND\"",
             "timeout": 180,
             "statusMessage": "Running QA pipeline before push..."
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-vps-git-guard.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-cleanup-tokens-check.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 6
           }
         ]
       },
@@ -441,8 +461,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh PreToolUse",
-            "async": true,
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           }
         ]
       }
@@ -525,6 +545,11 @@
             "type": "command",
             "command": "~/.claude/hooks/post-scp-screenshot.sh",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-scp-deploy-report.sh",
+            "timeout": 3
           }
         ]
       },
@@ -534,8 +559,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh PostToolUse",
-            "async": true,
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           }
         ]
       }
@@ -558,8 +583,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SessionEnd",
-            "async": true,
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           }
         ]
       }
@@ -570,8 +595,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh Notification",
-            "async": true,
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           }
         ]
       }
@@ -582,8 +607,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh UserPromptSubmit",
-            "async": true,
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           },
           {
             "type": "command",
@@ -593,6 +618,11 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/authority-barter-trigger.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prompt-taskcreate-nag.sh",
             "timeout": 5
           }
         ]
@@ -622,8 +652,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SubagentStart",
-            "async": true,
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           }
         ]
       }
@@ -634,8 +664,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SubagentStop",
-            "async": true,
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           }
         ]
       }
@@ -657,8 +687,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh WorktreeRemove",
-            "async": true,
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           }
         ]
       }
@@ -669,8 +699,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh TeammateIdle",
-            "async": true,
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           }
         ]
       }
@@ -681,8 +711,8 @@
           {
             "type": "command",
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh TaskCompleted",
-            "async": true,
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           }
         ]
       }
@@ -717,5 +747,7 @@
     }
   },
   "skipDangerousModePermissionPrompt": true,
+  "autoCompactEnabled": false,
+  "agentPushNotifEnabled": true,
   "voiceEnabled": true
 }
