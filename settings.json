@@ -624,6 +624,11 @@
             "type": "command",
             "command": "~/.claude/hooks/prompt-taskcreate-nag.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prompt-medical-mcp-reminder.sh",
+            "timeout": 5
           }
         ]
       },
