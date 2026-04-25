@@ -37,3 +37,30 @@
   3. Self-disable после первого TaskCreate или >10 turns
   4. Активация на новой сессии или через `/hooks` reload
 - **Слой 2 (если #9 повторится):** PreToolUse-блокировка на любом tool кроме TaskCreate при pending>0, whitelist READ-only (Bash(git|ls|cat|pwd), Read)
+
+## МЕТА-ПРАВИЛО: инцидент → хук, не «запомню»
+
+Когда деструктивный инцидент случился — **обязательно создать PreToolUse-хук** с детерминистичной проверкой. Не полагаться на «запишу в правило» / «буду внимательнее» / «теперь знаю».
+
+Причина: правила в md-файлах — это **моя память**, которая в моменте не срабатывает (см. инциденты #8, #9 и инцидент 23.04 с потерей коммита 9973dc3 — все три случая правило было, но я его не вспомнил). Хук работает на уровне харнеса, не зависит от моего внимания.
+
+Алгоритм после нового инцидента:
+1. Идентифицировать паттерн (regex по команде / пути / args)
+2. Написать `~/.claude/hooks/pre-<thing>-guard.sh` с exit 1 + bypass через env
+3. Зарегистрировать в `~/.claude/settings.json` под нужный matcher (Bash / Edit / Write)
+4. Тест: 3+ кейса блокировки + 3+ кейса пропуска + bypass
+5. Дописать в текущий файл строку под «Активные защитные хуки»
+
+### Активные защитные хуки
+
+| Хук | Matcher | Прецедент | Bypass env |
+|-----|---------|-----------|-----------|
+| `pre-push-qa-check.sh` | Bash | 18.04 — push без QA, 3× security CRIT в проде | `QA_SKIP=1` |
+| `pre-vps-git-guard.sh` | Bash | 23.04 — потеря коммита 9973dc3 через `ssh git pull --rebase` | `VPS_GIT_FORCE=1` |
+| `pre-tmp-write-guard.sh` | Write+Edit | 23.04 — `/tmp/gen_dental_reports.py` потерян при reboot | `TMP_WRITE_FORCE=1` |
+| `pre-cleanup-tokens-check.sh` | Bash | 17.04 — `rm -rf ~/.npm` убил YouTube OAuth (invalid_grant) | `CLEANUP_FORCE=1` |
+| `prompt-taskcreate-nag.sh` | UserPromptSubmit | 18-19.04 — TaskCreate пропуск при 180 pending | (auto-disable) |
+| `inject-challenge-reminder.sh` | UserPromptSubmit | магические цифры без источника | (auto после Skill) |
+| `stop-hallucination-detect.sh` | Stop | детект галлюцинаций в ответе | — |
+
+При добавлении нового хука — **сразу обновить таблицу**.
