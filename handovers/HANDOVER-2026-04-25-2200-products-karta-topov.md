@@ -134,6 +134,81 @@ print(f'{len(out)} projects')
 - Topvisor аккаунт: `tokens.json` → `topvisor.user_id` / `topvisor.api_key`
 - Реестр клиентов: `.claude/rules/clients-registry.md` (9 платящих, в т.ч. Burenie-SKV, OTIDO, Geely A2Auto)
 
+## 🔄 Переклассификация продукта (важно!)
+
+Антон в конце сессии: **«это уже не Карта Топов — это общий мониторинг = наш продукт»**.
+
+«Карта Топов» = один из view внутри **Artvision Pulse** (мониторинг) или **Artvision Flow** (SEO-конвейер). Решить в новой сессии.
+
+## 🧮 Концепция: Priority Score (Hot Keys)
+
+Развитие от Антона: не просто карта позиций, а **приоритизатор ключей** — какие двигать первыми, чтобы быстрее получить органику + поведенческие.
+
+```
+PriorityScore =
+    Frequency_Wordstat
+  × (1 − AggregatorShare_TOP10)         // мало агрегаторов = шанс есть
+  × (1 − SpecPlacementCount/4)          // мало спецразмещения = выше орг. CTR
+  × ContentStrength_avgTop10            // у конкурентов в ТОПе мало бэклинков → слабая ниша
+  × ClusterAnchorWeight                 // маркерный (главный ключ кластера) = бонус
+  × OurPositionProximity                // мы рядом с ТОПом → толкнуть проще
+```
+
+**ContentStrength** = `1/(avg_backlinks_TOP10 + 1)` — гипотеза Антона: страница в ТОПе с малым числом ссылок = сильный контент сам по себе → ниша где можно встать без линкбилдинга.
+
+## 🧰 Инвентаризация: что уже есть в репо
+
+ГОТОВО:
+- `scripts/topvisor_serp.py` — SERP top-10 сбор
+- `scripts/serp-cluster.py` — SERP-кластеризация (hard/soft, threshold)
+- `scripts/seo-cluster.py` — embeddings-кластеризация
+- `scripts/topvisor_validate_clusters.py` — валидация кластеров
+- `scripts/topvisor_multiregion.py` — устарел (баг с positionsData parsing), использовать новый `products/karta-topov/collect_data.py`
+- `scripts/semrush_backlink_gap.py` — Semrush Backlink Gap через Playwright
+- `scripts/semrush_top_pages.py` — Semrush Top Pages (URL → traffic + backlinks)
+- `scripts/direct_search_queries_monitor.py` — мониторинг запросов в Директе
+- `scripts/direct_moderation_check.py` — модерация Директа
+- Wordstat API — `tokens.json yandex.wordstat` + rule `.claude/rules/yandex-api.md`
+- `dashboards/engine/modules/` — есть `traffic.py`, `marketplaces.py`, `tasks.py`, `competitors_finance.py` → сюда добавлять новые модули
+
+НЕТ (доработка):
+- **Aggregator detection** в SERP — нужен список доменов (wildberries, ozon, market.yandex, avito, zoon, 2gis, prom, dzen, …) и классификатор URL → пометка тип в `topvisor_serp.py` (наш/конкурент/агрегатор/маркетплейс/Дзен/соцсеть)
+- **Spec placement count** Директа в выдаче — нет детекции (через Direct API spec-placement endpoint или scrape SERP-блока)
+- **ContentStrength** — данные есть в Semrush, формулы как метрики нет
+- **PriorityScore** агрегатор — нового скрипта `priority_score.py` нет
+- UI-вьюшка ключей по приоритету — нет
+
+## 🏗️ Целевая архитектура (план для новой сессии)
+
+```
+dashboards/engine/modules/
+  ├── priority_engine.py   ← НОВЫЙ — собирает PriorityScore из готовых компонентов
+  ├── serp_classifier.py   ← НОВЫЙ — детект агрегаторов/МП/Дзена в SERP (список доменов)
+  ├── traffic.py           ← есть
+  ├── marketplaces.py      ← есть
+  └── ...
+
+products/<pulse|flow>/regions/   ← возможно переименовать из products/karta-topov/
+  ├── collect_data.py            ← уже есть
+  ├── priority_score.py          ← НОВЫЙ — точка входа сборки
+  ├── index.html                 ← view «Регионы» (готов)
+  └── views/
+      ├── hot-keys.html          ← view «Топ ключей по PriorityScore»
+      ├── clusters.html          ← view «Кластеры»
+      └── gap.html               ← view «Gap: регионы сайта vs Topvisor»
+```
+
+## 🔜 Дополнения к следующим шагам
+
+(перенумеровать вместе с предыдущими 6 пунктами)
+
+7. **Решение с Антоном:** Pulse или Flow? Одно слово, влияет на путь `products/<name>/`
+8. **Pre-flight inventory** — перечитать `scripts/topvisor_serp.py` целиком (есть ли уже частично классификация SERP), `scripts/serp-cluster.py` (можно ли извлечь маркерный ключ из готовой кластеризации)
+9. **`serp_classifier.py`** — список агрегаторных доменов + helper `classify_url(url) → tag` → дополнить `topvisor_serp.py` колонкой типа
+10. **`priority_score.py`** — собирает все готовые куски в одну формулу. ВАЖНО: не дублировать сбор данных, читать готовые JSON из output/ скриптов выше.
+11. **View «Hot Keys»** — рядом с картой регионов, таблица топ-20 ключей по `PriorityScore` для выбранного региона
+12. **Кластерный фильтр** на UI — выбираешь кластер → метрики и список ключей пересчитываются
+
 ## 🎬 Состояние при закрытии
 
 - ✅ git: незакоммичено (products/karta-topov/* + handover файл) — закоммитить в новой сессии
