@@ -442,6 +442,11 @@
             "type": "command",
             "command": "~/.claude/hooks/pre-cleanup-tokens-check.sh \"$CLAUDE_BASH_COMMAND\"",
             "timeout": 6
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-strip-script-guard.sh",
+            "timeout": 5
           }
         ]
       },
