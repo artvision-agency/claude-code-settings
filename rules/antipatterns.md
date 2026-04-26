@@ -23,6 +23,8 @@
 | Числа без источника в КП/отчёт | CONFIRMED / UNCONFIRMED / WRONG маркировка |
 | AI/нейросети в публичных материалах | "Авторская методология", "Экспертный анализ" |
 | Код напрямую на VPS через SSH | git repo → commit → push → deploy script |
+| Копировать SVG/цвет одного бренда на UI другого (WhatsApp→Max, Analytics Pro→DemosMed) | Извлечь брендинг из официального источника. Max=#0077FF (max.ru). Мессенджер-SVG не переиспользовать. Прецедент: vaysman 23.02 |
+| `section:nth-child(even)` для CTA/footer без `!important` | CTA/footer всегда `background: ... !important` или inline-style — иначе nth-child cascade перебьёт фон. Прецедент: vaysman 23.02 |
 
 ## Взаимодействие
 
@@ -42,3 +44,6 @@
 | Создавать новый файл вместо расширения | Расширить существующий |
 | Массовая операция без dry-run | `--dry-run` → проверить → выполнить |
 | Деструктивная операция без бэкапа | `git stash` или `cp file.bak` ПЕРЕД правкой |
+| Валидация HTML/DOM через `grep`/`wc -l` (CSS-классы в `<style>` ≠ DOM-элементы) | BeautifulSoup/lxml DOM-парсинг. Skill `/validate-pages`. Считать секции до и после изменений. Прецедент: ant-partners 10.02 ("14/14 PASS, реально 8/14") |
+| Валидатор без regression-проверки (наличие vs предыдущий счётчик) | Сохранять `.section-counts.json` baseline → fail если стало меньше. Прецедент: ant-partners 24.02 ("29/29 PASS при 157 удалённых секциях") |
+| Strip/clean скрипт (`*strip*.py`, `*clean*.py`, `*fix_*.py`) на `clients/*/` без бэкапа | `git stash` ИЛИ feature branch ДО запуска + `--dry-run` первым прогоном. Если файлов/секций упало >10% → STOP. Хук `pre-strip-script-guard.sh` (Bash) блокирует. Прецедент: ant-partners 24.02 (157 секций), 03.03 (564→72 файла, -87%) |
