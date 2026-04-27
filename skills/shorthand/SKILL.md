@@ -84,6 +84,7 @@ disable-model-invocation: false
 | чакры почисти | Перезагрузи контекст |
 | пенсил / pencil | Pencil.dev (AI дизайн) |
 | референс / ref | Визуальный референс |
+| отзов / Отзов | биржа отзывов qcomment.com (API в tokens.json) |
 
 ## Аккаунты Claude
 
