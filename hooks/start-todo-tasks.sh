@@ -1,55 +1,48 @@
 #!/usr/bin/env bash
 # start-todo-tasks.sh — SessionStart hook.
-# Инжектит top-5 priority:high задач (total, не per-file) из всех TODO.md.
+# Инжектит top-5 priority:high задач ТОЛЬКО из TODO текущего контекста сессии.
 #
+# Контекст определяется через ~/.claude/scripts/lib/todo-route.sh (cwd → ctx).
+# Если cwd=$HOME (нет явной сессии) → silent exit, top не инжектится.
 # Цель: минимальный контекст, максимальный сигнал. Детали — в TODO файлах.
-# История: до 2026-04-22 инжектил top-31 (5h+3o × 5 files) → жрал ~5KB на старте.
+# История:
+#   - до 2026-04-22 — top-31 (5h+3o × 5 files), ~5KB на старте
+#   - до 2026-04-27 — top-5 со ВСЕХ 5 TODO (ops+bot+infra+presale+products)
+#   - после 2026-04-27 — top-5 ТОЛЬКО текущего контекста (фильтр по cwd)
 
 set -uo pipefail
 
-TODO_FILES=(
-  "$HOME/artvision-data/TODO.md"
-  "$HOME/artvision-data/presale/TODO.md"
-  "$HOME/artvision-data/products/TODO.md"
-  "$HOME/artvision-tg-bot/TODO.md"
-  "$HOME/devops-agent/TODO.md"
-)
+LIB="${HOME}/.claude/scripts/lib/todo-route.sh"
+[ -f "$LIB" ] || { echo '{}'; exit 0; }
+# shellcheck source=/dev/null
+source "$LIB"
 
-# Глобальный счётчик pending (для контекста "5 из N")
-TOTAL=0
-for f in "${TODO_FILES[@]}"; do
-  [ -f "$f" ] || continue
-  FILE_TOTAL=$(grep -c '^- \[ \]' "$f" 2>/dev/null || echo 0)
-  TOTAL=$((TOTAL + FILE_TOTAL))
-done
+mapping="$(todo_for_cwd "${PWD:-$HOME}")"
+TODO="${mapping%%$'\t'*}"
+CTX="${mapping##*$'\t'}"
 
-# Собираем все priority:high со всех файлов, берём top-5 (глобально)
-TOP_HIGH=""
-while IFS= read -r line; do
-  [ -n "$line" ] && TOP_HIGH+="$line"$'\n'
-done < <(
-  for f in "${TODO_FILES[@]}"; do
-    [ -f "$f" ] || continue
-    LABEL=$(echo "$f" | sed "s|$HOME/||" | sed 's|/TODO.md||')
-    grep '^- \[ \].*priority:high' "$f" 2>/dev/null | sed "s|^- \[ \]|- [$LABEL]|"
-  done | head -5
-)
+# home / нет TODO → silent (не пинаем top на нейтральной сессии)
+[ "$CTX" = "home" ] && { echo '{}'; exit 0; }
+[ -f "$TODO" ] || { echo '{}'; exit 0; }
+
+TOTAL=$(grep -c '^- \[ \]' "$TODO" 2>/dev/null || echo 0)
+TOP_HIGH=$(grep '^- \[ \].*priority:high' "$TODO" 2>/dev/null | head -5)
 
 if [ -z "$TOP_HIGH" ]; then
   echo '{}'
   exit 0
 fi
 
-COUNT=$(echo -n "$TOP_HIGH" | grep -c '^-' || echo 0)
+COUNT=$(printf '%s\n' "$TOP_HIGH" | grep -c '^-' || echo 0)
 
-jq -n --arg pending "$TOP_HIGH" --arg count "$COUNT" --arg total "$TOTAL" '
+jq -n --arg pending "$TOP_HIGH" --arg count "$COUNT" --arg total "$TOTAL" --arg ctx "$CTX" '
 {
   hookSpecificOutput: {
     hookEventName: "SessionStart",
     additionalContext: (
-      "📋 TOP-" + $count + " priority:high (из " + $total + " pending total):\n" +
+      "📋 TOP-" + $count + " priority:high (контекст: " + $ctx + ", из " + $total + " pending в этом TODO):\n" +
       $pending +
-      "\nПолный список: TODO.md в контексте. Меню: 1 Комбайн / 2 Интервью / 3 Обзор / 4 Синк / 5 Фикс."
+      "\nПолный список: TODO.md контекста " + $ctx + ". Меню: 1 Комбайн / 2 Интервью / 3 Обзор / 4 Синк / 5 Фикс."
     )
   }
 }
