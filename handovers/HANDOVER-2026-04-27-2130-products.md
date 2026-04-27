@@ -48,6 +48,15 @@
 
 ## 🔜 Следующие шаги (приоритет)
 
+0. **🎯 ТОП-ПРИОРИТЕТ — First real case: Грелка-Гуделка** (новая задача из этой же сессии, ровно после форков). Ресторан СПб, бюджет 70K (контекст+таргет), доступы Я.Директ + Метрика + VK уже в `clients/grelka-gudelka/access.md`, КП v1 отправлен, senior-review есть. Шаги:
+   - Read `~/artvision-forks/yandex-direct-skill/SKILL.md` — понять формат API-токена и endpoints
+   - Прописать `yandex.direct.grelka` в `~/artvision-data/tokens.json` (ключ + OAuth flow если нужно)
+   - Запустить аудит через #1 → `clients/grelka-gudelka/presale/audit/direct-audit-2026-05-01.md`
+   - `claude mcp add yandex-mcp ~/artvision-forks/yandex-mcp` + smoke-test
+   - Усилить КП v2 через позиционирование **Artvision Direkt-Radar**
+   - **NB:** claude-ads (Google/Meta) НЕ применимо — РФ-локалка, Google заблокирован для РФ-рекламодателей с 2022, Meta тоже. Только Я.Директ + VK Ads (последнее — руками или ждём Artvision VK Ads Skill 15.06)
+   - **Дедлайн:** 2026-05-01
+
 1. **HIGH (стартовать в новой сессии):** Smoke-test `~/artvision-forks/yandex-mcp` через `claude mcp add` на тестовом токене (предложение: OTIDO как у наш платящий клиент с Я.Директ РСЯ). Проверить: 128 tools работают? Какие auth-проблемы? Дедлайн 04.05
 2. **HIGH:** Read `~/artvision-forks/yandex-direct-skill/SKILL.md` + написать gap-analysis (что покрывает / что нужно докрутить). Дедлайн 04.05
 3. **HIGH:** Доработка #1 v1 — multi-account routing (skill переключается между токенами клиентов из tokens.json). Дедлайн 10.05
