@@ -44,7 +44,7 @@
   2. Логика: если pending>0 И в транскрипте сессии НЕТ "TaskCreate" И prompts<=10 → инжектить императив с top-5 high
   3. Self-disable после первого TaskCreate или >10 turns
   4. Активация на новой сессии или через `/hooks` reload
-- **Слой 2 (если #9 повторится):** PreToolUse-блокировка на любом tool кроме TaskCreate при pending>0, whitelist READ-only (Bash(git|ls|cat|pwd), Read)
+- **Слой 2 (развёрнут 2026-04-27):** `~/.claude/hooks/pre-tool-block-no-taskcreate.sh` — PreToolUse, matcher `""` (все инструменты). Whitelist: Task*/Read/Grep/Glob/ToolSearch/Skill/ScheduleWakeup/AskUserQuestion + Bash для read-only (git status|pull|fetch|log|diff, ls/pwd/cat/head/tail/grep/find/wc, python3 -c, curl без -X POST/PUT/DELETE). Self-disable: `/tmp/taskcreate-done-{session_id}` после первого TaskCreate ИЛИ если в transcript уже есть `"name":"TaskCreate"`. Bypass: `TASKCREATE_FORCE=1`. Тесты: 13/13 PASS (`/tmp/test-taskcreate-hook.sh`).
 
 ## МЕТА-ПРАВИЛО: инцидент → хук, не «запомню»
 
@@ -69,7 +69,9 @@
 | `pre-cleanup-tokens-check.sh` | Bash | 17.04 — `rm -rf ~/.npm` убил YouTube OAuth (invalid_grant) | `CLEANUP_FORCE=1` |
 | `pre-client-work.sh` | Edit+Write | ant-partners 18/24/28.02 — пропуск Pre-Task Protocol → 29 страниц переделаны | `PRETASK_FORCE=1` |
 | `pre-strip-script-guard.sh` | Bash | ant-partners 24.02 — strip без regression-check, 157 секций потеряно | `STRIP_FORCE=1` |
-| `prompt-taskcreate-nag.sh` | UserPromptSubmit | 18-19.04 — TaskCreate пропуск при 180 pending | (auto-disable) |
+| `pre-bash-resource-guard.sh` | Bash | 26.04 — все 4 ttys claude упали 2× за 2 часа, OOM подозрение (free RAM ~42MB, диск 97%) | `RESOURCE_FORCE=1` |
+| `prompt-taskcreate-nag.sh` | UserPromptSubmit | 18-19.04 — TaskCreate пропуск при 180 pending (Layer 1, мягкий) | (auto-disable) |
+| `pre-tool-block-no-taskcreate.sh` | PreToolUse `""` (все) | 27.04 — Антон требует жёсткий блок (Layer 2) | `TASKCREATE_FORCE=1` |
 | `inject-challenge-reminder.sh` | UserPromptSubmit | магические цифры без источника | (auto после Skill) |
 | `stop-hallucination-detect.sh` | Stop | детект галлюцинаций в ответе | — |
 

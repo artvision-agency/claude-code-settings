@@ -320,6 +320,16 @@
     ],
     "PreToolUse": [
       {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-tool-block-no-taskcreate.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
         "matcher": "Read",
         "hooks": [
           {
@@ -447,6 +457,10 @@
             "type": "command",
             "command": "~/.claude/hooks/pre-strip-script-guard.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-bash-resource-guard.sh \"$CLAUDE_BASH_COMMAND\""
           }
         ]
       },
