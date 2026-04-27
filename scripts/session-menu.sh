@@ -131,13 +131,23 @@ LAST_TS=""
 [[ -f "$LAST_SESSION_FILE" ]] && LAST_TS=$(cat "$LAST_SESSION_FILE")
 LAST_AGO=$(human_ago "$LAST_TS")
 
-# Контекст по cwd
+# Контекст по cwd. Используем общую логику todo-route.sh (через case ниже),
+# дополненную явными ветками presale/products. cwd=$HOME → CTX="—" (нейтральная
+# сессия, без императивной фильтрации — Антон сам выберет через cc-name).
 SESSION_NAME=$(session_name_for_cwd)
 case "$CWD_NOW" in
-  "$HOME_DIR/artvision-data") CTX="ops"; CTX_TODO="$OPS_TODO"; CTX_N=$OPS_N ;;
-  "$HOME_DIR/artvision-tg-bot") CTX="bot"; CTX_TODO="$BOT_TODO"; CTX_N=$BOT_N ;;
-  "$HOME_DIR/devops-agent") CTX="infra"; CTX_TODO="$INFRA_TODO"; CTX_N=$INFRA_N ;;
-  *) CTX="—"; CTX_TODO=""; CTX_N=0 ;;
+  "$HOME_DIR/artvision-data/presale"|"$HOME_DIR/artvision-data/presale/"*)
+    CTX="presale"; CTX_TODO="$PRESALE_TODO"; CTX_N=$PRESALE_N; CTX_H=$PRESALE_H ;;
+  "$HOME_DIR/artvision-data/products"|"$HOME_DIR/artvision-data/products/"*)
+    CTX="products"; CTX_TODO="$PRODUCTS_TODO"; CTX_N=$PRODUCTS_N; CTX_H=$PRODUCTS_H ;;
+  "$HOME_DIR/artvision-data"|"$HOME_DIR/artvision-data/"*)
+    CTX="ops"; CTX_TODO="$OPS_TODO"; CTX_N=$OPS_N; CTX_H=$OPS_H ;;
+  "$HOME_DIR/artvision-tg-bot"|"$HOME_DIR/artvision-tg-bot/"*)
+    CTX="bot"; CTX_TODO="$BOT_TODO"; CTX_N=$BOT_N; CTX_H=$BOT_H ;;
+  "$HOME_DIR/devops-agent"|"$HOME_DIR/devops-agent/"*)
+    CTX="infra"; CTX_TODO="$INFRA_TODO"; CTX_N=$INFRA_N; CTX_H=$INFRA_H ;;
+  *)
+    CTX="—"; CTX_TODO=""; CTX_N=0; CTX_H=0 ;;
 esac
 
 # ─── Вывод меню ───────────────────────────────────────────────────────────────
@@ -156,9 +166,15 @@ echo "  cwd: ${CWD_NOW/$HOME_DIR/~}  |  контекст: ${CTX}"
 echo "  Последняя локалка: ${LAST_AGO}"
 echo "═══════════════════════════════════════════"
 echo ""
-echo "  📊 Очередь: ${TOTAL_N} задач (${TOTAL_H} high)"
-printf "     ops:%s  bot:%s  infra:%s  presale:%s  products:%s\n" \
-  "$OPS_N" "$BOT_N" "$INFRA_N" "$PRESALE_N" "$PRODUCTS_N"
+# Если контекст определён — показываем счётчик ТОЛЬКО его. Сводка 5 контекстов
+# имеет смысл только в нейтральной сессии (cwd=$HOME).
+if [[ "$CTX" != "—" ]]; then
+  echo "  📊 Очередь (${CTX}): ${CTX_N} задач (${CTX_H} high)"
+else
+  echo "  📊 Очередь (все контексты): ${TOTAL_N} задач (${TOTAL_H} high)"
+  printf "     ops:%s  bot:%s  infra:%s  presale:%s  products:%s\n" \
+    "$OPS_N" "$BOT_N" "$INFRA_N" "$PRESALE_N" "$PRODUCTS_N"
+fi
 echo ""
 
 if (( OVERDUE_N > 0 )); then

@@ -18,6 +18,12 @@
 todo_for_cwd() {
     local cwd="${1:-$PWD}"
     local todo ctx
+    # Явный home без проекта — контекст не определён (ctx=home, todo="")
+    # чтобы хуки не инжектили top-5 со всех 5 TODO в нейтральной сессии.
+    if [ "$cwd" = "$HOME" ] || [ "$cwd" = "$HOME/" ]; then
+        printf '%s\t%s\n' "" "home"
+        return
+    fi
     case "$cwd" in
         */artvision-data/presale*)  todo=/Users/antonk/artvision-data/presale/TODO.md;  ctx=presale ;;
         */artvision-data/products*) todo=/Users/antonk/artvision-data/products/TODO.md; ctx=products ;;
