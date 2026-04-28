@@ -235,11 +235,6 @@
             "type": "command",
             "command": "~/.claude/hooks/start-todo-tasks.sh",
             "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/start-handover-pending.sh",
-            "timeout": 5
           }
         ]
       },
@@ -302,8 +297,8 @@
           },
           {
             "type": "command",
-            "command": "~/.claude/hooks/stop-handover-check.sh",
-            "timeout": 10
+            "command": "~/.claude/hooks/stop-recap-status.sh",
+            "timeout": 5
           }
         ]
       },
@@ -648,14 +643,10 @@
             "type": "command",
             "command": "~/.claude/hooks/prompt-medical-mcp-reminder.sh",
             "timeout": 5
-          }
-        ]
-      },
-      {
-        "hooks": [
+          },
           {
             "type": "command",
-            "command": "/Users/antonk/.claude/hooks/seo-use-sf-reminder.sh",
+            "command": "~/.claude/hooks/prompt-action-call-asana.sh",
             "timeout": 5
           }
         ]
@@ -664,7 +655,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/antonk/.claude/hooks/context-40pct-warn.sh",
+            "command": "/Users/antonk/.claude/hooks/seo-use-sf-reminder.sh",
             "timeout": 5
           }
         ]
