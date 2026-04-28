@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-08T11:36:14",
-  "repo": "artvision-data",
-  "commit": "a5232952f",
-  "message": "fix: Content Lab \u2014 accessibility, dark theme tour, contrast, localStorage",
-  "signal_type": "error_resolution",
-  "detail": "fix: Content Lab \u2014 accessibility, dark theme tour, contrast, localStorage",
-  "files": ["clients/atribeaute/content-lab/index.html"]
-}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-14T02:10:28",
-  "repo": "artvision-data",
-  "commit": "9bde96b26",
-  "message": "fix(artvision.pro): revert 3 font-blocking filters in mu-plugin",
-  "signal_type": "error_resolution",
-  "detail": "fix(artvision.pro): revert 3 font-blocking filters in mu-plugin",
-  "files": ["vps-mu-plugins/artvision-performance/artvision-performance.php", "vps-mu-plugins/artvision-performance/artvision-performance.php.pre-20260414"]
-}

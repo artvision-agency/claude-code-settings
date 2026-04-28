@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-14T15:14:47",
-  "repo": "artvision-data",
-  "commit": "63931057a",
-  "message": "sync: session state 2026-04-14_15:14",
-  "signal_type": "workaround",
-  "detail": "workaround: +  // \u0431\u0430\u0437\u043e\u0432\u043e\u0435 \"\u043e\u0431\u043e\u0433\u0440\u0435\u0432\" \u043a\u0430\u043a fallback",
-  "files": ["clients/otido/otido-utm-bot-spec.html", "gantt-data.json", "sessions/2026-04-14.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

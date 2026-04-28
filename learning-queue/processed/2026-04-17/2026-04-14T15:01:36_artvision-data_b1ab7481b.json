@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-14T15:01:36",
-  "repo": "artvision-data",
-  "commit": "b1ab7481b",
-  "message": "fix: Unotrans \u041a\u041f \u2014 9 CRITICAL factcheck issues, x2.5 removed, \u0442\u043e\u0432\u0430\u0440\u043e\u043e\u0431\u043e\u0440\u043e\u0442 \u0420\u0424-\u041a\u0438\u0442\u0430\u0439 2024 verified",
-  "signal_type": "error_resolution",
-  "detail": "fix: Unotrans \u041a\u041f \u2014 9 CRITICAL factcheck issues, x2.5 removed, \u0442\u043e\u0432\u0430\u0440\u043e\u043e\u0431\u043e\u0440\u043e\u0442 \u0420\u0424-\u041a\u0438\u0442\u0430\u0439 2024 verified",
-  "files": ["clients/unotrans/context-log.md", "clients/unotrans/kp/unotrans-kp-2026-04.html"]
-}

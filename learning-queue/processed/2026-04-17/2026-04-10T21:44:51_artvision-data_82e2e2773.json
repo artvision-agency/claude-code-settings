@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-10T21:44:51",
-  "repo": "artvision-data",
-  "commit": "82e2e2773",
-  "message": "fix: senior review fixes for Grelka-Gudelka KP \u2014 9 corrections",
-  "signal_type": "error_resolution",
-  "detail": "fix: senior review fixes for Grelka-Gudelka KP \u2014 9 corrections",
-  "files": ["clients/grelka-gudelka/presale/kp/grelka_kp.html"]
-}

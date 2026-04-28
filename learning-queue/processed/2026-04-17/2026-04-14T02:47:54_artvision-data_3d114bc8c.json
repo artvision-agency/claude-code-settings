@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-14T02:47:54",
-  "repo": "artvision-data",
-  "commit": "3d114bc8c",
-  "message": "fix(tvorim): restore <title> on home/vrachi/contacts",
-  "signal_type": "error_resolution",
-  "detail": "fix(tvorim): restore <title> on home/vrachi/contacts",
-  "files": ["clients/tvorim-sovershenstvo/wp-theme/tilda_pages/contacts.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/home.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/vrachi.html"]
-}

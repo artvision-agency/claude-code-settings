@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-17T02:21:50",
-  "repo": "artvision-data",
-  "commit": "000dc5b81",
-  "message": "sync: session state 2026-04-17_02:21",
-  "signal_type": "workaround",
-  "detail": "workaround: +// ---------- LOAD: API first, fallback to tasks.json ----------",
-  "files": ["dashboards/data/artvision.db", "dashboards/frontend/ops-crm.html", "dashboards/frontend/tasks.json", "sessions/2026-04-17.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

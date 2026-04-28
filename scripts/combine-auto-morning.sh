@@ -39,7 +39,19 @@ PROMPT="комбайн авто утро — выполни все AUTO-зада
 if command -v claude >/dev/null 2>&1; then
     log "combine start"
     cd "$HOME/artvision-data"
-    claude --print "$PROMPT" >> "$LOG_FILE" 2>&1 || log "combine exited non-zero"
+    # Отдельный raw-лог для stdout/stderr claude --print (видно stacktrace/MCP-ошибки)
+    RAW_LOG="$LOG_DIR/combine-auto-morning-raw-${DATE}.log"
+    # timeout 15 мин: hang на MCP/HTTP (telegram disconnect, etc.) больше не виснет бесконечно
+    if /opt/homebrew/bin/gtimeout 900 claude --print "$PROMPT" >"$RAW_LOG" 2>&1; then
+        log "combine OK (raw log: $RAW_LOG, $(wc -c <"$RAW_LOG") bytes)"
+    else
+        rc=$?
+        if [ "$rc" -eq 124 ]; then
+            log "combine TIMEOUT (900s) — killed by gtimeout. Raw: $RAW_LOG"
+        else
+            log "combine exited non-zero (rc=$rc). Raw: $RAW_LOG"
+        fi
+    fi
     log "combine done"
 else
     log "ERROR: claude CLI not found in PATH"

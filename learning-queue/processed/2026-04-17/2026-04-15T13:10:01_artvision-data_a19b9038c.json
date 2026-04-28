@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-15T13:10:01",
-  "repo": "artvision-data",
-  "commit": "a19b9038c",
-  "message": "auto-sync: 1 new,1 modified [2026-04-15 13:10]",
-  "signal_type": "rule_update,workaround",
-  "detail": "rules: core.md,quality-gates.md, | workaround: +# Try factcheck-v2, fallback to legacy",
-  "files": [".claude-shared/README.md", ".claude-shared/agents/strict-factchecker.md", ".claude-shared/hooks/post-client-html-factcheck.sh", ".claude-shared/hooks/post-factcheck-autofix.sh", ".claude-shared/hooks/post-websearch-factcheck.sh", ".claude-shared/hooks/pre-client-write.sh", ".claude-shared/hooks/pre-deploy-factcheck.sh", ".claude-shared/hooks/pre-scp-factcheck.sh", ".claude-shared/install.sh", ".claude-shared/rules/core.md", ".claude-shared/rules/quality-gates.md", ".claude-shared/scripts/factcheck-autofix.py", ".claude-shared/scripts/factcheck-strict.py", ".claude-shared/scripts/factcheck-v2.py", "sessions/2026-04-15.jsonl"]
-}

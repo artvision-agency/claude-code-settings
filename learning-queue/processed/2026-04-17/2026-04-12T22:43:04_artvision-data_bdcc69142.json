@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-12T22:43:04",
-  "repo": "artvision-data",
-  "commit": "bdcc69142",
-  "message": "fix(unotrans): add source attributions to KP (factcheck 0 CRITICAL)",
-  "signal_type": "error_resolution",
-  "detail": "fix(unotrans): add source attributions to KP (factcheck 0 CRITICAL)",
-  "files": ["clients/unotrans/kp/unotrans-kp-2026-04.html"]
-}

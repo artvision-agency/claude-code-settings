@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-10T21:40:28",
-  "repo": "artvision-data",
-  "commit": "6fe3f5d9e",
-  "message": "fix: add C5 \u2014 \u041c\u0435\u0442\u0440\u0438\u043a\u0430/GA4 in service descriptions violates kp-brand rules",
-  "signal_type": "error_resolution",
-  "detail": "fix: add C5 \u2014 \u041c\u0435\u0442\u0440\u0438\u043a\u0430/GA4 in service descriptions violates kp-brand rules",
-  "files": ["clients/grelka-gudelka/presale/kp/senior-review-2026-04-10.md"]
-}

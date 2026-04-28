@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-17T01:30:03",
-  "repo": "artvision-data",
-  "commit": "b3c7d8622",
-  "message": "auto-sync: 1 new,1 modified [2026-04-17 01:30]",
-  "signal_type": "workaround",
-  "detail": "workaround: +   - LLM cascade: Gemma 27B\u219212B\u21924B \u2192 Mistral \u2192 Llama \u2192 template fallback (all free, getti",
-  "files": [".claude/memory-sync/client_domains_correct.md", ".claude/memory-sync/feedback_search_before_build.md", ".claude/rules-global/research-to-memory.md", "prompts/2026-04-17_session_8308712b.md", "sessions/2026-04-17.jsonl"]
-}

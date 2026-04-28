@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-17T13:00:01",
-  "repo": "artvision-data",
-  "commit": "0265a8b6f",
-  "message": "auto-sync: 1 new,2 modified [2026-04-17 13:00]",
-  "signal_type": "workaround",
-  "detail": "workaround: +| `reference_tg_channels.md` | Рабочие TG-каналы по получателям — ко�",
-  "files": [".claude/memory-sync/MEMORY.md", ".claude/memory-sync/feedback_karpathy_wiki_rejected.md", "sessions/2026-04-17.jsonl"]
-}

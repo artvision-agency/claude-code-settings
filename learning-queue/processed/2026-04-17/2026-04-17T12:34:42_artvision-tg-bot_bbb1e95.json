@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-17T12:34:42",
-  "repo": "artvision-tg-bot",
-  "commit": "bbb1e95",
-  "message": "fix(tvorim-opros-bot): Wave 1 \u2014 C1 race + H3 XSS + MAX_COMMENT_LEN",
-  "signal_type": "error_resolution",
-  "detail": "fix(tvorim-opros-bot): Wave 1 \u2014 C1 race + H3 XSS + MAX_COMMENT_LEN",
-  "files": ["tvorim-opros-bot/bot.py"]
-}

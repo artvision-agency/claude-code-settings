@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-14T03:39:38",
-  "repo": "artvision-data",
-  "commit": "bf4003bb4",
-  "message": "sync: session state 2026-04-14_03:39",
-  "signal_type": "workaround",
-  "detail": "workaround: +<meta name=\"robots\" content=\"noindex, nofollow\"> <meta charset=\"utf-8\" /> <meta http-equiv=\"Content",
-  "files": ["clients/tvorim-sovershenstvo/wp-theme/page.php", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/cirkonievye-koronki-koronki-iz-dioksida-cirkoniya-v-spb.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/implantaciya-v-spb.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/koronka-na-implant-v-sankt-peterburge-vidy-ceny-i-ustanovka-pod-klyuch.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/metallokeramicheskie-koronki-v-sankt-peterburge.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/migrate_page.py", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/odnomomentnaya-implantaciya-zubov-v-sankt-peterburge.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/protezirovanie-v-spb.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/udalenie-zuba-mudrosti.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/udalenie-zubov.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/veneers.html", "sessions/2026-04-14.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

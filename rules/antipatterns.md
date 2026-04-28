@@ -22,6 +22,7 @@
 | Фейковые конкуренты/данные | ТОЛЬКО реальные, с URL и источником |
 | Числа без источника в КП/отчёт | CONFIRMED / UNCONFIRMED / WRONG маркировка |
 | AI/нейросети в публичных материалах | "Авторская методология", "Экспертный анализ" |
+| **ORM: показывать заказчику авторов/исполнителей/биржи/каналы заказа отзывов** | НИКОГДА. Заказчик согласовывает только ТЕКСТЫ. Откуда/кем/через что — внутренняя кухня Artvision. Прецедент: BluMart 26.04. См. `feedback_orm_executors_hidden_from_client.md` |
 | Код напрямую на VPS через SSH | git repo → commit → push → deploy script |
 | Копировать SVG/цвет одного бренда на UI другого (WhatsApp→Max, Analytics Pro→DemosMed) | Извлечь брендинг из официального источника. Max=#0077FF (max.ru). Мессенджер-SVG не переиспользовать. Прецедент: vaysman 23.02 |
 | `section:nth-child(even)` для CTA/footer без `!important` | CTA/footer всегда `background: ... !important` или inline-style — иначе nth-child cascade перебьёт фон. Прецедент: vaysman 23.02 |

@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-08T21:25:31",
-  "repo": "artvision-data",
-  "commit": "84620a61b",
-  "message": "fix: remove leftover contractors block, calculator, and dead comments from Aleksandra KP",
-  "signal_type": "error_resolution",
-  "detail": "fix: remove leftover contractors block, calculator, and dead comments from Aleksandra KP",
-  "files": ["clients/aleksandra-dental/presale/kp/aleksandra_kp.html"]
-}

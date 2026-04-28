@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-08T12:44:23",
-  "repo": "artvision-data",
-  "commit": "f0a62402f",
-  "message": "sync: session state 2026-04-08_12:44",
-  "signal_type": "workaround",
-  "detail": "workaround: +- a controlled `ssh2.Server` fallback backend with no OpenSSH durability extensions",
-  "files": ["sessions/2026-04-08.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md", "tools/hex-ssh/README.md", "tools/hex-ssh/server.json"]
-}

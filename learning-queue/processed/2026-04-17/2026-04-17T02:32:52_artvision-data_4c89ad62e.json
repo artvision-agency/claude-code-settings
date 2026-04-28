@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-17T02:32:52",
-  "repo": "artvision-data",
-  "commit": "4c89ad62e",
-  "message": "sync: session state 2026-04-17_02:32",
-  "signal_type": "workaround",
-  "detail": "workaround: +  - 429 backoff: HTTP 429 triggers retry without crashing.",
-  "files": ["dashboards/data/artvision.db", "dashboards/tests/test_asana_sync.py", "dashboards/tests/test_sse.py", "sessions/2026-04-17.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md", "tokens.json"]
-}

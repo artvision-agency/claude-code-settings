@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-18T15:14:38",
-  "repo": "artvision-data",
-  "commit": "5d7c1cd7d",
-  "message": "fix(che-group): factcheck + \u0430\u043a\u0442\u0443\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u044f \u041a\u041f 18.04, deploy",
-  "signal_type": "error_resolution",
-  "detail": "fix(che-group): factcheck + \u0430\u043a\u0442\u0443\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u044f \u041a\u041f 18.04, deploy",
-  "files": ["clients/che-group/context-log.md"]
-}

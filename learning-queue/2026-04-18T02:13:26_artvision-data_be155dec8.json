@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-18T02:13:26",
-  "repo": "artvision-data",
-  "commit": "be155dec8",
-  "message": "sync: session state 2026-04-18_02:13",
-  "signal_type": "workaround",
-  "detail": "workaround: +    \"Fix: Admin notify fail 161261652 (\u0410\u043d\u0434\u0440\u0435\u0439 \u043d\u0435 \u043d\u0430\u0447\u0430\u043b DM \u0441 \u0431\u043e\u0442\u043e\u043c \u2014 \u043d\u0443\u0436\u0435\u043d fallback)\"",
-  "files": ["sessions/2026-04-18.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

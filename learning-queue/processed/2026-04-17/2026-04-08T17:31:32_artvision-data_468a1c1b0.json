@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-08T17:31:32",
-  "repo": "artvision-data",
-  "commit": "468a1c1b0",
-  "message": "fix: factcheck \u0424\u043b\u043e\u0440\u0435\u043d\u0446\u0438\u044f \u2014 \u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u044b\u0435 \u044e\u0440\u043b\u0438\u0446\u0430 \u0438 \u043e\u0431\u043e\u0440\u043e\u0442\u044b",
-  "signal_type": "error_resolution",
-  "detail": "fix: factcheck \u0424\u043b\u043e\u0440\u0435\u043d\u0446\u0438\u044f \u2014 \u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u044b\u0435 \u044e\u0440\u043b\u0438\u0446\u0430 \u0438 \u043e\u0431\u043e\u0440\u043e\u0442\u044b",
-  "files": ["clients/aleksandra-dental/presale/kp/aleksandra_kp.html"]
-}

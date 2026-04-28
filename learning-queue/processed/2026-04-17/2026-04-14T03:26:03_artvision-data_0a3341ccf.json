@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-14T03:26:03",
-  "repo": "artvision-data",
-  "commit": "0a3341ccf",
-  "message": "sync: session state 2026-04-14_03:25",
-  "signal_type": "workaround",
-  "detail": "workaround: +# \u041f\u043e\u0440\u044f\u0434\u043e\u043a \u0432\u0430\u0436\u0435\u043d: \u0441\u043d\u0430\u0447\u0430\u043b\u0430 \u0441\u043f\u0435\u0446\u0438\u0444\u0438\u0447\u043d\u044b\u0435, \u043f\u043e\u0442\u043e\u043c \u043e\u0431\u0449\u0438\u0439 fallback.",
-  "files": ["clients/tvorim-sovershenstvo/wp-theme/tilda_pages/contacts.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/home.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/implantaciya.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/protezirovanie.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/rewrite_links.py", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/vrachi.html", "sessions/2026-04-14.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

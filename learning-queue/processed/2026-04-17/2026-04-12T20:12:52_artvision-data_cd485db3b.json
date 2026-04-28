@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-12T20:12:52",
-  "repo": "artvision-data",
-  "commit": "cd485db3b",
-  "message": "chore: save session prompts before compact 2026-04-12_20:12",
-  "signal_type": "workaround",
-  "detail": "workaround: +   - **Fallback approach**: After both agents failed, started manual review using direct grep comma",
-  "files": ["prompts/2026-04-12_session_84183bae.md"]
-}

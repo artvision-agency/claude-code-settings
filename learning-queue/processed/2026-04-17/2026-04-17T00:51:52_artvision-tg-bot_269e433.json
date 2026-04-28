@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-17T00:51:52",
-  "repo": "artvision-tg-bot",
-  "commit": "269e433",
-  "message": "sync: session state 2026-04-17_00:51",
-  "signal_type": "workaround",
-  "detail": "workaround: +    retry_count INT DEFAULT 0,",
-  "files": ["supabase/migrations/002_link_inbox.sql", "tvorim-opros-bot/bot.py", "tvorim-opros-bot/config.py", "tvorim-opros-bot/ecosystem.config.cjs", "tvorim-opros-bot/email_notify.py", "tvorim-opros-bot/requirements.txt"]
-}
