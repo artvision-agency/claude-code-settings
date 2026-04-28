@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-14T02:33:39",
-  "repo": "artvision-data",
-  "commit": "daf6b0fb6",
-  "message": "feat(tvorim): migrate WP theme to git as source of truth",
-  "signal_type": "workaround",
-  "detail": "workaround: +\u251c\u2500\u2500 index.php             # fallback \u0434\u043b\u044f \u0430\u0440\u0445\u0438\u0432\u043e\u0432",
-  "files": ["clients/tvorim-sovershenstvo/wp-theme/.gitignore", "clients/tvorim-sovershenstvo/wp-theme/README.md", "clients/tvorim-sovershenstvo/wp-theme/archive.php", "clients/tvorim-sovershenstvo/wp-theme/deploy.sh", "clients/tvorim-sovershenstvo/wp-theme/footer.php", "clients/tvorim-sovershenstvo/wp-theme/functions.php", "clients/tvorim-sovershenstvo/wp-theme/header.php", "clients/tvorim-sovershenstvo/wp-theme/index.php", "clients/tvorim-sovershenstvo/wp-theme/page.php", "clients/tvorim-sovershenstvo/wp-theme/single.php", "clients/tvorim-sovershenstvo/wp-theme/style.css", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/blog-widget.php", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/contacts.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/footer-block.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/head-tilda.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/header-block.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/home.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/implantaciya.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/protezirovanie.html", "clients/tvorim-sovershenstvo/wp-theme/tilda_pages/vrachi.html"]
-}

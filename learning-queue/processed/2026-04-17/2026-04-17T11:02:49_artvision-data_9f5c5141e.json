@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-17T11:02:49",
-  "repo": "artvision-data",
-  "commit": "9f5c5141e",
-  "message": "fix: correct geo-platform statuses \u2014 \u042f.\u041a\u0430\u0440\u0442\u044b and 2\u0413\u0418\u0421 cards exist",
-  "signal_type": "error_resolution",
-  "detail": "fix: correct geo-platform statuses \u2014 \u042f.\u041a\u0430\u0440\u0442\u044b and 2\u0413\u0418\u0421 cards exist",
-  "files": ["clients/avtoworld/context-log.md", "clients/avtoworld/linkbuilding/SUMMARY-linkbuilding-2026-04-17.md"]
-}

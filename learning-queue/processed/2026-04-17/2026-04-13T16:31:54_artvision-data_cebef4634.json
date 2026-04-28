@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-13T16:31:54",
-  "repo": "artvision-data",
-  "commit": "cebef4634",
-  "message": "sync: session state 2026-04-13_16:31",
-  "signal_type": "workaround",
-  "detail": "workaround: +RETRY_DELAY = 5",
-  "files": ["scripts/marketing_digest_vps.py", "sessions/2026-04-13.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-14T13:46:57",
-  "repo": "artvision-data",
-  "commit": "103518511",
-  "message": "fix(aleksandra): tg-draft \u2014 Dana safe numbers from case, tvorim domain fix",
-  "signal_type": "error_resolution",
-  "detail": "fix(aleksandra): tg-draft \u2014 Dana safe numbers from case, tvorim domain fix",
-  "files": ["clients/aleksandra-dental/tg-draft.md"]
-}

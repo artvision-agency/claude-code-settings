@@ -200,12 +200,29 @@ Task(
 
 #### PPC Agents (focus=ppc или all)
 
+**Tooling 2026-04-28: Artvision Ads Stack** (форки Silverov+SvechaPVL+AgriciDaniel в `~/artvision-forks/`).
+
+**A. Если у клиента есть OAuth-токен Я.Директ** (`~/.secrets/yandex-direct/{client_slug}.json`) — использовать **реальный API-аудит**:
+
+```bash
+# Symlink на нужный клиентский токен
+ln -sf ~/.secrets/yandex-direct/{client_slug}.json ~/.secrets/yandex-direct.json
+
+# Запуск аудита (55 проверок YD01-YD55, A-F grading, RU benchmarks)
+~/artvision-forks/yandex-direct-skill/scripts/yd-audit.sh \
+  ~/artvision-data/clients/{client_slug}/presale/audit/direct-raw-$(date +%Y-%m-%d)/
+
+# Парсинг output JSON → markdown отчёт по структуре OTIDO direct-stats-2025
 ```
-# Агент 5: PPC Analysis (если есть рекламные кабинеты)
+
+**B. Если токена нет / только конкурентный анализ** — fallback на Claude-агента:
+
+```
+# Агент 5: PPC Competitor Analysis (без API)
 Task(
   subagent_type="data-analyst",
-  description="PPC campaign analysis",
-  prompt="Ты PPC-аналитик. Анализ рекламных кампаний клиента: {client}
+  description="PPC competitor analysis (no API access)",
+  prompt="Ты PPC-аналитик. Анализ рекламной активности по нише клиента: {client}
 
 ЗАДАЧИ:
 1. Проверить наличие рекламы по бренд-запросам: WebSearch '{brand}'
@@ -217,6 +234,14 @@ Task(
   run_in_background=true
 )
 ```
+
+**C. Глобал-клиент (Google/Meta)** — claude-ads (НЕ для РФ-рекламодателей, Google заблокирован с марта 2022):
+
+```bash
+~/artvision-forks/claude-ads/run.sh --client {client} --platforms google,meta
+```
+
+См. также: `sops/sop-ppc.md` § 8.3 (полный toolchain), `processes.md` PPC-цикл.
 
 ### Шаг 2: Сбор результатов
 

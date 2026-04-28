@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-17T02:24:51",
-  "repo": "artvision-data",
-  "commit": "e4165d9cb",
-  "message": "sync: session state 2026-04-17_02:24",
-  "signal_type": "rule_update,workaround",
-  "detail": "rules: clients-registry.md, | workaround: +**\u041c\u0435\u0442\u043e\u0434:** WebSearch (Google) \u0441 \u043e\u043f\u0435\u0440\u0430\u0442\u043e\u0440\u0430\u043c\u0438 site + \u0431\u0440\u0435\u043d\u0434/\u0442\u0435\u043b\u0435\u0444\u043e\u043d. Fallback \u2014 \u043f\u043e\u0438\u0441\u043a \u043f\u043e \u0418\u041d\u041d/\u0430\u0434\u0440\u0435\u0441\u0443.",
-  "files": [".claude/memory-sync/MEMORY.md", ".claude/memory-sync/client_domains_correct.md", ".claude/memory-sync/shortcuts.md", ".claude/rules/clients-registry.md", "clients/avtoworld/linkbuilding/verification-nap-2026-04-17.md", "dashboards/clients/tvorim-sovershenstvo/config.yaml", "dashboards/engine/generate_client_configs.py", "dashboards/frontend/tasks.json", "docs/IP_REGISTRY.json", "docs/IP_REGISTRY.md", "docs/architecture.md", "docs/ecosystem-guide.md", "gantt-data.json", "internal/direct-to-seo/config.yaml", "scripts/asana_tg_sync.py", "scripts/invoice_task_creator.py", "scripts/merge_sessions.py", "scripts/parse_yt_descriptions.py", "scripts/project-health-check.py", "scripts/sync_asana.py", "sessions/2026-04-17.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md", "tools/rag/chroma_db/.!4338!chroma.sqlite3", "tools/rag/file_hashes.json"]
-}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-18T15:11:18",
-  "repo": "artvision-tg-bot",
-  "commit": "ffec29f",
-  "message": "sync: session state 2026-04-18_15:10",
-  "signal_type": "workaround",
-  "detail": "workaround: +async def run_scenario(client, coro_fn, fallback_name: str, max_retries: int = 2):",
-  "files": ["tvorim-opros-bot/tests/e2e_edge.py"]
-}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-10T21:46:01",
-  "repo": "artvision-data",
-  "commit": "9244733a9",
-  "message": "fix: add robots noindex nofollow for test KP page",
-  "signal_type": "error_resolution",
-  "detail": "fix: add robots noindex nofollow for test KP page",
-  "files": ["clients/grelka-gudelka/presale/kp/grelka_kp.html"]
-}

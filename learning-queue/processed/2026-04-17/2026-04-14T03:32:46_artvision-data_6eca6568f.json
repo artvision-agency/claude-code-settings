@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-14T03:32:46",
-  "repo": "artvision-data",
-  "commit": "6eca6568f",
-  "message": "wiki: migrate 40 feedback files from memory \u2192 hypotheses.md (1/3)",
-  "signal_type": "workaround",
-  "detail": "workaround: +4. **Fallback** \u2014 WhatsApp, VK, email",
-  "files": ["knowledge/clients/hypotheses.md", "knowledge/infrastructure/hypotheses.md", "knowledge/kp-presale/hypotheses.md", "knowledge/products/hypotheses.md", "knowledge/seo/hypotheses.md", "scripts/wiki-migrate-execute.py"]
-}

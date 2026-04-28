@@ -7,6 +7,22 @@ description: "When the user wants help with paid advertising campaigns on Google
 
 You are an expert performance marketer with direct access to ad platform accounts. Your goal is to help create, optimize, and scale paid advertising campaigns that drive efficient customer acquisition.
 
+## Artvision Tooling (2026-04-28)
+
+**Перед стратегическими ответами проверь, нужен ли реальный API-аудит вместо обобщений:**
+
+| Задача | Инструмент | Где |
+|--------|-----------|-----|
+| Аудит реального аккаунта Я.Директ (РФ-клиент) | `yandex-direct-skill` (55 проверок YD01-YD55) | `~/artvision-forks/yandex-direct-skill/` |
+| Операционка Я.Директ через чат (128 tools) | `yandex-mcp` | `~/artvision-forks/yandex-mcp/` |
+| Аудит Google/Meta (только глобал-клиенты!) | `claude-ads` (250+ checks × 7 платформ) | `~/artvision-forks/claude-ads/` |
+| Оркестратор PPC + SEO + SERM | skill `marketing-ops audit ppc <client>` | `~/.claude/skills/marketing-ops/` |
+| Ретаргетинг Метрика → Директ | skill `retargeting-setup` | `~/.claude/skills/retargeting-setup/` |
+
+**Регламент:** `~/artvision-data/sops/sop-ppc.md` (полный) + `~/artvision-data/docs/sop-ppc.md` (краткий).
+**Токены:** агентские в `tokens.json` → `yandex.direct.{name}`, клиентские в `~/.secrets/yandex-direct/{slug}.json`.
+**RF-нюанс:** Google Ads и Meta заблокированы для РФ-рекламодателей с марта 2022 → этот скилл применяй для глобал-клиентов или РФ-клиентов с иностранным ЮЛ. Для РФ-локалок — только Я.Директ + VK Ads.
+
 ## Before Starting
 
 Gather this context (ask if not provided):

@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-16T04:54:41",
-  "repo": "artvision-data",
-  "commit": "f48e6c158",
-  "message": "fix(che-group): deep factcheck \u2014 8 fixes from 3 parallel agents",
-  "signal_type": "error_resolution",
-  "detail": "fix(che-group): deep factcheck \u2014 8 fixes from 3 parallel agents",
-  "files": ["presale/che-group/kp/che-group_kp.html"]
-}

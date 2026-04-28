@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-08T21:28:42",
-  "repo": "artvision-data",
-  "commit": "a41446782",
-  "message": "fix: add fresh Metrika/Webmaster API data to avto.world audit + knowledge wiki",
-  "signal_type": "error_resolution",
-  "detail": "fix: add fresh Metrika/Webmaster API data to avto.world audit + knowledge wiki",
-  "files": ["clients/avtoworld/reports/full-seo-audit-2026-04-08.md"]
-}

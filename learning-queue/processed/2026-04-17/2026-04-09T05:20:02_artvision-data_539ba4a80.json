@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-09T05:20:02",
-  "repo": "artvision-data",
-  "commit": "539ba4a80",
-  "message": "auto-sync: 3 modified [2026-04-09 05:20]",
-  "signal_type": "workaround",
-  "detail": "workaround: +    /* Fallback: icon-based cert cards when no images */",
-  "files": ["clients/aleksandra-dental/site/index.html", "gantt-data.json", "sessions/2026-04-09.jsonl"]
-}

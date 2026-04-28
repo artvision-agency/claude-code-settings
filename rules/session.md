@@ -1,25 +1,37 @@
-# Сессия и TODO
+# Сессия, TODO, Recap
 
 ## Старт сессии
 
-1. `git pull` → прочитать `artvision-data/PROJECTS.md` (source of truth)
-2. Прочитать TODO.md текущего контекста → показать открытые задачи
-3. TaskCreate для КАЖДОЙ pending задачи — СРАЗУ, без напоминания
-4. Показать меню перекрёстка (ниже)
+1. `git pull` → `artvision-data/PROJECTS.md` (source of truth) → TODO.md текущего контекста
+2. TaskCreate для КАЖДОЙ pending задачи — СРАЗУ, без напоминания
+3. Показать меню перекрёстка (ниже)
 
 ## TODO-маршрутизация
 
-| cwd / контекст | TODO файл |
-|----------------|-----------|
-| `~/artvision-data` (ops) | `artvision-data/TODO.md` |
-| `~/artvision-tg-bot` (bot) | `artvision-tg-bot/TODO.md` |
-| `~/devops-agent` (infra) | `devops-agent/TODO.md` |
-| presale | `artvision-data/presale/TODO.md` |
-| products | `artvision-data/products/TODO.md` |
+| cwd | session_name | TODO |
+|-----|--------------|------|
+| `~/artvision-data` (ops) | **Artvision Ops** | `artvision-data/TODO.md` |
+| `~/artvision-tg-bot` (bot) | **Bot Dev** | `artvision-tg-bot/TODO.md` |
+| `~/devops-agent` (infra) | **DevOps** | `devops-agent/TODO.md` |
+| presale | — | `artvision-data/presale/TODO.md` |
+| products | — | `artvision-data/products/TODO.md` |
 
-Новая задача → в нужный TODO по контексту. Конец сессии → commit + push TODO*.md.
+Новая задача → в нужный TODO. Конец сессии → commit + push TODO*.md (между аккаунтами синк через git).
 
-## Меню перекрёстка
+## Меню перекрёстка (показывать каждую сессию)
+
+```
+═══════════════════════════════════════════
+  {session_name} — {дата}
+  Открытых задач: {N} | Входящих: {M}
+═══════════════════════════════════════════
+  1. 🎯 КОМБАЙН — выполнить очередь (топ-3 одной строкой)
+  2. 💬 ИНТЕРВЬЮ — новая задача → разобью → в очередь
+  3. 📋 ОБЗОР — все задачи + статусы (TODO + Asana)
+  4. 🔄 СИНК — git pull/push + memory + Asana
+  5. ⚡ ФИКС — одна мелочь сразу, мимо очереди
+═══════════════════════════════════════════
+```
 
 | Ввод | Действие |
 |------|----------|
@@ -27,31 +39,60 @@
 | `2`/`интервью`/текст задачи | Уточнить (для кого, результат, срочность) → разбить → очередь |
 | `3`/`туду`/`обзор` | Показать все задачи |
 | `4`/`синк`/`sync` | `/sync-sessions` |
-| `5`/`фикс`/мелочь | Сделать сразу, без очереди |
+| `5`/`фикс`/мелочь | Сделать сразу (<5 мин, одна штука) |
 
-## Формат задачи в TODO
+## Интервью — обогащение задачи
+
+1. Выслушать, не перебивать
+2. Уточнить (макс 2-3 вопроса): для кого / что считается результатом / срочность
+3. Разбить на атомарные (1 задача = 1 результат)
+4. Каждая проходит чеклист готовности (см. ниже)
+5. В очередь → TODO.md + TaskCreate
+6. Если все ready → автозапуск `/combine`
+
+## Чеклист готовности задачи (обязательный перед `/combine`)
 
 ```
-- [ ] Описание [client:X] [result:X] [priority:high] [skill:auto]
+✅ READY:  - [ ] **BluMart: зачистить данные Ростокиных** [client:blumart] [result:docx+deploy] [priority:high] [assignee:anton] [due:2026-04-19]
+❌ NOT READY: - [ ] сделать что-то с сайтом
 ```
 
-Задача ready = все 4 обязательных поля заполнены. НЕ ready → мини-интервью (1-2 вопроса).
+Обязательные поля: глагол+объект, `[client:X]` или `[product:X]`, `[result:X]`, `[priority:high/medium/low]`, `[assignee:anton/andrey/stas]`, `[due:YYYY-MM-DD]`. Опциональные (авто): `[skill:X]`, `[blocked-by:X]`.
+
+`[assignee:]` + `[due:]` = те же поля что обязательны в Asana (asana-required-fields.md). Любая ready задача → автоматически в Asana.
+
+Claude автоматически обогащает: `[skill:]` по содержанию, `[client:]` по ключевым словам, `[priority:]` по revenue-impact (клиент > продукт > внутреннее). Не хватает данных → мини-интервью (1-2 вопроса).
+
+**Задача НЕ попадает в комбайн пока не ready.**
+
+## Комбайн = единственный способ выполнения
+
+ВСЕ задачи через `/combine`: читает TODO.md → фильтрует ready → сортирует high/medium/low → независимые в параллель, зависимые цепочкой → выполняет через `[skill:]` → завершённую помечает `[x]` в TODO + Asana.
+
+Автозапуск: после интервью (все ready) / выбор «1» в меню / команда `го`/`комбайн`. Исключение — путь 5 (быстрый фикс <5 мин).
+
+## Очередь = TODO.md (единая для всех)
+
+Кто может добавить: пользователь (через интервью), любой агент/субагент, Task Router, Asana sync, TG бот (`/task`), хуки. Формат: `- [ ] Описание [client:X] [result:X] [priority:high] [skill:auto]`.
+
+## Ops = CRM Artvision
+
+`artvision-data/` = реестр всех задач. PROJECTS.md = source of truth. TODO.md + presale/TODO.md + products/TODO.md = реестр. Задача в не-Ops сессии → дублируется в `artvision-data/TODO.md` с тегом `[session:bot-dev|devops|home]`. Asana ↔ TODO ↔ `/combine` — двусторонняя связка. Раз в день (09:00 брифинг) — мердж 5 TODO, закрытие дублей.
 
 ## После compaction/resume
 
 Парсить summary → TaskCreate для КАЖДОГО pending item. Обещание в тексте = TaskCreate сразу.
 
-## Sync между аккаунтами
+## Session Recap (sync/recaps/<sessionId>.md)
 
-TODO в git → `git pull` подтягивает. Начало: pull. Конец: commit + push.
+Хук создаёт recap при старте. Заполнить «Цель сессии» **ПЕРЕД первым Edit/Write/Bash** (кроме git pull/status/log, ls, cat без модификации).
 
-## Ops = CRM: единый реестр задач
+Заполнить: цель (1 предложение), Deliverables (файлы/деплои/Asana), Acceptance criteria (чеклист), дедлайн, связанные задачи. Не спрашивать пользователя — извлечь из контекста.
 
-`artvision-data/` — **CRM Artvision**. Все задачи отовсюду (Bot Dev, DevOps, Home, Asana, TG, email, meetings) должны быть видны здесь.
+После значимого этапа → append в «Лог выполнения»: `- [HH:MM] Сделано: <что>. Связь с целью: <какой пункт>`.
 
-- `PROJECTS.md` = source of truth проектов и клиентов
-- `TODO.md` + `presale/TODO.md` + `products/TODO.md` = реестр задач
-- Задача в не-Ops сессии → дублируется в `artvision-data/TODO.md` с тегом `[session:bot-dev|devops|home]`
-- Asana ↔ TODO ↔ `/combine` — двусторонняя связка: создание + статусы синкаются
-- `/combine` читает 5 TODO + Asana, фильтрует по `[session:]`, запускает из нужного cwd
-- Раз в день (09:00 брифинг) — мердж 5 TODO, закрытие дублей
+**Перед git push** (есть pre-bash-recap-check.sh) — сравнить acceptance с фактом. Незакрытое → показать таблицу + 3 варианта (дожимаем / коммитим как есть, незакрытое в TODO/Asana / цель изменилась — обнови recap). Sync НЕ блокируется.
+
+При закрытии сессии: ✅ COMPLETED / ⚠️ PARTIAL / ❌ ABANDONED + `Status: CLOSED`. Если recap уже есть (resume) — НЕ перезаписывать, дописывать.
+
+НЕ записывать в recap: случайные команды («туду», «синк»), меню-выбор без задачи, проверки статуса без действия.

@@ -1,0 +1,782 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(cd *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(echo *)",
+      "Bash(printf *)",
+      "Bash(python3 *)",
+      "Bash(python *)",
+      "Bash(node *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(pip *)",
+      "Bash(pip3 *)",
+      "Bash(grep *)",
+      "Bash(rg *)",
+      "Bash(find *)",
+      "Bash(sort *)",
+      "Bash(uniq *)",
+      "Bash(diff *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(touch *)",
+      "Bash(chmod *)",
+      "Bash(chown *)",
+      "Bash(which *)",
+      "Bash(type *)",
+      "Bash(pwd)",
+      "Bash(date *)",
+      "Bash(env *)",
+      "Bash(export *)",
+      "Bash(source *)",
+      "Bash(open *)",
+      "Bash(sips *)",
+      "Bash(base64 *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(gh *)",
+      "Bash(crontab *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Bash(rsync *)",
+      "Bash(tar *)",
+      "Bash(zip *)",
+      "Bash(unzip *)",
+      "Bash(gzip *)",
+      "Bash(gunzip *)",
+      "Bash(sed *)",
+      "Bash(awk *)",
+      "Bash(tr *)",
+      "Bash(cut *)",
+      "Bash(tee *)",
+      "Bash(xargs *)",
+      "Bash(jq *)",
+      "Bash(brew *)",
+      "Bash(launchctl *)",
+      "Bash(pkill *)",
+      "Bash(kill *)",
+      "Bash(ps *)",
+      "Bash(lsof *)",
+      "Bash(du *)",
+      "Bash(df *)",
+      "Bash(file *)",
+      "Bash(stat *)",
+      "Bash(md5 *)",
+      "Bash(shasum *)",
+      "Bash(openssl *)",
+      "Bash(sqlite3 *)",
+      "Bash(realpath *)",
+      "Bash(dirname *)",
+      "Bash(basename *)",
+      "Bash(mktemp *)",
+      "Bash(tput *)",
+      "Bash(test *)",
+      "Bash(true *)",
+      "Bash(false *)",
+      "Bash(sleep *)",
+      "Bash(wait *)",
+      "Bash(rm *)",
+      "Bash(rmdir *)",
+      "Bash(ln *)",
+      "Bash(readlink *)",
+      "Bash(pbcopy *)",
+      "Bash(pbpaste *)",
+      "Bash(sw_vers *)",
+      "Bash(uname *)",
+      "Bash(hostname *)",
+      "Bash(whoami *)",
+      "Bash(id *)",
+      "Bash(groups *)",
+      "Bash(defaults *)",
+      "Bash(plutil *)",
+      "Bash(osascript *)",
+      "Bash(say *)",
+      "Bash(caffeinate *)",
+      "Bash(nohup *)",
+      "Bash(screen *)",
+      "Bash(tmux *)",
+      "Bash(ag *)",
+      "Bash(fd *)",
+      "Bash(fzf *)",
+      "Bash(bat *)",
+      "Bash(exa *)",
+      "Bash(htop *)",
+      "Bash(top *)",
+      "Bash(dig *)",
+      "Bash(nslookup *)",
+      "Bash(ping *)",
+      "Bash(traceroute *)",
+      "Bash(nc *)",
+      "Bash(ifconfig *)",
+      "Bash(security *)",
+      "Bash(bun *)",
+      "Bash(go *)",
+      "Bash(gcc *)",
+      "Bash(g++ *)",
+      "Bash(make *)",
+      "Bash(cmake *)",
+      "Bash(ruby *)",
+      "Bash(gem *)",
+      "Bash(bundle *)",
+      "Bash(rails *)",
+      "Bash(java *)",
+      "Bash(javac *)",
+      "Bash(swift *)",
+      "Bash(swiftc *)",
+      "Bash(xcodebuild *)",
+      "Bash(php *)",
+      "Bash(composer *)",
+      "Bash(wp *)",
+      "Bash(ffmpeg *)",
+      "Bash(ffprobe *)",
+      "Bash(weasyprint *)",
+      "Bash(playwright *)",
+      "Bash(pytest *)",
+      "Bash(pyright *)",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "Task",
+      "Skill",
+      "NotebookEdit",
+      "mcp__asana__*",
+      "mcp__claude_ai_Asana__*",
+      "mcp__plugin_playwright_playwright__*",
+      "mcp__plugin_context7_context7__*",
+      "mcp__claudeus-wp__*",
+      "mcp__elementor-mcp__*",
+      "mcp__pencil"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf /*)",
+      "Bash(> /dev/sda*)",
+      "Bash(mkfs *)",
+      "Bash(dd if=*)"
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/validate-settings.sh --warn",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-sync-settings.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/session-namer.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-restore-session.sh",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/check-unsaved-artifacts.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/session-inbox.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-smoothing-report.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-asana-overdue.sh",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-recap-init.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-menu.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-ai-evolve-alert.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-todo-tasks.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-handover-pending.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SessionStart",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-todo-taskcreate.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-quality-check.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-sync-all.sh",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/auto-memory-suggest.sh",
+            "timeout": 10,
+            "statusMessage": "Checking memory suggestions..."
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/skills/continuous-learning/evaluate-session.sh",
+            "timeout": 15,
+            "statusMessage": "Extracting learning patterns..."
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-account-usage.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-hallucination-detect.sh",
+            "timeout": 10,
+            "statusMessage": "Detecting hallucinations..."
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-handover-check.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-recap-status.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh Stop",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-tool-block-no-taskcreate.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-read.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-client-write.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-client-work.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-client-lexicon.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-tmp-write-guard.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-client-write.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-client-work.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-client-lexicon.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-memory-write.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-tmp-write-guard.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-bash-check.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-push-summary.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-scp-factcheck.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-deploy-factcheck.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-commit-check.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-outbound-gate.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-memory-lint.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-bash-recap-check.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-push-qa-check.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 180,
+            "statusMessage": "Running QA pipeline before push..."
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-vps-git-guard.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-cleanup-tokens-check.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 6
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-strip-script-guard.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-bash-resource-guard.sh \"$CLAUDE_BASH_COMMAND\""
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__asana__asana_create_task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-asana-required-fields.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh PreToolUse",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-edit-lint.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-data-collect.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-client-context-log.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-ux-cro-check.sh",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-html-seo-check.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-edit-autotest.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-edit-skill-trigger.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-client-html-factcheck.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-client-html-validate.sh \"$CLAUDE_FILE_PATH\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-generate-validate.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-deploy-smoke.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 60
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-orm-review-check.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-factcheck-autofix.sh \"$CLAUDE_BASH_COMMAND\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-scp-screenshot.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-scp-deploy-report.sh",
+            "timeout": 3
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh PostToolUse",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-compact.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SessionEnd",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh Notification",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh UserPromptSubmit",
+            "timeout": 5,
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/inject-challenge-reminder.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/authority-barter-trigger.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prompt-taskcreate-nag.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prompt-medical-mcp-reminder.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.claude/hooks/seo-use-sf-reminder.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.claude/hooks/context-40pct-warn.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SubagentStart",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh SubagentStop",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "WorktreeCreate": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh WorktreeCreate",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "WorktreeRemove": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh WorktreeRemove",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "TeammateIdle": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh TeammateIdle",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh TaskCompleted",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-compact.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "superpowers@superpowers-dev": true,
+    "conductor@conductor-marketplace": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "telegram@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "codex@openai-codex": true
+  },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    }
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "autoCompactEnabled": false,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
+}

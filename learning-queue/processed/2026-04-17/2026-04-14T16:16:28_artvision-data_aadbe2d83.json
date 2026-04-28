@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-14T16:16:28",
-  "repo": "artvision-data",
-  "commit": "aadbe2d83",
-  "message": "sync: session state 2026-04-14_16:16",
-  "signal_type": "automation,rule_update,new_skill",
-  "detail": "hooks: inject-knowledge.sh, | rules: _disabled-knowledge-system.md, | skills: SKILL.md,",
-  "files": [".claude/hooks/inject-knowledge.sh", ".claude/rules-global/_disabled-knowledge-system.md", ".claude/rules/_disabled-knowledge-system.md", ".claude/skills/wiki/SKILL.md", "clients/unotrans/kp/unotrans-kp-2026-04.html", "gantt-data.json", "sessions/2026-04-14.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

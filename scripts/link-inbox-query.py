@@ -13,6 +13,7 @@ import argparse
 import json
 import os
 import sys
+import ssl
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -42,13 +43,16 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
+# === SSL context (Python 3.14 + OpenSSL 3.x fix) ===
+_SSL_CTX = ssl.create_default_context()
+
 # === Supabase helpers ===
 def sb_get(path: str, params: dict | None = None):
     url = f"{SB_URL}/rest/v1/{path}"
     if params:
         url += "?" + urllib.parse.urlencode(params)
     req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=15) as r:
+    with urllib.request.urlopen(req, timeout=15, context=_SSL_CTX) as r:
         return json.loads(r.read())
 
 def sb_patch(path: str, params: dict, data: dict):
@@ -57,7 +61,7 @@ def sb_patch(path: str, params: dict, data: dict):
     h = dict(HEADERS)
     h["Prefer"] = "return=representation"
     req = urllib.request.Request(url, method="PATCH", headers=h, data=body)
-    with urllib.request.urlopen(req, timeout=15) as r:
+    with urllib.request.urlopen(req, timeout=15, context=_SSL_CTX) as r:
         return json.loads(r.read())
 
 # === TG helpers ===
@@ -69,7 +73,7 @@ def tg_call(method: str, payload: dict):
         data=json.dumps(payload).encode(),
     )
     try:
-        with urllib.request.urlopen(req, timeout=15) as r:
+        with urllib.request.urlopen(req, timeout=15, context=_SSL_CTX) as r:
             return json.loads(r.read())
     except urllib.error.HTTPError as e:
         return {"ok": False, "error": e.read().decode()[:300]}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-18T17:10:07",
-  "repo": "artvision-data",
-  "commit": "bca4dae16",
-  "message": "auto-sync: 2 new,9 modified [2026-04-18 17:10]",
-  "signal_type": "workaround",
-  "detail": "workaround: +| `test_llm.py` | review-generator module | sanitize_name injection defence, model cascade via Open",
-  "files": ["clients/tvorimsovershenstvo/survey-bot/.coverage", "clients/tvorimsovershenstvo/survey-bot/.coveragerc", "clients/tvorimsovershenstvo/survey-bot/data/funnel.db", "clients/tvorimsovershenstvo/survey-bot/tests/README.md", "clients/tvorimsovershenstvo/survey-bot/tests/test_bot.py", "clients/zakvaski-rus/presale/kp/index.html", "gantt-data.json", "logs/vps-recovery.md", "sessions/2026-04-18.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

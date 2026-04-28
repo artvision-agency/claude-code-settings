@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-16T03:21:31",
-  "repo": "artvision-data",
-  "commit": "e8d534e57",
-  "message": "chore: save session prompts before compact 2026-04-16_03:21",
-  "signal_type": "workaround",
-  "detail": "workaround: +   The user (Anton, Artvision) wants me to fully configure a VPN end-to-end on his mac via Hiddify-",
-  "files": ["prompts/2026-04-16_session_1658a53b.md"]
-}

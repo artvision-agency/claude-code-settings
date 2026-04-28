@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-10T21:51:11",
-  "repo": "artvision-data",
-  "commit": "f83cc63e6",
-  "message": "fix: remove service prices from Grelka-Gudelka KP \u2014 prices discussed at meeting",
-  "signal_type": "error_resolution",
-  "detail": "fix: remove service prices from Grelka-Gudelka KP \u2014 prices discussed at meeting",
-  "files": ["clients/grelka-gudelka/presale/kp/grelka_kp.html"]
-}

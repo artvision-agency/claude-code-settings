@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-13T03:41:08",
-  "repo": "artvision-data",
-  "commit": "5ec637316",
-  "message": "chore: save session prompts before compact 2026-04-13_03:41",
-  "signal_type": "workaround",
-  "detail": "workaround: +      - First: replaced broken `stop-account-usage.sh` command with `echo ` (disabled fallback)",
-  "files": ["prompts/2026-04-13_session_3686eb13.md"]
-}

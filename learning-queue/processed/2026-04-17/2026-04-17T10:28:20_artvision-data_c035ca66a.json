@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-17T10:28:20",
-  "repo": "artvision-data",
-  "commit": "c035ca66a",
-  "message": "sync: session state 2026-04-17_10:28",
-  "signal_type": "workaround",
-  "detail": "workaround: +                    // Fallback: \u0438\u0449\u0435\u043c \u043f\u043e \u0432\u0441\u0435\u043c \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u0430\u043c",
-  "files": ["clients/avtoworld/linkbuilding/screenshots/v5_06_captcha_done.png", "clients/avtoworld/linkbuilding/screenshots/v5_07_biz_main.png", "clients/avtoworld/linkbuilding/screenshots/v5_08_add_page.png", "clients/avtoworld/linkbuilding/screenshots/v5_09_FINAL.png", "clients/avtoworld/linkbuilding/screenshots/v6_01_auth_page.png", "clients/avtoworld/linkbuilding/screenshots/v6_02_auth_captcha.png", "clients/avtoworld/linkbuilding/scripts/yandex_sprav_v6.py", "dashboards/data/artvision.db", "gantt-data.json", "sessions/2026-04-17.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

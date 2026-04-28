@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-17T10:16:25",
-  "repo": "artvision-data",
-  "commit": "dd74ce1da",
-  "message": "sync: session state 2026-04-17_10:16",
-  "signal_type": "workaround",
-  "detail": "workaround: +                    await ss(page, \"retry_email_form\")",
-  "files": ["clients/avtoworld/linkbuilding/screenshots/v3_01_passport.png", "clients/avtoworld/linkbuilding/screenshots/v3_02_more_menu.png", "clients/avtoworld/linkbuilding/screenshots/v3_03_debug_inputs.png", "clients/avtoworld/linkbuilding/screenshots/v3_04_auth_final.png", "clients/avtoworld/linkbuilding/screenshots/v3_05_captcha.png", "clients/avtoworld/linkbuilding/scripts/yandex_sprav_v3.py", "sessions/2026-04-17.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

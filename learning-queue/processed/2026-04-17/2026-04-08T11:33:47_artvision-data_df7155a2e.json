@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-08T11:33:47",
-  "repo": "artvision-data",
-  "commit": "df7155a2e",
-  "message": "sync: session state 2026-04-08_11:33",
-  "signal_type": "workaround",
-  "detail": "workaround: +| `stage_[id]` | `initData()` line 407 | `submitText()` line 980 | PASS -- parseInt with fallback t",
-  "files": ["clients/atribeaute/content-lab/test-reports/test-pipeline-state.md", "clients/atribeaute/content-lab/test-reports/test-qa-report.md", "sessions/2026-04-08.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

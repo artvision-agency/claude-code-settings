@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-17T11:17:01",
-  "repo": "artvision-tg-bot",
-  "commit": "7a5d52c",
-  "message": "sync: session state 2026-04-17_11:16",
-  "signal_type": "workaround",
-  "detail": "workaround: +    async def run_scenario(coro_fn, fallback_name: str):",
-  "files": ["tvorim-opros-bot/tests/e2e_full_flow.py"]
-}

@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-16T03:18:36",
-  "repo": "artvision-data",
-  "commit": "153e8a922",
-  "message": "chore: save session prompts before compact 2026-04-16_03:18",
-  "signal_type": "workaround",
-  "detail": "workaround: +   - **Let's Encrypt IP cert failed**: nginx holds port 80. Panel fallback to HTTP with self-signed",
-  "files": ["prompts/2026-04-16_session_1658a53b.md"]
-}

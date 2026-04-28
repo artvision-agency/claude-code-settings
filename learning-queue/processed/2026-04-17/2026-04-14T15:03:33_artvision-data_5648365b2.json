@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-14T15:03:33",
-  "repo": "artvision-data",
-  "commit": "5648365b2",
-  "message": "chore: disable Karpathy Wiki \u2014 duplicate with memory/rules/skills",
-  "signal_type": "rule_update",
-  "detail": "rules: _disabled-knowledge-system.md,knowledge-system.md,",
-  "files": [".claude/rules/_disabled-knowledge-system.md", ".claude/rules/knowledge-system.md", "TODO.md", "clients/otido/otido-utm-bot-spec.html", "sessions/2026-04-14.jsonl"]
-}

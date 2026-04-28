@@ -6,17 +6,28 @@
 2. Показать открытые задачи → TaskCreate для каждой
 3. После compaction/resume → парсить summary → TaskCreate для pending items
 
-## Rules (~100 строк, загружаются всегда)
+## Rules (загружаются всегда из ~/.claude/rules/)
 
 | Файл | Что |
 |------|-----|
-| `core.md` | Автономность, skills, данные, VPS, массовые операции |
-| `context.md` | TODO routing, старт сессии, compaction recovery |
-| `security.md` | AUTO/CONFIRM, табу AI в публичных, токены |
-| `git.md` | Auto-commit, проекты, аккаунты |
-| `self-check.md` | Топ-5 повторяющихся ошибок |
-| `shortcuts.md` | Ключевые команды (полный словарь → skill `shorthand`) |
+| `core.md` | Автономность, workflow (Superpowers + Git), skills, параллельность, токены, VPS, антипаттерны |
+| `session.md` | Старт, TODO-маршрутизация, меню, интервью, ready-чеклист, recap, comp recovery |
+| `quality.md` | Gates по типу задачи, qa-full.sh, challenge-self, уроки B2B/Puratos |
+| `security.md` | AUTO/CONFIRM, табу AI в публичных, бренды продуктов |
+| `git.md` | Auto-commit, аккаунты, sync |
+| `self-corrections.md` | Топ повторяющихся ошибок |
+| `antipatterns.md` | ANTIPATTERN-теги: что запрещено |
+| `agent-roster.md` | Маршрутизация задач → агенты |
+| `consilium-matrix.md` | `/cons` vs `round_table` vs Agent-рой vs Codex |
+| `bulletproof-patterns.md` | Challenge loop, 40% rule, anti-rationalization |
+| `tool-adoption-proof.md` | Round-table перед adopt любого нового инструмента |
+| `asana-required-fields.md` | assignee + due_on + project_id обязательны |
+| `deploy-report-template.md` | Таблица 15 инструментов после deploy клиентского документа |
+| `tg-auto-capture.md` | tg-send-tracked.sh для статус-запросов команде |
+| `todo-routing.md` | TODO по контексту, sync через git |
+| `no-smoothing.md` | Запрет сглаживания углов, обязательный формат при проблемах |
+| `shortcuts.md` | Ключевые короткие команды |
 
 ## Skills (загружаются по запросу)
 
-Полный словарь опечаток → `shorthand`. Детали workflow → `artvision-workflow`. Маршрутизация агентов → `agent-roster` (skill `run-agent`). Quality gates → `quality-gates` (skill `factcheck`).
+Полный словарь опечаток → skill `shorthand` (триггер: непонятная команда). Детали workflow → `artvision-workflow`. Quality gates → skill `factcheck`.

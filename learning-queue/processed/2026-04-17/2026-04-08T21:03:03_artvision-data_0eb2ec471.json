@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-08T21:03:03",
-  "repo": "artvision-data",
-  "commit": "0eb2ec471",
-  "message": "feat: add Synamica to PROJECTS.md and clients registry",
-  "signal_type": "rule_update",
-  "detail": "rules: clients-registry.md,",
-  "files": [".claude/rules/clients-registry.md"]
-}

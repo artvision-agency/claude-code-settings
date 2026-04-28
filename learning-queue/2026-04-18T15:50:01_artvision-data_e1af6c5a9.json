@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-18T15:50:01",
-  "repo": "artvision-data",
-  "commit": "e1af6c5a9",
-  "message": "auto-sync: 2 new,6 modified [2026-04-18 15:50]",
-  "signal_type": "workaround",
-  "detail": "workaround: +| **Обработка ошибок** | 6/10 | `try/except Exception` глобальный, воз�",
-  "files": ["audit/2026-04-18-live-infra/01-hook-orphans.txt", "audit/2026-04-18-live-infra/01-hooks.json", "audit/2026-04-18-live-infra/02-launchagents.txt", "audit/2026-04-18-live-infra/03-crontab.txt", "audit/2026-04-18-live-infra/04-mcp.txt", "audit/2026-04-18-live-infra/05-critical-scripts.txt", "audit/2026-04-18-live-infra/06-client-configs.txt", "audit/2026-04-18-live-infra/06-client-domains.txt", "audit/2026-04-18-live-infra/06-client-html-recent.txt", "audit/2026-04-18-live-infra/07-local-bots.txt", "audit/2026-04-18-live-infra/07-vps-bots.txt", "audit/2026-04-18-live-infra/08-memory-active.txt", "clients/tvorimsovershenstvo/survey-bot/QA_AUDIT_2026-04-18.md", "dashboards/data/artvision.db", "gantt-data.json", "logs/vps-recovery.md", "sessions/2026-04-18.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}

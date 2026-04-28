@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-08T11:26:54",
-  "repo": "artvision-data",
-  "commit": "f36ee6cb1",
-  "message": "sync: session state 2026-04-08_11:26",
-  "signal_type": "new_skill",
-  "detail": "skills: SKILL.md,SKILL.md,SKILL.md,SKILL.md,",
-  "files": [".claude/commands/opsx/apply.md", ".claude/commands/opsx/archive.md", ".claude/commands/opsx/explore.md", ".claude/commands/opsx/propose.md", ".claude/skills/openspec-apply-change/SKILL.md", ".claude/skills/openspec-archive-change/SKILL.md", ".claude/skills/openspec-explore/SKILL.md", ".claude/skills/openspec-propose/SKILL.md", ".cursor/commands/opsx-apply.md", ".cursor/commands/opsx-archive.md", ".cursor/commands/opsx-explore.md", ".cursor/commands/opsx-propose.md", ".cursor/skills/openspec-apply-change/SKILL.md", ".cursor/skills/openspec-archive-change/SKILL.md", ".cursor/skills/openspec-explore/SKILL.md", ".cursor/skills/openspec-propose/SKILL.md", ".github/prompts/opsx-apply.prompt.md", ".github/prompts/opsx-archive.prompt.md", ".github/prompts/opsx-explore.prompt.md", ".github/prompts/opsx-propose.prompt.md", ".github/skills/openspec-apply-change/SKILL.md", ".github/skills/openspec-archive-change/SKILL.md", ".github/skills/openspec-explore/SKILL.md", ".github/skills/openspec-propose/SKILL.md", "clients/atribeaute/content-lab/index.html", "sessions/2026-04-08.jsonl", "sync/SESSION_STATE.json", "sync/SYNC_STATUS.md"]
-}
