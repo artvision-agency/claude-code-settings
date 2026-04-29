@@ -256,6 +256,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-sync-memory.sh",
+            "timeout": 12
+          }
+        ]
       }
     ],
     "Stop": [
