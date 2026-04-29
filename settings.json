@@ -479,6 +479,16 @@
             "async": true
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-tool-recap-goal-check.sh",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PostToolUse": [
