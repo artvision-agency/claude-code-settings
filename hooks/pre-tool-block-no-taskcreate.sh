@@ -34,7 +34,7 @@ set -uo pipefail
 INPUT="$(cat 2>/dev/null || true)"
 [ -z "$INPUT" ] && exit 0
 
-# 2. Parse session_id, tool_name, bash_command (single python call)
+# 2. Parse session_id, tool_name, bash_command, file_path (single python call)
 PARSED=$(printf '%s' "$INPUT" | python3 -c '
 import sys, json
 try:
@@ -43,17 +43,28 @@ try:
     print(d.get("tool_name", ""))
     ti = d.get("tool_input", {}) or {}
     print(ti.get("command", "") if d.get("tool_name") == "Bash" else "")
+    print(ti.get("file_path", "") if d.get("tool_name") in ("Edit", "Write", "MultiEdit") else "")
 except Exception:
-    print("")
-    print("")
-    print("")
-' 2>/dev/null || printf '\n\n\n')
+    print(""); print(""); print(""); print("")
+' 2>/dev/null || printf '\n\n\n\n')
 
 SESSION_ID=$(printf '%s\n' "$PARSED" | sed -n '1p')
 TOOL_NAME=$(printf '%s\n' "$PARSED" | sed -n '2p')
 CMD=$(printf '%s\n' "$PARSED" | sed -n '3p')
+FILE_PATH=$(printf '%s\n' "$PARSED" | sed -n '4p')
 
 [ -z "$TOOL_NAME" ] && exit 0
+
+# 2a. Edit/Write/MultiEdit на recap-файл текущей сессии — пропуск (разрывает дедлок
+# с pre-tool-recap-goal-check.sh при первом запуске сессии).
+if [ -n "$SESSION_ID" ] && [ -n "$FILE_PATH" ]; then
+  RECAP_FILE_LOCAL="$HOME/artvision-data/sync/recaps/${SESSION_ID}.md"
+  case "$TOOL_NAME" in
+    Edit|Write|MultiEdit)
+      [ "$FILE_PATH" = "$RECAP_FILE_LOCAL" ] && exit 0
+      ;;
+  esac
+fi
 
 # 3. Whitelist tool names
 case "$TOOL_NAME" in
