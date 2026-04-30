@@ -4,3 +4,6 @@
 
 ## Routed 2026-04-27 21:54
 - [ ] **[routed]** **#1 доработка v1: подключить tokens.json + multi-account routing по клиентам Artvision** [product:ads-stack] [priority:high] [assignee:claude] [skill:python-developer] [result:multi-account-skill+test-on-otido] [due:2026-05-10] [blocked-by:изучить-#1] — Артвижн ведёт N клиентов на Я.Директ → один skill должен переключаться между клиентскими токенами
+
+## Routed 2026-04-29 02:50
+- [ ] **[routed]** **AdvertMed/Reutov: уточнить у Элви скоуп GEO-анализа (6 текущих сайтов или 40 клиник сети)** [client:advertmed] [priority:medium] [assignee:anton] [due:2026-05-05] [result:scope-confirmed]
