@@ -70,9 +70,11 @@
 | `pre-client-work.sh` | Edit+Write | ant-partners 18/24/28.02 — пропуск Pre-Task Protocol → 29 страниц переделаны | `PRETASK_FORCE=1` |
 | `pre-strip-script-guard.sh` | Bash | ant-partners 24.02 — strip без regression-check, 157 секций потеряно | `STRIP_FORCE=1` |
 | `pre-bash-resource-guard.sh` | Bash | 26.04 — все 4 ttys claude упали 2× за 2 часа, OOM подозрение (free RAM ~42MB, диск 97%) | `RESOURCE_FORCE=1` |
+| `pre-bash-topvisor-guard.sh` | Bash | 29.04 — ДВАЖДЫ за одну сессию сжёг 100 RUB баланса Антона: фильтр `NOT_IN [0]` на `edit/positions_2/checker/go` запустил съём по 9 чужим проектам (vlpco, dsk-home, stomatiko, otido), 529 ключей × ~0.19 RUB. Блокирует: NOT_IN, MATCH '%', EXISTS, GREATER/LESS, checker/go без EQUALS, EQUALS [0], EQUALS []. Тесты: 8/8 PASS | `TOPVISOR_BROADCAST_FORCE=1` |
 | `prompt-taskcreate-nag.sh` | UserPromptSubmit | 18-19.04 — TaskCreate пропуск при 180 pending (Layer 1, мягкий) | (auto-disable) |
 | `pre-tool-block-no-taskcreate.sh` | PreToolUse `""` (все) | 27.04 — Антон требует жёсткий блок (Layer 2) | `TASKCREATE_FORCE=1` |
 | `pre-tool-recap-goal-check.sh` | PreToolUse `""` (все) | 29.04 — recap «Цель сессии» пустая на первом Edit/Write/Bash 2 раза подряд (sessionId c0f1dfaa) | `RECAP_GOAL_FORCE=1` |
+| `pre-kp-bred-block.sh` | PreToolUse `Write\|Edit` | 30.04 — strict-агенты нашли 49 CRITICAL в 39 КП за месяц (выручка клиента в рублях, UNCONFIRMED маркеры в видимом тексте, artvision.pro упоминания, «Лор-Альянс»-фейковый конкурент). Системные хуки + auto-fix + scanner | `KP_BRED_OK=1` |
 | `inject-challenge-reminder.sh` | UserPromptSubmit | магические цифры без источника | (auto после Skill) |
 | `stop-hallucination-detect.sh` | Stop | детект галлюцинаций в ответе | — |
 
