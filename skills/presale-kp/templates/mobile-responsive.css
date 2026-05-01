@@ -1,0 +1,72 @@
+/* === MOBILE / TABLET RESPONSIVE === KP partial.
+   Источник: сессия na-sklad.ru — 6 breakpoints + overflow-x: clip
+   Применять: вставить блок перед </style> в КП.
+*/
+
+/* Корневое clipping */
+html, body { overflow-x: clip; }
+.kp-document { max-width: 100%; overflow-x: hidden; }
+img, iframe, video { max-width: 100%; height: auto; }
+table { max-width: 100%; }
+pre, code { white-space: pre-wrap; word-wrap: break-word; }
+
+@media (max-width: 768px) {
+    /* Тарифы — auto-fit на mobile в 1 колонку */
+    div[style*="minmax(320px"] { grid-template-columns: 1fr !important; }
+    /* Audit modules: 4 → 2 колонки */
+    .av-audit-modules { grid-template-columns: repeat(2, 1fr) !important; }
+    /* Audit summary: 2 → 1 колонка */
+    .av-audit-summary { grid-template-columns: 1fr !important; }
+    /* Графики */
+    .av-chart { max-width: 100% !important; }
+    .av-chart img { max-width: 100%; height: auto; }
+    /* Stages cards */
+    .stages, .stage-card { width: 100% !important; box-sizing: border-box; }
+    /* Tariff cards */
+    .tariff-card { width: 100% !important; box-sizing: border-box; }
+    /* TOC — 1 столбик */
+    .kp-toc-list, .toc-list { columns: 1 !important; }
+    /* Footer — 1 колонка */
+    .kp-footer-grid { grid-template-columns: 1fr !important; }
+    /* Hero metrics */
+    .hero-metrics { grid-template-columns: repeat(2, 1fr) !important; gap: 12px; }
+}
+
+@media (max-width: 600px) {
+    /* Stage cards / тарифные карточки в 1 колонку */
+    .stages > .stage-card { width: 100%; box-sizing: border-box; }
+    div[style*="grid-template-columns:repeat(auto-fit"],
+    div[style*="grid-template-columns: repeat(auto-fit"] {
+        grid-template-columns: 1fr !important;
+    }
+    /* Бейдж «Рекомендуем» — статично */
+    .tariff-badge { position: static !important; display: inline-block; margin-bottom: 10px; }
+}
+
+@media (max-width: 480px) {
+    /* Таблицы — горизонтальный scroll */
+    .kp-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .kp-table table, table.kp-table { min-width: 600px; }
+    /* Padding страниц */
+    .kp-page, .hero, .cta-block, .kp-footer { padding: 28px 16px !important; }
+    /* Stage числа меньше */
+    .stage-num { font-size: 28px !important; }
+    /* TOC числа меньше */
+    .kp-toc-list li::before { font-size: 11px; min-width: 20px; }
+    /* Hero metrics — 1 колонка */
+    .hero-metrics { grid-template-columns: 1fr !important; }
+    /* Section title bigger gap */
+    .section-title { font-size: 22px !important; }
+    /* Chat bubble меньше + не перекрывает CTA */
+    .av-chat-toggle { width: 48px !important; height: 48px !important; bottom: 12px !important; right: 12px !important; }
+    .av-chat-toggle svg { width: 22px; height: 22px; }
+    .kp-footer, footer.kp-footer { padding-bottom: 80px !important; }
+    /* Контраст таблиц */
+    .kp-table td, .kp-table th { color: #1a202c; font-size: 13px; }
+}
+
+@media (max-width: 360px) {
+    .kp-page, .hero, .cta-block { padding: 22px 14px !important; }
+    .av-audit-modules { grid-template-columns: 1fr !important; }
+    .stage-num { font-size: 24px !important; }
+}
