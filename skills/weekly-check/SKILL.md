@@ -351,7 +351,7 @@ done
 
 ## 3.4 После созвона (автоматизация)
 
-1. Все решения → Asana (через `mcp__asana__asana_create_task`) с assignee Андрей
+1. Все решения → Asana (через `mcp__asana__asana_create_task`) БЕЗ assignee — спросить у пользователя кто исполнитель
 2. Задачи → `TODO.md` с тегами `[priority:]` `[client:]` `[due:]`
 3. Конспект → commit + push
 4. Обновить `plans/weekly-plan-W*.md` — план факт недели

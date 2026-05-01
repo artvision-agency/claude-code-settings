@@ -44,7 +44,7 @@ For sessions without matching Asana tasks:
   - `name`: concise task title from session topic
   - `notes`: session ID for traceability + brief description
   - `due_on`: today or next business day
-  - `assignee`: "me"
+  - `assignee`: НЕ назначать автоматически — спросить у пользователя
   - `project_id`: matched project GID
 
 For existing tasks that need updates:
