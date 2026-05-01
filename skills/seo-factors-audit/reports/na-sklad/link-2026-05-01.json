@@ -1,0 +1,410 @@
+{
+  "target_domain": "na-sklad.ru",
+  "audited_at": "2026-05-01T00:17:23+00:00",
+  "providers_available": {
+    "checktrust": false,
+    "serpstat": false,
+    "ahrefs": false,
+    "majestic": false,
+    "yandex_webmaster": true,
+    "topvisor": true
+  },
+  "competitors": [
+    "dlg.ru",
+    "beelogistic.ru",
+    "altum-spb.ru"
+  ],
+  "factors": [
+    {
+      "id": 1,
+      "group": "external_profile",
+      "name": "Ссылочная масса",
+      "status": "manual",
+      "severity": "high",
+      "value": null,
+      "evidence": "Требуется API [checktrust]. Добавь токен в tokens.json. Нет данных Serpstat/Checktrust/Webmaster.",
+      "method": "api_checktrust",
+      "description": "Общее количество входящих ссылок (dofollow+nofollow). Абсолют по нише.",
+      "source": "stub"
+    },
+    {
+      "id": 2,
+      "group": "external_profile",
+      "name": "Ссылающиеся домены",
+      "status": "manual",
+      "severity": "critical",
+      "value": null,
+      "evidence": "Требуется API [checktrust]. Добавь токен в tokens.json. Нет данных Serpstat/Webmaster.",
+      "method": "api_checktrust",
+      "description": "Количество уникальных доменов-донаров. Ключевая метрика для Яндекса.",
+      "source": "stub"
+    },
+    {
+      "id": 3,
+      "group": "external_profile",
+      "name": "Уникальность доноров",
+      "status": "manual",
+      "severity": "medium",
+      "value": null,
+      "evidence": "Требуется API [serpstat]. Добавь токен в tokens.json. Нет данных по new/lost.",
+      "method": "api_serpstat",
+      "description": "Доля новых донаров за последние 6 мес. <10% = стагнация ссылочной.",
+      "source": "stub"
+    },
+    {
+      "id": 4,
+      "group": "external_profile",
+      "name": "DR-распределение доноров",
+      "status": "manual",
+      "severity": "high",
+      "value": null,
+      "evidence": "Требуется API [checktrust]. Добавь токен в tokens.json. Нет Checktrust bulk-вызова по всем донорам.",
+      "method": "api_checktrust",
+      "description": "Гистограмма DR (0-20, 20-40, 40-60, 60-80, 80+). Нужно >=5% high-DR.",
+      "source": "stub"
+    },
+    {
+      "id": 5,
+      "group": "external_profile",
+      "name": "Тематичность доноров",
+      "status": "manual",
+      "severity": "high",
+      "value": null,
+      "evidence": "Требуется API [checktrust]. Добавь токен в tokens.json. Тематичность требует ручной категоризации донаров.",
+      "method": "api_checktrust",
+      "description": "Доля донаров в тематике клиента (категория сайта совпадает).",
+      "source": "stub"
+    },
+    {
+      "id": 6,
+      "group": "external_profile",
+      "name": "TLD-распределение",
+      "status": "manual",
+      "severity": "medium",
+      "value": null,
+      "evidence": "Требуется API [checktrust]. Добавь токен в tokens.json. Нет Serpstat и Webmaster.",
+      "method": "api_checktrust",
+      "description": ".ru/.рф vs .com/.net. Для рунета нужно >40% ru-доменов.",
+      "source": "stub"
+    },
+    {
+      "id": 7,
+      "group": "external_profile",
+      "name": "Типы ссылок (follow)",
+      "status": "manual",
+      "severity": "medium",
+      "value": null,
+      "evidence": "Требуется API [checktrust]. Добавь токен в tokens.json. Нет follow-статистики.",
+      "method": "api_checktrust",
+      "description": "dofollow / nofollow / UGC / sponsored разбивка.",
+      "source": "stub"
+    },
+    {
+      "id": 8,
+      "group": "external_profile",
+      "name": "Ссылки с главных vs внутренних",
+      "status": "manual",
+      "severity": "low",
+      "value": null,
+      "evidence": "Требуется API [serpstat]. Добавь токен в tokens.json. Нет Serpstat getBacklinks / Webmaster samples.",
+      "method": "api_serpstat",
+      "description": "% ссылок с homepage доноров vs внутренние страницы. Гомо-баланс лучше.",
+      "source": "stub"
+    },
+    {
+      "id": 9,
+      "group": "external_profile",
+      "name": "Rel=canonical на внешних",
+      "status": "manual",
+      "severity": "low",
+      "value": null,
+      "evidence": "Требуется API [serpstat]. Добавь токен в tokens.json. Нестандартный паттерн, требуется ручная SERP-проверка.",
+      "method": "api_serpstat",
+      "description": "Внешние страницы, указывающие canonical на нас (редкий паттерн цитирования).",
+      "source": "stub"
+    },
+    {
+      "id": 10,
+      "group": "external_profile",
+      "name": "gov/edu доноры",
+      "status": "manual",
+      "severity": "low",
+      "value": null,
+      "evidence": "Требуется API [checktrust]. Добавь токен в tokens.json. Нет Serpstat getBacklinks / Webmaster samples.",
+      "method": "api_checktrust",
+      "description": "Количество ссылок с .gov/.edu/.academy — редкие, но дают сильный траст.",
+      "source": "stub"
+    },
+    {
+      "id": 11,
+      "group": "external_profile",
+      "name": "Социальные сигналы",
+      "status": "warn",
+      "severity": "low",
+      "value": 5,
+      "evidence": "Упоминаний в соцсетях (SERP-оценка): ~5",
+      "method": "serp_parse",
+      "description": "Упоминания в соцсетях (VK/TG/OK) — парсим через SERP-оператор.",
+      "source": "serp_parse"
+    },
+    {
+      "id": 12,
+      "group": "external_profile",
+      "name": "Brand mentions без ссылки",
+      "status": "manual",
+      "severity": "medium",
+      "value": null,
+      "evidence": "Требуется API [serp_parse]. Добавь токен в tokens.json. Нужен Ahrefs Content Explorer или Brand24.",
+      "method": "serp_parse",
+      "description": "Упоминания бренда в тексте без гиперссылки — потенциал к аутричу.",
+      "source": "stub"
+    },
+    {
+      "id": 13,
+      "group": "anchor_toxicity",
+      "name": "Распределение анкоров",
+      "status": "manual",
+      "severity": "critical",
+      "value": null,
+      "evidence": "Требуется API [checktrust]. Добавь токен в tokens.json. Нет данных по анкорам.",
+      "method": "api_checktrust",
+      "description": "Brand / exact / partial / naked-url / generic. Нужен баланс, не >20% exact.",
+      "source": "stub"
+    },
+    {
+      "id": 14,
+      "group": "anchor_toxicity",
+      "name": "Переспам точных анкоров",
+      "status": "manual",
+      "severity": "critical",
+      "value": null,
+      "evidence": "Требуется API [checktrust]. Добавь токен в tokens.json. Нет данных по анкорам.",
+      "method": "api_checktrust",
+      "description": "% анкоров с точным коммерческим вхождением. >35% = высокий риск Минусинска.",
+      "source": "stub"
+    },
+    {
+      "id": 15,
+      "group": "anchor_toxicity",
+      "name": "Токсичные доноры",
+      "status": "manual",
+      "severity": "critical",
+      "value": null,
+      "evidence": "Требуется API [checktrust]. Добавь токен в tokens.json. Checktrust bulk по всем донорам платный.",
+      "method": "api_checktrust",
+      "description": "PBN-паттерны, дропы, спамные каталоги. Используем Checktrust X-Spam.",
+      "source": "stub"
+    },
+    {
+      "id": 16,
+      "group": "anchor_toxicity",
+      "name": "Авторские ссылки (footprint)",
+      "status": "manual",
+      "severity": "high",
+      "value": null,
+      "evidence": "Требуется API [ahrefs]. Добавь токен в tokens.json. Нужен Ahrefs Content Explorer для author detection.",
+      "method": "api_ahrefs",
+      "description": "Один автор = много доноров. >30 доноров от одного автора = red flag.",
+      "source": "stub"
+    },
+    {
+      "id": 17,
+      "group": "anchor_toxicity",
+      "name": "Нулевой анкор",
+      "status": "manual",
+      "severity": "low",
+      "value": null,
+      "evidence": "Требуется API [checktrust]. Добавь токен в tokens.json. Нет данных по анкорам.",
+      "method": "api_checktrust",
+      "description": "% ссылок без анкора (наг URL или img). Ок до 40%.",
+      "source": "stub"
+    },
+    {
+      "id": 18,
+      "group": "dynamics_age",
+      "name": "Возраст ссылочной массы",
+      "status": "manual",
+      "severity": "high",
+      "value": null,
+      "evidence": "Требуется API [ahrefs]. Добавь токен в tokens.json. Нужен Ahrefs API.",
+      "method": "api_ahrefs",
+      "description": "Медианный возраст ссылки. Молодая масса (<3 мес) = слабый траст.",
+      "source": "stub"
+    },
+    {
+      "id": 19,
+      "group": "dynamics_age",
+      "name": "Динамика прироста (12 мес)",
+      "status": "manual",
+      "severity": "high",
+      "value": null,
+      "evidence": "Требуется API [serpstat]. Добавь токен в tokens.json. Нужен Serpstat/Ahrefs history или Yandex.Webmaster.",
+      "method": "api_serpstat",
+      "description": "График прироста по месяцам. Спайк >300% за месяц = подозрение на покупку.",
+      "source": "stub"
+    },
+    {
+      "id": 20,
+      "group": "dynamics_age",
+      "name": "Потерянные ссылки (lost)",
+      "status": "manual",
+      "severity": "medium",
+      "value": null,
+      "evidence": "Требуется API [ahrefs]. Добавь токен в tokens.json. Нет данных по lost.",
+      "method": "api_ahrefs",
+      "description": "% ссылок, пропавших за последние 30 дней. >25% = разваливается донор-пул.",
+      "source": "stub"
+    },
+    {
+      "id": 21,
+      "group": "internal_linking",
+      "name": "Внутренняя перелинковка",
+      "status": "pass",
+      "severity": "high",
+      "value": 81.2,
+      "evidence": "Среднее внутренних ссылок на страницу: 81.2",
+      "method": "crawl_internal",
+      "description": "Среднее кол-во внутренних ссылок НА страницу. Нужно >=3.",
+      "source": "crawl"
+    },
+    {
+      "id": 22,
+      "group": "internal_linking",
+      "name": "Сиротские страницы",
+      "status": "pass",
+      "severity": "high",
+      "value": 0,
+      "evidence": "Сирот: 0 (из 40 страниц)",
+      "method": "crawl_internal",
+      "description": "Страницы без входящих внутренних ссылок. >20 = провал архитектуры.",
+      "source": "crawl"
+    },
+    {
+      "id": 23,
+      "group": "internal_linking",
+      "name": "Глубина кликов",
+      "status": "pass",
+      "severity": "medium",
+      "value": 3,
+      "evidence": "Максимальная глубина: 3 кликов",
+      "method": "crawl_internal",
+      "description": "Максимальная глубина до важных страниц. >6 кликов = Яндекс не увидит.",
+      "source": "crawl"
+    },
+    {
+      "id": 24,
+      "group": "internal_linking",
+      "name": "Битые внутренние ссылки",
+      "status": "pass",
+      "severity": "high",
+      "value": 0,
+      "evidence": "Битых внутренних: 0",
+      "method": "crawl_internal",
+      "description": "404 по внутренним ссылкам. Фикс через редиректы или удаление.",
+      "source": "crawl"
+    },
+    {
+      "id": 25,
+      "group": "internal_linking",
+      "name": "Редиректы в ссылочной",
+      "status": "warn",
+      "severity": "medium",
+      "value": 33,
+      "evidence": "Цепочек редиректов в ссылочной: 33",
+      "method": "crawl_internal",
+      "description": "301-цепочки из внешних ссылок (теряем PR на каждом шаге).",
+      "source": "crawl"
+    },
+    {
+      "id": 26,
+      "group": "competitor_gap",
+      "name": "Ссылочный разрыв vs конкуренты",
+      "status": "manual",
+      "severity": "critical",
+      "value": null,
+      "evidence": "Требуется API [serpstat]. Добавь токен в tokens.json. Нет списка конкурентов или нет Serpstat API.",
+      "method": "api_serpstat",
+      "description": "% разрыв по ref domains. >80% = догнать за год невозможно, нужна стратегия.",
+      "source": "stub"
+    },
+    {
+      "id": 27,
+      "group": "competitor_gap",
+      "name": "Уникальные доноры конкурентов",
+      "status": "manual",
+      "severity": "high",
+      "value": null,
+      "evidence": "Требуется API [serpstat]. Добавь токен в tokens.json. Нет списка конкурентов или нет Serpstat API.",
+      "method": "api_serpstat",
+      "description": "Доноры, которые ссылаются на конкурентов, но не на нас. Pool для аутрича.",
+      "source": "stub"
+    }
+  ],
+  "charts": {
+    "anchor_distribution": {
+      "brand": 0,
+      "exact": 0,
+      "partial": 0,
+      "naked_url": 0,
+      "generic": 0,
+      "empty": 0
+    }
+  },
+  "meta": {
+    "factors_total": 27,
+    "crawl": {
+      "pages_count": 40,
+      "orphans_sample": [],
+      "broken_sample": []
+    },
+    "summary": {
+      "counts": {
+        "pass": 4,
+        "warn": 2,
+        "fail": 0,
+        "manual": 21,
+        "na": 0
+      },
+      "by_group": {
+        "external_profile": {
+          "pass": 0,
+          "warn": 1,
+          "fail": 0,
+          "manual": 11,
+          "na": 0
+        },
+        "anchor_toxicity": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 5,
+          "na": 0
+        },
+        "dynamics_age": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 3,
+          "na": 0
+        },
+        "internal_linking": {
+          "pass": 4,
+          "warn": 1,
+          "fail": 0,
+          "manual": 0,
+          "na": 0
+        },
+        "competitor_gap": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 2,
+          "na": 0
+        }
+      },
+      "critical_fails_top": [],
+      "score": 66.7,
+      "automated_factors": 6
+    }
+  }
+}
