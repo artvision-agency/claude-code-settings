@@ -1,0 +1,114 @@
+<!--
+Виджет чата с псевдо-менеджером (например «Анна Ширшова») → POST /api/lead.
+Источник: na-sklad.ru. Endpoint: https://artvision.pro/api/lead/ принимает name, phone, message, page.
+Использование: вставить ПЕРЕД </body> в КП. Заменить MGR_INITIALS, MGR_NAME, MGR_ROLE.
+-->
+
+<style>
+.av-chat-toggle { position: fixed; right: 24px; bottom: 24px; width: 60px; height: 60px; border-radius: 50%;
+    background: var(--primary, #2c3e88); color: #fff; border: none; cursor: pointer; z-index: 9999;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18); display: flex; align-items: center; justify-content: center; }
+.av-chat-toggle:hover { transform: scale(1.05); }
+.av-chat-toggle svg { width: 26px; height: 26px; }
+.av-chat-toggle .av-chat-pulse { position: absolute; top: 6px; right: 6px; width: 12px; height: 12px;
+    border-radius: 50%; background: #22c55e; border: 2px solid #fff; }
+.av-chat-toggle .av-chat-pulse::before { content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 2px solid #22c55e; animation: avPulse 2s infinite; }
+@keyframes avPulse { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(1.8); opacity: 0; } }
+
+.av-chat-window { position: fixed; right: 24px; bottom: 100px; width: 360px; max-width: calc(100vw - 32px);
+    height: 520px; max-height: calc(100vh - 130px); background: #fff; border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.22); display: none; flex-direction: column; z-index: 9999;
+    overflow: hidden; font: 14px/1.5 -apple-system, system-ui, sans-serif; }
+.av-chat-window.open { display: flex; }
+.av-chat-header { padding: 14px 16px; background: var(--primary, #2c3e88); color: #fff; display: flex; align-items: center; gap: 12px; }
+.av-chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: #fff; color: var(--primary, #2c3e88);
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; }
+.av-chat-info { flex: 1; }
+.av-chat-name { font-weight: 600; font-size: 14px; }
+.av-chat-status { font-size: 11px; opacity: .85; display: flex; align-items: center; gap: 6px; }
+.av-chat-status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 2px rgba(34,197,94,.3); }
+.av-chat-close { background: transparent; border: none; color: #fff; cursor: pointer; font-size: 22px; padding: 0 4px; }
+.av-chat-body { flex: 1; padding: 14px; overflow-y: auto; background: #f6f8fb; display: flex; flex-direction: column; gap: 8px; }
+.av-msg { max-width: 80%; padding: 10px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.45; word-wrap: break-word; }
+.av-msg.in { background: #fff; color: #1a202c; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.av-msg.out { background: var(--primary, #2c3e88); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+.av-msg.system { background: transparent; color: #6b7280; font-size: 11px; align-self: center; padding: 4px 8px; }
+.av-chat-form { padding: 10px 12px; background: #fff; border-top: 1px solid #e5e7eb; }
+.av-chat-form input, .av-chat-form textarea { width: 100%; padding: 8px 12px; box-sizing: border-box;
+    border: 1px solid #d1d5db; border-radius: 8px; font: inherit; margin-bottom: 6px; resize: none; }
+.av-chat-form .av-row { display: flex; gap: 6px; align-items: stretch; }
+.av-chat-form .av-row textarea { flex: 1; min-height: 38px; max-height: 100px; }
+.av-chat-form button[type=submit] { background: var(--primary, #2c3e88); color: #fff; border: none;
+    border-radius: 8px; padding: 0 14px; cursor: pointer; font: inherit; font-weight: 600; }
+.av-chat-hp { position: absolute; left: -9999px; }
+@media print { .av-chat-toggle, .av-chat-window { display: none !important; } }
+</style>
+
+<button type="button" class="av-chat-toggle" id="avChatToggle" aria-label="Открыть чат">
+  <span class="av-chat-pulse"></span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
+<div class="av-chat-window" id="avChatWindow" role="dialog">
+  <div class="av-chat-header">
+    <div class="av-chat-avatar">{{MGR_INITIALS}}</div>
+    <div class="av-chat-info">
+      <div class="av-chat-name">{{MGR_NAME}}</div>
+      <div class="av-chat-status">{{MGR_ROLE}} · обычно отвечает за 5–10 минут</div>
+    </div>
+    <button type="button" class="av-chat-close" id="avChatClose">×</button>
+  </div>
+  <div class="av-chat-body" id="avChatBody">
+    <div class="av-msg in">Здравствуйте! Я {{MGR_NAME_SHORT}}, {{MGR_ROLE}}. Прочитала аудит — есть вопросы или идеи.</div>
+    <div class="av-msg in">Если хотите обсудить документ — напишите. Отвечу лично.</div>
+  </div>
+  <form class="av-chat-form" id="avChatForm" autocomplete="on">
+    <input type="text" name="website" class="av-chat-hp" tabindex="-1" autocomplete="off">
+    <input type="text" name="name" placeholder="Как к вам обращаться" required maxlength="100">
+    <input type="tel" name="phone" placeholder="Телефон (необязательно)" maxlength="20">
+    <div class="av-row">
+      <textarea name="message" placeholder="Ваш вопрос или сообщение" required maxlength="2000" rows="2"></textarea>
+      <button type="submit" id="avChatSubmit">→</button>
+    </div>
+  </form>
+</div>
+
+<script>
+(function(){
+  var toggle = document.getElementById('avChatToggle');
+  var win = document.getElementById('avChatWindow');
+  var closeBtn = document.getElementById('avChatClose');
+  var form = document.getElementById('avChatForm');
+  var body = document.getElementById('avChatBody');
+  var submit = document.getElementById('avChatSubmit');
+  toggle.addEventListener('click', function(){ win.classList.toggle('open'); });
+  closeBtn.addEventListener('click', function(){ win.classList.remove('open'); });
+  function addMsg(text, cls){
+    var m = document.createElement('div'); m.className = 'av-msg ' + cls; m.textContent = text;
+    body.appendChild(m); body.scrollTop = body.scrollHeight;
+  }
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var fd = new FormData(form);
+    var name = (fd.get('name')||'').toString().trim();
+    var msg = (fd.get('message')||'').toString().trim();
+    if (!name || !msg) return;
+    addMsg(msg, 'out');
+    fd.append('page', location.href);
+    submit.disabled = true;
+    fetch('/api/lead/', { method: 'POST', body: fd })
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if (j.status === 'ok') {
+          addMsg('Спасибо, ' + name + '! Получила. Отвечу в течение 10 минут.', 'in');
+          form.querySelector('[name=message]').value = '';
+        } else {
+          addMsg('Не удалось отправить: ' + (j.message || 'ошибка'), 'system');
+        }
+      })
+      .catch(function(){ addMsg('Не удалось отправить. Проверьте соединение и повторите.', 'system'); })
+      .finally(function(){ submit.disabled = false; });
+  });
+})();
+</script>
