@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>na-sklad — Аудит коммерческих факторов | artvision.pro Pulse</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --av-black: #181818;
+    --av-pure-black: #000000;
+    --av-white: #ffffff;
+    --av-text-primary: #181818;
+    --av-text-secondary: #636663;
+    --av-text-dark: #323232;
+    --av-green: #059856;
+    --av-green-light: #1a7d52;
+    --av-pink: #d82b63;
+    --av-orange: #e07c1d;
+    --av-red: #c33648;
+
+    --av-bg-light: #f3f3f3;
+    --av-bg-white: #ffffff;
+    --av-bg-footer: #e1e1e1;
+    --av-border: #c8c8c8;
+    --av-border-dark: #000000;
+
+    --av-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--av-font);
+    color: var(--av-text-primary);
+    background: #e8e8e8;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* Document wrapper */
+.report {
+    max-width: 1040px;
+    margin: 0 auto;
+    background: var(--av-bg-white);
+    box-shadow: 0 2px 40px rgba(0,0,0,0.12);
+}
+.page {
+    padding: 56px 64px;
+    border-bottom: 1px solid var(--av-border);
+}
+.page:last-child { border-bottom: none; }
+.page-dark {
+    padding: 56px 64px;
+    background: var(--av-pure-black);
+    color: var(--av-white);
+}
+
+/* Header */
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 32px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+}
+.header-top .brand { font-weight: 600; color: var(--av-white); }
+
+h1 {
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: -0.015em;
+}
+h2 {
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+}
+h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 24px 0 12px;
+}
+h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 20px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--av-text-secondary);
+}
+p { margin-bottom: 14px; color: var(--av-text-dark); font-size: 15px; }
+
+.subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    max-width: 620px;
+}
+
+/* Summary stats */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+}
+.stat {
+    background: var(--av-bg-light);
+    padding: 20px 18px;
+    border-radius: 10px;
+    border-left: 4px solid var(--av-green);
+}
+.stat.warn { border-left-color: var(--av-orange); }
+.stat.fail { border-left-color: var(--av-red); }
+.stat.manual { border-left-color: var(--av-text-secondary); }
+.stat .value {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.stat .label {
+    font-size: 12px;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* Score big */
+.score-block {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    background: var(--av-bg-light);
+    padding: 28px;
+    border-radius: 12px;
+    margin: 20px 0 28px;
+}
+.score-big {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--av-green);
+    min-width: 160px;
+}
+.score-big.low { color: var(--av-red); }
+.score-big.mid { color: var(--av-orange); }
+.score-caption h3 { margin-top: 0; }
+
+/* TOC */
+.toc {
+    background: var(--av-bg-light);
+    padding: 24px 28px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+.toc ol { padding-left: 22px; }
+.toc li {
+    margin: 6px 0;
+    font-size: 15px;
+}
+.toc a {
+    color: var(--av-text-primary);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--av-border);
+}
+.toc a:hover { border-bottom-color: var(--av-green); color: var(--av-green); }
+
+/* Tables */
+.factor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 14px;
+}
+.factor-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--av-bg-light);
+    border-bottom: 2px solid var(--av-border-dark);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--av-text-dark);
+}
+.factor-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--av-border);
+    vertical-align: top;
+}
+.factor-table tr:hover td { background: #fafafa; }
+.factor-table .col-status { width: 72px; }
+.factor-table .col-id { width: 48px; color: var(--av-text-secondary); }
+.factor-table .col-sev { width: 90px; }
+.factor-table .col-name { width: 200px; font-weight: 600; }
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.status-pass { background: #d8f0e4; color: var(--av-green-light); }
+.status-warn { background: #fde4cc; color: var(--av-orange); }
+.status-fail { background: #f8d4d9; color: var(--av-red); }
+.status-manual { background: #e4e4e4; color: var(--av-text-secondary); }
+.status-na { background: #f0f0f0; color: var(--av-text-secondary); }
+
+.sev-critical { color: var(--av-red); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+.sev-high { color: var(--av-orange); font-weight: 600; text-transform: uppercase; font-size: 11px; }
+.sev-medium { color: var(--av-text-dark); text-transform: uppercase; font-size: 11px; }
+.sev-low { color: var(--av-text-secondary); text-transform: uppercase; font-size: 11px; }
+
+.evidence {
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    line-height: 1.5;
+}
+
+/* Top critical */
+.critical-list {
+    background: #fff5f6;
+    border-left: 4px solid var(--av-red);
+    padding: 18px 22px;
+    border-radius: 6px;
+    margin: 16px 0 24px;
+}
+.critical-list ol { padding-left: 22px; }
+.critical-list li {
+    margin: 8px 0;
+    font-size: 15px;
+    color: var(--av-text-dark);
+}
+.critical-list li strong { color: var(--av-red); }
+
+/* Meta block */
+.meta-block {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 10px 18px;
+    margin: 24px 0;
+    font-size: 14px;
+    color: var(--av-text-dark);
+}
+.meta-block .key {
+    font-weight: 600;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding-top: 2px;
+}
+.meta-block .value { word-break: break-word; }
+.meta-block a { color: var(--av-green-light); }
+
+/* Category section anchor */
+section.category {
+    scroll-margin-top: 20px;
+}
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid var(--av-border-dark);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
+.category-stats {
+    font-size: 13px;
+    color: var(--av-text-secondary);
+}
+
+/* Footer */
+footer {
+    background: var(--av-bg-footer);
+    padding: 28px 64px;
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    text-align: center;
+}
+footer a { color: var(--av-green-light); text-decoration: none; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page, .page-dark { padding: 36px 24px; }
+    h1 { font-size: 30px; }
+    h2 { font-size: 22px; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .score-block { flex-direction: column; gap: 12px; text-align: center; }
+    .score-big { min-width: unset; font-size: 56px; }
+    .factor-table, .factor-table thead, .factor-table tbody, .factor-table tr, .factor-table td, .factor-table th { display: block; }
+    .factor-table thead { display: none; }
+    .factor-table td {
+        border: none;
+        padding: 4px 0;
+    }
+    .factor-table tr {
+        border-bottom: 1px solid var(--av-border);
+        padding: 12px 0;
+    }
+    .meta-block { grid-template-columns: 1fr; gap: 4px; }
+    .meta-block .key { margin-top: 10px; }
+}
+
+@media print {
+    body { background: white; }
+    .report { box-shadow: none; max-width: none; }
+    .page, .page-dark { padding: 24px; page-break-inside: avoid; }
+    section.category { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="report">
+
+<!-- ===== COVER ===== -->
+<div class="page-dark">
+    <div class="header-top">
+        <span class="brand">artvision.pro</span>
+        <span>Pulse · 01.05.2026 00:17</span>
+    </div>
+    <h1>Аудит коммерческих факторов</h1>
+    <p class="subtitle">
+        na-sklad — сканирование сайта по 118 параметрам
+        ранжирования, основанным на методике Яндекса
+        и наработках агентства artvision.pro.
+    </p>
+    <div style="margin-top: 28px; font-size: 14px; color: rgba(255,255,255,0.85);">
+        <strong>Сайт:</strong> <a href="https://na-sklad.ru" style="color: #76e0a8;">https://na-sklad.ru</a><br>
+        <strong>Дата проверки:</strong> 01.05.2026 00:17
+    </div>
+</div>
+
+<!-- ===== EXECUTIVE SUMMARY ===== -->
+<div class="page">
+    <h2>Резюме</h2>
+
+    <div class="score-block">
+        <div class="score-big low">25.0%</div>
+        <div class="score-caption">
+            <h3>30 из 120 факторов выполнены</h3>
+            <p>
+                Остальные — потенциал для роста позиций, конверсии и доверия.
+                Фокус на критичных разрывах даёт наибольший прирост на первом этапе.
+            </p>
+        </div>
+    </div>
+
+    <div class="summary-grid">
+        <div class="stat">
+            <div class="value">30</div>
+            <div class="label">Выполнено</div>
+        </div>
+        <div class="stat fail">
+            <div class="value">67</div>
+            <div class="label">Не выполнено</div>
+        </div>
+        <div class="stat warn">
+            <div class="value">2</div>
+            <div class="label">Требует внимания</div>
+        </div>
+        <div class="stat manual">
+            <div class="value">21</div>
+            <div class="label">Ручная проверка</div>
+        </div>
+    </div>
+
+    <h3>Топ критичных разрывов</h3>
+    <div class="critical-list">
+        <ol>
+            <li>
+                <strong>Доставка</strong>
+                <span style="color: var(--av-text-secondary); font-size: 13px;">
+                    (E-commerce: корзина, доставка, оплата, severity: critical)
+                </span>
+            </li>
+            <li>
+                <strong>Фотографии товара</strong>
+                <span style="color: var(--av-text-secondary); font-size: 13px;">
+                    (Карточка товара и каталог, severity: critical)
+                </span>
+            </li>
+            <li>
+                <strong>Структура сайта</strong>
+                <span style="color: var(--av-text-secondary); font-size: 13px;">
+                    (Навигация и информация о компании, severity: high)
+                </span>
+            </li>
+            <li>
+                <strong>Поиск по сайту</strong>
+                <span style="color: var(--av-text-secondary); font-size: 13px;">
+                    (Навигация и информация о компании, severity: high)
+                </span>
+            </li>
+            <li>
+                <strong>Сертификаты и лицензии</strong>
+                <span style="color: var(--av-text-secondary); font-size: 13px;">
+                    (Доверие и социальные доказательства, severity: high)
+                </span>
+            </li>
+        </ol>
+    </div>
+
+    <h3 id="toc">Содержание</h3>
+    <div class="toc">
+        <ol>
+            <li><a href="#meta">Параметры проверки</a></li>
+            <li><a href="#cat-navigation_company">Навигация и информация о компании</a> (22)</li>
+            <li><a href="#cat-trust">Доверие и социальные доказательства</a> (21)</li>
+            <li><a href="#cat-ecommerce">E-commerce: корзина, доставка, оплата</a> (19)</li>
+            <li><a href="#cat-engagement">Взаимодействие с клиентом</a> (13)</li>
+            <li><a href="#cat-content_seo">Контент и SEO</a> (12)</li>
+            <li><a href="#cat-sales_tools">Инструменты продаж</a> (8)</li>
+            <li><a href="#cat-product_info">Карточка товара и каталог</a> (25)</li>
+            <li><a href="#recommendations">Рекомендации и следующие шаги</a></li>
+        </ol>
+    </div>
+</div>
+
+<!-- ===== META ===== -->
+<section class="page" id="meta">
+    <h2>Параметры проверки</h2>
+    <div class="meta-block">
+        <div class="key">URL сайта</div>
+        <div class="value"><a href="https://na-sklad.ru" target="_blank">https://na-sklad.ru</a></div>
+
+        <div class="key">Дата и время</div>
+        <div class="value">01.05.2026 00:17 (UTC)</div>
+
+        <div class="key">Страниц обследовано</div>
+        <div class="value">
+                <strong>home:</strong> <a href="https://na-sklad.ru/" target="_blank">https://na-sklad.ru/</a><br>
+                <strong>contacts:</strong> <a href="https://na-sklad.ru/kontakty" target="_blank">https://na-sklad.ru/kontakty</a><br>
+                <strong>about:</strong> <a href="https://na-sklad.ru/o-kompanii" target="_blank">https://na-sklad.ru/o-kompanii</a><br>
+                <strong>blog:</strong> <a href="https://na-sklad.ru/news" target="_blank">https://na-sklad.ru/news</a><br>
+        </div>
+
+        <div class="key">Всего факторов</div>
+        <div class="value">120</div>
+
+        <div class="key">Инструмент</div>
+        <div class="value">artvision.pro Pulse — авторская методика на основе 118 параметров Яндекса</div>
+
+        <div class="key">Ограничения</div>
+        <div class="value">
+            Аудит проводится без JS-рендеринга и без авторизации в личный кабинет.
+            Пункты, требующие ручной проверки репутации и внешних источников,
+            отмечены отдельной меткой.
+        </div>
+    </div>
+</section>
+
+<!-- ===== CATEGORIES ===== -->
+<section class="page category" id="cat-navigation_company">
+    <div class="category-header">
+        <h2>1. Навигация и информация о компании</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">13 выполнено</span> ·
+            <span style="color: var(--av-red);">8 не выполнено</span> ·
+            <span style="color: var(--av-text-secondary);">1 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">3</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Структура сайта</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: nav, header nav, .menu</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        У сайта есть проработанная структура навигации
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">21</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Поиск по сайту</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: input[type=&#39;search&#39;], [class*=&#39;search&#39;] input, form[role=&#39;search&#39;]</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Наличие формы поиска на видном месте
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">10</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Филиалы</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: филиал, наши офисы, отделени, branches</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Контакты всех филиалов. Можно со структурой, персоналом
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">19</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Выбор региона</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: ваш город, выбор города, ваш регион, город доставки, выберите регион</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Если работаете в нескольких регионах и есть поддомены — добавить выбор нужного региона
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">20</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Телефоны — региональный/8-800</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: 8 800, 8-800, 8(800), +7 800</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Региональный или бесплатный 8-800. Мобильный лучше не использовать
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">11</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Представители</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: представител, дилер, региональные менеджеры, дистрибьютор</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Представители компании в других регионах, странах
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">14</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Оптовикам</td>
+                <td>
+                    <div class="evidence">URL/пункт меню не найден: /opt, /wholesale, /optom, оптом, оптовикам</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Раздел с информацией по работе с оптовыми клиентами, партнерами
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">15</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Корпоративным клиентам</td>
+                <td>
+                    <div class="evidence">URL/пункт меню не найден: /corporate, /b2b, /business, корпоративн, юрлицам</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Раздел с информацией для корпоративных клиентов
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">7</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Контакты и обратная связь</td>
+                <td>
+                    <div class="evidence">Найдена ссылка/пункт меню: &#39;/kontakty&#39;</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Полные контакты с индексом, больше упоминаний на сайте
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">8</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Телефон в шапке</td>
+                <td>
+                    <div class="evidence">Найден элемент &#39;header a[href^=&#39;tel:&#39;]&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Обязательное упоминание в шапке сайта, на странице Контакты и в футере
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">18</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Логотип</td>
+                <td>
+                    <div class="evidence">Найден элемент &#39;header img&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Наличие логотипа в шапке сайта, желательно в левом верхнем углу
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">9</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Реквизиты</td>
+                <td>
+                    <div class="evidence">Найдено &#39;ИНН&#39; на about</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Раздел с реквизитами компании
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/o-kompanii/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/o-kompanii/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">16</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">График работы</td>
+                <td>
+                    <div class="evidence">Найдено &#39;график работы&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Детальная информация по графику работы компании, основного офиса, филиалов
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">22</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Email в контактах</td>
+                <td>
+                    <div class="evidence">Найден элемент &#39;a[href^=&#39;mailto:&#39;]&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Email-адрес для связи
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">1</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">История компании</td>
+                <td>
+                    <div class="evidence">Найдено &#39;о компани&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Описаны этапы развития компании, рост, увеличение товарных предложений
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">2</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Информация о персонале</td>
+                <td>
+                    <div class="evidence">Найдено &#39;команда&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Информация о сотрудниках, работающих в компании, их опыте, достижениях
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">6</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Партнеры</td>
+                <td>
+                    <div class="evidence">Найдено &#39;партнер&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Кто является партнером компании, поставщики
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">12</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Новости</td>
+                <td>
+                    <div class="evidence">Найдена ссылка/пункт меню: &#39;/news&#39;</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Раздел со свежими новостями компании
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">13</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Портфолио</td>
+                <td>
+                    <div class="evidence">Найдена ссылка/пункт меню: &#39;работы&#39;</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Раздел с примерами работ, товаров, продукции
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">4</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Оборудование, техника, материалы</td>
+                <td>
+                    <div class="evidence">Найдено &#39;оборудован&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Блок-схема структуры компании, отделы, департаменты, бизнес-процессы, используемое оборудование
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">5</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Вакансии</td>
+                <td>
+                    <div class="evidence">Найдена ссылка/пункт меню: &#39;/rabota&#39;</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Раздел с вакансиями
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">17</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Слоган</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Наличие слогана в шапке сайта, желательно в левом верхнем углу
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-trust">
+    <div class="category-header">
+        <h2>2. Доверие и социальные доказательства</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">4 выполнено</span> ·
+            <span style="color: var(--av-red);">7 не выполнено</span> ·
+            <span style="color: var(--av-text-secondary);">10 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">25</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Сертификаты и лицензии</td>
+                <td>
+                    <div class="evidence">URL/пункт меню не найден: /certificates, /litsenzii, /sertifikaty, сертификат, лицензи</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Раздел-галерея с фотографиями и сканами официальных документов
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">28</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Преимущества</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: наши преимущества, почему мы, почему выбирают, why us, advantages</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Наличие блока Наши преимущества
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">24</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Наши клиенты</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: наши клиенты, clients, с нами работают, нам доверяют</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Информация о клиентах компании (логотипы, кейсы)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">26</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Достижения</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: достижения, награды, премии, грамоты, патенты...</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Раздел с фотографиями грамот, достижений, патентов, публикаций
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">31</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Корпоративный блог</td>
+                <td>
+                    <div class="evidence">URL/пункт меню не найден: /blog, /articles, /статьи, блог, журнал</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        В блоге актуальная, регулярно обновляющаяся информация
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">32</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Фото и видео-отчёты</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: фото отчет, видео отчет, фотоотчет, видеоотчет, отчет о работе</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Фото и/или видео-отчеты по каждой услуге
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">35</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Видео / канал на YouTube</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: a[href*=&#39;youtube.com&#39;], iframe[src*=&#39;youtube&#39;], iframe[src*=&#39;rutube&#39;]</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Наличие видео-роликов или собственного канала
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">23</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Отзывы, рекомендации, благодарности</td>
+                <td>
+                    <div class="evidence">Найдена ссылка/пункт меню: &#39;/otzyvy&#39;</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Раздел с отзывами и рекомендациями
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">27</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Видимость в интернете (соцсети)</td>
+                <td>
+                    <div class="evidence">Найден элемент &#39;a[href*=&#39;t.me&#39;]&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Активные страницы компании во всех соцсетях
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">30</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Виджет карты и схема проезда</td>
+                <td>
+                    <div class="evidence">Найден элемент &#39;[class*=&#39;map&#39;]&#39; на contacts</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Схема проезда по актуальному адресу компании
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/kontakty/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/kontakty/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">29</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Элементы доверия</td>
+                <td>
+                    <div class="evidence">Найдено &#39;мир&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Размещение логотипов авторитетных сервисов (платежные системы, партнеры)
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">37</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Яндекс Справочник / Google Мой Бизнес</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Компания зарегистрирована в справочниках (ручная проверка)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">34</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Отсутствие сторонней рекламы</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Сайт должен продавать свой товар, без баннеров чужих компаний
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">36</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Репутация и возраст домена</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Работа по репутации на сторонних сайтах отзывов о компании
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">39</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Узнаваемость бренда</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Упоминания названия бренда в интернете, особенно СМИ + брендованный трафик
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">40</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Отзывы на отзовиках</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Отзывы на сторонних сайтах (flamp.ru, otzovik.com, yandex отзывы)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">38</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Сервисы Яндекса</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Участие в сервисах Яндекса (Маркет, Дзен, Карты, Услуги)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">41</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Отзывы на агрегаторах</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Отзывы на агрегаторах (Яндекс.Маркет, Ozon, Wildberries)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">42</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Ссылки на авторитетных ресурсах</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Работа по простановке ссылок с авторитетных ресурсов
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">33</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Видеообращение директора</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Видеообращение руководителя повышает доверие клиента
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">43</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Упоминания бренда на форумах</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Работа над упоминаниями бренда в интернете
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-ecommerce">
+    <div class="category-header">
+        <h2>3. E-commerce: корзина, доставка, оплата</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">3 выполнено</span> ·
+            <span style="color: var(--av-red);">16 не выполнено</span> ·
+            <span style="color: var(--av-text-secondary);">0 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">49</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Доставка</td>
+                <td>
+                    <div class="evidence">URL/пункт меню не найден: /delivery, /dostavka, /shipping, доставка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Описаны условия доставки и возможные варианты
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">53</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Гарантии, возврат, оплата</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: гарантия, возврат, способы оплаты, warranty, refund</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Подробно описано что гарантируем и способы возврата
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">55</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Ссылка на корзину в шапке</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: header a[href*=&#39;cart&#39;], header a[href*=&#39;order&#39;], [class*=&#39;cart&#39;]</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        При добавлении товара в корзину отображается количество и сумма
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">56</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Корзина — правильный URL</td>
+                <td>
+                    <div class="evidence">URL/пункт меню не найден: /cart, /order, /checkout</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Адрес корзины должен быть /cart или /order, но не /korzina (Яндекс не распознает)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">61</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Срок доставки</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: срок доставки, дн. доставка, доставим за, delivery time, в течение</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Упоминание примерного срока доставки товара
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">46</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Прайс-лист (скачать)</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: скачать прайс, прайс-лист, price list, скачать каталог, .pdf...</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Возможность скачать прайс-лист в удобном формате
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">48</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Обслуживание клиента</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: персональный менеджер, горячая линия, бесплатный телефон, консультация бесплатно</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Персональный менеджер, бесплатный телефон горячей линии
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">51</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">FAQ</td>
+                <td>
+                    <div class="evidence">URL/пункт меню не найден: /faq, /voprosy, /help, faq, вопрос-ответ</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Подробный раздел вопрос-ответ
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">57</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Оплата через Сбербанк Онлайн</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: сбербанк, sberbank, sberpay, сберпей</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Второй по популярности способ оплаты
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">58</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Самовывоз</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: самовывоз, pickup, забрать из магазина, забрать на складе</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Возможность самовывоза
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">60</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Информация об оплате (иконки)</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: [class*=&#39;payment&#39;] img, [class*=&#39;pay-systems&#39;] img, footer img[alt*=&#39;visa&#39; i]</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Дубль иконками и логотипами платежных систем
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">62</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Доп информация по заказу</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: в кредит, рассрочка, бонусы, кэшбек, cashback</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Покупка в кредит, бонусы, рассрочка
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">45</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Сравнение товаров</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: сравнить, сравнение, compare</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Возможность сравнить товары
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">47</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Сервис и ремонт</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: сервис, ремонт, обслуживание, гарантийный ремонт</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Осуществляется ли обслуживание/ремонт компанией, условия
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">52</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Франчайзинг</td>
+                <td>
+                    <div class="evidence">URL/пункт меню не найден: /franchise, /franchising, франшиз, franchise</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Возможность представления франшизы
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">59</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Адреса сервисных центров</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: сервисный центр, сервисные центры, сервисные точки, service center</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Адреса сервисных центров для клиентов
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">50</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Условия оферты</td>
+                <td>
+                    <div class="evidence">Найдено &#39;оферт&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Описание договора публичной оферты
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">44</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Калькулятор стоимости</td>
+                <td>
+                    <div class="evidence">Найдено &#39;калькулятор&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Онлайн расчет стоимости услуг, товаров, доставки
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">54</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Личный кабинет</td>
+                <td>
+                    <div class="evidence">Найдена ссылка/пункт меню: &#39;/personal&#39;</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        С информацией по бонусам, истории покупок
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-engagement">
+    <div class="category-header">
+        <h2>4. Взаимодействие с клиентом</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">5 выполнено</span> ·
+            <span style="color: var(--av-red);">6 не выполнено</span> ·
+            <span style="color: var(--av-text-secondary);">2 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">64</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Онлайн-консультация</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: [class*=&#39;jivo&#39;], [class*=&#39;talk-me&#39;], [class*=&#39;livechat&#39;]</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Наличие виджета онлайн-консультант
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">66</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Этапы взаимодействия с клиентом</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: этапы работы, как мы работаем, процесс работы, как заказать, шаг 1</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Описан процесс консультации и работы с клиентом
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">72</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Комментарии</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: комментарии, оставить комментарий, добавить комментарий, comments</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Наличие формы с комментариями
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">73</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Кнопки шаринга</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: [class*=&#39;share&#39;], [class*=&#39;social-share&#39;], [class*=&#39;yashare&#39;]</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Кнопки Поделиться в соцсетях
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">74</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Сообщить о поступлении</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: сообщить о поступлении, уведомить о поступлении, notify when available</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Если товара нет в наличии — функционал Сообщить о поступлении
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">75</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Обратный отсчёт</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: [class*=&#39;countdown&#39;], [class*=&#39;timer&#39;], [class*=&#39;counter-time&#39;]</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Формы с обратным отсчётом срока действия предложения
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">63</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Формы связи</td>
+                <td>
+                    <div class="evidence">Найдено &#39;обратный звонок&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Кнопки Обратный звонок, Перезвонить
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">68</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Виджеты связи через чат соцсетей</td>
+                <td>
+                    <div class="evidence">Найден элемент &#39;a[href*=&#39;wa.me&#39;]&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        В один клик перейти к диалогу в соцсети/мессенджере
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">65</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Сервисы захвата посетителя</td>
+                <td>
+                    <div class="evidence">Найден элемент &#39;[class*=&#39;popup&#39;]&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Виджеты типа CallbackHunter, Envybox и аналоги
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">71</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Слайдер на главной</td>
+                <td>
+                    <div class="evidence">Найден элемент &#39;[class*=&#39;slider&#39;]&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Слайдер с главной информацией, желательно с формой захвата
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">70</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Всплывающие окна</td>
+                <td>
+                    <div class="evidence">Найден элемент &#39;[class*=&#39;popup&#39;]&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Скидки, заказ обратного звонка через всплывающие окна
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">69</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Глубина вложенности страниц</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Важные страницы не дальше третьего уровня вложенности (проверять вручную через SF)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">67</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Push-уведомления</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Рассылка подписавшимся клиентам о новостях, товарах, акциях
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-content_seo">
+    <div class="category-header">
+        <h2>5. Контент и SEO</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">5 выполнено</span> ·
+            <span style="color: var(--av-red);">3 не выполнено</span> ·
+            <span style="color: var(--av-text-secondary);">2 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">79</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Визуализация контента (инфографика, иконки)</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: svg, [class*=&#39;icon&#39;], [class*=&#39;infographic&#39;]</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Инфографика, иконки с преимуществами и кратким описанием
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">80</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Инфографика (процессы)</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: инфографик, схема работы, процесс доставки</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Важные процессы описаны инфографикой (процесс доставки и т.д.)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">82</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Инструкции к товарам</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: инструкция, мануал, скачать инструкцию, manual, user guide</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Инструкции к товарам с возможностью скачивания
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">119</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Счётчик Яндекс.Метрики (API-проверка)</td>
+                <td>
+                    <div class="evidence">Счётчик Метрики не найден в tokens.json для данного домена</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Счётчик Яндекс.Метрики установлен, активен и собирает данные (проверка через API). Без tokens.json — проверка ручная
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">120</td>
+                <td><span class="status-badge status-warn">Внимание</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Цели конверсии в Метрике</td>
+                <td>
+                    <div class="evidence">Счётчик Метрики не найден в tokens.json для данного домена</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        В Яндекс.Метрике настроены цели конверсии (заказ, корзина, форма). E-commerce цель — приоритет. Без tokens.json — проверка ручная
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">76</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">HTTPS (SSL сертификат)</td>
+                <td>
+                    <div class="evidence">Сайт работает на HTTPS: https://na-sklad.ru</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Сайт работает на HTTPS, настроен SSL сертификат
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">78</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Адаптация под мобильные</td>
+                <td>
+                    <div class="evidence">Найден элемент &#39;meta[name=&#39;viewport&#39;]&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Адаптивная или мобильная версия, AMP или Яндекс.Турбо
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">84</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Meta title / description</td>
+                <td>
+                    <div class="evidence">Найден элемент &#39;title&#39; на home</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Прописаны title и description на главной странице
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">85</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Structured data (schema.org)</td>
+                <td>
+                    <div class="evidence">JSON-LD: 1 блок(ов)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Микроразметка schema.org (Organization, Product, Breadcrumb)
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">81</td>
+                <td><span class="status-badge status-pass">Ок</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Советы / инструкции</td>
+                <td>
+                    <div class="evidence">Найдено &#39;как выбрать&#39; на blog</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Раздел с советами по выбору продукции или услуг
+                    </div>
+                    <div class="evidence" style="margin-top: 4px;">
+                        Проверено на: <a href="https://na-sklad.ru/news/" target="_blank" style="color: var(--av-green-light);">https://na-sklad.ru/news/</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">83</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">ЧПУ (человекочитаемые URL)</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        В URL карточек товаров — уровень /catalog/ + название категории
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">77</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Читабельность домена</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Доменное имя читаемо и легко диктуется по телефону
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-sales_tools">
+    <div class="category-header">
+        <h2>6. Инструменты продаж</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 выполнено</span> ·
+            <span style="color: var(--av-red);">7 не выполнено</span> ·
+            <span style="color: var(--av-text-secondary);">1 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">86</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Скидки</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: скидка, скидки, discount, -10%, -20%...</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Системы скидок, накопительные системы
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">87</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Акции</td>
+                <td>
+                    <div class="evidence">URL/пункт меню не найден: /actions, /akcii, /promo, /sale, акции</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Регулярная информация об акциях компании
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">88</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Распродажа</td>
+                <td>
+                    <div class="evidence">URL/пункт меню не найден: /sale, /rasprodazha, /clearance, распродажа</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Раздел Распродажа
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">89</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Бонусы</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: бонус, бонусная программа, накопительная система, cashback, кэшбек</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Собственная бонусная программа
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">91</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Дополнительные предложения</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: с этим товаром, рекомендуем, также купили, upsell</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Услуги, в которых может возникнуть необходимость при покупке основного
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">92</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Cross-sell (с этим покупают)</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: с этим покупают, вместе с этим, похожие товары, related products</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Формы допродаж — с этим покупают и т.д.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">93</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Цена со скидкой (старая/новая)</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: [class*=&#39;old-price&#39;], [class*=&#39;discount-price&#39;], [class*=&#39;price-old&#39;]</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Старая/новая цена — визуальное выделение скидки
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">90</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">УТП (уникальное торговое предложение)</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Наличие в видимой части экрана уникального торгового предложения
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-product_info">
+    <div class="category-header">
+        <h2>7. Карточка товара и каталог</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 выполнено</span> ·
+            <span style="color: var(--av-red);">20 не выполнено</span> ·
+            <span style="color: var(--av-text-secondary);">5 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство / рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">99</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Фотографии товара</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: [class*=&#39;product&#39;] img, [class*=&#39;gallery&#39;] img, .product img</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Обязательное наличие фотографий товара
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">98</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Характеристики товара</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: характеристики, описание, технические параметры, specs, specifications</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Подробные технические характеристики товара
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">101</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Отзывы о товаре / рейтинг</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: отзыв, рейтинг, оценка, звезд, rating</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Отзывы о товаре, услуге на сайте, рейтинг
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">105</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Фильтр перед каталогом</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: [class*=&#39;filter&#39;], [class*=&#39;catalog-filter&#39;], .filters</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Фильтр по цене, популярности
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">115</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Кнопка Купить (текстовая)</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: button, a.button, .btn-buy</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Кнопка Купить — текстовая, а не только иконка
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">116</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">CTA-кнопки (не ссылки)</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: button[class*=&#39;cart&#39;], button[class*=&#39;buy&#39;], button[type=&#39;submit&#39;]</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Купить, добавить в корзину — должны быть кнопками, а не ссылками
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">95</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Артикул</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: артикул, sku, код товара</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Наличие артикула товара
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">96</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Наличие товара (кол-во на складе)</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: в наличии, на складе, шт. в наличии, осталось, in stock</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Количество штук на складе, а не только В наличии
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">102</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Размерный ряд</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: размер, размерная сетка, размерный ряд, size chart</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Информация о доступных для заказа размерах
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">106</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Расширенный фильтр</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: цвет, размер, бренд, материал, производитель</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Фильтр по параметрам (цвет, размер, бренд)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">109</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Купить в 1 клик</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: купить в 1 клик, купить в один клик, быстрый заказ, заказать в один клик</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Кнопка быстрого заказа
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">111</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Рейтинг товара в каталоге</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: [class*=&#39;rating&#39;], [class*=&#39;stars&#39;], .rating</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Рейтинг товара отображается в каталоге и карточке
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">112</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Отметки (Новинка, Хит, Распродажа)</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: новинка, хит продаж, распродажа, акция, популярный...</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Отметки Новинка, Хит продаж, Распродажа в каталоге
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">113</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Цена в рублях (руб., не ₽)</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: руб., руб, р.</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Цена выражается в рублёвом эквиваленте: 2000 руб. (не 2000 ₽)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">117</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Название и страна производителя</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: производитель, страна производства, бренд, made in</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        В карточках товаров
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">100</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Обзоры на товар</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: обзор, видеообзор, review, video review</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Видео-обзоры от лица магазина или покупателя
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">103</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">3D-модель</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: [class*=&#39;3d&#39;], [class*=&#39;sketchfab&#39;], iframe[src*=&#39;3d&#39;]</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        3D-модель объекта (строительство домов и т.п.)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">104</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Быстрый просмотр товара</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: быстрый просмотр, quick view, быстрый просмотр товара</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Функционал быстрого просмотра товара во всплывающем окне
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">107</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Ссылки на тегирование</td>
+                <td>
+                    <div class="evidence">Элементы не найдены: [class*=&#39;tag&#39;], [class*=&#39;tags&#39;] a, .tag-cloud a</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Страницы тегов для тематической перелинковки
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">108</td>
+                <td><span class="status-badge status-fail">Разрыв</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Выбор комплектации</td>
+                <td>
+                    <div class="evidence">Не найдено ни одного из: комплектация, выбор комплектации, варианты, configuration</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Возможность выбора комплектации товара
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">118</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Цена товара (наличие)</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Цена присутствует на карточке товара и в каталоге
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">94</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Детализация услуги/товара</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Что включает услуга: замер, проектирование, доставка, монтаж
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">97</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Товарный ассортимент</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Не менее 50% от среднего среди 20 конкурентов
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">114</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Название товара с категорией</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Название товара содержит название категории, в единственном числе
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">110</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Перенаправление с карточки</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Клик по изображению в каталоге ведёт на карточку товара
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ===== RECOMMENDATIONS ===== -->
+<section class="page" id="recommendations">
+    <h3>Порядок работ</h3>
+    <ol style="padding-left: 24px;">
+        <li style="margin: 10px 0;">
+            <strong>Устранить критичные разрывы</strong> — 5 пунктов из топа
+            дают базовое доверие Яндекса и клиента. Работаем до зелёного статуса по каждому.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Проработать блок высокой важности</strong> — 16 пунктов со статусом
+            severity: high. Это вторая волна правок, обычно 2-3 недели работ.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Закрыть пункты ручной проверки</strong> — 21 факторов требуют
+            решений вне сайта: Яндекс Справочник, отзывы на внешних ресурсах, УТП, узнаваемость бренда.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Повторный аудит через квартал</strong> — замеряем прогресс, фиксируем результат
+            по шкале 0-100%, корректируем план.
+        </li>
+    </ol>
+
+    <h3>Что делает artvision.pro</h3>
+    <p>
+        Команда закрывает коммерческие факторы поэтапно: правки на сайте, подключение сервисов,
+        работа с репутацией и внешними площадками. Формат — абонентское сопровождение
+        с ежемесячной отчётностью и повторным прогоном аудита раз в квартал.
+    </p>
+    <p>
+        Связь: <a href="mailto:info@artvision.pro" style="color: var(--av-green-light);">info@artvision.pro</a>
+        · <a href="https://artvision.pro" style="color: var(--av-green-light);">artvision.pro</a>
+    </p>
+</section>
+
+<footer>
+    artvision.pro Pulse · Отчёт сгенерирован 01.05.2026 00:17 ·
+    <a href="https://artvision.pro">artvision.pro</a>
+</footer>
+
+</div>
+</body>
+</html>

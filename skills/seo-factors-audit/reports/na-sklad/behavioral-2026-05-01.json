@@ -1,0 +1,427 @@
+{
+  "target_url": "https://na-sklad.ru",
+  "audited_at": "2026-05-01T00:17:23+00:00",
+  "counter_id": null,
+  "period_days": 30,
+  "factors": [
+    {
+      "id": 1,
+      "category": "engagement",
+      "name": "Среднее время на сайте",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: Метрика не подключена (нет counter_id или token)",
+      "value": null,
+      "recommendation": "Нарастить глубину контента: расширить тексты, добавить видео, интерактивные элементы. Улучшить внутреннюю перелинковку.",
+      "description": "Среднее время, которое пользователь проводит на сайте за визит. Индикатор качества контента и релевантности выдачи."
+    },
+    {
+      "id": 2,
+      "category": "engagement",
+      "name": "Глубина просмотра (pages per session)",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: Метрика не подключена (нет counter_id или token)",
+      "value": null,
+      "recommendation": "Добавить блоки «похожие статьи», «с этим товаром покупают», сквозные CTA на смежные страницы.",
+      "description": "Среднее число страниц за визит. Поведенческий сигнал Яндекса: чем больше — тем лучше."
+    },
+    {
+      "id": 3,
+      "category": "engagement",
+      "name": "Процент отказов (15-секундное правило)",
+      "status": "na",
+      "severity": "critical",
+      "evidence": "Нет данных: Метрика не подключена (нет counter_id или token)",
+      "value": null,
+      "recommendation": "Проверить соответствие title/H1 контенту, скорость загрузки первого экрана, наличие очевидного ответа на запрос выше линии сгиба.",
+      "description": "Доля визитов длительностью менее 15 секунд (стандарт Яндекса). Критичный сигнал низкой релевантности."
+    },
+    {
+      "id": 4,
+      "category": "engagement",
+      "name": "Возвраты в SERP (косвенно через среднюю сессию)",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: Метрика не подключена (нет counter_id или token)",
+      "value": null,
+      "recommendation": "Усилить первый экран посадочной: явный ответ на запрос, кликабельный оффер, видео/инфографика.",
+      "description": "Dwell time: если пользователь быстро возвращается в выдачу — сигнал нерелевантности. Оцениваем через сочетание короткой сессии и отказа."
+    },
+    {
+      "id": 5,
+      "category": "engagement",
+      "name": "Возвратные пользователи",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: Метрика не подключена (нет counter_id или token)",
+      "value": null,
+      "recommendation": "Подписки на уведомления/рассылку, ретаргетинг, полезный контент-хаб, брендированные кампании.",
+      "description": "Доля возвратных посетителей — индикатор ценности сайта и запоминаемости бренда."
+    },
+    {
+      "id": 6,
+      "category": "serp",
+      "name": "Средний CTR в выдаче Яндекса",
+      "status": "na",
+      "severity": "critical",
+      "evidence": "Нет данных: Сайт не найден в Вебмастере (или нет прав)",
+      "value": null,
+      "recommendation": "Переписать title/description для топ-20 запросов: добавить УТП, цифры, эмодзи-маркеры, призыв к действию.",
+      "description": "Отношение кликов к показам в органической выдаче Яндекса. Влияет на ранжирование как поведенческий сигнал."
+    },
+    {
+      "id": 7,
+      "category": "serp",
+      "name": "Позиции по ключевым запросам",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: Сайт не найден в Вебмастере (или нет прав)",
+      "value": null,
+      "recommendation": "Для топ-20 (но не топ-10) — улучшить на уровне контента и ПФ. Для топ-50 — разобраться с технической оптимизацией и семантикой.",
+      "description": "Средняя позиция в органической выдаче Яндекса по запросам с показами."
+    },
+    {
+      "id": 8,
+      "category": "serp",
+      "name": "Запросы без кликов (impressions > 10, clicks = 0)",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: Сайт не найден в Вебмастере (или нет прав)",
+      "value": null,
+      "recommendation": "Собрать список запросов без кликов → проверить сниппеты → переписать title/description с учётом интента.",
+      "description": "Доля запросов, по которым сайт показывается, но не получает кликов. Прямой индикатор проблем со сниппетом."
+    },
+    {
+      "id": 9,
+      "category": "serp",
+      "name": "Поисковые фразы в Метрике",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: Сайт не найден в Вебмастере (или нет прав)",
+      "value": null,
+      "recommendation": "Расширить семантическое ядро: добавить посадочные под фразы из Wordstat и search console, LSI-тексты.",
+      "description": "Разнообразие поискового трафика — индикатор семантического охвата сайта."
+    },
+    {
+      "id": 10,
+      "category": "interaction",
+      "name": "Микроконверсии: клики по телефону",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Настроить цель в Метрике на клики по tel:. Добавить кнопку-телефон в шапке и плавающую кнопку на мобильном.",
+      "description": "Клики по tel:-ссылке — индикатор готовности к контакту. Настраивается как цель в Метрике."
+    },
+    {
+      "id": 11,
+      "category": "interaction",
+      "name": "Микроконверсии: клики по email",
+      "status": "manual",
+      "severity": "low",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Заменить mailto: на форму обратной связи с отправкой на email. Email держать видимым, но форма — главный CTA.",
+      "description": "Клики по mailto:-ссылке. Хоть и слабее чем формы, но всё ещё индикатор интереса."
+    },
+    {
+      "id": 12,
+      "category": "interaction",
+      "name": "Scroll depth (карта скроллинга)",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "В Метрике → Карты → Карта скроллинга. Проанализировать топ-5 посадочных. CTA и ключевые УТП — выше 50% линии.",
+      "description": "Карта скроллинга в Метрике показывает до какой глубины страницы доходит пользователь. Ключевые блоки должны быть выше 50%-й линии."
+    },
+    {
+      "id": 13,
+      "category": "interaction",
+      "name": "Тепловая карта кликов",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "В Метрике → Карты → Карта кликов. Проверить топ-3 посадочных. Если жмут по некликабельным элементам — сделать их кликабельными.",
+      "description": "Карта кликов показывает куда реально жмут пользователи. Несоответствие CTA и кликов — сигнал UX-проблемы."
+    },
+    {
+      "id": 14,
+      "category": "interaction",
+      "name": "Аналитика форм",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "В Метрике → Карты → Аналитика форм. Убрать/сделать опциональными поля с drop-off > 30%. Добавить валидацию в реальном времени.",
+      "description": "Карта форм показывает где пользователи бросают заполнение, какие поля вызывают проблемы."
+    },
+    {
+      "id": 15,
+      "category": "interaction",
+      "name": "Вебвизор — ручной разбор сессий",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Вебвизор → фильтр по посадочным с высоким bounce. Посмотреть 10-20 сессий. Выписать паттерны проблем.",
+      "description": "Выборочный просмотр реальных сессий пользователей. Находит UX-проблемы, которые не видны в метриках."
+    },
+    {
+      "id": 16,
+      "category": "segmentation",
+      "name": "Поведение Mobile vs Desktop",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: Метрика не подключена",
+      "value": null,
+      "recommendation": "Проверить мобильную вёрстку на реальных устройствах. Увеличить тап-таргеты (минимум 44px), читаемость шрифта, скорость.",
+      "description": "Сравнение отказов mobile vs desktop. Большая разница (>10 п.п.) — проблема адаптивности."
+    },
+    {
+      "id": 17,
+      "category": "segmentation",
+      "name": "Источники трафика — распределение",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: Метрика не подключена",
+      "value": null,
+      "recommendation": "Если перекос в рекламу — усилить SEO. Если перекос в прямой — работать над узнаваемостью бренда.",
+      "description": "Здоровый микс источников: поиск, прямой, соцсети, реферальный. Перекос в один источник — риск зависимости."
+    },
+    {
+      "id": 18,
+      "category": "segmentation",
+      "name": "Качество источника: отказы по каналам",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: Метрика не подключена",
+      "value": null,
+      "recommendation": "Для каналов с высоким bounce — проверить UTM-таргетинг, посадочные страницы, соответствие обещания контенту.",
+      "description": "Отказы в разбивке по источникам. Высокий bounce по одному каналу — проблема с настройкой кампании или релевантностью."
+    },
+    {
+      "id": 19,
+      "category": "segmentation",
+      "name": "География: регион и отказы",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: Метрика не подключена",
+      "value": null,
+      "recommendation": "Проверить: упомянут ли регион в title/H1. Есть ли филиал/доставка в регион. Нет ли блокировок по IP.",
+      "description": "Поведение по регионам. Если приоритетный регион даёт высокий bounce — проблема с локализацией/релевантностью."
+    },
+    {
+      "id": 20,
+      "category": "segmentation",
+      "name": "Топ посадочных страниц (entry pages)",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: Метрика не подключена",
+      "value": null,
+      "recommendation": "Расширять набор ранжирующихся страниц. Каждая страница с >100 визитов/мес = повод для оптимизации.",
+      "description": "Какие страницы первые в визите. Концентрация в 2-3 страницах = узкий фронт SEO."
+    },
+    {
+      "id": 21,
+      "category": "segmentation",
+      "name": "Exit pages — откуда уходят",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: Метрика не подключена",
+      "value": null,
+      "recommendation": "Страницы с высоким exit rate и низкой конверсией — добавить CTA, внутренние ссылки, связанный контент.",
+      "description": "Какие страницы последние в визите. Аномальные exit rates — проблема UX/контента на конкретной странице."
+    },
+    {
+      "id": 22,
+      "category": "conversions",
+      "name": "Цели в Метрике настроены",
+      "status": "na",
+      "severity": "critical",
+      "evidence": "Нет данных: Метрика не подключена",
+      "value": null,
+      "recommendation": "Настроить минимум: 1) заявка с формы 2) клик по телефону 3) корзина/добавление в избранное 4) составная цель (посещение +N страниц + время >2 мин).",
+      "description": "Количество настроенных целей в Метрике. Без целей невозможно измерить эффективность канала."
+    },
+    {
+      "id": 23,
+      "category": "conversions",
+      "name": "Конверсия по ключевой цели",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Аудит посадочных: УТП на первом экране, упрощение формы, социальные доказательства, гарантии. CRO-тест.",
+      "description": "Конверсия в ключевое целевое действие (заявка/звонок/покупка)."
+    },
+    {
+      "id": 24,
+      "category": "conversions",
+      "name": "Конверсия по источникам — качественные каналы",
+      "status": "manual",
+      "severity": "high",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Усиливать каналы с высокой конверсией. Для каналов с низкой — пересмотреть таргетинг или отказаться.",
+      "description": "Разбивка конверсии по каналам. Выявить, какой канал приносит качественный трафик, а какой — шум."
+    },
+    {
+      "id": 25,
+      "category": "technical",
+      "name": "Core Web Vitals: LCP (Largest Contentful Paint)",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351",
+      "value": null,
+      "recommendation": "Оптимизировать изображения (WebP, lazy-load), убрать блокирующий CSS/JS, включить preload для hero-image.",
+      "description": "Время до отрисовки крупнейшего элемента. Ключевой UX-показатель, прямой сигнал ранжирования."
+    },
+    {
+      "id": 26,
+      "category": "technical",
+      "name": "Core Web Vitals: CLS (Cumulative Layout Shift)",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351",
+      "value": null,
+      "recommendation": "Задать width/height у всех изображений и видео. Выделить пространство под баннеры/рекламу через aspect-ratio.",
+      "description": "Смещение элементов верстки во время загрузки. Высокий CLS = раздражающий опыт."
+    },
+    {
+      "id": 27,
+      "category": "technical",
+      "name": "Core Web Vitals: INP (Interaction to Next Paint)",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351",
+      "value": null,
+      "recommendation": "Разбить долгие JS-задачи на микротаски, отложить неиспользуемые скрипты, минимизировать third-party.",
+      "description": "Отзывчивость сайта на действия пользователя (клик, ввод). Заменил FID с 2024 года."
+    },
+    {
+      "id": 28,
+      "category": "technical",
+      "name": "Время до первого байта (TTFB)",
+      "status": "na",
+      "severity": "medium",
+      "evidence": "Нет данных: PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351",
+      "value": null,
+      "recommendation": "Включить серверный кэш (Redis/Memcached), CDN для статики, оптимизация БД-запросов, HTTP/2 или HTTP/3.",
+      "description": "Время серверного отклика. Влияет на LCP и общее восприятие скорости."
+    },
+    {
+      "id": 29,
+      "category": "technical",
+      "name": "Мобильный Speed Score (PageSpeed)",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351",
+      "value": null,
+      "recommendation": "Приоритет #1 для Яндекса — мобильная версия. Оптимизация картинок, JS, CSS, критический путь рендеринга.",
+      "description": "Общая оценка производительности мобильной версии по Lighthouse."
+    },
+    {
+      "id": 30,
+      "category": "technical",
+      "name": "Доля 404 в трафике",
+      "status": "na",
+      "severity": "high",
+      "evidence": "Нет данных: Метрика не подключена",
+      "value": null,
+      "recommendation": "Собрать 404 в Метрике → настроить 301-редиректы на релевантные страницы. Для навсегда удалённого контента — кастомная 404-страница с поиском и навигацией.",
+      "description": "Процент посещений на страницы-404. Сигнал битых ссылок, потери ссылочного веса, плохого UX."
+    },
+    {
+      "id": 31,
+      "category": "technical",
+      "name": "JS-ошибки на странице",
+      "status": "manual",
+      "severity": "medium",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "В Метрике → Отчёты → JS-ошибки. Топ-10 ошибок исправить. Настроить Sentry или аналог для постоянного мониторинга.",
+      "description": "Критичные JS-ошибки ломают интерактив, формы, CTA. Метрика регистрирует хиты с ошибками."
+    },
+    {
+      "id": 32,
+      "category": "technical",
+      "name": "Adblock usage — доля посетителей с блокировщиками",
+      "status": "manual",
+      "severity": "low",
+      "evidence": "Требуется ручная проверка в интерфейсе Метрики / Вебмастера",
+      "value": null,
+      "recommendation": "Если доля высокая — не полагаться только на клиентскую Метрику. Дополнить server-side трекингом (Measurement Protocol).",
+      "description": "Доля аудитории с adblock. Если >30% — часть трекинга теряется, нужны server-side аналоги."
+    }
+  ],
+  "meta": {
+    "metrika_skip": "counter_id не передан (--counter-id)",
+    "factors_total": 32,
+    "summary": {
+      "counts": {
+        "pass": 0,
+        "warn": 0,
+        "fail": 0,
+        "manual": 10,
+        "na": 22
+      },
+      "by_category": {
+        "engagement": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 0,
+          "na": 5
+        },
+        "serp": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 0,
+          "na": 4
+        },
+        "interaction": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 6,
+          "na": 0
+        },
+        "segmentation": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 0,
+          "na": 6
+        },
+        "conversions": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 2,
+          "na": 1
+        },
+        "technical": {
+          "pass": 0,
+          "warn": 0,
+          "fail": 0,
+          "manual": 2,
+          "na": 6
+        }
+      },
+      "critical_fails_top": [],
+      "score": 0
+    }
+  },
+  "raw_data": {
+    "webmaster": {
+      "_error": "Сайт не найден в Вебмастере (или нет прав)"
+    },
+    "pagespeed": {
+      "_error": "PageSpeed API 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'pagespeedonline.googleapis.com' for consumer 'project_number:583797351"
+    }
+  }
+}

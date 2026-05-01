@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>na-sklad — Аудит поведенческих факторов | artvision.pro Pulse</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --av-black: #181818;
+    --av-pure-black: #000000;
+    --av-white: #ffffff;
+    --av-text-primary: #181818;
+    --av-text-secondary: #636663;
+    --av-text-dark: #323232;
+    --av-green: #059856;
+    --av-green-light: #1a7d52;
+    --av-pink: #d82b63;
+    --av-orange: #e07c1d;
+    --av-red: #c33648;
+
+    --av-bg-light: #f3f3f3;
+    --av-bg-white: #ffffff;
+    --av-bg-footer: #e1e1e1;
+    --av-border: #c8c8c8;
+    --av-border-dark: #000000;
+
+    --av-font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--av-font);
+    color: var(--av-text-primary);
+    background: #e8e8e8;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+.report {
+    max-width: 1040px;
+    margin: 0 auto;
+    background: var(--av-bg-white);
+    box-shadow: 0 2px 40px rgba(0,0,0,0.12);
+}
+.page {
+    padding: 56px 64px;
+    border-bottom: 1px solid var(--av-border);
+}
+.page:last-child { border-bottom: none; }
+.page-dark {
+    padding: 56px 64px;
+    background: var(--av-pure-black);
+    color: var(--av-white);
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    margin-bottom: 32px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+}
+.header-top .brand { font-weight: 600; color: var(--av-white); }
+
+h1 { font-size: 42px; line-height: 1.15; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.015em; }
+h2 { font-size: 28px; line-height: 1.2; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.01em; }
+h3 { font-size: 20px; font-weight: 600; margin: 24px 0 12px; }
+h4 { font-size: 16px; font-weight: 600; margin: 20px 0 8px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--av-text-secondary); }
+p { margin-bottom: 14px; color: var(--av-text-dark); font-size: 15px; }
+
+.subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    max-width: 620px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+}
+.stat {
+    background: var(--av-bg-light);
+    padding: 20px 18px;
+    border-radius: 10px;
+    border-left: 4px solid var(--av-green);
+}
+.stat.warn { border-left-color: var(--av-orange); }
+.stat.fail { border-left-color: var(--av-red); }
+.stat.manual { border-left-color: var(--av-text-secondary); }
+.stat.na { border-left-color: #b0b0b0; }
+.stat .value { font-size: 34px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.stat .label { font-size: 12px; color: var(--av-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 20px 0 28px;
+}
+.kpi-card {
+    background: var(--av-bg-light);
+    padding: 18px 16px;
+    border-radius: 8px;
+    border-left: 3px solid var(--av-green-light);
+}
+.kpi-card .kpi-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--av-text-primary);
+    line-height: 1.1;
+}
+.kpi-card .kpi-label {
+    font-size: 11px;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+}
+
+.score-block {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    background: var(--av-bg-light);
+    padding: 28px;
+    border-radius: 12px;
+    margin: 20px 0 28px;
+}
+.score-big {
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--av-green);
+    min-width: 160px;
+}
+.score-big.low { color: var(--av-red); }
+.score-big.mid { color: var(--av-orange); }
+.score-caption h3 { margin-top: 0; }
+
+.toc {
+    background: var(--av-bg-light);
+    padding: 24px 28px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+.toc ol { padding-left: 22px; }
+.toc li { margin: 6px 0; font-size: 15px; }
+.toc a {
+    color: var(--av-text-primary);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--av-border);
+}
+.toc a:hover { border-bottom-color: var(--av-green); color: var(--av-green); }
+
+.factor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 14px;
+}
+.factor-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--av-bg-light);
+    border-bottom: 2px solid var(--av-border-dark);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--av-text-dark);
+}
+.factor-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--av-border);
+    vertical-align: top;
+}
+.factor-table tr:hover td { background: #fafafa; }
+.factor-table .col-status { width: 90px; }
+.factor-table .col-id { width: 48px; color: var(--av-text-secondary); }
+.factor-table .col-sev { width: 90px; }
+.factor-table .col-name { width: 230px; font-weight: 600; }
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.status-pass { background: #d8f0e4; color: var(--av-green-light); }
+.status-warn { background: #fde4cc; color: var(--av-orange); }
+.status-fail { background: #f8d4d9; color: var(--av-red); }
+.status-manual { background: #e4e4e4; color: var(--av-text-secondary); }
+.status-na { background: #f0f0f0; color: var(--av-text-secondary); }
+
+.sev-critical { color: var(--av-red); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+.sev-high { color: var(--av-orange); font-weight: 600; text-transform: uppercase; font-size: 11px; }
+.sev-medium { color: var(--av-text-dark); text-transform: uppercase; font-size: 11px; }
+.sev-low { color: var(--av-text-secondary); text-transform: uppercase; font-size: 11px; }
+
+.evidence {
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    line-height: 1.5;
+}
+.recommendation {
+    font-size: 13px;
+    color: var(--av-text-dark);
+    line-height: 1.5;
+    margin-top: 6px;
+    padding: 8px 12px;
+    background: #f9fafb;
+    border-left: 3px solid var(--av-green);
+    border-radius: 0 4px 4px 0;
+}
+
+.critical-list {
+    background: #fff5f6;
+    border-left: 4px solid var(--av-red);
+    padding: 18px 22px;
+    border-radius: 6px;
+    margin: 16px 0 24px;
+}
+.critical-list ol { padding-left: 22px; }
+.critical-list li { margin: 8px 0; font-size: 15px; color: var(--av-text-dark); }
+.critical-list li strong { color: var(--av-red); }
+
+.meta-block {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 10px 18px;
+    margin: 24px 0;
+    font-size: 14px;
+    color: var(--av-text-dark);
+}
+.meta-block .key {
+    font-weight: 600;
+    color: var(--av-text-secondary);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding-top: 2px;
+}
+.meta-block .value { word-break: break-word; }
+.meta-block a { color: var(--av-green-light); }
+
+.data-sources {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+.data-source {
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--av-border);
+    font-size: 13px;
+}
+.data-source.ok { border-color: var(--av-green); background: #f0faf5; }
+.data-source.missing { border-color: #d0d0d0; background: #fafafa; color: var(--av-text-secondary); }
+.data-source .ds-name { font-weight: 600; margin-bottom: 4px; }
+.data-source .ds-status { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+section.category { scroll-margin-top: 20px; }
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid var(--av-border-dark);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
+.category-stats { font-size: 13px; color: var(--av-text-secondary); }
+
+.chart-block {
+    margin: 24px 0;
+    padding: 20px;
+    background: var(--av-bg-light);
+    border-radius: 10px;
+}
+.chart-block img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+.chart-caption { font-size: 12px; color: var(--av-text-secondary); text-align: center; margin-top: 8px; }
+
+footer {
+    background: var(--av-bg-footer);
+    padding: 28px 64px;
+    font-size: 13px;
+    color: var(--av-text-secondary);
+    text-align: center;
+}
+footer a { color: var(--av-green-light); text-decoration: none; }
+
+@media (max-width: 768px) {
+    .page, .page-dark { padding: 36px 24px; }
+    h1 { font-size: 30px; }
+    h2 { font-size: 22px; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .data-sources { grid-template-columns: 1fr; }
+    .score-block { flex-direction: column; gap: 12px; text-align: center; }
+    .score-big { min-width: unset; font-size: 56px; }
+    .factor-table, .factor-table thead, .factor-table tbody, .factor-table tr, .factor-table td, .factor-table th { display: block; }
+    .factor-table thead { display: none; }
+    .factor-table td { border: none; padding: 4px 0; }
+    .factor-table tr { border-bottom: 1px solid var(--av-border); padding: 12px 0; }
+    .meta-block { grid-template-columns: 1fr; gap: 4px; }
+    .meta-block .key { margin-top: 10px; }
+}
+
+@media print {
+    body { background: white; }
+    .report { box-shadow: none; max-width: none; }
+    .page, .page-dark { padding: 24px; page-break-inside: avoid; }
+    section.category { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="report">
+
+<!-- ===== COVER ===== -->
+<div class="page-dark">
+    <div class="header-top">
+        <span class="brand">artvision.pro</span>
+        <span>Pulse · Поведенческие факторы · 01.05.2026 00:17</span>
+    </div>
+    <h1>Аудит поведенческих факторов</h1>
+    <p class="subtitle">
+        na-sklad — анализ поведения аудитории на сайте и в выдаче Яндекса
+        по методике artvision.pro. 32 проверок по шести блокам: вовлечённость,
+        выдача, взаимодействие, сегменты, конверсии, техническое здоровье.
+    </p>
+    <div style="margin-top: 28px; font-size: 14px; color: rgba(255,255,255,0.85);">
+        <strong>Сайт:</strong> <a href="https://na-sklad.ru" style="color: #76e0a8;">https://na-sklad.ru</a><br>
+        <strong>Период анализа:</strong> 30 дней<br>
+        <strong>Дата проверки:</strong> 01.05.2026 00:17
+    </div>
+</div>
+
+<!-- ===== EXECUTIVE SUMMARY ===== -->
+<div class="page">
+    <h2>Резюме</h2>
+
+    <div class="score-block">
+        <div class="score-big low">0%</div>
+        <div class="score-caption">
+            <h3>0 из 0 измеримых факторов в зелёной зоне</h3>
+            <p>
+                Поведенческие факторы — прямой сигнал качества для Яндекса.
+                Высокая важность: <strong>0</strong>. Фокус на них даёт максимальный
+                прирост позиций и конверсии.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="summary-grid">
+        <div class="stat">
+            <div class="value">0</div>
+            <div class="label">В норме</div>
+        </div>
+        <div class="stat fail">
+            <div class="value">0</div>
+            <div class="label">Разрывы</div>
+        </div>
+        <div class="stat warn">
+            <div class="value">0</div>
+            <div class="label">Внимание</div>
+        </div>
+        <div class="stat manual">
+            <div class="value">32</div>
+            <div class="label">Ручная / Нет данных</div>
+        </div>
+    </div>
+
+
+    <h3 id="toc">Содержание</h3>
+    <div class="toc">
+        <ol>
+            <li><a href="#meta">Параметры проверки и источники данных</a></li>
+            <li><a href="#cat-engagement">Вовлечённость на сайте</a> (5)</li>
+            <li><a href="#cat-serp">Поведение в выдаче Яндекса</a> (4)</li>
+            <li><a href="#cat-interaction">Взаимодействие с элементами</a> (6)</li>
+            <li><a href="#cat-segmentation">Сегменты аудитории</a> (6)</li>
+            <li><a href="#cat-conversions">Цели и конверсии</a> (3)</li>
+            <li><a href="#cat-technical">Скорость и техническое здоровье</a> (8)</li>
+            <li><a href="#recommendations">Рекомендации и следующие шаги</a></li>
+        </ol>
+    </div>
+</div>
+
+<!-- ===== META ===== -->
+<section class="page" id="meta">
+    <h2>Параметры проверки</h2>
+    <div class="meta-block">
+        <div class="key">URL сайта</div>
+        <div class="value"><a href="https://na-sklad.ru" target="_blank">https://na-sklad.ru</a></div>
+
+        <div class="key">Период анализа</div>
+        <div class="value">30 дней (данные Метрики и Вебмастера)</div>
+
+        <div class="key">Counter ID Метрики</div>
+        <div class="value">не передан — Метрика-факторы в статусе «нет данных»</div>
+
+        <div class="key">Дата проверки</div>
+        <div class="value">01.05.2026 00:17 (UTC)</div>
+
+        <div class="key">Всего факторов</div>
+        <div class="value">32</div>
+
+        <div class="key">Инструмент</div>
+        <div class="value">artvision.pro Pulse — авторская методика анализа поведенческих сигналов Яндекса</div>
+    </div>
+
+    <h3>Источники данных</h3>
+    <div class="data-sources">
+        <div class="data-source missing">
+            <div class="ds-name">Яндекс.Метрика API</div>
+            <div class="ds-status">Нет данных</div>
+            <div style="margin-top: 6px; font-size: 12px;">
+                Вовлечённость, сегменты, цели, источники трафика
+            </div>
+        </div>
+        <div class="data-source missing">
+            <div class="ds-name">Яндекс.Вебмастер API</div>
+            <div class="ds-status">Нет данных</div>
+            <div style="margin-top: 6px; font-size: 12px;">
+                CTR, позиции, поисковые запросы, показы
+            </div>
+        </div>
+        <div class="data-source missing">
+            <div class="ds-name">Google PageSpeed API</div>
+            <div class="ds-status">Нет данных</div>
+            <div style="margin-top: 6px; font-size: 12px;">
+                Core Web Vitals (LCP, CLS, INP), Performance Score
+            </div>
+        </div>
+    </div>
+
+    <p style="font-size: 13px; color: var(--av-text-secondary); margin-top: 16px;">
+        <strong>Для полного отчёта нужно:</strong>
+ доступ к счётчику Метрики (counter_id) и OAuth-токен API; токен Вебмастера (user_id + OAuth) с правами на сайт.        Без них часть факторов отмечена как «нет данных».
+    </p>
+</section>
+
+
+<!-- ===== CATEGORIES ===== -->
+<section class="page category" id="cat-engagement">
+    <div class="category-header">
+        <h2>1. Вовлечённость на сайте</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 в норме</span> ·
+            <span style="color: var(--av-red);">0 разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">5 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">3</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Процент отказов (15-секундное правило)</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена (нет counter_id или token)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Доля визитов длительностью менее 15 секунд (стандарт Яндекса). Критичный сигнал низкой релевантности.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">1</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Среднее время на сайте</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена (нет counter_id или token)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Среднее время, которое пользователь проводит на сайте за визит. Индикатор качества контента и релевантности выдачи.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">2</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Глубина просмотра (pages per session)</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена (нет counter_id или token)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Среднее число страниц за визит. Поведенческий сигнал Яндекса: чем больше — тем лучше.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">4</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Возвраты в SERP (косвенно через среднюю сессию)</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена (нет counter_id или token)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Dwell time: если пользователь быстро возвращается в выдачу — сигнал нерелевантности. Оцениваем через сочетание короткой сессии и отказа.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">5</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Возвратные пользователи</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена (нет counter_id или token)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Доля возвратных посетителей — индикатор ценности сайта и запоминаемости бренда.
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-serp">
+    <div class="category-header">
+        <h2>2. Поведение в выдаче Яндекса</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 в норме</span> ·
+            <span style="color: var(--av-red);">0 разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">4 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">6</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Средний CTR в выдаче Яндекса</td>
+                <td>
+                    <div class="evidence">Нет данных: Сайт не найден в Вебмастере (или нет прав)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Отношение кликов к показам в органической выдаче Яндекса. Влияет на ранжирование как поведенческий сигнал.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">7</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Позиции по ключевым запросам</td>
+                <td>
+                    <div class="evidence">Нет данных: Сайт не найден в Вебмастере (или нет прав)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Средняя позиция в органической выдаче Яндекса по запросам с показами.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">8</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Запросы без кликов (impressions &gt; 10, clicks = 0)</td>
+                <td>
+                    <div class="evidence">Нет данных: Сайт не найден в Вебмастере (или нет прав)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Доля запросов, по которым сайт показывается, но не получает кликов. Прямой индикатор проблем со сниппетом.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">9</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Поисковые фразы в Метрике</td>
+                <td>
+                    <div class="evidence">Нет данных: Сайт не найден в Вебмастере (или нет прав)</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Разнообразие поискового трафика — индикатор семантического охвата сайта.
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-interaction">
+    <div class="category-header">
+        <h2>3. Взаимодействие с элементами</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 в норме</span> ·
+            <span style="color: var(--av-red);">0 разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">6 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">10</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Микроконверсии: клики по телефону</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка в интерфейсе Метрики / Вебмастера</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Клики по tel:-ссылке — индикатор готовности к контакту. Настраивается как цель в Метрике.
+                    </div>
+                    <div class="recommendation">
+                        <strong>Что делать:</strong> Настроить цель в Метрике на клики по tel:. Добавить кнопку-телефон в шапке и плавающую кнопку на мобильном.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">14</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Аналитика форм</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка в интерфейсе Метрики / Вебмастера</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Карта форм показывает где пользователи бросают заполнение, какие поля вызывают проблемы.
+                    </div>
+                    <div class="recommendation">
+                        <strong>Что делать:</strong> В Метрике → Карты → Аналитика форм. Убрать/сделать опциональными поля с drop-off &gt; 30%. Добавить валидацию в реальном времени.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">12</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Scroll depth (карта скроллинга)</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка в интерфейсе Метрики / Вебмастера</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Карта скроллинга в Метрике показывает до какой глубины страницы доходит пользователь. Ключевые блоки должны быть выше 50%-й линии.
+                    </div>
+                    <div class="recommendation">
+                        <strong>Что делать:</strong> В Метрике → Карты → Карта скроллинга. Проанализировать топ-5 посадочных. CTA и ключевые УТП — выше 50% линии.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">13</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Тепловая карта кликов</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка в интерфейсе Метрики / Вебмастера</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Карта кликов показывает куда реально жмут пользователи. Несоответствие CTA и кликов — сигнал UX-проблемы.
+                    </div>
+                    <div class="recommendation">
+                        <strong>Что делать:</strong> В Метрике → Карты → Карта кликов. Проверить топ-3 посадочных. Если жмут по некликабельным элементам — сделать их кликабельными.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">15</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Вебвизор — ручной разбор сессий</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка в интерфейсе Метрики / Вебмастера</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Выборочный просмотр реальных сессий пользователей. Находит UX-проблемы, которые не видны в метриках.
+                    </div>
+                    <div class="recommendation">
+                        <strong>Что делать:</strong> Вебвизор → фильтр по посадочным с высоким bounce. Посмотреть 10-20 сессий. Выписать паттерны проблем.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">11</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Микроконверсии: клики по email</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка в интерфейсе Метрики / Вебмастера</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Клики по mailto:-ссылке. Хоть и слабее чем формы, но всё ещё индикатор интереса.
+                    </div>
+                    <div class="recommendation">
+                        <strong>Что делать:</strong> Заменить mailto: на форму обратной связи с отправкой на email. Email держать видимым, но форма — главный CTA.
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-segmentation">
+    <div class="category-header">
+        <h2>4. Сегменты аудитории</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 в норме</span> ·
+            <span style="color: var(--av-red);">0 разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">6 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">16</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Поведение Mobile vs Desktop</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Сравнение отказов mobile vs desktop. Большая разница (&gt;10 п.п.) — проблема адаптивности.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">17</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Источники трафика — распределение</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Здоровый микс источников: поиск, прямой, соцсети, реферальный. Перекос в один источник — риск зависимости.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">18</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Качество источника: отказы по каналам</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Отказы в разбивке по источникам. Высокий bounce по одному каналу — проблема с настройкой кампании или релевантностью.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">19</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">География: регион и отказы</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Поведение по регионам. Если приоритетный регион даёт высокий bounce — проблема с локализацией/релевантностью.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">20</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Топ посадочных страниц (entry pages)</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Какие страницы первые в визите. Концентрация в 2-3 страницах = узкий фронт SEO.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">21</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Exit pages — откуда уходят</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Какие страницы последние в визите. Аномальные exit rates — проблема UX/контента на конкретной странице.
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-conversions">
+    <div class="category-header">
+        <h2>5. Цели и конверсии</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 в норме</span> ·
+            <span style="color: var(--av-red);">0 разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">3 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">23</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Конверсия по ключевой цели</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка в интерфейсе Метрики / Вебмастера</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Конверсия в ключевое целевое действие (заявка/звонок/покупка).
+                    </div>
+                    <div class="recommendation">
+                        <strong>Что делать:</strong> Аудит посадочных: УТП на первом экране, упрощение формы, социальные доказательства, гарантии. CRO-тест.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">24</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Конверсия по источникам — качественные каналы</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка в интерфейсе Метрики / Вебмастера</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Разбивка конверсии по каналам. Выявить, какой канал приносит качественный трафик, а какой — шум.
+                    </div>
+                    <div class="recommendation">
+                        <strong>Что делать:</strong> Усиливать каналы с высокой конверсией. Для каналов с низкой — пересмотреть таргетинг или отказаться.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">22</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-critical">critical</span></td>
+                <td class="col-name">Цели в Метрике настроены</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Количество настроенных целей в Метрике. Без целей невозможно измерить эффективность канала.
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+<section class="page category" id="cat-technical">
+    <div class="category-header">
+        <h2>6. Скорость и техническое здоровье</h2>
+        <div class="category-stats">
+            <span style="color: var(--av-green);">0 в норме</span> ·
+            <span style="color: var(--av-red);">0 разрывов</span> ·
+            <span style="color: var(--av-text-secondary);">8 ручной проверки</span>
+        </div>
+    </div>
+
+    <table class="factor-table">
+        <thead>
+            <tr>
+                <th class="col-id">№</th>
+                <th class="col-status">Статус</th>
+                <th class="col-sev">Важность</th>
+                <th class="col-name">Фактор</th>
+                <th>Свидетельство и рекомендация</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">31</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">JS-ошибки на странице</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка в интерфейсе Метрики / Вебмастера</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Критичные JS-ошибки ломают интерактив, формы, CTA. Метрика регистрирует хиты с ошибками.
+                    </div>
+                    <div class="recommendation">
+                        <strong>Что делать:</strong> В Метрике → Отчёты → JS-ошибки. Топ-10 ошибок исправить. Настроить Sentry или аналог для постоянного мониторинга.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">32</td>
+                <td><span class="status-badge status-manual">Ручная</span></td>
+                <td><span class="sev-low">low</span></td>
+                <td class="col-name">Adblock usage — доля посетителей с блокировщиками</td>
+                <td>
+                    <div class="evidence">Требуется ручная проверка в интерфейсе Метрики / Вебмастера</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Доля аудитории с adblock. Если &gt;30% — часть трекинга теряется, нужны server-side аналоги.
+                    </div>
+                    <div class="recommendation">
+                        <strong>Что делать:</strong> Если доля высокая — не полагаться только на клиентскую Метрику. Дополнить server-side трекингом (Measurement Protocol).
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">25</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Core Web Vitals: LCP (Largest Contentful Paint)</td>
+                <td>
+                    <div class="evidence">Нет данных: PageSpeed API 429: {
+  &#34;error&#34;: {
+    &#34;code&#34;: 429,
+    &#34;message&#34;: &#34;Quota exceeded for quota metric &#39;Queries&#39; and limit &#39;Queries per day&#39; of service &#39;pagespeedonline.googleapis.com&#39; for consumer &#39;project_number:583797351</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Время до отрисовки крупнейшего элемента. Ключевой UX-показатель, прямой сигнал ранжирования.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">29</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Мобильный Speed Score (PageSpeed)</td>
+                <td>
+                    <div class="evidence">Нет данных: PageSpeed API 429: {
+  &#34;error&#34;: {
+    &#34;code&#34;: 429,
+    &#34;message&#34;: &#34;Quota exceeded for quota metric &#39;Queries&#39; and limit &#39;Queries per day&#39; of service &#39;pagespeedonline.googleapis.com&#39; for consumer &#39;project_number:583797351</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Общая оценка производительности мобильной версии по Lighthouse.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">30</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-high">high</span></td>
+                <td class="col-name">Доля 404 в трафике</td>
+                <td>
+                    <div class="evidence">Нет данных: Метрика не подключена</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Процент посещений на страницы-404. Сигнал битых ссылок, потери ссылочного веса, плохого UX.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">26</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Core Web Vitals: CLS (Cumulative Layout Shift)</td>
+                <td>
+                    <div class="evidence">Нет данных: PageSpeed API 429: {
+  &#34;error&#34;: {
+    &#34;code&#34;: 429,
+    &#34;message&#34;: &#34;Quota exceeded for quota metric &#39;Queries&#39; and limit &#39;Queries per day&#39; of service &#39;pagespeedonline.googleapis.com&#39; for consumer &#39;project_number:583797351</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Смещение элементов верстки во время загрузки. Высокий CLS = раздражающий опыт.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">27</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Core Web Vitals: INP (Interaction to Next Paint)</td>
+                <td>
+                    <div class="evidence">Нет данных: PageSpeed API 429: {
+  &#34;error&#34;: {
+    &#34;code&#34;: 429,
+    &#34;message&#34;: &#34;Quota exceeded for quota metric &#39;Queries&#39; and limit &#39;Queries per day&#39; of service &#39;pagespeedonline.googleapis.com&#39; for consumer &#39;project_number:583797351</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Отзывчивость сайта на действия пользователя (клик, ввод). Заменил FID с 2024 года.
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-id">28</td>
+                <td><span class="status-badge status-na">Нет данных</span></td>
+                <td><span class="sev-medium">medium</span></td>
+                <td class="col-name">Время до первого байта (TTFB)</td>
+                <td>
+                    <div class="evidence">Нет данных: PageSpeed API 429: {
+  &#34;error&#34;: {
+    &#34;code&#34;: 429,
+    &#34;message&#34;: &#34;Quota exceeded for quota metric &#39;Queries&#39; and limit &#39;Queries per day&#39; of service &#39;pagespeedonline.googleapis.com&#39; for consumer &#39;project_number:583797351</div>
+                    <div class="evidence" style="margin-top: 4px; font-style: italic; color: #8a8a8a;">
+                        Время серверного отклика. Влияет на LCP и общее восприятие скорости.
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- ===== RECOMMENDATIONS ===== -->
+<section class="page" id="recommendations">
+    <h3>Порядок работ</h3>
+    <ol style="padding-left: 24px;">
+        <li style="margin: 10px 0;">
+            <strong>Ручная проверка (10)</strong> — карты скроллинга, тепловые карты,
+            вебвизор, аналитика форм. Требует часовой сессии в интерфейсе Метрики с выводами.
+        </li>
+        <li style="margin: 10px 0;">
+            <strong>Повторный аудит через 6-8 недель</strong> — замер динамики, пересбор данных
+            из API, обновление рекомендаций на основе свежих сигналов.
+        </li>
+    </ol>
+
+    <h3>Что делает artvision.pro</h3>
+    <p>
+        Команда закрывает поведенческие факторы системно: настройка целей Метрики,
+        переписывание title/description для топ-запросов, ускорение сайта (Core Web Vitals),
+        улучшение форм и первых экранов. Формат — абонентское сопровождение с ежемесячной
+        отчётностью и повторным прогоном аудита раз в квартал.
+    </p>
+    <p>
+        Связь: <a href="mailto:info@artvision.pro" style="color: var(--av-green-light);">info@artvision.pro</a>
+        · <a href="https://artvision.pro" style="color: var(--av-green-light);">artvision.pro</a>
+    </p>
+</section>
+
+<footer>
+    artvision.pro Pulse · Поведенческие факторы · Отчёт сгенерирован 01.05.2026 00:17 ·
+    <a href="https://artvision.pro">artvision.pro</a>
+</footer>
+
+</div>
+</body>
+</html>
