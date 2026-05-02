@@ -206,7 +206,16 @@ done
 ok "auto-bootstrap"
 
 # ──────────────────────────────────────────────────────────────
-step "18/18  Итоги"
+step "18/19  Skill-enforcement (4 уровня гарантии использования скиллов)"
+if [[ -x "$HOME/claude-code-settings/scripts/install-skill-enforcement.sh" ]]; then
+  bash "$HOME/claude-code-settings/scripts/install-skill-enforcement.sh"
+  ok "skill-enforcement установлен (hooks + scripts + cron auto-pull)"
+else
+  warn "install-skill-enforcement.sh не найден — skip"
+fi
+
+# ──────────────────────────────────────────────────────────────
+step "19/19  Итоги"
 cat << 'EOF'
 
 Установлено:
