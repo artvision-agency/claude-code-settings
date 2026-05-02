@@ -30,11 +30,23 @@ SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty' 2>/dev/null)
 
 # Whitelist (read-only or already meta)
 case "$TOOL_NAME" in
-  Read|Grep|Glob|Skill|TaskCreate|TaskUpdate|TaskList|ToolSearch|AskUserQuestion|ScheduleWakeup|Edit) :;;
-  Write) :;;
-  Bash) :;;
+  Read|Grep|Glob|Skill|TaskCreate|TaskUpdate|TaskList|ToolSearch|AskUserQuestion|ScheduleWakeup) exit 0;;
+  Write|Edit|Bash) :;;
   *) exit 0;;
 esac
+
+# Bash subset whitelist — git/touch/scp/curl/etc — read-only or sync ops
+if [[ "$TOOL_NAME" == "Bash" ]]; then
+  CMD=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null | head -c 500)
+  case "$CMD" in
+    git\ *|*"&& git "*|*"; git "*) exit 0;;
+    touch\ *|mkdir\ *|chmod\ *|chown\ *|ln\ *|cp\ *|mv\ *) exit 0;;
+    ls\ *|cat\ *|head\ *|tail\ *|grep\ *|find\ *|wc\ *|file\ *) exit 0;;
+    scp\ *|ssh\ *|rsync\ *|curl\ *|wget\ *) exit 0;;
+    python3\ *|node\ *|npm\ *|pip\ *|brew\ *|crontab\ *) exit 0;;
+    echo\ *|printf\ *|date|pwd|env|export\ *) exit 0;;
+  esac
+fi
 
 [[ -z "$SESSION_ID" ]] && exit 0
 
