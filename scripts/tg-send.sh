@@ -15,7 +15,7 @@ fi
 
 case "$CHANNEL" in
     team)   CHAT_ID="-4273200821" ;;
-    anton)  CHAT_ID="${TELEGRAM_ANTON_CHAT_ID:-326925698}" ;;
+    anton)  CHAT_ID="${TELEGRAM_ANTON_CHAT_ID:-161261562}" ;;
     *)      CHAT_ID="$CHANNEL" ;;
 esac
 export TELEGRAM_TEAM_CHAT_ID="$CHAT_ID"

@@ -686,6 +686,11 @@
             "type": "command",
             "command": "~/.claude/hooks/prompt-action-call-asana.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/short-confirmation-action-reminder.sh",
+            "timeout": 5
           }
         ]
       },
