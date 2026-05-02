@@ -193,6 +193,20 @@ def daily_pace(slug, days=7):
     }
 
 
+def load_qcomment_snapshot(slug):
+    """Последний qcomment snapshot."""
+    qc_dir = Path.home() / "artvision-data" / "clients" / slug / "orm" / "qcomment"
+    if not qc_dir.exists():
+        return None
+    snaps = sorted(qc_dir.glob("snap-*.json"))
+    if not snaps:
+        return None
+    try:
+        return json.loads(snaps[-1].read_text())
+    except Exception:
+        return None
+
+
 def format_kwork_executors(tg_corpus):
     """Извлечь названия kwork-исполнителей из TG."""
     # Известные ники из истории
@@ -222,6 +236,7 @@ def main():
     state = classify(sheet1, executors, tg_norm)
     pace = daily_pace(args.slug, days=7)
     kwork_exec = format_kwork_executors(tg_corpus)
+    qc = load_qcomment_snapshot(args.slug)
 
     # Output
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M МСК")
@@ -249,6 +264,33 @@ def main():
     out_md.append(f"| 🚫 Неуникальный (шинглы) | {len(state['uniq_failed'])} | Переписать |")
     out_md.append(f"| ? Другое/неклассиф. | {len(state['other'])} | Проверить статусы |")
     out_md.append("")
+
+    if qc:
+        out_md.append("## QComment (биржа qcomment.com — отдельный канал)")
+        out_md.append("")
+        balance = qc.get("balance", "?")
+        total = qc.get("total_projects", 0)
+        pending = qc.get("pending_review", 0)
+        accepted = qc.get("accepted_total", 0)
+        rejected = qc.get("rejected_total", 0)
+        rework = qc.get("rework_total", 0)
+        out_md.append(f"- **Баланс:** {balance} ₽")
+        out_md.append(f"- **Проектов:** {total} (каждый = 1 слот для отзыва, тариф 183)")
+        out_md.append(f"- ⏳ Ждут исполнителя или модерации: {total - pending - accepted - rejected - rework}")
+        out_md.append(f"- 🚨 **Принять работу: {pending}** (auto-accept на 3-й день — НЕ пропустить!)")
+        out_md.append(f"- ✅ Принято: {accepted}")
+        out_md.append(f"- ❌ Отклонено: {rejected}")
+        out_md.append(f"- 🔄 На доработке: {rework}")
+        if pending > 0:
+            out_md.append("")
+            out_md.append("**Pending проекты:**")
+            for gname, projs in qc.get("groups", {}).items():
+                pending_projs = [p for p in projs if p.get("pending", 0) > 0]
+                for p in pending_projs:
+                    out_md.append(f"- [{p['project_id']}]({p['manage_url']}) — {gname} · {p['human_status']}")
+        out_md.append("")
+        out_md.append("📊 Дашборд: https://artvision.pro/qcomment/ (admin/111)")
+        out_md.append("")
 
     if pace:
         out_md.append("## Темп публикаций")
@@ -297,6 +339,14 @@ def main():
         "state_counts": {k: len(v) for k, v in state.items()},
         "pace": pace,
         "kwork_executors": kwork_exec,
+        "qcomment": {
+            "balance": qc.get("balance") if qc else None,
+            "total_projects": qc.get("total_projects") if qc else None,
+            "pending_review": qc.get("pending_review") if qc else None,
+            "accepted": qc.get("accepted_total") if qc else None,
+            "rejected": qc.get("rejected_total") if qc else None,
+            "rework": qc.get("rework_total") if qc else None,
+        } if qc else None,
         "approved_not_given_full": state["approved_not_given"],
     }, ensure_ascii=False, indent=2))
 
