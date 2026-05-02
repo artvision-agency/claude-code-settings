@@ -92,19 +92,27 @@ print(f'Биржа просит ещё: {len(signals[\"bourse_pings\"])} пин�
     ;;
 
   orders-state)
-    echo "🔹 Step 1/3: Sheet snapshot"
+    echo "🔹 Step 1/4: Sheet snapshot"
     "$SCRIPTS_DIR/sheet-snapshot.sh" "$CLIENT"
     echo ""
-    echo "🔹 Step 2/3: TG export"
+    echo "🔹 Step 2/4: TG export"
     python3 "$SCRIPTS_DIR/tg-export-clone.py" "$CLIENT" --days 14
     echo ""
-    echo "🔹 Step 3/3: Orders state — раскладка по корзинам + темп публикаций + не тронутые"
+    echo "🔹 Step 3/4: QComment API snapshot"
+    python3 "$SCRIPTS_DIR/qcomment-monitor.py" "$CLIENT" || echo "⚠️  qcomment failed (continuing)"
+    echo ""
+    echo "🔹 Step 4/4: Orders state — раскладка по корзинам + темп публикаций + не тронутые"
     python3 "$SCRIPTS_DIR/orders-state.py" "$CLIENT"
+    ;;
+
+  qcomment)
+    echo "🔹 QComment monitor — pull /api/projects + /api/balance + /api/comments"
+    python3 "$SCRIPTS_DIR/qcomment-monitor.py" "$CLIENT"
     ;;
 
   *)
     echo "❌ Unknown mode: $MODE"
-    echo "Available: full | contractors | reviews | signals | diff | plan | report"
+    echo "Available: full | contractors | reviews | signals | diff | plan | report | orders-state | qcomment"
     exit 1
     ;;
 esac
