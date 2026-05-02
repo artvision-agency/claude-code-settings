@@ -38,7 +38,7 @@ WATCHED_CHATS = [-4273200821]
 # Маппинг TG user_id → recipient name (для матчинга по sender)
 SENDER_MAP = {
     1857522687: "andrey",   # @PandaCaffe
-    326925698:  "anton",
+    161261562:  "anton",
     356640470:  "stas",
 }
 
