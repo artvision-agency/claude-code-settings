@@ -1,24 +1,67 @@
 ---
 name: orm-pulse
-description: ORM-конвейер мониторинг для клиентов с reputation management. Собирает Sheet snapshot + TG-экспорт релевантных чатов + Playwright live-парс целевой площадки → reconciliation 3-источников → STATUS-ALL.md. Триггеры — 'orm-pulse', 'orm pulse', 'orm пульс', 'orm статус', 'аудит отзывов', 'orm аудит', 'reputation pulse', 'статус отзывов клиента'. Сейчас работает для BluMart (reviews.yandex.ru). Расширяется на других ORM-клиентов через registry.yaml.
+description: ORM-конвейер командный центр для клиентов с reputation management. Агрегирует Sheet + TG (Telethon) + qcomment API + reviews.yandex.ru live + executor-ledger + research → единый HTML-дашборд + TG-алёрты команде. Авто-refresh 30 мин. Триггеры — 'orm-pulse', 'orm pulse', 'orm пульс', 'orm статус', 'командный центр', 'orm дашборд', 'orm аудит', 'reputation pulse'. Сейчас работает для BluMart (reviews.yandex.ru). Расширяется через registry.yaml.
 ---
 
-# ORM Pulse — мониторинг ORM-конвейера
+# ORM Pulse — командный центр ORM-workflow
 
 ## Назначение
 
-Один скилл — три вопроса:
-1. **Что заказано** (через Sheet + TG)
-2. **Что опубликовано** (через live-парс целевой площадки)
-3. **Что делать дальше** (через diff vs предыдущий прогон + биржевые пинги)
+Единый pipeline и live-дашборд для всех источников ORM-данных клиента:
+1. **Что заказано** — Sheet1/Sheet2 (snapshot + diff)
+2. **Что опубликовано** — reviews.yandex.ru live (rating/total/темп через LaunchAgent 4×/день)
+3. **Что в работе** — qcomment API (balance/проекты/pending), TG биржи, kwork (manual session)
+4. **Кому отдано** — executor-ledger (append-only CSV журнал передач)
+5. **Что делать дальше** — alert-router в TG команды (НЕ заказчикам!) + research отчёты
+6. **Где искать** — tg-discover-serm + контакты подрядчиков в registry.yaml
+
+## Live URLs (X-Robots-Tag noindex)
+
+- 🎯 **Command Center**: https://artvision.pro/orm-command-center/<slug>.html
+- 📊 QComment dashboard: https://artvision.pro/qcomment/
+- 🤝 Contractors HTML: https://artvision.pro/orm-contractors.html
+- 🔬 Research: https://artvision.pro/orm-research/<slug>-*.html
 
 ## Использование
 
+```bash
+# Главный режим — full pipeline + deploy command-center + alerts
+~/.claude/skills/orm-pulse/scripts/auto-refresh.sh <client>
+
+# Отдельные режимы
+./scripts/run.sh <client> qcomment        # только qcomment snapshot
+./scripts/run.sh <client> orders-state    # Sheet воронка + qcomment блок
+./scripts/run.sh <client> ledger          # executor-ledger stats
+./scripts/run.sh <client> full            # все источники, без deploy
+
+# Discovery
+./scripts/tg-discover-serm.py <client> --global-search --scan-subs
+
+# Командный центр
+./scripts/command-center.py <client> --deploy
+
+# Research отчёты деплой
+./scripts/deploy-research.py <client> <md_filename>
+./scripts/deploy-research.py --all <client>
+
+# Алёрты в TG команды (rate-limit 6h)
+./scripts/alert-router.py <client> [--dry-run] [--force]
+
+# Executor ledger
+./scripts/executor-ledger.py add <client> --executor X --channel Y --status sent --text "..."
+./scripts/executor-ledger.py backfill <client> --source qcomment
+./scripts/executor-ledger.py stats <client>
 ```
-/orm-pulse blumart            # один прогон
-/orm-pulse blumart --report   # публичная версия (без исполнителей/цен) для клиента
-/orm-pulse blumart --watch    # cron 09:00 daily
-```
+
+## Setup для нового клиента / восстановления сессий
+
+См. `SETUP.md` рядом — пошаговая инструкция для:
+- Telethon (TG export, alerts, discover) — общая сессия
+- Google Sheets — Safari cookies
+- QComment — API key (уже в tokens.json)
+- Kupi-otziv — Cookie-Editor → Netscape txt
+- Kwork — manual Chrome session ИЛИ kwork API
+- Zenno.club — auth не требуется
 
 ## Pipeline (12 этапов)
 
