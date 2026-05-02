@@ -110,6 +110,16 @@ print(f'Биржа просит ещё: {len(signals[\"bourse_pings\"])} пин�
     python3 "$SCRIPTS_DIR/qcomment-monitor.py" "$CLIENT"
     ;;
 
+  ledger)
+    echo "🔹 Executor ledger — stats"
+    python3 "$SCRIPTS_DIR/executor-ledger.py" stats "$CLIENT"
+    echo ""
+    echo "Команды:"
+    echo "  add        — добавить запись (executor-ledger.py add $CLIENT --executor X --channel Y --status Z ...)"
+    echo "  backfill   — заполнить из qcomment (executor-ledger.py backfill $CLIENT --source qcomment)"
+    echo "  query      — запрос истории (executor-ledger.py query $CLIENT --executor X)"
+    ;;
+
   *)
     echo "❌ Unknown mode: $MODE"
     echo "Available: full | contractors | reviews | signals | diff | plan | report | orders-state | qcomment"
