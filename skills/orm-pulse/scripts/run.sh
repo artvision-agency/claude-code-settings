@@ -91,6 +91,17 @@ print(f'Биржа просит ещё: {len(signals[\"bourse_pings\"])} пин�
     python3 "$SCRIPTS_DIR/compose-status.py" "$CLIENT" --public
     ;;
 
+  orders-state)
+    echo "🔹 Step 1/3: Sheet snapshot"
+    "$SCRIPTS_DIR/sheet-snapshot.sh" "$CLIENT"
+    echo ""
+    echo "🔹 Step 2/3: TG export"
+    python3 "$SCRIPTS_DIR/tg-export-clone.py" "$CLIENT" --days 14
+    echo ""
+    echo "🔹 Step 3/3: Orders state — раскладка по корзинам + темп публикаций + не тронутые"
+    python3 "$SCRIPTS_DIR/orders-state.py" "$CLIENT"
+    ;;
+
   *)
     echo "❌ Unknown mode: $MODE"
     echo "Available: full | contractors | reviews | signals | diff | plan | report"
