@@ -27,8 +27,22 @@ fi
 
 mkdir -p "$CLAUDE/hooks" "$CLAUDE/scripts" "$CLAUDE/commands"
 
-step "1/4  Симлинки hooks"
-for hook in pre-tool-skill-required.sh prompt-skill-discovery.sh stop-skill-audit.sh stop-asana-skill-comment.sh; do
+step "1/5  Симлинки hooks"
+HOOKS=(
+  # skill-enforcement (orig 4)
+  pre-tool-skill-required.sh
+  prompt-skill-discovery.sh
+  stop-skill-audit.sh
+  stop-asana-skill-comment.sh
+  # 7 anti-error hooks
+  pre-scp-clients-factcheck.sh
+  stop-recap-completeness.sh
+  post-agent-cost-track.sh
+  stop-cost-summary.sh
+  pre-compact-context-save.sh
+  prompt-compact-recovery.sh
+)
+for hook in "${HOOKS[@]}"; do
   src="$REPO/hooks/$hook"
   dst="$CLAUDE/hooks/$hook"
   if [[ -f "$src" ]]; then
@@ -40,8 +54,16 @@ for hook in pre-tool-skill-required.sh prompt-skill-discovery.sh stop-skill-audi
   fi
 done
 
-step "2/4  Симлинки scripts"
-for script in audit-session-tools.py build-routing-table.py asana-skill-comment.py; do
+step "2/5  Симлинки scripts"
+SCRIPTS=(
+  audit-session-tools.py
+  build-routing-table.py
+  asana-skill-comment.py
+  skill-discovery-tfidf.py
+  multi-machine-drift-check.sh
+  tg-bot-deploy-guard.sh
+)
+for script in "${SCRIPTS[@]}"; do
   src="$REPO/scripts/$script"
   dst="$CLAUDE/scripts/$script"
   if [[ -f "$src" ]]; then
@@ -51,12 +73,12 @@ for script in audit-session-tools.py build-routing-table.py asana-skill-comment.
   fi
 done
 
-step "3/4  Симлинк commands/session-stats.md"
+step "3/5  Симлинк commands/session-stats.md"
 src="$REPO/commands/session-stats.md"
 dst="$CLAUDE/commands/session-stats.md"
 [[ -f "$src" ]] && ln -sfn "$src" "$dst" && ok "session-stats.md → linked"
 
-step "4/4  Регистрация hooks в settings.json"
+step "4/5  Регистрация hooks в settings.json"
 SETTINGS="$CLAUDE/settings.json"
 if [[ ! -f "$SETTINGS" ]]; then
   echo '{"hooks":{}}' > "$SETTINGS"
@@ -84,12 +106,20 @@ def add(event, command, matcher=""):
         new["matcher"] = matcher
     arr.append(new)
 
-# PreToolUse — скилл-блок (matcher для всех инструментов кроме whitelist делается внутри скрипта)
+# PreToolUse — skill-блок + factcheck для scp клиентских HTML
 add("PreToolUse", "$HOME/.claude/hooks/pre-tool-skill-required.sh")
-# UserPromptSubmit — discovery
+add("PreToolUse", "$HOME/.claude/hooks/pre-scp-clients-factcheck.sh", matcher="Bash")
+# PostToolUse — cost tracking для Agent tool (subagents)
+add("PostToolUse", "$HOME/.claude/hooks/post-agent-cost-track.sh", matcher="Agent")
+# UserPromptSubmit — skill discovery + post-compact recovery
 add("UserPromptSubmit", "$HOME/.claude/hooks/prompt-skill-discovery.sh")
-# Stop — audit в recap + Asana comment
+add("UserPromptSubmit", "$HOME/.claude/hooks/prompt-compact-recovery.sh")
+# PreCompact — save context before compaction
+add("PreCompact", "$HOME/.claude/hooks/pre-compact-context-save.sh")
+# Stop — skill audit + recap completeness + cost summary + asana comment
 add("Stop", "$HOME/.claude/hooks/stop-skill-audit.sh")
+add("Stop", "$HOME/.claude/hooks/stop-recap-completeness.sh")
+add("Stop", "$HOME/.claude/hooks/stop-cost-summary.sh")
 add("Stop", "$HOME/.claude/hooks/stop-asana-skill-comment.sh")
 
 p.write_text(json.dumps(data, indent=2, ensure_ascii=False))
@@ -98,23 +128,51 @@ PY
 
 ok "hooks зарегистрированы в settings.json"
 
-step "+ Cron auto-pull (каждые 30 мин)"
-CRON_LINE='*/30 * * * * cd $HOME/claude-code-settings && /usr/bin/git pull --quiet 2>>$HOME/claude-code-settings/.auto-pull.log'
+step "5/5  Cron jobs"
+# 1) Auto-pull settings repo каждые 30 мин
+CRON_PULL='*/30 * * * * cd $HOME/claude-code-settings && /usr/bin/git pull --quiet 2>>$HOME/claude-code-settings/.auto-pull.log'
 if crontab -l 2>/dev/null | grep -qF "claude-code-settings && /usr/bin/git pull"; then
-  ok "cron уже установлен"
+  ok "cron auto-pull уже установлен"
 else
-  ( crontab -l 2>/dev/null; echo "$CRON_LINE" ) | crontab -
-  ok "cron записан: каждые 30 мин"
+  ( crontab -l 2>/dev/null; echo "$CRON_PULL" ) | crontab -
+  ok "cron auto-pull: каждые 30 мин"
 fi
+
+# 2) Multi-machine drift check каждый день 9:00
+CRON_DRIFT='0 9 * * * /usr/bin/env bash $HOME/.claude/scripts/multi-machine-drift-check.sh 2>>$HOME/.claude/logs/drift-check.log'
+if crontab -l 2>/dev/null | grep -qF "multi-machine-drift-check.sh"; then
+  ok "cron drift-check уже установлен"
+else
+  ( crontab -l 2>/dev/null; echo "$CRON_DRIFT" ) | crontab -
+  ok "cron drift-check: ежедневно 9:00"
+fi
+
+mkdir -p "$HOME/.claude/logs"
 
 echo ""
 echo "═══════════════════════════════════════════════════════"
-echo "  Skill-enforcement установлен"
+echo "  Skill-enforcement + 7 anti-error hooks установлены"
 echo "═══════════════════════════════════════════════════════"
-echo "  • PreToolUse: pre-tool-skill-required.sh (блок если skill пропущен)"
-echo "  • UserPromptSubmit: prompt-skill-discovery.sh (подсказка релевантных)"
-echo "  • Stop: stop-skill-audit.sh (аудит в recap)"
-echo "  • Cron: git pull каждые 30 мин"
+echo "  PreToolUse:"
+echo "    • pre-tool-skill-required.sh (skill-блок)"
+echo "    • pre-scp-clients-factcheck.sh (factcheck перед scp клиентских HTML)"
+echo "  PostToolUse:"
+echo "    • post-agent-cost-track.sh (cost tracking Agent tool)"
+echo "  UserPromptSubmit:"
+echo "    • prompt-skill-discovery.sh (TF-IDF top-5 релевантных)"
+echo "    • prompt-compact-recovery.sh (восстановление после компакшена)"
+echo "  PreCompact:"
+echo "    • pre-compact-context-save.sh (сохранить goal+tasks+обещания)"
+echo "  Stop:"
+echo "    • stop-skill-audit.sh (аудит в recap)"
+echo "    • stop-recap-completeness.sh (goal+deliverables+acceptance+status)"
+echo "    • stop-cost-summary.sh (суммарные затраты, alert >\$10)"
+echo "    • stop-asana-skill-comment.sh (комментарий в Asana задачи)"
+echo "  Cron:"
+echo "    • git pull каждые 30 мин"
+echo "    • multi-machine-drift-check ежедневно 9:00"
 echo ""
 echo "  Тест: python3 ~/.claude/scripts/audit-session-tools.py"
-echo "  Bypass блокировки: SKILL_OVERRIDE=1 SKILL_REASON='reason'"
+echo "  Bypass skill: SKILL_OVERRIDE=1 SKILL_REASON='reason'"
+echo "  Bypass factcheck: FACTCHECK_FORCE=1"
+echo "  TG bot guard: bash ~/.claude/scripts/tg-bot-deploy-guard.sh <bot-name> <log-path>"
