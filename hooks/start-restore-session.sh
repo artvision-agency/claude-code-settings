@@ -2,7 +2,10 @@
 # Восстановление контекста при старте сессии Claude Code
 # Запускается как SessionStart hook
 # Собирает: git pull, коммиты с VDS/TG, незавершённые задачи, контекст
-set -euo pipefail
+set -uo pipefail
+# pipefail оставляем, но гасим SIGPIPE от git log | head — это нормальный кейс,
+# не ошибка. set -e убран, чтобы один SIGPIPE не валил весь hook (exit 141).
+trap '' PIPE
 
 # ─── Конфигурация ───
 REPOS=(
