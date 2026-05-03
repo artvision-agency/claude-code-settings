@@ -28,7 +28,7 @@ fi
 mkdir -p "$CLAUDE/hooks" "$CLAUDE/scripts" "$CLAUDE/commands"
 
 step "1/4  Симлинки hooks"
-for hook in pre-tool-skill-required.sh prompt-skill-discovery.sh stop-skill-audit.sh; do
+for hook in pre-tool-skill-required.sh prompt-skill-discovery.sh stop-skill-audit.sh stop-asana-skill-comment.sh; do
   src="$REPO/hooks/$hook"
   dst="$CLAUDE/hooks/$hook"
   if [[ -f "$src" ]]; then
@@ -41,7 +41,7 @@ for hook in pre-tool-skill-required.sh prompt-skill-discovery.sh stop-skill-audi
 done
 
 step "2/4  Симлинки scripts"
-for script in audit-session-tools.py build-routing-table.py; do
+for script in audit-session-tools.py build-routing-table.py asana-skill-comment.py; do
   src="$REPO/scripts/$script"
   dst="$CLAUDE/scripts/$script"
   if [[ -f "$src" ]]; then
@@ -88,8 +88,9 @@ def add(event, command, matcher=""):
 add("PreToolUse", "$HOME/.claude/hooks/pre-tool-skill-required.sh")
 # UserPromptSubmit — discovery
 add("UserPromptSubmit", "$HOME/.claude/hooks/prompt-skill-discovery.sh")
-# Stop — audit в recap
+# Stop — audit в recap + Asana comment
 add("Stop", "$HOME/.claude/hooks/stop-skill-audit.sh")
+add("Stop", "$HOME/.claude/hooks/stop-asana-skill-comment.sh")
 
 p.write_text(json.dumps(data, indent=2, ensure_ascii=False))
 print("settings.json patched")
