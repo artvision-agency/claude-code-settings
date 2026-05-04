@@ -119,6 +119,31 @@ def ledger_stats(client: str) -> dict:
     }
 
 
+def last_contact_per_executor(client: str) -> dict[str, dict]:
+    """Возвращает {executor: {last_ts, last_text, last_channel}} — последний контакт."""
+    p = ROOT / "clients" / client / "orm" / "executor-ledger.csv"
+    if not p.exists():
+        return {}
+    try:
+        rows = list(csv.DictReader(open(p)))
+    except Exception:
+        return {}
+    last: dict[str, dict] = {}
+    for r in rows:
+        ex = r.get("executor", "")
+        if not ex:
+            continue
+        ts = r.get("timestamp", "")
+        if ex not in last or ts > last[ex]["last_ts"]:
+            last[ex] = {
+                "last_ts": ts,
+                "last_text": (r.get("text", "") or "")[:80],
+                "last_channel": r.get("channel", ""),
+                "last_status": r.get("status", ""),
+            }
+    return last
+
+
 def list_research(client: str) -> list[dict]:
     d = ROOT / "clients" / client / "orm" / "research"
     if not d.exists():
@@ -405,19 +430,58 @@ def render_research_card(items) -> str:
     return f'<div class="card"><h2><span><span class="icon">🔬</span>Research</span><span class="pill">{len(items)}</span></h2>{rows}</div>'
 
 
-def render_contractors_card(registry) -> str:
+def _status_classify(status: str) -> tuple[str, str]:
+    """Возвращает (css_class, emoji) по статусу контрагента."""
+    s = (status or "").lower()
+    if s == "active":
+        return ("ok", "✅")
+    if "fail" in s or "block" in s or "decline" in s:
+        return ("crit", "❌")
+    if "unused" in s or "lead_only" in s:
+        return ("neutral", "⏸")
+    if "cold_pitch" in s or "pending" in s:
+        return ("warn", "💬")
+    if "unknown" in s:
+        return ("neutral", "❓")
+    return ("neutral", "•")
+
+
+def render_contractors_card(registry, client: str) -> str:
     contractors = registry.get("contractors", [])
+    last_contacts = last_contact_per_executor(client)
     rows = []
     for c in contractors:
+        name = c.get("name", "?")
         status = c.get("status", "?")
-        cls = "ok" if status == "active" else ("crit" if "fail" in status else "neutral")
-        rows.append(
-            f'<tr><td>{html.escape(c.get("name", "?"))}</td>'
-            f'<td><span class="tag {cls}">{status}</span></td></tr>'
+        ctype = c.get("type", "?")
+        cls, emoji = _status_classify(status)
+        # Сматчить ledger executors с registry name (нечёткий матч)
+        last = None
+        for ex_key, info in last_contacts.items():
+            if name.lower() in ex_key.lower() or ex_key.lower() in name.lower():
+                last = info
+                break
+        last_html = (
+            f'<small style="color:var(--muted)">{html.escape(last["last_ts"][:16])} · '
+            f'{html.escape(last["last_channel"])}</small>'
+            if last
+            else '<small style="color:var(--muted)">—</small>'
         )
+        rows.append(
+            f'<tr>'
+            f'<td>{emoji} {html.escape(name)}<br>{last_html}</td>'
+            f'<td><span class="tag {cls}">{html.escape(status)}</span><br>'
+            f'<small style="color:var(--muted)">{html.escape(ctype)}</small></td>'
+            f'</tr>'
+        )
+
+    active_count = sum(1 for c in contractors if c.get("status") == "active")
     return f'''<div class="card">
-  <h2><span><span class="icon">🤝</span>Contractors</span><span class="pill">{len(contractors)}</span></h2>
-  <table class="compact"><thead><tr><th>Name</th><th>Status</th></tr></thead><tbody>{"".join(rows)}</tbody></table>
+  <h2><span><span class="icon">🤝</span>Подрядчики — статус общения</span><span class="pill">{active_count}/{len(contractors)} active</span></h2>
+  <table class="compact"><thead><tr><th>Кто / последний контакт</th><th>Статус</th></tr></thead><tbody>{"".join(rows)}</tbody></table>
+  <p style="font-size:11px;color:var(--muted);margin-top:8px">
+    Последний контакт = из <code>executor-ledger.csv</code>. ✅ active · ⏸ unused · 💬 cold-pitch · ❌ blocked · ❓ unknown
+  </p>
 </div>'''
 
 
@@ -441,7 +505,7 @@ def build_html(client: str) -> str:
         render_reviews_card(pace, qc),
         render_orders_state_card(state),
         render_ledger_card(ledger),
-        render_contractors_card(registry),
+        render_contractors_card(registry, client),
         render_kwork_card(kw),
         render_kupi_otziv_card(ko),
         render_research_card(research),
