@@ -71,18 +71,24 @@ LAST_USER=$(jq -r 'select(.message.role=="user") | .message.content | if type=="
 CALLED_SKILLS=$(jq -r '.message.content[]? | select(.type=="tool_use" and .name=="Skill") | .input.skill // empty' "$TRANSCRIPT" 2>/dev/null | sort -u)
 
 # Loop по доступным скиллам, ищем match по name+description в last_user
+# Match только если skill-name появляется как ОТДЕЛЬНОЕ слово или /skill-name (slash-команда),
+# а не как substring внутри другого слова (cro в "across", cons в "consilium" и т.п.).
+# Минимальная длина skill-name для триггера — 5 символов (избегаем cro/api/seo как ложные).
 MATCHED=""
 for skill_md in "$SKILLS_DIR"/*/SKILL.md; do
   [[ ! -f "$skill_md" ]] && continue
   SKILL_NAME=$(basename "$(dirname "$skill_md")")
   # Skip archived
   [[ "$SKILL_NAME" == .* ]] && continue
+  # Skip коротких имён — слишком много false-positive substring-матчей
+  [[ ${#SKILL_NAME} -lt 5 ]] && continue
 
   # Skip already called
   echo "$CALLED_SKILLS" | grep -qx "$SKILL_NAME" && continue
 
-  # Match by name (verbatim) — самый строгий критерий
-  if echo "$LAST_USER" | grep -q -- "${SKILL_NAME}"; then
+  # Match только как /skill-name (явный вызов) ИЛИ word-boundary (отдельное слово)
+  # grep -E '\b' не работает с дефисами надёжно — используем явные границы
+  if echo "$LAST_USER" | grep -qE "(^|[[:space:]/])${SKILL_NAME}([[:space:]:,;.!?'\"]|\$)"; then
     MATCHED="$MATCHED $SKILL_NAME"
     break
   fi
