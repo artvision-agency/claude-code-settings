@@ -23,13 +23,22 @@ description: "Онбординг нового клиента Artvision: созд
 
 ШАГ 2: СОЗДАНИЕ СТРУКТУРЫ
 ───────────────────────────
-mkdir -p clients/[slug]/{seo,output_v6,kp,patches}
+Лучший путь: cp -r clients/_template/ clients/[slug]/  (затем заменить плейсхолдеры)
 
-Файлы:
-  - clients/[slug]/access.md       # Доступы (пустой шаблон)
-  - clients/[slug]/config.yaml     # Фирменный стиль
-  - clients/[slug]/README.md       # Описание клиента
-  - clients/[slug]/patches/        # Patch-система (самообучение на ошибках)
+Альтернатива (вручную):
+mkdir -p clients/[slug]/{seo,output_v6,kp,patches,meetings,presale}
+
+Файлы (все есть в _template/):
+  - clients/[slug]/access.md         # Доступы (пустой шаблон)
+  - clients/[slug]/config.yaml       # Фирменный стиль, бренд
+  - clients/[slug]/README.md         # Описание клиента
+  - clients/[slug]/CLAUDE.md         # Контекст проекта (ICP, тон, Pre-Task Protocol)
+  - clients/[slug]/context-log.md    # Журнал работы (пополняется КАЖДУЮ сессию)
+  - clients/[slug]/patches/          # Patch-система (фиксы багов с историей)
+  - clients/[slug]/meetings/         # Записи встреч/созвонов
+  - clients/[slug]/presale/          # Артефакты до подписания (КП, переписка)
+  - clients/[slug]/seo/              # SF-кравлы, Lighthouse, отчёты по дате
+  - clients/[slug]/kp/               # Финальные КП клиенту
 
 ШАГ 3: ЗАПРОС ДОСТУПОВ (показать клиенту!)
 ──────────────────────────────────────────────
@@ -224,6 +233,7 @@ notes: |
 - [ ] Папка clients/[slug]/ создана
 - [ ] access.md создан (пустой или заполненный)
 - [ ] config.yaml создан
+- [ ] **design_profile в config.yaml задан** (см. `~/.claude/rules/design-profile-routing.md`, 5 типов: enterprise / b2c-polished / lux-marketing / dashboard-relationship / mvp-prototype). При неуверенности — спросить Антона.
 - [ ] README.md создан
 
 ### Регистрация

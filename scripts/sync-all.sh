@@ -34,6 +34,19 @@ log_warn()  { echo -e "${YELLOW}⚠️${NC} $1"; }
 log_err()   { echo -e "${RED}❌${NC} $1"; }
 log_step()  { echo -e "\n${BLUE}━━━ $1 ━━━${NC}"; }
 
+# ─── TOKENS (через VPS, отдельный канал) ───────────────────
+
+do_tokens() {
+    local mode="$1"  # push|pull|sync
+    log_step "tokens.json через VPS ($mode)"
+    local script="$HOME/.claude/scripts/sync-tokens.sh"
+    if [ -x "$script" ]; then
+        timeout 30 "$script" "$mode" 2>&1 | tail -3 || log_warn "sync-tokens $mode exit=$?"
+    else
+        log_warn "sync-tokens.sh не установлен — пропускаю tokens"
+    fi
+}
+
 # ─── PUSH ───────────────────────────────────────────────────
 
 do_push() {
@@ -112,6 +125,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
         changes_made=1
     fi
 
+    # ── Шаг 4: tokens.json через VPS ──
+    do_tokens push
+
     echo ""
     if [ $changes_made -eq 1 ]; then
         log_ok "Синхронизация завершена — всё запушено"
@@ -159,6 +175,9 @@ do_pull() {
     else
         log_warn "Memory sync директория не найдена в artvision-data"
     fi
+
+    # ── Шаг 3: tokens.json через VPS ──
+    do_tokens pull
 
     echo ""
     log_ok "Pull завершён — всё актуально"
