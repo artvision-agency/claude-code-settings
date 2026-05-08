@@ -312,7 +312,87 @@ def render_qcomment_card(qc) -> str:
 </div>'''
 
 
-def render_reviews_card(pace, qc) -> str:
+def _daily_deltas_for_chart(client: str, days: int = 14):
+    """Возвращает [(MM-DD, added, removed)] за последние N дней по reviews-tracker history."""
+    from datetime import datetime as _dt, timedelta as _td
+    history = ROOT / "clients" / client / "orm" / "reviews-tracker" / "history.csv"
+    if not history.exists():
+        return []
+    by_day: dict[str, int] = {}
+    try:
+        for row in csv.DictReader(open(history)):
+            ts = row.get("timestamp", "")
+            if len(ts) < 10:
+                continue
+            day = ts[:10]
+            try:
+                t = int(row.get("total") or 0)
+            except (TypeError, ValueError):
+                continue
+            by_day[day] = t
+    except Exception:
+        return []
+    if len(by_day) < 2:
+        return []
+    sorted_days = sorted(by_day.keys())
+    cutoff = (_dt.now() - _td(days=days)).strftime("%Y-%m-%d")
+    sorted_days = [d for d in sorted_days if d >= cutoff]
+    if len(sorted_days) < 2:
+        return []
+    out = []
+    prev = by_day[sorted_days[0]]
+    for day in sorted_days[1:]:
+        cur = by_day[day]
+        d = cur - prev
+        out.append((day[5:], max(d, 0), max(-d, 0)))
+        prev = cur
+    return out
+
+
+def _render_publications_svg(deltas) -> str:
+    """SVG bar-chart: зелёные = added, красные = removed."""
+    if not deltas:
+        return ""
+    n = len(deltas)
+    W = max(280, n * 22 + 40)
+    H = 110
+    pad_l, pad_r, pad_t, pad_b = 24, 8, 14, 28
+    chart_w = W - pad_l - pad_r
+    chart_h = H - pad_t - pad_b
+    max_v = max(max(a for _, a, _ in deltas), max(r for _, _, r in deltas), 1)
+    bar_w = chart_w / n * 0.6
+    gap = chart_w / n
+    baseline = pad_t + chart_h * 0.65
+    bars = []
+    labels = []
+    sum_added = sum(a for _, a, _ in deltas)
+    sum_removed = sum(r for _, _, r in deltas)
+    for i, (day, added, removed) in enumerate(deltas):
+        cx = pad_l + gap * i + gap / 2
+        bx = cx - bar_w / 2
+        if added:
+            h = (baseline - pad_t) * (added / max_v)
+            bars.append(f'<rect x="{bx:.1f}" y="{baseline-h:.1f}" width="{bar_w:.1f}" height="{h:.1f}" fill="#16a34a" rx="2"/>')
+            bars.append(f'<text x="{cx:.1f}" y="{baseline-h-2:.1f}" font-size="9" fill="#16a34a" text-anchor="middle" font-weight="600">+{added}</text>')
+        if removed:
+            h = (H - pad_b - baseline) * (removed / max_v)
+            bars.append(f'<rect x="{bx:.1f}" y="{baseline:.1f}" width="{bar_w:.1f}" height="{h:.1f}" fill="#dc2626" rx="2"/>')
+            bars.append(f'<text x="{cx:.1f}" y="{baseline+h+10:.1f}" font-size="9" fill="#dc2626" text-anchor="middle" font-weight="600">-{removed}</text>')
+        if i % 2 == 0 or i == n - 1:
+            labels.append(f'<text x="{cx:.1f}" y="{H-6:.1f}" font-size="9" fill="#64748b" text-anchor="middle">{day}</text>')
+    legend = (
+        f'<text x="{pad_l}" y="10" font-size="9" fill="#16a34a" font-weight="600">+{sum_added} опубл</text>'
+        f'<text x="{pad_l+62}" y="10" font-size="9" fill="#dc2626" font-weight="600">-{sum_removed} снёс Я</text>'
+    )
+    return (
+        f'<svg viewBox="0 0 {W} {H}" width="100%" height="{H}" style="display:block;margin-top:8px">'
+        f'<line x1="{pad_l}" y1="{baseline:.1f}" x2="{W-pad_r}" y2="{baseline:.1f}" stroke="#cbd5e1" stroke-width="0.5"/>'
+        + legend + "".join(bars) + "".join(labels) +
+        '</svg>'
+    )
+
+
+def render_reviews_card(pace, qc, client: str = "bluemart") -> str:
     if not pace:
         return '<div class="card"><h2><span><span class="icon">⭐</span>Yandex Reviews</span></h2><div class="empty">Нет history. LaunchAgent reviews-tracker должен прогнать 4×/день.</div></div>'
 
@@ -322,12 +402,21 @@ def render_reviews_card(pace, qc) -> str:
     delta_class = "good" if delta > 0 else ("danger" if delta < 0 else "")
     delta_str = f"+{delta}" if delta > 0 else str(delta)
 
+    deltas = _daily_deltas_for_chart(client, days=14)
+    chart_svg = _render_publications_svg(deltas)
+    chart_block = (
+        f'<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">'
+        f'<div style="font-size:11px;color:var(--muted);margin-bottom:2px">Динамика публикаций (14 дней)</div>'
+        f'{chart_svg}</div>'
+    ) if chart_svg else ""
+
     return f'''<div class="card">
   <h2><span><span class="icon">⭐</span>Yandex Reviews</span><span class="pill">{pace.get("snapshots", 0)} snapshots</span></h2>
   <div class="metric"><span class="label">Рейтинг сейчас</span><span class="value big">{rating}</span></div>
   <div class="metric"><span class="label">Всего отзывов</span><span class="value">{total}</span></div>
   <div class="metric"><span class="label">Δ за период</span><span class="value {delta_class}">{delta_str}</span></div>
   <div class="metric"><span class="label">Окно</span><span class="value" style="font-size:11px">{pace.get("first_ts", "?")} → {pace.get("last_ts", "?")}</span></div>
+  {chart_block}
   <p style="margin:8px 0 0;font-size:11px;color:var(--muted)">
     <a href="https://reviews.yandex.ru/shop/blumart.ru" target="_blank">reviews.yandex.ru →</a>
   </p>
@@ -430,6 +519,237 @@ def render_research_card(items) -> str:
     return f'<div class="card"><h2><span><span class="icon">🔬</span>Research</span><span class="pill">{len(items)}</span></h2>{rows}</div>'
 
 
+_STATUS_EMOJI = {
+    "Отзыв размещён": "✅",
+    "Согласовано, заказ размещён": "📤",
+    "Ожидание модерации": "⏳",
+    "Текст согласован": "📝",
+    "Ожидает согласования": "⏸",
+    "Неуникальный текст отзыва (повторящиеся шинглы)": "🚫",
+    "Ждет размещения": "📦",
+    "Не прошёл модерацию": "❌",
+    "потрачен": "💸",
+}
+
+
+def sheet_tab_stats(client: str) -> dict:
+    """Парсит snapshot CSV → {snapshot_filename: {total, by_status: [(emoji+status, count)]}}.
+    Используется для подмешивания цифр в Google Sheets ссылки.
+    """
+    base = ROOT / "clients" / client / "orm" / "snapshots" / "latest"
+    if not base.exists():
+        return {}
+    out: dict = {}
+    for f in base.glob("sheet*.csv"):
+        try:
+            with open(f) as fh:
+                rows = list(csv.reader(fh))
+        except Exception:
+            continue
+        statuses: Counter = Counter()
+        for r in rows[1:]:
+            if len(r) >= 3 and r[2].strip():
+                statuses[r[2].strip()] += 1
+        if not statuses:
+            continue
+        out[f.stem] = {
+            "total": sum(statuses.values()),
+            "by_status": [
+                (f"{_STATUS_EMOJI.get(s, '•')} {s[:24]}", n)
+                for s, n in statuses.most_common(4)
+            ],
+        }
+    return out
+
+
+def parse_batch_compose(p) -> str:
+    """Извлекает строку '5 шт. (Плитка ×3 + Аксессуары ×2)' из batch md."""
+    try:
+        text = p.read_text()
+    except Exception:
+        return ""
+    import re as _re
+    m = _re.search(r"\*\*Состав:\*\*\s*(.+?)$", text, _re.MULTILINE)
+    if m:
+        return m.group(1).strip()
+    return ""
+
+
+def docs_inventory(client: str, registry: dict) -> dict:
+    """Собирает инвентарь всех ORM-документов клиента с фактическими цифрами."""
+    base = ROOT / "clients" / client / "orm"
+    repo_url = "https://github.com/artvision-agency/artvision-data/blob/feat/ops-crm-v1"
+    sheet_stats = sheet_tab_stats(client)
+
+    def file_meta(rel_path: str) -> dict | None:
+        p = base / rel_path
+        if not p.exists():
+            return None
+        st = p.stat()
+        meta = {
+            "name": rel_path,
+            "size_kb": st.st_size // 1024 or 1,
+            "mtime": datetime.fromtimestamp(st.st_mtime).strftime("%d.%m %H:%M"),
+            "github": f"{repo_url}/clients/{client}/orm/{rel_path}",
+        }
+        if rel_path.endswith(".csv"):
+            try:
+                with open(p) as f:
+                    meta["rows"] = sum(1 for _ in f) - 1
+            except Exception:
+                pass
+        # batch-N-*.md → состав
+        if rel_path.startswith("batches/batch-"):
+            meta["data"] = parse_batch_compose(p)
+        return meta
+
+    def latest_match(pattern: str) -> str | None:
+        files = sorted(base.glob(pattern), reverse=True)
+        return files[0].name if files else None
+
+    # Google Sheets из registry — с цифрами из snapshot
+    sheet_snapshot_map = {
+        ("sheet1_internal", 0): "sheet1_internal_0",
+        ("sheet1_internal", 88304516): "sheet1_internal_88304516",
+        ("sheet1_internal", 470319558): "sheet1_internal_470319558",
+        ("sheet2_okponrussia", 0): "sheet2_okponrussia_0",
+        ("sheet2_okponrussia", 666154064): "sheet2_okponrussia_666154064",
+    }
+    sheets = []
+    for key, sh in (registry.get("sheets") or {}).items():
+        sid = sh.get("id")
+        if not sid:
+            continue
+        for tab in sh.get("tabs", []):
+            snap_key = sheet_snapshot_map.get((key, tab.get("gid", 0)))
+            stats = sheet_stats.get(snap_key) if snap_key else None
+            sheets.append({
+                "label": f"{sh.get('role', key)} — {tab.get('name', '?')}",
+                "owner": sh.get("owner", "?"),
+                "plan": tab.get("plan"),
+                "period": tab.get("period"),
+                "url": f"https://docs.google.com/spreadsheets/d/{sid}/edit#gid={tab.get('gid', 0)}",
+                "stats": stats,
+            })
+
+    # Ключевые локальные доки
+    key_docs = []
+    for rel in ["registry.yaml", "plan-may-2026.md", "batch-plan-2026-05-04.md",
+                "contractors-master-table.md", "authoring-matrix-v1.md",
+                "executor-ledger.csv", "order-template-for-executors.md"]:
+        m = file_meta(rel)
+        if m:
+            key_docs.append(m)
+
+    # Свежие dated-доки (orders-state, STATUS, pending)
+    dated_docs = []
+    for prefix in ["orders-state-", "STATUS-INTERNAL-", "STATUS-ALL-", "pending-"]:
+        latest = latest_match(f"{prefix}*.md")
+        if latest:
+            m = file_meta(latest)
+            if m:
+                dated_docs.append(m)
+
+    # Batches (новые)
+    batches = []
+    bdir = base / "batches"
+    if bdir.exists():
+        for f in sorted(bdir.glob("*.md")):
+            m = file_meta(f"batches/{f.name}")
+            if m:
+                batches.append(m)
+
+    return {
+        "sheets": sheets,
+        "key_docs": key_docs,
+        "dated_docs": dated_docs,
+        "batches": batches,
+    }
+
+
+def render_docs_card(client: str, registry: dict) -> str:
+    inv = docs_inventory(client, registry)
+
+    def doc_row(d: dict, extra: str = "") -> str:
+        bits = [f'<span class="meta">{d["size_kb"]} KB · {d["mtime"]}']
+        if d.get("rows") is not None:
+            bits.append(f'· {d["rows"]} строк')
+        bits.append("</span>")
+        meta = "".join(bits)
+        return (f'<a class="research-link" href="{html.escape(d["github"])}" target="_blank">'
+                f'<span class="name">{html.escape(d["name"])}</span> {meta}{extra}</a>')
+
+    def sheet_row(s: dict) -> str:
+        st = s.get("stats")
+        if st:
+            statuses_html = " · ".join(
+                f'<span style="white-space:nowrap">{html.escape(label)} {n}</span>'
+                for label, n in st["by_status"]
+            )
+            stats_line = (
+                f'<span class="meta">📈 <b>{st["total"]}</b> строк · '
+                f'plan: {s["plan"] or "—"} · {html.escape(s["owner"])}</span>'
+                f'<div style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5">{statuses_html}</div>'
+            )
+        else:
+            stats_line = (
+                f'<span class="meta">{html.escape(s["owner"])} · '
+                f'plan: {s["plan"] or "—"} · {s["period"] or "—"}</span>'
+            )
+        return (
+            f'<a class="research-link" href="{html.escape(s["url"])}" target="_blank">'
+            f'<span class="name">📊 {html.escape(s["label"])}</span>{stats_line}</a>'
+        )
+
+    sheets_rows = "".join(sheet_row(s) for s in inv["sheets"]) or '<div class="empty">нет</div>'
+
+    def batch_row(d: dict) -> str:
+        compose = d.get("data") or ""
+        extra = (
+            f'<div style="font-size:11px;color:var(--muted);margin-top:2px">📦 {html.escape(compose)}</div>'
+            if compose else ""
+        )
+        return doc_row(d, extra=extra)
+
+    dated_rows = "".join(doc_row(d) for d in inv["dated_docs"]) or '<div class="empty">нет</div>'
+    key_rows = "".join(doc_row(d) for d in inv["key_docs"]) or '<div class="empty">нет</div>'
+    batch_rows = "".join(batch_row(d) for d in inv["batches"]) or '<div class="empty">нет</div>'
+
+    # External services
+    ext_links = [
+        ("📨 qcomment dashboard", "https://artvision.pro/qcomment/", "admin/111"),
+        ("⭐ reviews.yandex.ru/shop/blumart.ru", "https://reviews.yandex.ru/shop/blumart.ru", "публичная страница"),
+        ("💬 kwork (ЛК)", "https://kwork.ru/manage_orders", "Андрей Киселев"),
+    ]
+    ext_rows = "".join(
+        f'<a class="research-link" href="{html.escape(u)}" target="_blank">'
+        f'<span class="name">{html.escape(label)}</span> '
+        f'<span class="meta">{html.escape(note)} →</span></a>'
+        for label, u, note in ext_links
+    )
+
+    total = len(inv["sheets"]) + len(inv["key_docs"]) + len(inv["dated_docs"]) + len(inv["batches"]) + len(ext_links)
+
+    return f'''<div class="card">
+  <h2><span><span class="icon">📚</span>Документы ORM</span><span class="pill">{total}</span></h2>
+
+  <h3 style="font-size:13px;color:var(--muted);margin:12px 0 6px;text-transform:uppercase">Google Sheets</h3>
+  {sheets_rows}
+
+  <h3 style="font-size:13px;color:var(--muted);margin:12px 0 6px;text-transform:uppercase">Свежие отчёты ({len(inv["dated_docs"])})</h3>
+  {dated_rows}
+
+  <h3 style="font-size:13px;color:var(--muted);margin:12px 0 6px;text-transform:uppercase">Партии раздачи ({len(inv["batches"])})</h3>
+  {batch_rows}
+
+  <h3 style="font-size:13px;color:var(--muted);margin:12px 0 6px;text-transform:uppercase">Базовые доки ({len(inv["key_docs"])})</h3>
+  {key_rows}
+
+  <h3 style="font-size:13px;color:var(--muted);margin:12px 0 6px;text-transform:uppercase">Внешние сервисы</h3>
+  {ext_rows}
+</div>'''
+
+
 def _status_classify(status: str) -> tuple[str, str]:
     """Возвращает (css_class, emoji) по статусу контрагента."""
     s = (status or "").lower()
@@ -502,13 +822,14 @@ def build_html(client: str) -> str:
 
     cards = [
         render_qcomment_card(qc),
-        render_reviews_card(pace, qc),
+        render_reviews_card(pace, qc, client),
         render_orders_state_card(state),
         render_ledger_card(ledger),
         render_contractors_card(registry, client),
         render_kwork_card(kw),
         render_kupi_otziv_card(ko),
         render_research_card(research),
+        render_docs_card(client, registry),
     ]
 
     return f'''<!doctype html>

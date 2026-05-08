@@ -33,7 +33,7 @@ extract_safari_cookies() {
         return 1
     fi
 
-    python3 << PYEOF >"$out"
+    python3 <<'PYEOF' >"$out"
 import sys, struct
 from pathlib import Path
 
@@ -163,13 +163,24 @@ for tab in json.loads(sys.stdin.read()):
         fi
 
         size=$(wc -l < "$out_file" | tr -d ' ')
-        md5=$(md5 -q "$out_file" 2>/dev/null || md5sum "$out_file" | cut -d' ' -f1)
+        # Robust md5: try /sbin/md5 (BSD), fallback md5sum (Linux), fallback empty (just compare size)
+        md5=""
+        if command -v md5 >/dev/null 2>&1; then
+            md5=$(md5 -q "$out_file" 2>/dev/null || true)
+        elif command -v md5sum >/dev/null 2>&1; then
+            md5=$(md5sum "$out_file" 2>/dev/null | awk '{print $1}' || true)
+        fi
 
         # Сравнение с предыдущим snapshot если есть
         delta="—"
         if [[ -L "$PREV_LINK" ]] && [[ -f "${PREV_LINK}/${sheet_key}_${gid}.csv" ]]; then
-            prev_md5=$(md5 -q "${PREV_LINK}/${sheet_key}_${gid}.csv" 2>/dev/null || md5sum "${PREV_LINK}/${sheet_key}_${gid}.csv" | cut -d' ' -f1)
-            if [[ "$md5" == "$prev_md5" ]]; then
+            prev_md5=""
+            if command -v md5 >/dev/null 2>&1; then
+                prev_md5=$(md5 -q "${PREV_LINK}/${sheet_key}_${gid}.csv" 2>/dev/null || true)
+            elif command -v md5sum >/dev/null 2>&1; then
+                prev_md5=$(md5sum "${PREV_LINK}/${sheet_key}_${gid}.csv" 2>/dev/null | awk '{print $1}' || true)
+            fi
+            if [[ -n "$md5" && "$md5" == "$prev_md5" ]]; then
                 delta="идентичен"
             else
                 prev_size=$(wc -l < "${PREV_LINK}/${sheet_key}_${gid}.csv" | tr -d ' ')
