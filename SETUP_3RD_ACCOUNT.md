@@ -82,7 +82,7 @@ curl -sL https://raw.githubusercontent.com/artvision-agency/claude-code-settings
 | 13 | `chmod +x` на hooks/scripts |
 | 14 | Screaming Frog wrapper `~/.local/bin/sf` (если Spider установлен) |
 | 15 | `cc-update` / `cc-share` команды |
-| 16 | `tokens.json` — либо из template, либо scp с донора |
+| 16 | `tokens.json` — либо из template, либо scp с донора, либо `sync-tokens.sh pull` (см. §4) |
 | 17 | Auto-bootstrap в `.zshrc` |
 | 18 | Итоговый отчёт |
 
@@ -110,12 +110,28 @@ cd ~/.claude && git add exports/ && git commit -m "chore: env exports $(date +%Y
 После `full-setup.sh` на новой машине нужно ОТДЕЛЬНО получить:
 
 ```bash
-# С донорской машины:
+# Вариант 1 (рекомендуется) — через VPS-канал, который уже автоматизирован:
+#   1. Скопируй SSH-ключ к VPS с донора:
+scp -r ~/.ssh/                             NEW_MACHINE:~/.ssh/
+#   2. На новой машине:
+~/.claude/scripts/sync-tokens.sh pull       # подтянет tokens.json с VPS
+# Дальше любые правки tokens.json будут авто-синкаться через post-edit hook
+# (см. ~/.claude/hooks/post-edit-tokens-sync.sh + start-sync-tokens.sh)
+
+# Вариант 2 — прямой scp с донора (если VPS недоступен):
 scp ~/artvision-data/tokens.json           NEW_MACHINE:~/artvision-data/
 scp -r ~/.ssh/                             NEW_MACHINE:~/.ssh/
+
 # Опционально (если та же Anthropic установка на второй машине):
 scp ~/.claude/.secrets                     NEW_MACHINE:~/.claude/  # gitignored
 ```
+
+**Авто-синк tokens.json (установлено 2026-05-05):**
+- Канал: `root@80.90.181.152:/root/.claude-sync/tokens.json` (chmod 600)
+- Push при каждом изменении локального файла (PostToolUse Edit/Write hook)
+- Pull на старте каждой Claude-сессии (SessionStart hook)
+- SHA-checksum + mtime-merge — newer wins, идемпотентно
+- Ручной запуск: `~/.claude/scripts/sync-tokens.sh [push|pull|sync]`
 
 **НЕ копировать:**
 - Telethon `.session` файлы (риск флуд-вейта при параллельном логине с 2 машин — перелогиниться)

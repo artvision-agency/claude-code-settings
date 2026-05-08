@@ -17,17 +17,26 @@ allowed-tools: Read Write Edit Bash Glob Grep Agent WebSearch WebFetch
 
 ## КРИТИЧЕСКИЕ ПРАВИЛА
 
-### 1. yt-dlp — единственный способ получить транскрипт
+### 1. Источник транскрипта — каскадный fallback
+
+```
+YouTube URL → youtube-transcript-api (PRIMARY, не блокируется consent-редиректом)
+            → yt-dlp (FALLBACK для не-YouTube или при отказе API)
+            → @BukvitsaAI_bot (LAST RESORT, ручной)
+
+Не-YouTube URL → yt-dlp → @BukvitsaAI_bot
+```
+
+Зависимости (проверять перед стартом):
 ```bash
-# Проверить наличие
+python3 -c "import youtube_transcript_api" 2>/dev/null || pip3 install youtube-transcript-api
 which yt-dlp || brew install yt-dlp
 ```
 
+**Почему `youtube-transcript-api` сначала:** YouTube редиректит на `consent.youtube.com` (EU/UK), что ломает WebFetch и часть запросов yt-dlp без cookies. API-эндпоинт `timedtext` отдаёт авто-субтитры напрямую, без consent. Подтверждено 2026-05-03 на видео Игоря Тимо (YXXKbilyWCQ).
+
 ### 2. Язык субтитров — сначала русский, потом английский
-```bash
-# Приоритет: ручные ru → авто ru → ручные en → авто en
-yt-dlp --list-subs "URL" 2>/dev/null | head -20
-```
+Приоритет: ручные ru → авто ru → ручные en → авто en. Применять одинаково для обоих способов.
 
 ### 3. Не модифицировать файлы без явного одобрения пользователя
 Шаги 1-7 (анализ) — автоматически. Шаг 8 (реализация) — ТОЛЬКО после подтверждения.
@@ -49,40 +58,93 @@ mkdir -p "$WORK_DIR"
 
 ### Step 1: Скачать транскрипт
 
-**1.1: Попробовать yt-dlp (авто/ручные субтитры)**
+**1.1 (PRIMARY для YouTube): `youtube-transcript-api`**
+
+Срабатывает если URL содержит `youtube.com` или `youtu.be`. Не зависит от consent-редиректа, не требует cookies.
 
 ```bash
 VIDEO_URL="$1"
 WORK_DIR="/tmp/video-learn-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$WORK_DIR"
 
-# Сначала проверить доступные субтитры
-yt-dlp --list-subs "$VIDEO_URL" 2>/dev/null
+# Извлечь video_id (поддерживает youtube.com/watch?v=, youtu.be/, shorts/)
+VIDEO_ID=$(python3 -c "
+import re, sys
+url = '$VIDEO_URL'
+m = re.search(r'(?:v=|/shorts/|youtu\.be/|/embed/)([A-Za-z0-9_-]{11})', url)
+print(m.group(1) if m else '')
+")
 
-# Скачать субтитры (приоритет: ручные ru → авто ru → ручные en → авто en)
+if [ -n "$VIDEO_ID" ]; then
+  python3 << PYEOF > "$WORK_DIR/transcript_raw.txt" 2> "$WORK_DIR/transcript_err.log"
+from youtube_transcript_api import YouTubeTranscriptApi
+api = YouTubeTranscriptApi()
+listing = api.list("$VIDEO_ID")
+# Приоритет: ручные ru → авто ru → ручные en → авто en
+preferred_order = []
+for is_generated in [False, True]:
+    for lang in ["ru", "en"]:
+        for t in listing:
+            if t.language_code == lang and t.is_generated == is_generated:
+                preferred_order.append(t)
+if preferred_order:
+    tr = preferred_order[0].fetch()
+    for s in tr.snippets:
+        m, sec = divmod(int(s.start), 60)
+        print(f"[{m:02d}:{sec:02d}] {s.text}")
+PYEOF
+fi
+
+# Метаданные через oEmbed (без yt-dlp)
+python3 -c "
+import urllib.request, json
+url = 'https://www.youtube.com/oembed?url=$VIDEO_URL&format=json'
+try:
+    data = json.loads(urllib.request.urlopen(url, timeout=10).read())
+    print(f\"{data.get('title','')}|||{data.get('author_name','')}|||unknown|||unknown\")
+except: pass
+" > "$WORK_DIR/metadata.txt"
+```
+
+Если `transcript_raw.txt` пустой — переход к 1.2.
+
+**1.2 (FALLBACK): yt-dlp** — для не-YouTube платформ или если API не отдал транскрипт
+
+```bash
+yt-dlp --list-subs "$VIDEO_URL" 2>/dev/null | head -20
+
 yt-dlp --write-sub --write-auto-sub --sub-lang "ru,en" --sub-format "srt/vtt/best" \
   --skip-download --output "$WORK_DIR/%(title)s.%(ext)s" "$VIDEO_URL"
 
-# Также скачать метаданные видео (название, автор, длительность)
 yt-dlp --print "%(title)s|||%(uploader)s|||%(duration_string)s|||%(upload_date)s" \
   "$VIDEO_URL" 2>/dev/null > "$WORK_DIR/metadata.txt"
 ```
 
-**1.2: Если субтитров нет — fallback**
+**1.3 (LAST RESORT): Если транскрипта нет нигде**
 
-Если yt-dlp не нашёл субтитры:
 1. Сообщить пользователю: "Субтитры недоступны для этого видео."
 2. Предложить: "Отправьте видео в @BukvitsaAI_bot (Telegram) — он вернёт текстовый транскрипт."
 3. Попросить вставить транскрипт в чат или указать путь к файлу.
 4. **НЕ продолжать pipeline без транскрипта.**
 
-### Step 2: Очистка SRT → plain text
+### Step 2: Очистка → plain text
+
+**2a (если использовался путь 1.1 — youtube-transcript-api):** `transcript_raw.txt` уже без HTML-тегов и формат `[MM:SS] текст`. Для шага 3 достаточно скопировать его в `transcript_clean.txt` (опционально срезать таймкоды для длинных текстовых блоков):
+
+```bash
+if [ -s "$WORK_DIR/transcript_raw.txt" ]; then
+  # Убрать таймкоды и склеить дубли подряд
+  sed 's/^\[[0-9:]*\] //' "$WORK_DIR/transcript_raw.txt" | awk '!seen[$0]++' > "$WORK_DIR/transcript_clean.txt"
+fi
+```
+
+**2b (если использовался путь 1.2 — yt-dlp):** очистка SRT/VTT:
 
 ```bash
 # Найти скачанный файл субтитров
 SUB_FILE=$(find "$WORK_DIR" -name "*.srt" -o -name "*.vtt" | head -1)
 
-if [ -n "$SUB_FILE" ]; then
+if [ -n "$SUB_FILE" ] && [ ! -s "$WORK_DIR/transcript_clean.txt" ]; then
   # Очистить SRT: убрать таймкоды, номера строк, дубли, HTML-теги
   python3 -c "
 import re, sys
@@ -401,14 +463,14 @@ CronCreate: через 7 дней напомнить:
 
 ## Поддерживаемые платформы
 
-| Платформа | Субтитры через yt-dlp | Fallback |
-|-----------|----------------------|----------|
-| YouTube | Авто + ручные | — |
-| VK Video | Часто нет | @BukvitsaAI_bot |
-| Rutube | Часто нет | @BukvitsaAI_bot |
-| Vimeo | Ручные (если есть) | @BukvitsaAI_bot |
-| Twitch VOD | Авто (если есть) | @BukvitsaAI_bot |
-| Yandex.Zen | Нет | @BukvitsaAI_bot |
+| Платформа | PRIMARY | FALLBACK | LAST RESORT |
+|-----------|---------|----------|-------------|
+| YouTube | `youtube-transcript-api` (Python) | `yt-dlp` | @BukvitsaAI_bot |
+| VK Video | `yt-dlp` | — | @BukvitsaAI_bot |
+| Rutube | `yt-dlp` | — | @BukvitsaAI_bot |
+| Vimeo | `yt-dlp` (ручные если есть) | — | @BukvitsaAI_bot |
+| Twitch VOD | `yt-dlp` (авто если есть) | — | @BukvitsaAI_bot |
+| Yandex.Zen | — | — | @BukvitsaAI_bot |
 
 ## Частые ошибки (НЕ ПОВТОРЯТЬ)
 

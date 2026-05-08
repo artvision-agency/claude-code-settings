@@ -64,6 +64,23 @@
 3. Прямая ссылка рядом с числом
 4. Проверить ссылку: `curl -sI` → 200?
 
+### 🕷 SEO-аудит / правка `clients/<name>/seo/*` или `*.html` клиента
+
+| Шаг | Инструмент | Кто | Блокер? |
+|-----|-----------|-----|---------|
+| 1. Screaming Frog crawl | `sf <url> --output-folder clients/<name>/seo/sf-out` | СКРИПТ | ✅ |
+| 2. Lighthouse mobile+desktop | `lhci autorun --collect.url=<url> --upload.outputDir=clients/<name>/seo/lighthouse-<date>` | СКРИПТ | ✅ |
+| 3. Я.Метрика+Вебмастер API | `seo-toolkit.py --tools metrika,webmaster` | СКРИПТ | ✅ |
+| 4. Чтение CSV/JSON | Read sf-out + lhr-*.json | Claude | — |
+| 5. Перед написанием отчёта | свежесть артефактов <7 дней | хук `pre-seo-task.sh` | ⚠️ WARN |
+| 6. Перед деплоем HTML | factcheck-v2 на отчёт | СКРИПТ | ✅ |
+
+**Блокеры 1-2-3:** без свежих SF + Lighthouse + API-данных любые SEO-выводы = галлюцинация. Хук `pre-seo-task.sh` (PreToolUse Edit/Write/Bash) предупреждает если данных нет. Bypass: `SEO_FRESH_SKIP=1`.
+
+**Единая обёртка:** `python3 ~/artvision-data/scripts/seo-toolkit.py --url <url> --tools screaming-frog,lighthouse,pagespeed,ssl,w3c,metrika,webmaster --output-folder clients/<name>/seo/<date>/`. Лог запусков — `~/.claude/logs/seo-toolkit.log`.
+
+**Cron-фон:** `~/Library/LaunchAgents/pro.artvision.weekly-sf-lighthouse.plist` гоняет SF+Lighthouse раз в неделю по всем активным клиентам (читает `clients/*/config.yaml`), пишет в `clients/<name>/seo/<date>/`. Можно стартовать вручную: `launchctl start pro.artvision.weekly-sf-lighthouse`.
+
 ### 🤖 Выбор агента (нужен Bash → не research-analyst)
 
 | Задача | Bash? | Агент |

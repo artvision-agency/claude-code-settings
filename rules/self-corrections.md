@@ -46,6 +46,26 @@
   4. Активация на новой сессии или через `/hooks` reload
 - **Слой 2 (развёрнут 2026-04-27):** `~/.claude/hooks/pre-tool-block-no-taskcreate.sh` — PreToolUse, matcher `""` (все инструменты). Whitelist: Task*/Read/Grep/Glob/ToolSearch/Skill/ScheduleWakeup/AskUserQuestion + Bash для read-only (git status|pull|fetch|log|diff, ls/pwd/cat/head/tail/grep/find/wc, python3 -c, curl без -X POST/PUT/DELETE). Self-disable: `/tmp/taskcreate-done-{session_id}` после первого TaskCreate ИЛИ если в transcript уже есть `"name":"TaskCreate"`. Bypass: `TASKCREATE_FORCE=1`. Тесты: 13/13 PASS (`/tmp/test-taskcreate-hook.sh`).
 
+### 11. Shorthand «не нашёл» при поверхностной проверке (инцидент 2026-05-08, AVBOTS_restore)
+- **Проблема:** Антон написал «п/ф ?», я загрузил skill `shorthand` (словарь), не нашёл «п/ф» там и ответил «нет в словаре». Антон: «ты врешь, было МНОГО раз». При широком grep оказалось — «п/ф» = «план/факт», встречается в memory + 10+ session jsonl + recap d172a931, прошлый Claude уже расшифровал.
+- **Корень:** SKILL.md `shorthand` — **не единственный источник** короткостей. Антон копит сокращения в живых сессиях; если что-то не в словаре — это НЕ значит «не существует», скорее «не успели внести в словарь».
+- **Решение:**
+  1. При неизвестном shorthand — **не возвращать «нет в словаре»** даже если skill пустой
+  2. Сделать grep по 4 источникам параллельно: `~/.claude/projects/-Users-antonk/memory/`, `~/.claude/projects/-Users-antonk/*.jsonl` (последние 30 дней), `~/artvision-data/sync/recaps/`, `~/.claude/skills/shorthand/SKILL.md`
+  3. Если найдено в session jsonl где предыдущий Claude уже расшифровал — взять ту расшифровку
+  4. Если не найдено нигде — спросить **по контексту**, а не «нет в словаре»
+- **Кандидат-хук:** `pre-shorthand-grep.sh` — если ответ Claude содержит «нет в словаре» / «не нашёл» по shorthand-теме без признаков grep по jsonl → инжект напоминания. (TBD)
+- **Также:** дополнить skill `shorthand` записью «п/ф = план/факт» (отдельная задача).
+
+### 12. Telethon session expired без proactive health check (инцидент 2026-05-08, AVBOTS_restore)
+- **Проблема:** в задаче «прочитать чат @avportal_bot» Telethon session оказалась expired (last auth 2026-05-01, 7 дней назад). Скрипт упал на интерактивном prompt'е телефона. Acceptance не закрыт.
+- **Корень:** session-файл стареет молча. Нет проверки «давно ли auth» перед задачами требующими Telethon.
+- **Решение:**
+  1. SessionStart-хук: если `~/artvision-data/.claude_temp_scripts/tg_userbot.session` mtime > 3 дня → warn + предложить re-auth
+  2. Wrapper-script `tg_chat_reader.py` — перед запуском проверять connect+is_user_authorized, при fail выводить чёткое «нужна re-auth: запусти `tg-reauth.sh`»
+  3. Skill `tg-chat-export` обновить с pre-flight check
+- **Hard requirement:** re-auth = только интерактивно (Антон вводит код из TG), Claude не может сам.
+
 ## МЕТА-ПРАВИЛО: инцидент → хук, не «запомню»
 
 Когда деструктивный инцидент случился — **обязательно создать PreToolUse-хук** с детерминистичной проверкой. Не полагаться на «запишу в правило» / «буду внимательнее» / «теперь знаю».
@@ -71,10 +91,12 @@
 | `pre-strip-script-guard.sh` | Bash | ant-partners 24.02 — strip без regression-check, 157 секций потеряно | `STRIP_FORCE=1` |
 | `pre-bash-resource-guard.sh` | Bash | 26.04 — все 4 ttys claude упали 2× за 2 часа, OOM подозрение (free RAM ~42MB, диск 97%) | `RESOURCE_FORCE=1` |
 | `pre-bash-topvisor-guard.sh` | Bash | 29.04 — ДВАЖДЫ за одну сессию сжёг 100 RUB баланса Антона: фильтр `NOT_IN [0]` на `edit/positions_2/checker/go` запустил съём по 9 чужим проектам (vlpco, dsk-home, stomatiko, otido), 529 ключей × ~0.19 RUB. Блокирует: NOT_IN, MATCH '%', EXISTS, GREATER/LESS, checker/go без EQUALS, EQUALS [0], EQUALS []. Тесты: 8/8 PASS | `TOPVISOR_BROADCAST_FORCE=1` |
+| `pre-scp-kp-diff.sh` | Bash | 05.05 — АН-НУР 3 итерации правок из-за пропущенных элементов starclinic при grep-by-code сравнении (domain-pill, advm-mark в footer, бэйдж AdvertMed, brand strip, плашки «Что даёт оценку», «Окно ROI», «Конкурентная гипотеза», «Формат AdvertMed», реквизиты клиники). Хук читает `clients/<name>/config.yaml` → `reference_kp:`, требует прогона `kp-visual-diff.py` (skill `kp-visual-diff`) перед scp клиентского КП. Скилл рендерит оба HTML в PNG 1280×720@2x через Playwright + pixel-diff Pillow + side-by-side HTML отчёт. | `KP_DIFF_SKIP=1` |
 | `prompt-taskcreate-nag.sh` | UserPromptSubmit | 18-19.04 — TaskCreate пропуск при 180 pending (Layer 1, мягкий) | (auto-disable) |
 | `pre-tool-block-no-taskcreate.sh` | PreToolUse `""` (все) | 27.04 — Антон требует жёсткий блок (Layer 2) | `TASKCREATE_FORCE=1` |
 | `pre-tool-recap-goal-check.sh` | PreToolUse `""` (все) | 29.04 — recap «Цель сессии» пустая на первом Edit/Write/Bash 2 раза подряд (sessionId c0f1dfaa) | `RECAP_GOAL_FORCE=1` |
 | `pre-kp-bred-block.sh` | PreToolUse `Write\|Edit` | 30.04 — strict-агенты нашли 49 CRITICAL в 39 КП за месяц (выручка клиента в рублях, UNCONFIRMED маркеры в видимом тексте, artvision.pro упоминания, «Лор-Альянс»-фейковый конкурент). Системные хуки + auto-fix + scanner | `KP_BRED_OK=1` |
+| `pre-client-lexicon.sh` | PreToolUse `Write\|Edit` | lexicon-lint для clients/*/presale/*/kp/*: AI/нейросети запрещены, бренд написание, клише. **Whitelist 05.05:** `*/clients/*/CLAUDE.md\|README.md\|context-log.md\|lexicon.yaml` (служебные файлы для агента, не клиента) | `LEXICON_INTERNAL_OK=1` |
 | `inject-challenge-reminder.sh` | UserPromptSubmit | магические цифры без источника | (auto после Skill) |
 | `stop-hallucination-detect.sh` | Stop | детект галлюцинаций в ответе | — |
 

@@ -15,6 +15,19 @@ case "$FILE_PATH" in
   *) exit 0 ;;
 esac
 
+# Bypass для внутренних служебных файлов клиента (CLAUDE.md, README.md в корне clients/<name>/)
+# Эти файлы — для агента, не для клиента. Лексикон-правила «AI запрещено в публичных» к ним не применяются.
+case "$FILE_PATH" in
+  */clients/*/CLAUDE.md|*/clients/*/README.md|*/clients/*/context-log.md|*/clients/*/lexicon.yaml)
+    exit 0 ;;
+esac
+
+# Явный bypass через env (для исключительных случаев — например, .ai-методология в названии скрипта)
+if [ "${LEXICON_INTERNAL_OK:-0}" = "1" ]; then
+  echo "⚠️  LEXICON_INTERNAL_OK=1 — пропуск проверки для $FILE_PATH" >&2
+  exit 0
+fi
+
 # Только текстовые форматы
 case "$FILE_PATH" in
   *.html|*.md|*.txt|*.yaml|*.yml|*.json) ;;

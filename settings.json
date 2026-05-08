@@ -1,6 +1,7 @@
 {
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "400000"
   },
   "permissions": {
     "allow": [
@@ -235,6 +236,11 @@
             "type": "command",
             "command": "~/.claude/hooks/start-todo-tasks.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-time-context.sh",
+            "timeout": 5
           }
         ]
       },
@@ -264,6 +270,10 @@
             "type": "command",
             "command": "~/.claude/hooks/start-sync-memory.sh",
             "timeout": 12
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-sync-tokens.sh"
           }
         ]
       }
@@ -319,6 +329,38 @@
             "command": "/Users/antonk/.agents-in-the-office/hooks/claude-code.sh Stop",
             "timeout": 5,
             "async": true
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-skill-audit.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-asana-skill-comment.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-recap-completeness.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-cost-summary.sh"
           }
         ]
       }
@@ -517,6 +559,51 @@
             "command": "~/.claude/hooks/pre-kp-bred-block.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-seo-task.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-tool-skill-required.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-scp-clients-factcheck.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-scp-kp-diff.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-client-design-work.sh",
+            "timeout": 3
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -567,6 +654,10 @@
             "type": "command",
             "command": "~/.claude/hooks/post-client-html-validate.sh \"$CLAUDE_FILE_PATH\"",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-edit-tokens-sync.sh \"$CLAUDE_FILE_PATH\""
           }
         ]
       },
@@ -615,6 +706,15 @@
             "async": true
           }
         ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/post-agent-cost-track.sh"
+          }
+        ]
       }
     ],
     "PreCompact": [
@@ -625,6 +725,14 @@
             "type": "command",
             "command": "~/.claude/hooks/pre-compact.sh",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-compact-context-save.sh"
           }
         ]
       }
@@ -700,6 +808,22 @@
             "type": "command",
             "command": "/Users/antonk/.claude/hooks/seo-use-sf-reminder.sh",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/prompt-skill-discovery.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/prompt-compact-recovery.sh"
           }
         ]
       }
@@ -788,6 +912,10 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "input=$(cat); user=$(whoami); host=$(hostname -s); dir=$(echo \"$input\" | jq -r '.workspace.current_dir // .cwd // empty' 2>/dev/null); [ -z \"$dir\" ] && dir=$(pwd); short_dir=$(echo \"$dir\" | awk -F'/' '{if(NF>2) print \"\\xe2\\x80\\xa6/\"$(NF-1)\"/\"$NF; else print $0}'); model=$(echo \"$input\" | jq -r '.model.display_name // empty' 2>/dev/null); used=$(echo \"$input\" | jq -r '.context_window.used_percentage // empty' 2>/dev/null); short_model=$(echo \"$model\" | sed 's/Claude //' | sed 's/ /-/g'); out=\"${user}@${host}:${short_dir}\"; [ -n \"$short_model\" ] && out=\"$out | $short_model\"; [ -n \"$used\" ] && out=\"$out | ctx:$(printf '%.0f' $used)%\"; five=$(echo \"$input\" | jq -r '.rate_limits.five_hour.used_percentage // empty' 2>/dev/null); [ -n \"$five\" ] && out=\"$out | 5h:$(printf '%.0f' $five)%\"; printf '%s' \"$out\""
+  },
   "enabledPlugins": {
     "superpowers@superpowers-dev": true,
     "conductor@conductor-marketplace": true,
@@ -804,12 +932,10 @@
       }
     }
   },
-  "statusLine": {
-    "type": "command",
-    "command": "input=$(cat); user=$(whoami); host=$(hostname -s); dir=$(echo \"$input\" | jq -r '.workspace.current_dir // .cwd // empty' 2>/dev/null); [ -z \"$dir\" ] && dir=$(pwd); short_dir=$(echo \"$dir\" | awk -F'/' '{if(NF>2) print \"\\xe2\\x80\\xa6/\"$(NF-1)\"/\"$NF; else print $0}'); model=$(echo \"$input\" | jq -r '.model.display_name // empty' 2>/dev/null); used=$(echo \"$input\" | jq -r '.context_window.used_percentage // empty' 2>/dev/null); short_model=$(echo \"$model\" | sed 's/Claude //' | sed 's/ /-/g'); out=\"${user}@${host}:${short_dir}\"; [ -n \"$short_model\" ] && out=\"$out | $short_model\"; [ -n \"$used\" ] && out=\"$out | ctx:$(printf '%.0f' $used)%\"; five=$(echo \"$input\" | jq -r '.rate_limits.five_hour.used_percentage // empty' 2>/dev/null); [ -n \"$five\" ] && out=\"$out | 5h:$(printf '%.0f' $five)%\"; printf '%s' \"$out\""
-  },
   "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
   "autoCompactEnabled": false,
   "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
   "voiceEnabled": true
 }

@@ -7,3 +7,9 @@
 
 ## Routed 2026-04-29 02:50
 - [ ] **[routed]** **AdvertMed/Reutov: уточнить у Элви скоуп GEO-анализа (6 текущих сайтов или 40 клиник сети)** [client:advertmed] [priority:medium] [assignee:anton] [due:2026-05-05] [result:scope-confirmed]
+
+## Routed 2026-05-04 03:05
+- [ ] **[routed]** **Звонок Наталье 05.05.2026** — обсудить пример сайта, уточнить требования [assignee:anton] [due:2026-05-05] [priority:high]
+
+## Routed 2026-05-04 04:05
+- [ ] **[routed]** **Anzhee Clinic: отправить SEO-аудит** [client:anzhee-clinic] [skill:seo-master] [priority:high] [assignee:claude+anton] [due:2026-05-06] — на прошлый звонок не ответил, делаем аудит и отправляем во вт 06.05 для активации диалога.

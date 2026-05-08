@@ -164,13 +164,22 @@ def _diff_pending_projects(prev: dict, curr: dict) -> list[str]:
     return sorted(curr_pending - prev_pending)
 
 
+VALID_SLUG = __import__("re").compile(r"^[a-z0-9][a-z0-9_-]*$")
+
 def main():
     if len(sys.argv) < 2:
         sys.exit("Usage: qcomment-monitor.py <client_slug>")
     client = sys.argv[1]
 
+    if not VALID_SLUG.match(client):
+        sys.exit(f"❌ Invalid client_slug: {client!r} — must be [a-z0-9][a-z0-9_-]*")
+
+    client_dir = ROOT / "clients" / client
+    if not client_dir.exists():
+        sys.exit(f"❌ Client folder not found: {client_dir}")
+
     cfg = load_qcomment_config()
-    out_dir = ROOT / "clients" / client / "orm" / "qcomment"
+    out_dir = client_dir / "orm" / "qcomment"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"→ Pulling qcomment API for {client}")
