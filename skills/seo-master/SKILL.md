@@ -5,6 +5,18 @@ description: "Полный SEO-инструмент: аудит, keyword researc
 
 # SEO Audit — Artvision
 
+## ПЕРВЫЙ ШАГ ПРИ ЛЮБОЙ SEO-ЗАДАЧЕ — sentinel
+
+```bash
+touch "/tmp/seo-master-invoked-${CLAUDE_SESSION_ID:-default}"
+```
+
+Это разблокирует `pre-tool-seo-task-require-master.sh` хук на текущую сессию.
+Без этого Edit/Write/Bash на SEO-файлы будут блокироваться.
+Прецедент: Codex GPT-5.4 review 09.05.2026 — adoption problem (4/83 КП = 4.8%).
+
+---
+
 ## КРИТИЧЕСКИЕ ПРАВИЛА (НЕ НАРУШАТЬ!)
 
 ### 1. WebFetch ТЕРЯЕТ `<head>` — НИКОГДА не использовать для мета-тегов!
