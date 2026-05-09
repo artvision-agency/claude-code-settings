@@ -507,6 +507,91 @@ def render_kwork_card(kw) -> str:
 </div>'''
 
 
+def render_attribution_card(client: str) -> str:
+    """Карточка attribution: кого пинговать на дозамену + готовые тексты сообщений.
+
+    Читает свежий attribution-report-*.csv. Если нет — показывает «нет данных».
+    """
+    out_dir = ROOT / "clients" / client / "orm"
+    csvs = sorted(out_dir.glob("attribution-report-*.csv"))
+    if not csvs:
+        return ('<div class="card"><h2><span><span class="icon">🔁</span>Attribution / Дозамена</span></h2>'
+                '<div class="empty">Нет attribution-report.csv. Запусти: '
+                '<code>python3 ~/.claude/skills/orm-pulse/scripts/attribution-report.py ' + client + '</code></div></div>')
+    latest = csvs[-1]
+    import csv as _csv
+    rows = list(_csv.DictReader(open(latest)))
+    # Только те которым нужна замена
+    need_replace = [r for r in rows if r.get("status_in_sheet") in ("Отзыв размещён", "Отзыв размещен")
+                    and r.get("live_status", "").startswith("❌")]
+
+    # Группировка по исполнителю
+    from collections import defaultdict
+    by_contractor: dict[str, list[dict]] = defaultdict(list)
+    for r in need_replace:
+        by_contractor[r["contractor"]].append(r)
+
+    if not by_contractor:
+        return ('<div class="card"><h2><span><span class="icon">🔁</span>Attribution / Дозамена</span></h2>'
+                f'<div class="metric"><span class="label">Дата отчёта</span><span class="value">{latest.stem.split("-", 2)[-1]}</span></div>'
+                '<div class="empty good">✅ Нечего дозаменять — все Sheet «размещён» найдены в live</div></div>')
+
+    blocks = []
+    total_certain = 0
+    total_maybe = 0
+    for contractor, items in sorted(by_contractor.items(), key=lambda x: -len(x[1])):
+        # Сортируем по дате отзыва (старые первыми = точнее снос)
+        certain = [r for r in items if r.get("date_review")]
+        maybe = [r for r in items if not r.get("date_review")]
+        total_certain += len(certain)
+        total_maybe += len(maybe)
+        # Текст сообщения для исполнителя — JS clipboard
+        msg_lines = [
+            f"Привет! Антифрод яндекса снёс {len(items)} наших отзывов на reviews.yandex.ru/shop. ",
+            "Нужна дозамена. Список:",
+            "",
+        ]
+        for i, r in enumerate(items[:30], 1):
+            author = r.get("author_in_sheet") or "—"
+            cat = r.get("category") or "—"
+            date = r.get("date_review") or "(без даты)"
+            preview = (r.get("text") or "")[:80].replace("\n", " ")
+            msg_lines.append(f"{i}. {cat} · {author} · {date} · {preview}…")
+        msg_lines.append("")
+        msg_lines.append("Нужны новые тексты под те же товары/категории. Срок 3 дня. Спасибо!")
+        msg_text = "\n".join(msg_lines)
+        msg_escaped = html.escape(msg_text).replace("\n", "&#10;")
+        # Список для preview
+        preview_items = "".join(
+            f'<li><strong>{html.escape(r.get("category","—"))}</strong> · '
+            f'{html.escape(r.get("author_in_sheet") or "—")} · '
+            f'{html.escape(r.get("date_review") or "(без даты)")} · '
+            f'<em>{html.escape((r.get("text","") or "")[:80])}…</em></li>'
+            for r in items[:20]
+        )
+        more = f'<li><em>…и ещё {len(items)-20}</em></li>' if len(items) > 20 else ''
+        blocks.append(f"""
+<details style="margin:8px 0;padding:10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px">
+<summary style="cursor:pointer;font-weight:600;color:#991b1b">
+🔁 {html.escape(contractor)} — {len(items)} требует дозамены
+<span class="muted">(c датой: {len(certain)} · без даты: {len(maybe)})</span>
+</summary>
+<button onclick="navigator.clipboard.writeText(this.dataset.msg).then(()=>this.textContent='✅ Скопировано')" data-msg="{msg_escaped}" style="margin:8px 0;padding:6px 10px;background:#dc2626;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px">📋 Копировать текст для исполнителя</button>
+<ul style="margin:8px 0 0;font-size:12px;max-height:300px;overflow-y:auto">{preview_items}{more}</ul>
+</details>""")
+
+    return f'''<div class="card">
+  <h2><span><span class="icon">🔁</span>Attribution / Дозамена</span><span class="pill">{len(need_replace)} итого</span></h2>
+  <div class="metric"><span class="label">Точно (с датой)</span><span class="value danger">{total_certain}</span></div>
+  <div class="metric"><span class="label">Под вопросом (без даты)</span><span class="value warn">{total_maybe}</span></div>
+  <div class="metric"><span class="label">Источник</span><span class="value" style="font-size:11px">{html.escape(latest.name)}</span></div>
+  {''.join(blocks)}
+  <p style="margin:8px 0 0;font-size:11px;color:var(--muted)">
+    Регенерация: <code>attribution-report.py {client}</code> · CSV для Excel: <code>{html.escape(latest.name)}</code>
+  </p>
+</div>'''
+
+
 def render_research_card(items) -> str:
     if not items:
         return '<div class="card"><h2><span><span class="icon">🔬</span>Research</span></h2><div class="empty">Отчётов нет</div></div>'
@@ -823,6 +908,7 @@ def build_html(client: str) -> str:
     cards = [
         render_qcomment_card(qc),
         render_reviews_card(pace, qc, client),
+        render_attribution_card(client),
         render_orders_state_card(state),
         render_ledger_card(ledger),
         render_contractors_card(registry, client),
