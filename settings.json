@@ -363,6 +363,15 @@
             "command": "$HOME/.claude/hooks/stop-cost-summary.sh"
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-seo-pipeline-reminder.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
