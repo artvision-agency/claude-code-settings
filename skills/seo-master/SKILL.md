@@ -5,11 +5,18 @@ description: "Полный SEO-инструмент: аудит, keyword researc
 
 # SEO Audit — Artvision
 
-## ОБЯЗАТЕЛЬНАЯ СТРУКТУРА АУДИТ-СТРАНИЦЫ
+## ОБЯЗАТЕЛЬНАЯ СТРУКТУРА + КАРКАС
 
-**Spec:** `~/artvision-data/templates/seo-audit-spec.md` — 6 секций + TOC. **READ FIRST** при создании любой presale-страницы SEO-аудита.
+**Spec:** `~/artvision-data/templates/seo-audit-spec.md` — структура 15 разделов B + дизайн. **READ FIRST**.
 
-**Эталоны (живые HTML):** `~/artvision-data/clients/spb-kursy/{index,cosmetology-kursy,hair-courses}.html`
+**Каркас (всегда КАМЕО, цвета клиента):**
+- Эталон каркаса: `~/artvision-data/clients/kamey/presale/kp/cameo_kp.html`
+- Цвета: подставлять из `presales/<client>/design-system.md` (извлечь с сайта клиента в Шаге 1)
+- Decision: `decisions/2026-05-09-cameo-frame-client-colors.md`
+
+**Эталоны (живые применения):**
+- spb-kursy v3 (target — пересобирается)
+- ant-партнерс / atribeaute / madwave (KP по структуре B)
 
 ```
 TOC (📋 Содержание) → ВСЕГДА первый блок
