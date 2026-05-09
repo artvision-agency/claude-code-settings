@@ -826,6 +826,16 @@
             "command": "$HOME/.claude/hooks/prompt-compact-recovery.sh"
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/prompt-verify-docs-detect.sh",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "SubagentStart": [
