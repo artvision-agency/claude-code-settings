@@ -15,6 +15,25 @@ touch "/tmp/seo-master-invoked-${CLAUDE_SESSION_ID:-default}"
 Без этого Edit/Write/Bash на SEO-файлы будут блокироваться.
 Прецедент: Codex GPT-5.4 review 09.05.2026 — adoption problem (4/83 КП = 4.8%).
 
+## ДЕПЛОЙ КЛИЕНТСКИХ HTML — ТОЛЬКО через safe-deploy-html.sh
+
+```bash
+# ✅ ПРАВИЛЬНО (factcheck гарантированно прогоняется):
+~/.claude/scripts/safe-deploy-html.sh \
+  ~/artvision-data/clients/spb-kursy/index.html \
+  /var/www/artvision/kp/spb-kursy/index.html
+
+# ❌ НЕПРАВИЛЬНО (хук pre-scp-factcheck НЕ работает у саб-агентов):
+scp ~/artvision-data/clients/X/index.html root@80.90.181.152:/var/www/...
+```
+
+**Почему:** PreToolUse-хуки родительской сессии не распространяются на саб-агенты.
+`safe-deploy-html.sh` гарантирует factcheck-v2.py + scp + curl verify в одном вызове.
+
+Bypass (только emergency): `FACTCHECK_SKIP=1 safe-deploy-html.sh ...`
+
+Прецедент: 09.05.2026 — 4 саб-агента деплоили scp без factcheck (отчёты в /tmp пустые).
+
 ---
 
 ## КРИТИЧЕСКИЕ ПРАВИЛА (НЕ НАРУШАТЬ!)
