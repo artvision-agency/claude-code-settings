@@ -210,13 +210,36 @@ async def crawl(slug: str, since: str | None, max_pages: int) -> dict:
 
 
 def main() -> int:
+    import fcntl
     ap = argparse.ArgumentParser()
     ap.add_argument("slug")
     ap.add_argument("--since", default=None, help="cutoff YYYY-MM-DD (stop when older)")
     ap.add_argument("--max-pages", type=int, default=200)
     args = ap.parse_args()
 
-    result = asyncio.run(crawl(args.slug, args.since, args.max_pages))
+    # flock на slug — НЕ давать 2 параллельным процессам биться за persistent context
+    lock_path = Path(f"/tmp/orm-pulse-pw-{args.slug}.lock")
+    lock_fd = open(lock_path, "w")
+    try:
+        fcntl.flock(lock_fd.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        print(f"⚠️ Another playwright-full-crawl уже работает для {args.slug} (lock {lock_path}). Skip.", file=sys.stderr)
+        return 3
+
+    try:
+        result = asyncio.run(crawl(args.slug, args.since, args.max_pages))
+    except Exception as e:
+        # Не падаем тихо — выводим короткую причину чтобы daily-cron err.log был полезным
+        import traceback
+        print(f"❌ crawl failed: {type(e).__name__}: {e}", file=sys.stderr)
+        traceback.print_exc(file=sys.stderr, limit=3)
+        return 1
+    finally:
+        try:
+            fcntl.flock(lock_fd.fileno(), fcntl.LOCK_UN)
+            lock_fd.close()
+        except Exception:
+            pass
 
     out_dir = Path("/tmp/orm-pulse") / args.slug / "full-crawl"
     ts = datetime.now().strftime("%Y-%m-%d-%H%M")
