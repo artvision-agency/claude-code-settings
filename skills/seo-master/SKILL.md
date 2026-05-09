@@ -5,6 +5,24 @@ description: "Полный SEO-инструмент: аудит, keyword researc
 
 # SEO Audit — Artvision
 
+## ОБЯЗАТЕЛЬНАЯ СТРУКТУРА АУДИТ-СТРАНИЦЫ
+
+**Spec:** `~/artvision-data/templates/seo-audit-spec.md` — 6 секций + TOC. **READ FIRST** при создании любой presale-страницы SEO-аудита.
+
+**Эталоны (живые HTML):** `~/artvision-data/clients/spb-kursy/{index,cosmetology-kursy,hair-courses}.html`
+
+```
+TOC (📋 Содержание) → ВСЕГДА первый блок
+§1. Профиль клиента (метрики + traffic estimate)
+§2. Конкуренты (3 шт)
+§3. Позиции Яндекс (10 ключей × 4 сайта, полные названия колонок!)
+§4. Технический SEO (🔴/🟡/🟢)
+§5. Потенциал + тариф (95/145/195K или 105/135/175K для медицины)
+§6. План работ первого месяца (4 подблока)
+```
+
+Decision: `decisions/2026-05-09-seo-audit-template-v1.md`
+
 ## ПЕРВЫЙ ШАГ ПРИ ЛЮБОЙ SEO-ЗАДАЧЕ — обязательный pipeline
 
 ```bash
