@@ -5,15 +5,32 @@ description: "Полный SEO-инструмент: аудит, keyword researc
 
 # SEO Audit — Artvision
 
-## ПЕРВЫЙ ШАГ ПРИ ЛЮБОЙ SEO-ЗАДАЧЕ — sentinel
+## ПЕРВЫЙ ШАГ ПРИ ЛЮБОЙ SEO-ЗАДАЧЕ — обязательный pipeline
 
 ```bash
-touch "/tmp/seo-master-invoked-${CLAUDE_SESSION_ID:-default}"
+~/artvision-data/scripts/seo/run-seo-pipeline.sh <client_slug> <domain>
+
+# пример:
+~/artvision-data/scripts/seo/run-seo-pipeline.sh spb-kursy https://spb-kursy.ru
 ```
 
-Это разблокирует `pre-tool-seo-task-require-master.sh` хук на текущую сессию.
-Без этого Edit/Write/Bash на SEO-файлы будут блокироваться.
-Прецедент: Codex GPT-5.4 review 09.05.2026 — adoption problem (4/83 КП = 4.8%).
+**Что он делает (5 шагов автоматически):**
+1. `touch /tmp/seo-master-invoked-$CLAUDE_SESSION_ID` — разблокирует `pre-tool-seo-task-require-master.sh` хук
+2. **Screaming Frog crawl** через `sf` CLI → `clients/<client>/seo/<date>/sf-out/`
+3. **SEMrush Top Pages** через session-first скрипт (skip если сессия мертва, не блокирует)
+4. **Hybrid SEO audit** через `hybrid-seo-audit.py`
+5. Запись `pipeline-summary.md` с тем что реально собрано
+
+**Почему обязательно:** до 09.05.2026 — `/seo-master` вызван 4/83 КП (4.8%), SF crawl применён 4/125 клиентов (3.2%), SEMrush 0/125. Это adoption-gap. Wrapper решает adoption через **один вызов вместо 5**.
+
+**Bypass (только emergency):** `SKIP_SF=1`, `SKIP_SEMRUSH=1`, `SKIP_HYBRID=1`.
+
+**После pipeline** читать собранные артефакты:
+- `sf-out/internal_html.csv` — все URL + статусы
+- `sf-out/page_titles_all.csv` — title аудит
+- `sf-out/h1_missing.csv` — страницы без H1
+- `semrush/*.json` — топ-страницы (если сессия активна)
+- `hybrid-audit.json` — структурированный on-page аудит
 
 ## ДЕПЛОЙ КЛИЕНТСКИХ HTML — ТОЛЬКО через safe-deploy-html.sh
 
