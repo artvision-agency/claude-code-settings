@@ -45,6 +45,7 @@ from lib.cards import (  # noqa: E402
     render_orders_state_card, render_ledger_card, render_kupi_otziv_card,
     render_kwork_card, render_attribution_card, render_research_card,
     render_docs_card, render_contractors_card, render_status_funnel_card,
+    render_our_publications_card,
 )
 from lib.config import ROOT, VPS_USER, VPS_HOST, VPS_DIR, PUBLIC_BASE  # noqa: E402, F401
 
@@ -73,6 +74,7 @@ def build_html(client: str) -> str:
     alerts_html = render_alerts(qc, state, kw, client=client)
 
     cards = [
+        render_our_publications_card(client),
         render_qcomment_card(qc),
         render_reviews_card(pace, qc, client),
         render_status_funnel_card(client),
