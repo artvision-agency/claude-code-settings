@@ -32,29 +32,61 @@ def load_registry(slug: str) -> dict:
 
 
 def parse_date_ru(s: str) -> str | None:
-    """'1 мая' → 'YYYY-MM-DD' (год = текущий, поправка для 'месяцев назад')."""
+    """'1 мая' / 'вчера' / '2 недели назад' → 'YYYY-MM-DD'."""
     if not s:
         return None
+    s_low = s.lower().strip()
+    today = datetime.now()
+    from datetime import timedelta
+
     months = {
-        "янв": "01", "фев": "02", "мар": "03", "апр": "04", "ма": "05",
+        "янв": "01", "фев": "02", "март": "03", "мар": "03", "апр": "04",
+        "ма": "05", "май": "05",
         "июн": "06", "июл": "07", "авг": "08", "сен": "09", "окт": "10",
         "ноя": "11", "дек": "12",
     }
-    parts = s.lower().strip().split()
-    today = datetime.now()
-    year = today.year
+    parts = s_low.split()
 
+    # "N <месяц>"
     if len(parts) >= 2 and parts[0].isdigit():
         day = parts[0].zfill(2)
         m_key = next((k for k in months if parts[1].startswith(k)), None)
-        if not m_key:
-            return None
-        return f"{year}-{months[m_key]}-{day}"
+        if m_key:
+            year = today.year
+            month = int(months[m_key])
+            # если месяц больше текущего → отзыв за прошлый год
+            if month > today.month:
+                year -= 1
+            return f"{year}-{months[m_key]}-{day}"
 
-    if "вчера" in s.lower():
-        return (today.replace(day=today.day - 1)).strftime("%Y-%m-%d")
-    if "сегодня" in s.lower():
+    if "вчера" in s_low:
+        return (today - timedelta(days=1)).strftime("%Y-%m-%d")
+    if "сегодня" in s_low:
         return today.strftime("%Y-%m-%d")
+    if "позавчера" in s_low:
+        return (today - timedelta(days=2)).strftime("%Y-%m-%d")
+
+    # "N дн[яей] назад"
+    import re
+    m = re.match(r"(\d+)\s*(дн|сут)", s_low)
+    if m:
+        return (today - timedelta(days=int(m.group(1)))).strftime("%Y-%m-%d")
+    # "N недел" — приблизительно
+    m = re.match(r"(\d+)\s*недел", s_low)
+    if m:
+        return (today - timedelta(weeks=int(m.group(1)))).strftime("%Y-%m-%d")
+    if s_low.startswith("неделю назад"):
+        return (today - timedelta(weeks=1)).strftime("%Y-%m-%d")
+    # "N месяц[ев] назад" — первый день N месяцев назад
+    m = re.match(r"(\d+)\s*месяц", s_low)
+    if m:
+        n = int(m.group(1))
+        y = today.year
+        mo = today.month - n
+        while mo <= 0:
+            mo += 12
+            y -= 1
+        return f"{y}-{mo:02d}-01"
 
     return None
 
@@ -69,30 +101,55 @@ async def quit_chrome():
         pass
 
 
-async def extract_reviews(page, max_iter=40):
-    """Собирает все отзывы со страницы reviews.yandex.ru с прокруткой."""
+async def extract_reviews(page, max_iter=80):
+    """Собирает все отзывы со страницы reviews.yandex.ru с прокруткой.
+
+    DOM (2026-05): li.Review, .ReviewAuthor-Name, .Review-Rating[aria-label="оценка X из 5"],
+                    .Review-Date, .Review-Text .TextCut, a.ReviewAuthor-Link[href=/user/<id>...]
+    """
     seen = set()
-    all_items = []
+    all_items: list[dict] = []
     last_count = 0
     stale_iter = 0
 
     for i in range(max_iter):
-        # JS-extract
-        items = await page.evaluate("""() => {
-            const reviews = [];
-            const cards = document.querySelectorAll('[class*="review"], [data-zone-name*="review"]');
+        items = await page.evaluate(r"""() => {
+            const out = [];
+            const cards = document.querySelectorAll('li.Review');
             cards.forEach(c => {
-                const author = c.querySelector('[class*="author"], [class*="name"]')?.textContent?.trim() || '';
-                const date = c.querySelector('[class*="date"]')?.textContent?.trim() || '';
-                const text = c.querySelector('[class*="text"], [class*="body"]')?.textContent?.trim() || '';
-                const ratingEl = c.querySelector('[class*="rating"], [class*="stars"]');
-                const rating = ratingEl?.getAttribute('aria-label') || ratingEl?.textContent?.trim() || '';
-                const id = c.getAttribute('data-review-id') || c.getAttribute('data-id') || c.id || '';
-                if (author && (text || date)) {
-                    reviews.push({author, date, text: text.slice(0, 500), rating, id});
+                // Автор
+                const author = c.querySelector('.ReviewAuthor-Name')?.textContent?.trim() || '';
+
+                // Рейтинг — из aria-label "оценка 5 из 5"
+                const ratingEl = c.querySelector('.Review-Rating[aria-label]');
+                const aria = ratingEl?.getAttribute('aria-label') || '';
+                const m = aria.match(/(\d)\s*из\s*5/);
+                const rating = m ? parseInt(m[1], 10) : null;
+
+                // Дата
+                const date = c.querySelector('.Review-Date')?.textContent?.trim() || '';
+
+                // Текст
+                const text = (c.querySelector('.Review-Text .TextCut, .Review-Text')?.textContent || '').trim();
+
+                // user_id из href ReviewAuthor-Link
+                const userHref = c.querySelector('a.ReviewAuthor-Link')?.getAttribute('href') || '';
+                const uMatch = userHref.match(/\/user\/([a-z0-9]+)/i);
+                const user_id = uMatch ? uMatch[1] : '';
+
+                // log_node — для трекинга. Берём с любого data-log-node вложенного
+                const logNodeEl = c.querySelector('[data-log-node]');
+                const log_node = logNodeEl?.getAttribute('data-log-node') || '';
+
+                if (author && rating !== null) {
+                    out.push({
+                        author, rating, date,
+                        text: text.slice(0, 600),
+                        user_id, log_node,
+                    });
                 }
             });
-            return reviews;
+            return out;
         }""")
 
         for it in items:
@@ -102,13 +159,13 @@ async def extract_reviews(page, max_iter=40):
             seen.add(key)
             all_items.append(it)
 
-        # Прокрутка
+        # Прокрутка вниз
         await page.evaluate("window.scrollBy(0, document.body.scrollHeight)")
         await asyncio.sleep(1.5)
 
         if len(all_items) == last_count:
             stale_iter += 1
-            if stale_iter >= 3:
+            if stale_iter >= 4:
                 break
         else:
             stale_iter = 0
@@ -152,13 +209,17 @@ async def main():
         # Извлечение
         all_items = await extract_reviews(page)
 
-        # Метаданные
-        meta = await page.evaluate("""() => {
-            const ratingEl = document.querySelector('[class*="rating-value"], [class*="averageRating"]');
-            const totalEl = document.querySelector('[class*="total"], [class*="count"]');
+        # Метаданные карточки магазина
+        meta = await page.evaluate(r"""() => {
+            // На странице есть блок с общей оценкой 3.0 + "3 264 оценки" + "3 088 отзывов"
+            const txt = document.body.innerText || '';
+            const ratingNum = (txt.match(/^(\d[.,]\d)\s*\n/m) || [])[1] || '';
+            const ratingsCnt = (txt.match(/(\d[\d\s]*)\s*оцен/i) || [])[1]?.replace(/\s/g, '') || '';
+            const reviewsCnt = (txt.match(/(\d[\d\s]*)\s*отзыв/i) || [])[1]?.replace(/\s/g, '') || '';
             return {
-                rating: ratingEl?.textContent?.trim() || '',
-                total_text: totalEl?.textContent?.trim() || '',
+                rating: ratingNum,
+                ratings_count: ratingsCnt,
+                reviews_count: reviewsCnt,
                 title: document.title,
             };
         }""")
