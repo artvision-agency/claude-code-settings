@@ -196,6 +196,112 @@ def render_kwork_card(kw) -> str:
 </div>'''
 
 
+def render_our_publications_card(client: str) -> str:
+    """Только НАШИ опубликованные/снесённые отзывы — отдельно от общей картины сайта.
+
+    Источник: attribution-report (sheet × live match).
+    Группа: published_in_live / missing_from_live (но в sheet=размещён) / by_rating.
+
+    Антон 11.05: «нам надо ТОЛЬКО те что мы заказывали, не все на сайте».
+    Плохие 1-4★ — алёрт (хотя наши тексты должны быть 5★).
+    """
+    out_dir = ROOT / "clients" / client / "orm"
+    csvs = sorted(out_dir.glob("attribution-report-*.csv"))
+    if not csvs:
+        return ('<div class="card"><h2><span><span class="icon">📝</span>Наши публикации</span></h2>'
+                '<div class="empty">Нет attribution-report</div></div>')
+    rows = list(csv.DictReader(open(csvs[-1])))
+
+    # Только sheet rows с status "Отзыв размещён" — то что Sheet помечает опубликованным
+    published_in_sheet = [r for r in rows if r.get("status_in_sheet", "").strip() in ("Отзыв размещён", "Отзыв размещен")]
+
+    # Опубликовано в live (наш текст подтверждён в crawl)
+    confirmed = [r for r in published_in_sheet if r.get("live_status", "").startswith("✅")]
+    # Снесено (sheet=размещён, но в live нет)
+    removed = [r for r in published_in_sheet if r.get("live_status", "").startswith("❌")]
+
+    # Загрузим live для rating-info по нашим confirmed
+    live = []
+    live_dir = out_dir / "live-reviews"
+    if live_dir.exists():
+        files = sorted(live_dir.glob("*.json"), key=lambda f: f.stat().st_mtime, reverse=True)
+        if files:
+            try:
+                live = __import__("json").loads(files[0].read_text()).get("items", [])
+            except Exception:
+                pass
+    # Index live by author for rating lookup
+    live_by_text = {}
+    for it in live:
+        key = (it.get("text") or "")[:80].lower().strip()
+        if key:
+            live_by_text[key] = it
+
+    # Подсчёт rating среди наших confirmed
+    by_rating = Counter()
+    for r in confirmed:
+        text_key = (r.get("text") or "")[:80].lower().strip()
+        li = live_by_text.get(text_key)
+        if li:
+            try:
+                rating = int(li.get("rating", 5))
+                by_rating[rating] += 1
+            except (TypeError, ValueError):
+                by_rating[0] += 1
+        else:
+            by_rating[0] += 1
+
+    total_ordered = len(rows)
+    total_published_in_sheet = len(published_in_sheet)
+    total_confirmed = len(confirmed)
+    total_removed = len(removed)
+
+    # Темп НАШИХ публикаций — confirmed по дате (date_review)
+    from datetime import datetime as _dt, timedelta as _td
+    today = _dt.now().date()
+    cutoff_7d = today - _td(days=7)
+    new_7d = 0
+    for r in confirmed:
+        dr = r.get("date_review", "").strip()
+        if dr:
+            try:
+                d = _dt.strptime(dr, "%d.%m.%Y").date()
+                if d >= cutoff_7d:
+                    new_7d += 1
+            except ValueError:
+                pass
+    pace_per_day = new_7d / 7.0
+
+    # 1-4★ алёрт (наши обычно 5★, плохой = аномалия)
+    bad_rating = sum(by_rating.get(r, 0) for r in (1, 2, 3, 4))
+    bad_alert = f'<div class="alert" style="background:#fdecea;color:#b71c1c;padding:6px 10px;font-size:11px;border-radius:4px;margin-top:6px">⚠️ {bad_rating} наших с rating 1-4★ — посмотри почему не 5</div>' if bad_rating else ""
+
+    rating_rows = []
+    for r in (5, 4, 3, 2, 1):
+        n = by_rating.get(r, 0)
+        if n == 0 and r < 5:
+            continue
+        emoji = "⭐" * r if r else "?"
+        color = "#1b5e20" if r == 5 else "#e65100" if r >= 3 else "#b71c1c"
+        rating_rows.append(f'<tr><td>{emoji}</td><td style="text-align:right;color:{color};font-weight:600">{n}</td></tr>')
+    if by_rating.get(0):
+        rating_rows.append(f'<tr><td style="color:#888">? без rating</td><td style="text-align:right">{by_rating[0]}</td></tr>')
+
+    return f'''<div class="card">
+<h2><span><span class="icon">📝</span>Наши публикации</span><span class="pill">из {total_ordered} ТЗ</span></h2>
+<div class="metric"><span class="label">Sheet «размещён»</span><span class="value">{total_published_in_sheet}</span></div>
+<div class="metric"><span class="label">✅ Подтверждено в live</span><span class="value good big">{total_confirmed}</span></div>
+<div class="metric"><span class="label">🚫 Снесено (нет в live)</span><span class="value danger">{total_removed}</span></div>
+<div class="metric"><span class="label">📈 Темп НАШИХ (7 дней)</span><span class="value">{pace_per_day:.2f}/день</span></div>
+{bad_alert}
+<table class="compact" style="margin-top:8px;font-size:11px;width:100%">
+<thead><tr><th>Rating</th><th style="text-align:right">Наших</th></tr></thead>
+<tbody>{"".join(rating_rows)}</tbody>
+</table>
+<p style="margin:6px 0 0;font-size:10px;color:#666">Только sheet rows со статусом «размещён» — то что Sheet помечает выполненным. НЕ всё на сайте Blumart.</p>
+</div>'''
+
+
 def render_status_funnel_card(client: str) -> str:
     """Воронка статусов по площадкам.
 
@@ -231,6 +337,8 @@ def render_status_funnel_card(client: str) -> str:
             funnel[contractor]["awaiting"] += 1
         elif sheet_status in ("Ожидание модерации",):
             funnel[contractor]["on_moderation"] += 1
+        elif sheet_status in ("Не прошёл модерацию", "Не прошел", "Не прошёл", "Отклонён", "Отклонен"):
+            funnel[contractor]["rejected_by_moderation"] += 1
         elif sheet_status in ("Отзыв размещён", "Отзыв размещен"):
             if live_status.startswith("✅"):
                 funnel[contractor]["confirmed_live"] += 1
@@ -238,6 +346,9 @@ def render_status_funnel_card(client: str) -> str:
                 funnel[contractor]["removed_or_missing"] += 1
             else:
                 funnel[contractor]["published_unverified"] += 1
+        elif sheet_status in ("потрачен", "Потрачен"):
+            # «потрачен» в Sheet = бюджет на текст списан, исполнитель работает
+            funnel[contractor]["budget_spent"] += 1
         elif sheet_status:
             funnel[contractor]["other_" + sheet_status[:20]] += 1
 
@@ -264,9 +375,11 @@ def render_status_funnel_card(client: str) -> str:
         ("assigned", "Передан", "📤"),
         ("awaiting", "Ожидание", "⏳"),
         ("on_moderation", "Модерация", "🔍"),
-        ("confirmed_live", "Опубликован", "✅"),
-        ("published_unverified", "Не проверен", "❓"),
-        ("removed_or_missing", "Снесён/нет", "🚫"),
+        ("confirmed_live", "Опубл. в live", "✅"),
+        ("published_unverified", "Размещ. (не в live)", "❓"),
+        ("removed_or_missing", "Снесён", "🚫"),
+        ("rejected_by_moderation", "Не прошёл", "⛔"),
+        ("budget_spent", "Потрачен", "💸"),
     ]
     th = "".join(f'<th title="{name}">{emoji}</th>' for _, name, emoji in stages)
     tbody = []
