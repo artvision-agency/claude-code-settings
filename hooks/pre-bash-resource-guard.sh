@@ -30,8 +30,10 @@ esac
 PAGE_SIZE=$(pagesize 2>/dev/null || echo 16384)
 FREE_PAGES=$(vm_stat 2>/dev/null | awk '/Pages free/ {gsub(/\./,""); print $3}')
 SPEC_PAGES=$(vm_stat 2>/dev/null | awk '/Pages speculative/ {gsub(/\./,""); print $3}')
+# inactive pages are reclaimable on macOS — count as available
+INACTIVE_PAGES=$(vm_stat 2>/dev/null | awk '/Pages inactive/ {gsub(/\./,""); print $3}')
 if [ -z "${FREE_PAGES:-}" ]; then exit 0; fi
-FREE_MB=$(( (FREE_PAGES + ${SPEC_PAGES:-0}) * PAGE_SIZE / 1048576 ))
+FREE_MB=$(( (FREE_PAGES + ${SPEC_PAGES:-0} + ${INACTIVE_PAGES:-0}) * PAGE_SIZE / 1048576 ))
 
 # Get disk free GB on home volume
 DISK_FREE_GB=$(df -g "$HOME" 2>/dev/null | awk 'NR==2 {print $4}')
