@@ -129,11 +129,19 @@ def load_live(slug: str) -> list[dict]:
     return out
 
 
-def best_match(needle_norm: str, hay: list[dict], threshold: float = 0.75) -> tuple[dict | None, float]:
+def best_match(needle_norm: str, hay: list[dict], threshold: float = 0.75,
+               used_keys: set | None = None) -> tuple[dict | None, float]:
+    """BUG-2 fix (2026-05-11): greedy assignment — each live review consumed only once.
+
+    used_keys: set of live-item identifiers already matched. Excludes them.
+    """
     if not needle_norm or not hay:
         return None, 0.0
     best, best_score = None, 0.0
     for h in hay:
+        # Skip уже потреблённые
+        if used_keys and _live_key(h) in used_keys:
+            continue
         # Pre-filter по длине ±30%
         if not h.get("text_norm"):
             continue
@@ -145,6 +153,15 @@ def best_match(needle_norm: str, hay: list[dict], threshold: float = 0.75) -> tu
     if best_score >= threshold:
         return best, best_score
     return None, best_score
+
+
+def _live_key(item: dict) -> str:
+    """Уникальный идентификатор live-отзыва для greedy-assignment."""
+    return (
+        item.get("log_node")
+        or item.get("user_id")
+        or f"{item.get('author','')}|{(item.get('text') or '')[:80]}"
+    )
 
 
 def render_replacement_block(rows: list[dict]) -> str:
@@ -295,12 +312,23 @@ def main() -> int:
     print(f"🌐 Live items: {len(live)}")
 
     # Match каждой строки Sheet с live + флаг "нужна дозамена у исполнителя"
+    # BUG-2 fix: greedy assignment (live-review consumed only once).
+    # Сортируем: сначала строки с явной date_review (точные), потом без даты.
     today = datetime.now()
-    for r in sheet_rows:
+    used_live_keys: set = set()
+
+    def sort_key(row: dict) -> tuple[int, str]:
+        # 0 = с датой (приоритет), 1 = без → matched первыми с датой
+        has_date = 0 if row.get("date_review") else 1
+        return (has_date, row.get("date_review") or "")
+
+    for r in sorted(sheet_rows, key=sort_key):
         r["replacement_required"] = "no"
         r["age_days"] = ""
         if r["status_in_sheet"] in ("Отзыв размещён", "Отзыв размещен"):
-            m, score = best_match(r["text_norm"], live, threshold=0.75)
+            m, score = best_match(r["text_norm"], live, threshold=0.75, used_keys=used_live_keys)
+            if m:
+                used_live_keys.add(_live_key(m))
             # Возраст отзыва (для оценки шанса что он на page 1000+ vs точно удалён)
             try:
                 d = datetime.strptime(r["date_review"], "%d.%m.%Y") if r["date_review"] else None
