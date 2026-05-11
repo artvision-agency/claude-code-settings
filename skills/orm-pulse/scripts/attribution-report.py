@@ -108,9 +108,11 @@ def load_live(slug: str) -> list[dict]:
             candidates.extend(p.glob("*.json"))
     if not candidates:
         return []
-    largest = max(candidates, key=lambda p: p.stat().st_size)
+    # BUG-4 fix (2026-05-11): freshest by mtime, not largest by size.
+    # Прецедент: full-crawl 3000 items стареет, daily-crawl 1000 свежее → matching против stale = false-removals.
+    freshest = max(candidates, key=lambda p: p.stat().st_mtime)
     try:
-        data = json.loads(largest.read_text())
+        data = json.loads(freshest.read_text())
     except Exception:
         return []
     out = []
