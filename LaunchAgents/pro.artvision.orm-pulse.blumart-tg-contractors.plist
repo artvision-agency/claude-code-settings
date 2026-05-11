@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>pro.artvision.orm-pulse.blumart-tg-contractors</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/antonk/.claude/skills/orm-pulse/scripts/tg-contractors-monitor.py</string>
+    <string>blumart</string>
+    <string>--limit</string>
+    <string>50</string>
+  </array>
+  <key>StartInterval</key>
+  <integer>1800</integer>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>StandardOutPath</key>
+  <string>/Users/antonk/.claude/logs/orm-pulse-blumart-tg-contractors.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/antonk/.claude/logs/orm-pulse-blumart-tg-contractors.err</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HOME</key>
+    <string>/Users/antonk</string>
+    <key>PATH</key>
+    <string>/Library/Frameworks/Python.framework/Versions/3.13/bin:/usr/local/bin:/usr/bin:/bin:/sbin:/usr/sbin</string>
+  </dict>
+</dict>
+</plist>
