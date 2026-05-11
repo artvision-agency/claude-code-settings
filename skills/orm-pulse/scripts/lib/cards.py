@@ -196,6 +196,62 @@ def render_kwork_card(kw) -> str:
 </div>'''
 
 
+def render_kwork_orders_card(client: str) -> str:
+    """Kwork orders + balance из safari-kwork-monitor.
+
+    Источник: clients/<slug>/orm/kwork-state-latest.json (через Safari AppleScript scrape).
+    Антон 11.05: «нам надо ВСЕ площадки» — kwork один из ключевых каналов размещения.
+    """
+    state_path = ROOT / "clients" / client / "orm" / "kwork-state-latest.json"
+    if not state_path.exists():
+        return ('<div class="card"><h2><span><span class="icon">🛠</span>Kwork</span></h2>'
+                '<div class="empty">Нет kwork-state. Запусти: '
+                '<code>safari-kwork-monitor.py ' + client + '</code></div></div>')
+    import json as _json
+    try:
+        state = _json.loads(state_path.read_text())
+    except Exception:
+        return '<div class="card"><h2>🛠 Kwork</h2><div class="empty">Не парсится state</div></div>'
+
+    fetched = state.get("fetched_at", "?")[:16].replace("T", " ")
+    orders_block = state.get("orders", {}) or {}
+    notifs = state.get("notifications", {}) or {}
+    my_kworks = state.get("my_kworks", {}) or {}
+
+    balance = orders_block.get("header_balance", "?")
+    chat_unread = orders_block.get("header_chat", "?")
+    orders_total = orders_block.get("header_orders", "?")
+
+    active_orders = orders_block.get("orders", []) or []
+    notif_items = notifs.get("notifications", []) or []
+
+    # Активные заказы — таблица
+    order_rows_html = []
+    for o in active_orders[:5]:
+        txt = (o.get("text") or "")[:120]
+        href = o.get("href", "")
+        order_rows_html.append(f'<tr><td style="font-size:11px"><a href="{html.escape(href)}" target="_blank">{html.escape(txt)}</a></td></tr>')
+    orders_table = ('<table class="compact" style="width:100%;margin-top:6px"><tbody>'
+                    + "".join(order_rows_html) + '</tbody></table>') if order_rows_html else '<div class="empty">Активных нет</div>'
+
+    # Recent notifications
+    notif_html = []
+    for n in notif_items[:5]:
+        notif_html.append(f'<li style="font-size:11px">· <a href="{html.escape(n.get("href",""))}" target="_blank">{html.escape((n.get("text") or "")[:120])}</a></li>')
+
+    return f'''<div class="card">
+<h2><span><span class="icon">🛠</span>Kwork</span><span class="pill">snap {fetched}</span></h2>
+<div class="metric"><span class="label">Баланс</span><span class="value big">{html.escape(str(balance))} ₽</span></div>
+<div class="metric"><span class="label">Активных заказов</span><span class="value">{len(active_orders)}</span></div>
+<div class="metric"><span class="label">Чат (непроч.)</span><span class="value">{html.escape(str(chat_unread))}</span></div>
+<div style="margin-top:8px;font-size:11px;color:var(--muted)">Активные заказы:</div>
+{orders_table}
+<div style="margin-top:8px;font-size:11px;color:var(--muted)">Последние события ({len(notif_items)}):</div>
+<ul style="margin:4px 0 0;padding-left:0;list-style:none">{"".join(notif_html) or '<li style="font-size:11px">—</li>'}</ul>
+<p style="margin:8px 0 0;font-size:10px;color:#888">Через Safari AppleScript (без captcha)</p>
+</div>'''
+
+
 def render_our_publications_card(client: str) -> str:
     """Только НАШИ опубликованные/снесённые отзывы — отдельно от общей картины сайта.
 
