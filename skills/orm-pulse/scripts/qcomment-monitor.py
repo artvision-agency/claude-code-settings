@@ -12,6 +12,7 @@ Usage: qcomment-monitor.py <client_slug>
 """
 from __future__ import annotations
 import json
+import subprocess
 import sys
 from pathlib import Path
 from datetime import datetime
@@ -21,6 +22,55 @@ from collections import defaultdict
 
 ROOT = Path("/Users/antonk/artvision-data")
 TOKENS_PATH = ROOT / "tokens.json"
+TG_SEND = Path.home() / ".claude/scripts/tg-send.sh"
+
+# Q12 budget-cap (decisions/2026-05-10-orm-budget-cap.md)
+sys.path.insert(0, str(Path(__file__).parent))
+try:
+    from lib.budget_guard import check_qcomment_balance, should_send_alert, mark_alert_sent  # noqa: E402
+except ImportError:
+    check_qcomment_balance = None  # type: ignore
+    should_send_alert = None  # type: ignore
+    mark_alert_sent = None  # type: ignore
+
+
+def _send_budget_alert(client: str) -> None:
+    """Q12: TG-алёрт при низком балансе qcomment (rate-limited)."""
+    if check_qcomment_balance is None:
+        return
+    try:
+        bal = check_qcomment_balance(client)
+    except Exception as e:
+        print(f"⚠️ budget check failed: {e}", file=sys.stderr)
+        return
+    if bal.get("level") == "norm" or bal.get("balance_rub") is None:
+        return
+    level = bal["level"]
+    if not should_send_alert(level, rate_limit_hours=6):
+        print(f"⏸ Budget alert rate-limited ({level})", file=sys.stderr)
+        return
+
+    if level == "critical":
+        msg = (
+            f"🚨 {client}: qcomment баланс CRITICAL — "
+            f"{bal['balance_rub']:.0f} ₽ < {bal['threshold_critical']} ₽\n"
+            f"Новые placement-заказы автоматически блокируются (Q12 budget-cap).\n"
+            f"Пополни: https://qcomment.com/finance/"
+        )
+    else:  # warn
+        msg = (
+            f"⚠️ {client}: qcomment баланс низкий — "
+            f"{bal['balance_rub']:.0f} ₽ < {bal['threshold_warn']} ₽\n"
+            f"Рекомендую пополнить: https://qcomment.com/finance/"
+        )
+
+    if TG_SEND.exists():
+        try:
+            subprocess.run([str(TG_SEND), "team", msg], timeout=15)
+            mark_alert_sent(level)
+            print(f"🚨 Q12 budget alert sent ({level})", file=sys.stderr)
+        except Exception as e:
+            print(f"❌ TG send failed: {e}", file=sys.stderr)
 
 
 def load_qcomment_config() -> dict:
@@ -228,6 +278,9 @@ def main():
     if snap["pending_review"] > 0:
         print(f"\n⚠️  ВСЕГО {snap['pending_review']} pending — иди принимать")
     print("="*60)
+
+    # Q12 budget-cap: алёрт если баланс упал ниже threshold
+    _send_budget_alert(client)
 
     return 0 if snap["pending_review"] == 0 else 2  # exit 2 → есть что принимать
 

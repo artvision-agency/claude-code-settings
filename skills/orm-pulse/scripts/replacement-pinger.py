@@ -14,8 +14,11 @@ Usage:
 from __future__ import annotations
 import argparse
 import csv
+import json
+import os
 import subprocess
 import sys
+import time
 from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -23,6 +26,58 @@ from pathlib import Path
 ROOT = Path("/Users/antonk/artvision-data")
 TG_SEND = Path.home() / ".claude/scripts/tg-send.sh"
 ATTRIBUTION = Path.home() / ".claude/skills/orm-pulse/scripts/attribution-report.py"
+
+# Q5 — partial crawl auto-stop (decisions/2026-05-10-orm-partial-crawl-autostop.md)
+PARTIAL_THRESHOLD = 3
+HEALTH_ALERT_RATE_LIMIT_SEC = 6 * 3600  # 6h
+
+
+def crawl_health_blocks(slug: str) -> tuple[bool, str]:
+    """Q5: проверка .crawl-health.json. Возвращает (blocked, reason)."""
+    health_path = ROOT / "clients" / slug / "orm" / ".crawl-health.json"
+    if not health_path.exists():
+        return False, "no health file"
+    try:
+        h = json.loads(health_path.read_text())
+    except Exception as e:
+        return False, f"parse error: {e}"
+    cp = int(h.get("consecutive_partials", 0))
+    if cp < PARTIAL_THRESHOLD:
+        return False, f"consecutive_partials={cp} < {PARTIAL_THRESHOLD}"
+    return True, (
+        f"consecutive_partials={cp} ≥ {PARTIAL_THRESHOLD}, "
+        f"last_partial_items={h.get('last_partial_items')}, "
+        f"last_good={h.get('last_good', 'never')}"
+    )
+
+
+def send_unhealthy_alert(slug: str, reason: str, dry_run: bool = False) -> None:
+    """Q5: TG alert with 6h rate-limit."""
+    rate_limit_path = Path(f"/tmp/orm-pulse/{slug}-crawler-unhealthy-last")
+    rate_limit_path.parent.mkdir(parents=True, exist_ok=True)
+
+    now = int(time.time())
+    if rate_limit_path.exists():
+        try:
+            last = int(rate_limit_path.read_text().strip())
+            if now - last < HEALTH_ALERT_RATE_LIMIT_SEC:
+                print(f"⏸ alert rate-limited ({now - last}s < {HEALTH_ALERT_RATE_LIMIT_SEC}s)", file=sys.stderr)
+                return
+        except Exception:
+            pass
+
+    msg = (
+        f"🚨 {slug}: Crawler unhealthy — replacement-pinger остановлен\n"
+        f"{reason}\n"
+        f"Проверь playwright-full-crawl логи: "
+        f"~/.claude/logs/orm-pulse-{slug}-launchagent.err\n"
+        f"После восстановления (1 нормальный crawl ≥500 items) — pinger возобновится автоматически."
+    )
+    if dry_run:
+        print(f"[DRY-RUN] would send:\n{msg}")
+    elif TG_SEND.exists():
+        subprocess.run([str(TG_SEND), "team", msg], timeout=15)
+    rate_limit_path.write_text(str(now))
 
 
 def run_attribution(slug: str) -> Path | None:
@@ -184,6 +239,14 @@ def main() -> int:
     ap.add_argument("--no-attribution", action="store_true",
                     help="не запускать attribution-report, использовать существующий")
     args = ap.parse_args()
+
+    # Q5: проверка crawl-health перед любой работой
+    if not os.environ.get("PINGER_FORCE"):
+        blocked, reason = crawl_health_blocks(args.slug)
+        if blocked:
+            print(f"🛑 Q5 partial autostop: {reason}", file=sys.stderr)
+            send_unhealthy_alert(args.slug, reason, dry_run=args.dry_run)
+            return 0  # exit 0 — это не ошибка, это защитный механизм
 
     if args.no_attribution:
         out_dir = ROOT / "clients" / args.slug / "orm"

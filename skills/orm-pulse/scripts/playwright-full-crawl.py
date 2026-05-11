@@ -246,21 +246,77 @@ def main() -> int:
     snap_path = out_dir / f"{ts}.json"
     snap_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
 
-    # Stable copy в clients
+    items = result["items"]
+    items_count = len(items)
+
+    # Sanity floor — чтобы partial crawl не затёр последний полный snapshot.
+    # Прецедент: 09.05.2026 — 25-items partial затёр предыдущий 1000-items в live-reviews/.
+    MIN_ITEMS_STABLE = 500
+
+    # History: ВСЕГДА сохраняем (нужно для diff даже partial)
+    history_dir = ROOT / "clients" / args.slug / "orm" / "live-reviews-history"
+    history_dir.mkdir(parents=True, exist_ok=True)
+    history_path = history_dir / f"{datetime.now().strftime('%Y-%m-%d-%H%M')}.json"
+    history_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+
+    # Stable: только если crawl набрал минимальный объём
     stable_dir = ROOT / "clients" / args.slug / "orm" / "live-reviews"
     stable_dir.mkdir(parents=True, exist_ok=True)
-    (stable_dir / f"{datetime.now().strftime('%Y-%m-%d')}.json").write_text(
-        json.dumps(result, ensure_ascii=False, indent=2)
-    )
+    stable_path = stable_dir / f"{datetime.now().strftime('%Y-%m-%d')}.json"
 
-    items = result["items"]
+    if items_count >= MIN_ITEMS_STABLE:
+        stable_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+        print(f"✓ Stable updated: {stable_path.name} ({items_count} items)")
+    else:
+        # Не затираем существующий stable, если он больше
+        existing = 0
+        if stable_path.exists():
+            try:
+                existing = len(json.loads(stable_path.read_text()).get("items", []))
+            except Exception:
+                existing = 0
+        if items_count > existing:
+            stable_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+            print(f"⚠️ Partial crawl ({items_count} < {MIN_ITEMS_STABLE}), но больше старого ({existing}) → обновлено: {stable_path.name}", file=sys.stderr)
+        else:
+            print(f"⚠️ Partial crawl ({items_count} < {MIN_ITEMS_STABLE}) — НЕ затёр старый stable ({existing} items). History сохранён.", file=sys.stderr)
+
+    # Q5 — crawl health tracking (decisions/2026-05-10-orm-partial-crawl-autostop.md)
+    # consecutive_partials используется replacement-pinger для autostop при ≥3 partials подряд.
+    health_path = ROOT / "clients" / args.slug / "orm" / ".crawl-health.json"
+    health = {}
+    if health_path.exists():
+        try:
+            health = json.loads(health_path.read_text())
+        except Exception:
+            health = {}
+
+    now_iso = datetime.now().isoformat()
+    if items_count >= MIN_ITEMS_STABLE:
+        health["consecutive_partials"] = 0
+        health["last_good"] = now_iso
+        health["last_good_items"] = items_count
+    else:
+        health["consecutive_partials"] = int(health.get("consecutive_partials", 0)) + 1
+        health["last_partial"] = now_iso
+        health["last_partial_items"] = items_count
+
+    health["last_crawl"] = now_iso
+    health["last_crawl_items"] = items_count
+    health["min_items_threshold"] = MIN_ITEMS_STABLE
+    health_path.write_text(json.dumps(health, ensure_ascii=False, indent=2))
+    cp = health.get("consecutive_partials", 0)
+    if cp > 0:
+        print(f"⚠️ crawl-health: consecutive_partials={cp} ({items_count} < {MIN_ITEMS_STABLE})", file=sys.stderr)
+
     with_date = [i for i in items if i.get("date_iso")]
-    print(f"\n✅ Total: {len(items)}")
+    print(f"\n✅ Total: {items_count}")
     print(f"   With date: {len(with_date)}")
     if with_date:
         dates = sorted(d for d in (i.get("date_iso") for i in items) if d)
         print(f"   Range: {dates[0]} → {dates[-1]}")
-    print(f"💾 {snap_path}")
+    print(f"💾 history: {history_path}")
+    print(f"💾 snap (tmp): {snap_path}")
     return 0
 
 
