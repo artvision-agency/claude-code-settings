@@ -20,9 +20,11 @@ from collections import Counter
 
 import yaml
 
+ROOT = Path.home() / "artvision-data"
+
 
 def load_registry(slug: str) -> dict:
-    return yaml.safe_load((Path.home() / "artvision-data" / "clients" / slug / "orm" / "registry.yaml").read_text())
+    return yaml.safe_load((ROOT / "clients" / slug / "orm" / "registry.yaml").read_text())
 
 
 def parse_dmy(s: str):
@@ -174,10 +176,34 @@ def main():
     signals = parse_tg_signals(args.slug, registry)
 
     # Match data
+    # BUG-1 fix (2026-05-11, QA-3): fallback на attribution-report-{today}.csv если match/ нет
     match_dir = Path("/tmp/orm-pulse") / args.slug / "match"
     matched = json.loads((match_dir / "matched.json").read_text()) if (match_dir / "matched.json").exists() else []
     missing = json.loads((match_dir / "missing.json").read_text()) if (match_dir / "missing.json").exists() else []
     organic = json.loads((match_dir / "organic.json").read_text()) if (match_dir / "organic.json").exists() else []
+    match_source = "match_dir"
+
+    if not matched and not missing:
+        # Fallback: читаем свежий attribution-report-{date}.csv
+        import csv as _csv
+        from datetime import datetime as _dt
+        for offset in (0, 1):  # today + yesterday
+            d = (_dt.now().date().toordinal() - offset)
+            date_str = _dt.fromordinal(d).strftime("%Y-%m-%d")
+            ar_path = ROOT / "clients" / args.slug / "orm" / f"attribution-report-{date_str}.csv"
+            if ar_path.exists():
+                with open(ar_path) as f:
+                    reader = list(_csv.DictReader(f))
+                matched = [r for r in reader if r.get("live_status", "").startswith("✅")]
+                missing = [r for r in reader if r.get("live_status", "").startswith("❌")]
+                match_source = f"attribution-report-{date_str}.csv ({len(reader)} rows)"
+                break
+        else:
+            # Совсем нет данных — FAIL loud
+            print(f"❌ Нет match/ И нет attribution-report — reconcile невозможен", file=sys.stderr)
+            print(f"   Проверь: ls /tmp/orm-pulse/{args.slug}/match/", file=sys.stderr)
+            print(f"   Или запусти: attribution-report.py {args.slug}", file=sys.stderr)
+            match_source = "MISSING"
 
     # Summary cifry
     summary = {
