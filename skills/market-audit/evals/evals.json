@@ -1,0 +1,53 @@
+[
+  {
+    "name": "artvision_pro_pilot",
+    "description": "Self-audit pilot. Должен вернуть 5 subagent results, composite score рассчитан, HTML report сгенерирован.",
+    "input": {
+      "url": "https://artvision.pro",
+      "brand": "Artvision",
+      "region": "msk",
+      "industry_hint": "agency"
+    },
+    "expected": {
+      "scoring_complete": true,
+      "sections": ["content", "conversion", "technical", "competitive", "strategy"],
+      "any_score_above": 30,
+      "report_html_path": "exists",
+      "industry_detected": "agency"
+    }
+  },
+  {
+    "name": "blumart_ecommerce",
+    "description": "B2C e-commerce клиент. Industry должен детектироваться как ecommerce, технические критерии — Я.Метрика + 2GIS-карточка + reviews.yandex.ru.",
+    "input": {
+      "url": "https://blumart.ru",
+      "brand": "BluMart",
+      "region": "msk",
+      "industry_hint": "ecommerce"
+    },
+    "expected": {
+      "scoring_complete": true,
+      "sections": ["content", "conversion", "technical", "competitive", "strategy"],
+      "industry_detected": "ecommerce",
+      "any_score_above": 30,
+      "competitor_count_min": 1
+    }
+  },
+  {
+    "name": "adenta_medical",
+    "description": "Medical/B2B клиент. Industry = medical. Должны срабатывать medical-specific критерии: лицензия Росздравнадзора, ФИО врачей, Я.Карты карточка.",
+    "input": {
+      "url": "https://adenta.pro",
+      "brand": "Adenta",
+      "region": "msk",
+      "industry_hint": "medical"
+    },
+    "expected": {
+      "scoring_complete": true,
+      "sections": ["content", "conversion", "technical", "competitive", "strategy"],
+      "industry_detected": "medical",
+      "any_score_above": 30,
+      "trust_signals_checked": true
+    }
+  }
+]
