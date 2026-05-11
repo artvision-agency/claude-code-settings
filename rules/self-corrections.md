@@ -118,3 +118,21 @@
 | `stop-hallucination-detect.sh` | Stop | детект галлюцинаций в ответе | — |
 
 При добавлении нового хука — **сразу обновить таблицу**.
+
+### 15. КП с дефолтной палитрой шаблона при копировании (инцидент 2026-05-11)
+- **Проблема:** cosmetology-kursy_kp_v3.html получил CAMEO navy+gold от spb-kursy потому что я делал ПРОГРАММНУЮ КОПИЮ шаблона (`build_3_kp.py` копирует spb → подменяет данные), а не «новый КП с нуля с extract дизайн-системы клиента». Правило `kp-brand.md` (extract palette/fonts с сайта клиента) есть, но НЕ применилось — при копировании я не запускал curl/WebFetch на cosmetology-kursy.ru. Антон поймал руками: «ПОЧЕМУ ТЫ САМ НЕ ПОНИМАЕШЬ ЧТО ТАК НАДО?»
+- **Корень:** при копировании шаблона КП от одного клиента к другому правило про brand-extraction не срабатывает (я думаю «я уже взял из spb-kursy»), хотя у разных клиентов разные палитры.
+- **Решение:**
+  1. Хук `pre-kp-brand-extract-check.sh` (PreToolUse Write/Edit) — блокирует первое сохранение `presales/<slug>/kp/*.html` если в transcript нет WebFetch/curl на домен клиента. Bypass: `BRAND_EXTRACT_OK=1`.
+  2. Bypass допускается ТОЛЬКО для существующих КП >50KB (Edit, не Write первой версии).
+  3. При копии шаблона — обязательный step: `curl + grep '#hex' + grep 'font-family'` на домен клиента ДО любого Write/Edit КП-файла.
+- **Активация:** хук зарегистрирован в `~/.claude/settings.json` PreToolUse Write|Edit. Тесты — TBD.
+
+### 16. Claim «нигде нет правила X» без полной проверки (инцидент 2026-05-11)
+- **Проблема:** сказал «в инструкциях про SEMrush нигде нет, пробел в rules/». Реально SEMrush был в `artvision-data/.claude/rules/{kp-brand,medical-kp}.md`, `memory/{MEMORY,accounts,feedback_top_pages_required}.md`, 6 skills, 10+ session jsonl. Антон поймал: «не может быть такого».
+- **Корень:** проверял только `~/.claude/rules/` — узкая выборка. У нас 3 источника правил: (1) `~/.claude/rules/` мой private, (2) `~/artvision-data/.claude/rules/` проектный, (3) `memory/` персональный. + skills.
+- **Решение:**
+  1. Хук `stop-claim-no-rule-check.sh` — Stop event, парсит последний assistant message на trigger «нигде нет / пробел / не зафиксировано», достаёт топик (CAPS-слово или известный инструмент), grep по 4 источникам. Если найдено — инжектит warning в stderr.
+  2. Bypass: `NO_RULE_CHECK_OK=1`.
+  3. Активирован в `~/.claude/settings.json` под Stop.
+- **Применять:** перед любым утверждением «правило не зафиксировано» — обязательный grep по 4 путям, не по одному.

@@ -67,6 +67,7 @@
 | copywriting, cta copy, headline help, improve this copy, marketing copy, rewrite this page, write copy for | `/copywriting` |
 | cost-aware-llm-pipeline | `/cost-aware-llm-pipeline` |
 | check company, counterparty-check, due diligence, инн, проверь контрагента, проверь юрлицо, реквизиты компании | `/counterparty-check` |
+| вебархив, wayback, archive.org, снапшот, диф снапшотов, восстановить страницу, история сайта, история домена, исчезла страница, web archive, domain history, site history, whois, возраст домена, кто владелец, когда зареган, дроп домен, expired domain, истекающий домен, освобождается, аукцион доменов, expired.ru, expireddomains.net, reg.ru аукцион, webnames, xpire, telderi, domain-intel | `/domain-intel` |
 | crag-research | `/crag-research` |
 | activation rate, conversion rate, cro, exit intent, first-run, form optimization, freemium conversion, lead form | `/cro` |
 | crosspost | `/crosspost` |
