@@ -30,7 +30,7 @@ RATE_LIMIT_HOURS = 6
 
 
 def load_alert_state(slug: str) -> dict:
-    p = Path("/tmp/orm-pulse") / slug / "alerts-state.json"
+    p = Path(str(Path.home() / ".claude/state/orm-pulse")) / slug / "alerts-state.json"
     if not p.exists():
         return {}
     try:
@@ -40,7 +40,7 @@ def load_alert_state(slug: str) -> dict:
 
 
 def save_alert_state(slug: str, state: dict) -> None:
-    p = Path("/tmp/orm-pulse") / slug / "alerts-state.json"
+    p = Path(str(Path.home() / ".claude/state/orm-pulse")) / slug / "alerts-state.json"
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(state, ensure_ascii=False, indent=2))
 
@@ -133,7 +133,7 @@ def collect_alerts(slug: str) -> list[dict]:
             pass
 
     # 3. Orders-state — approved_not_given > 20 или rejected увеличился
-    state_path = Path("/tmp/orm-pulse") / slug / "orders-state.json"
+    state_path = Path(str(Path.home() / ".claude/state/orm-pulse")) / slug / "orders-state.json"
     if state_path.exists():
         try:
             st = json.loads(state_path.read_text())

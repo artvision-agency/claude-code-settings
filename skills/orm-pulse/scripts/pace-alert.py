@@ -132,7 +132,7 @@ def main() -> int:
         return 0
 
     # Rate-limit
-    rate_path = Path(f"/tmp/orm-pulse/{args.slug}-pace-alert-last")
+    rate_path = Path(f"{Path.home()}/.claude/state/orm-pulse/{args.slug}-pace-alert-last")
     rate_path.parent.mkdir(parents=True, exist_ok=True)
     now = int(time.time())
     if rate_path.exists():

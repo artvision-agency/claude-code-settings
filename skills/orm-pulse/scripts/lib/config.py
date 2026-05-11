@@ -21,3 +21,7 @@ RECONCILIATION_WINDOW_DAYS = 7  # Q2 — окно для «removed»
 PARTIAL_THRESHOLD = 3  # Q5 — N partials подряд → auto-stop
 PACE_THRESHOLD_PER_DAY = 0.5  # Q10 — алёрт темпа
 DASHBOARD_STALE_THRESHOLD_HOURS = 2  # Q11 — watchdog
+
+# P0-1 migration (2026-05-11): persistent state outside /tmp (survives reboot)
+STATE_DIR = Path.home() / ".claude/state/orm-pulse"
+STATE_DIR.mkdir(parents=True, exist_ok=True)

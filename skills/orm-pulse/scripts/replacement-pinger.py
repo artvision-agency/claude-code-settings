@@ -53,7 +53,7 @@ def crawl_health_blocks(slug: str) -> tuple[bool, str]:
 
 def send_unhealthy_alert(slug: str, reason: str, dry_run: bool = False) -> None:
     """Q5: TG alert with 6h rate-limit."""
-    rate_limit_path = Path(f"/tmp/orm-pulse/{slug}-crawler-unhealthy-last")
+    rate_limit_path = Path(f"{Path.home()}/.claude/state/orm-pulse/{slug}-crawler-unhealthy-last")
     rate_limit_path.parent.mkdir(parents=True, exist_ok=True)
 
     now = int(time.time())

@@ -9,7 +9,7 @@ PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 CLIENT="${1:-blumart}"
 DASHBOARD_URL="https://artvision.pro/orm-command-center/${CLIENT}.html"
 THRESHOLD_HOURS="${STALE_THRESHOLD_HOURS:-2}"
-RATE_LIMIT_FILE="/tmp/orm-pulse/stale-watchdog-${CLIENT}-last-alert"
+RATE_LIMIT_FILE="${HOME}/.claude/state/orm-pulse/stale-watchdog-${CLIENT}-last-alert"
 RATE_LIMIT_HOURS=6
 
 # basic auth для дашборда (из tokens.json)
@@ -56,6 +56,6 @@ if [ -x "$HOME/.claude/scripts/tg-send.sh" ]; then
     "$HOME/.claude/scripts/tg-send.sh" team "$MSG" || echo "tg-send failed"
 fi
 
-mkdir -p /tmp/orm-pulse
+mkdir -p ${HOME}/.claude/state/orm-pulse
 echo "$NOW_TS" > "$RATE_LIMIT_FILE"
 echo "🚨 Алёрт отправлен"
