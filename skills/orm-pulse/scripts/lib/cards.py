@@ -196,6 +196,109 @@ def render_kwork_card(kw) -> str:
 </div>'''
 
 
+def render_status_funnel_card(client: str) -> str:
+    """Воронка статусов по площадкам.
+
+    Источники:
+    - attribution-report-{date}.csv (sheet × live матчинг, BUG-2 greedy)
+    - qcomment-monitor snap (pending review)
+    - registry.yaml (mapping contractor → platform)
+
+    Группирует по платформам, показывает количество в каждом статусе.
+    Наш private учёт (не для заказчиков).
+    """
+    out_dir = ROOT / "clients" / client / "orm"
+    csvs = sorted(out_dir.glob("attribution-report-*.csv"))
+    if not csvs:
+        return ('<div class="card"><h2><span><span class="icon">📊</span>Воронка статусов</span></h2>'
+                '<div class="empty">Нет attribution-report.csv. Запусти '
+                '<code>attribution-report.py ' + client + '</code></div></div>')
+    latest = csvs[-1]
+    rows = list(csv.DictReader(open(latest)))
+
+    # Группа по contractor (= платформа в нашем учёте)
+    funnel = defaultdict(lambda: Counter())
+    for r in rows:
+        contractor = r.get("contractor") or "—"
+        sheet_status = (r.get("status_in_sheet") or "").strip()
+        live_status = r.get("live_status") or ""
+
+        if sheet_status in ("Текст согласован",):
+            funnel[contractor]["text_approved"] += 1
+        elif sheet_status in ("Согласовано, заказ размещён",):
+            funnel[contractor]["assigned"] += 1
+        elif sheet_status in ("Ждет размещения",):
+            funnel[contractor]["awaiting"] += 1
+        elif sheet_status in ("Ожидание модерации",):
+            funnel[contractor]["on_moderation"] += 1
+        elif sheet_status in ("Отзыв размещён", "Отзыв размещен"):
+            if live_status.startswith("✅"):
+                funnel[contractor]["confirmed_live"] += 1
+            elif live_status.startswith("❌"):
+                funnel[contractor]["removed_or_missing"] += 1
+            else:
+                funnel[contractor]["published_unverified"] += 1
+        elif sheet_status:
+            funnel[contractor]["other_" + sheet_status[:20]] += 1
+
+    # Добавляем qcomment pending из API/snap
+    qc_dir = out_dir / "qcomment"
+    qc_snaps = sorted(qc_dir.glob("snap-*.json"))
+    qc_pending = 0
+    if qc_snaps:
+        try:
+            qc = __import__("json").loads(qc_snaps[-1].read_text())
+            qc_pending = int(qc.get("pending_review", 0) or 0)
+        except Exception:
+            pass
+    if qc_pending:
+        funnel["qcomment"]["on_moderation"] += qc_pending
+
+    if not funnel:
+        return ('<div class="card"><h2><span><span class="icon">📊</span>Воронка статусов</span></h2>'
+                '<div class="empty">Нет данных в attribution-report</div></div>')
+
+    # Header + table
+    stages = [
+        ("text_approved", "Текст согл.", "🧾"),
+        ("assigned", "Передан", "📤"),
+        ("awaiting", "Ожидание", "⏳"),
+        ("on_moderation", "Модерация", "🔍"),
+        ("confirmed_live", "Опубликован", "✅"),
+        ("published_unverified", "Не проверен", "❓"),
+        ("removed_or_missing", "Снесён/нет", "🚫"),
+    ]
+    th = "".join(f'<th title="{name}">{emoji}</th>' for _, name, emoji in stages)
+    tbody = []
+    totals = Counter()
+    for contractor in sorted(funnel.keys(), key=lambda c: -sum(funnel[c].values())):
+        cells = []
+        for key, _, _ in stages:
+            n = funnel[contractor].get(key, 0)
+            totals[key] += n
+            css = "" if n == 0 else (
+                "background:#e8f5e9" if key == "confirmed_live"
+                else "background:#fdecea" if key == "removed_or_missing"
+                else "background:#fff3e0" if key in ("on_moderation","awaiting")
+                else ""
+            )
+            cells.append(f'<td style="text-align:right;{css}">{n if n else "—"}</td>')
+        tbody.append(f'<tr><td style="white-space:nowrap">{html.escape(contractor)}</td>{"".join(cells)}</tr>')
+    # Totals row
+    cells_total = "".join(f'<td style="text-align:right;font-weight:600">{totals.get(k,0) or "—"}</td>' for k,_,_ in stages)
+    tbody.append(f'<tr style="border-top:2px solid #ccc"><td style="font-weight:600">ИТОГО</td>{cells_total}</tr>')
+
+    return f'''<div class="card"><h2><span><span class="icon">📊</span>Воронка статусов по площадкам</span><span class="pill">{latest.stem.split("-",2)[-1]}</span></h2>
+<table class="compact" style="width:100%;font-size:11px">
+<thead><tr><th>Площадка</th>{th}</tr></thead>
+<tbody>{"".join(tbody)}</tbody>
+</table>
+<div class="counters" style="margin-top:6px">
+🧾 текст согл. · 📤 передан · ⏳ ждёт · 🔍 модерация · ✅ опубл. в live · ❓ помечен размещ., не в crawl · 🚫 снесён/нет
+</div>
+</div>'''
+
+
 def render_attribution_card(client: str) -> str:
     """Карточка attribution: кого пинговать на дозамену + готовые тексты сообщений.
 
