@@ -55,7 +55,7 @@
 
 ## Аккаунты Claude Max
 
-**Два аккаунта:** `justtrance@gmail.com` + `adw.artvision.pro@gmail.com`
+**Три аккаунта:** `justtrance@gmail.com` + `adw.artvision.pro@gmail.com` + `antoniokmr@gmail.com`
 **Лимит:** сброс еженедельно
 
 **Проверка лимита:** `/status` → вкладка Usage (реальные данные от Anthropic)
