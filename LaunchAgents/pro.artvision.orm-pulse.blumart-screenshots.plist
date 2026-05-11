@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>HOME</key>
+		<string>/Users/antonk</string>
+		<key>LANG</key>
+		<string>en_US.UTF-8</string>
+		<key>PATH</key>
+		<string>/Library/Frameworks/Python.framework/Versions/3.14/bin:/usr/local/bin:/usr/bin:/bin</string>
+		<key>TZ</key>
+		<string>Europe/Moscow</string>
+	</dict>
+	<key>Label</key>
+	<string>pro.artvision.orm-pulse.blumart-screenshots</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/bash</string>
+		<string>-c</string>
+		<string>cd ~/artvision-data &amp;&amp; bash clients/blumart/orm/scripts/daily-screenshots.sh</string>
+	</array>
+	<key>RunAtLoad</key>
+	<false/>
+	<key>StandardErrorPath</key>
+	<string>/Users/antonk/.claude/logs/blumart-screenshots.err.log</string>
+	<key>StandardOutPath</key>
+	<string>/Users/antonk/.claude/logs/blumart-screenshots.out.log</string>
+	<key>StartCalendarInterval</key>
+	<dict>
+		<key>Hour</key>
+		<integer>9</integer>
+		<key>Minute</key>
+		<integer>30</integer>
+	</dict>
+</dict>
+</plist>

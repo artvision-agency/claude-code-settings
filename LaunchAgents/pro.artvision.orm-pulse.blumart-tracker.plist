@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>pro.artvision.orm-pulse.blumart-tracker</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Library/Frameworks/Python.framework/Versions/3.14/bin/python3</string>
+        <string>/Users/antonk/.claude/skills/orm-pulse/scripts/reviews-tracker.py</string>
+        <string>blumart</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict><key>Hour</key><integer>9</integer><key>Minute</key><integer>15</integer></dict>
+        <dict><key>Hour</key><integer>13</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Hour</key><integer>18</integer><key>Minute</key><integer>0</integer></dict>
+        <dict><key>Hour</key><integer>22</integer><key>Minute</key><integer>0</integer></dict>
+    </array>
+    <key>StandardOutPath</key>
+    <string>/Users/antonk/.claude/logs/orm-tracker-blumart.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/antonk/.claude/logs/orm-tracker-blumart.err.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/Library/Frameworks/Python.framework/Versions/3.14/bin</string>
+        <key>HOME</key>
+        <string>/Users/antonk</string>
+    </dict>
+</dict>
+</plist>

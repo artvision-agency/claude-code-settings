@@ -145,7 +145,8 @@ def render_budget_alert_html(client: str) -> str | None:
 
 
 # Rate-limit: чтобы не спамить cron-алёрты
-_LAST_ALERT_STATE = Path("/tmp/orm-pulse/budget-last-alert.json")
+# P0-1 migration (2026-05-11): state в $HOME — persistent, переживает reboot Mac.
+_LAST_ALERT_STATE = Path.home() / ".claude/state/orm-pulse/budget-last-alert.json"
 
 
 def should_send_alert(level: str, rate_limit_hours: int = 6) -> bool:

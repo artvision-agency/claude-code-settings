@@ -233,6 +233,26 @@ def main() -> int:
         import traceback
         print(f"❌ crawl failed: {type(e).__name__}: {e}", file=sys.stderr)
         traceback.print_exc(file=sys.stderr, limit=3)
+        # Q5 extension (2026-05-11, QA-1 finding): полный crash → тоже инкрементит consecutive_partials.
+        # Иначе при многократных fail замены не идут, но replacement-pinger молча шлёт пинги по stale данным.
+        try:
+            health_path = ROOT / "clients" / args.slug / "orm" / ".crawl-health.json"
+            health = {}
+            if health_path.exists():
+                try:
+                    health = json.loads(health_path.read_text())
+                except Exception:
+                    health = {}
+            health["consecutive_partials"] = int(health.get("consecutive_partials", 0)) + 1
+            health["last_partial"] = datetime.now().isoformat()
+            health["last_partial_items"] = 0
+            health["last_error"] = f"{type(e).__name__}: {str(e)[:200]}"
+            health["last_crawl"] = datetime.now().isoformat()
+            health["last_crawl_items"] = 0
+            health_path.write_text(json.dumps(health, ensure_ascii=False, indent=2))
+            print(f"⚠️ crawl-health: consecutive_partials={health['consecutive_partials']} (full crash)", file=sys.stderr)
+        except Exception as he:
+            print(f"⚠️ не удалось обновить .crawl-health.json: {he}", file=sys.stderr)
         return 1
     finally:
         try:
