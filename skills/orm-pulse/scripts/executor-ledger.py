@@ -98,48 +98,70 @@ def cmd_add(args) -> int:
 
 
 def cmd_backfill_qcomment(args) -> int:
-    """Backfill из qcomment snapshot: за каждый комментарий — record."""
+    """Backfill из qcomment snapshots: ИТЕРИРУЕТ ВСЕ snaps → status переходы сохраняются.
+
+    BUG-5 fix (QA-3, 2026-05-11): раньше читал только snaps[-1] → если статус менялся
+    (sent→rework→accepted), история терялась. Теперь dedup-key включает status — каждое
+    изменение статуса = новая строка в ledger. Q9 audit-trail integrity restored.
+    """
     qc_dir = ROOT / "clients" / args.client / "orm" / "qcomment"
     snaps = sorted(qc_dir.glob("snap-*.json")) if qc_dir.exists() else []
     if not snaps:
         sys.exit("ERROR: no qcomment snapshots found")
-    snap = json.loads(snaps[-1].read_text())
 
     path = ledger_path(args.client)
-    existing = {(r["text_id"], r["executor"], r["channel"]) for r in load_rows(path)}
+    # BUG-5: dedup-key включает status + snap_date → разные статусы = разные rows
+    existing = {(r["text_id"], r["executor"], r["channel"], r.get("status",""), (r.get("timestamp","") or "")[:10])
+                for r in load_rows(path)}
 
     added = 0
-    for gname, projs in snap.get("groups", {}).items():
-        for p in projs:
-            text_id = f"qcomment:{p['project_id']}"
-            key = (text_id, "qcomment", "qcomment")
-            if key in existing:
-                continue
-            # Determine status from counters
-            if p.get("accepted", 0) > 0 and p.get("accepted", 0) >= p.get("pay", 1):
-                status = "accepted"
-            elif p.get("pending", 0) > 0:
-                status = "sent"  # waiting for our acceptance
-            elif p.get("rework", 0) > 0:
-                status = "rework"
-            elif p.get("rejected", 0) > 0:
-                status = "rejected"
-            else:
-                status = "sent"  # waiting for executor pickup
-            row = {
-                "timestamp": snap.get("ts", datetime.now().isoformat()),
-                "text_id": text_id,
-                "text_preview": (p.get("title", ""))[:80],
-                "executor": "qcomment",
-                "channel": "qcomment",
-                "batch_id": gname,
-                "status": status,
-                "source": "qcomment-api",
-                "notes": f"project_id={p['project_id']} pay={p.get('pay')} pending={p.get('pending')} accepted={p.get('accepted')}",
-            }
-            append_row(path, row)
-            added += 1
-    print(f"✓ Backfilled {added} qcomment records (total snapshots: {len(snaps)})")
+    only_last = bool(getattr(args, "only_last", False))
+    snaps_to_process = snaps[-1:] if only_last else snaps
+
+    for snap_path in snaps_to_process:
+        try:
+            snap = json.loads(snap_path.read_text())
+        except Exception as e:
+            print(f"  ⚠️ {snap_path.name}: {e}", file=sys.stderr)
+            continue
+
+        snap_date = (snap.get("ts","") or snap_path.stem.replace("snap-",""))[:10]
+
+        for gname, projs in snap.get("groups", {}).items():
+            for p in projs:
+                text_id = f"qcomment:{p['project_id']}"
+                # Determine status from counters
+                if p.get("accepted", 0) > 0 and p.get("accepted", 0) >= p.get("pay", 1):
+                    status = "accepted"
+                elif p.get("pending", 0) > 0:
+                    status = "sent"  # waiting for our acceptance
+                elif p.get("rework", 0) > 0:
+                    status = "rework"
+                elif p.get("rejected", 0) > 0:
+                    status = "rejected"
+                else:
+                    status = "sent"  # waiting for executor pickup
+
+                key = (text_id, "qcomment", "qcomment", status, snap_date)
+                if key in existing:
+                    continue
+                existing.add(key)
+
+                row = {
+                    "timestamp": snap.get("ts", datetime.now().isoformat()),
+                    "text_id": text_id,
+                    "text_preview": (p.get("title", ""))[:80],
+                    "executor": "qcomment",
+                    "channel": "qcomment",
+                    "batch_id": gname,
+                    "status": status,
+                    "source": "qcomment-api",
+                    "notes": f"project_id={p['project_id']} pay={p.get('pay')} pending={p.get('pending')} accepted={p.get('accepted')} snap={snap_path.name}",
+                }
+                append_row(path, row)
+                added += 1
+
+    print(f"✓ Backfilled {added} qcomment records (processed {len(snaps_to_process)}/{len(snaps)} snapshots)")
     return 0
 
 
@@ -216,6 +238,8 @@ def main():
     p_bf = sub.add_parser("backfill", help="ретроспектива из источников")
     p_bf.add_argument("client")
     p_bf.add_argument("--source", required=True, choices=["qcomment"])
+    p_bf.add_argument("--only-last", action="store_true",
+                      help="только последний snapshot (быстро, без history) — default: ВСЕ snaps (BUG-5 fix 2026-05-11)")
     p_bf.set_defaults(func=lambda a: cmd_backfill_qcomment(a) if a.source == "qcomment" else 1)
 
     p_q = sub.add_parser("query", help="запросить историю")
