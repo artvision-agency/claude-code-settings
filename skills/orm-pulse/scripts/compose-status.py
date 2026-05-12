@@ -14,9 +14,12 @@ from collections import Counter
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 
 def load_registry(slug: str) -> dict:
-    return yaml.safe_load((Path.home() / "artvision-data" / "clients" / slug / "orm" / "registry.yaml").read_text())
+    return yaml.safe_load((ROOT / "clients" / slug / "orm" / "registry.yaml").read_text())
 
 
 def load_json(path: Path, default=None):
@@ -171,7 +174,7 @@ def main():
     else:
         suffix = "PUBLIC" if args.public else "INTERNAL"
         date = datetime.now().strftime("%Y-%m-%d")
-        out_path = Path.home() / "artvision-data" / "clients" / args.slug / "orm" / f"STATUS-{suffix}-{date}.md"
+        out_path = ROOT / "clients" / args.slug / "orm" / f"STATUS-{suffix}-{date}.md"
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(md)
