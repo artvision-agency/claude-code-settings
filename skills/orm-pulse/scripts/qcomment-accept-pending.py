@@ -22,8 +22,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from lib.config import ROOT  # noqa: E402
+from lib.budget_guard import append_audit_trail  # noqa: E402
 
 TOKENS_PATH = ROOT / "tokens.json"
+# Q9 audit-trail: цена qcomment по умолчанию (factчекнуто 11.05 через /api/project: 50₽).
+QCOMMENT_DEFAULT_PRICE_RUB = 50
 
 
 def load_api_code() -> tuple[str, str]:
@@ -161,6 +164,15 @@ def cmd_accept(args) -> int:
             try:
                 r = revision(cid, operation=0)
                 print(f"  ✓ {cid}: {r}")
+                # Q9 audit-trail
+                append_audit_trail(slug, {
+                    "type": "payment",
+                    "amount_rub": QCOMMENT_DEFAULT_PRICE_RUB,
+                    "comment_id": cid,
+                    "project_id": c.get("project_id"),
+                    "source": "qcomment-accept-all",
+                    "operation": 0,
+                })
                 ok += 1
             except Exception as e:
                 print(f"  ✗ {cid}: {e}", file=sys.stderr)
@@ -184,6 +196,14 @@ def cmd_accept(args) -> int:
     try:
         r = revision(args.comment_id, operation=0)
         print(f"✓ Accepted: {r}")
+        # Q9 audit-trail
+        append_audit_trail(slug, {
+            "type": "payment",
+            "amount_rub": QCOMMENT_DEFAULT_PRICE_RUB,
+            "comment_id": args.comment_id,
+            "source": "qcomment-accept",
+            "operation": 0,
+        })
         return 0
     except Exception as e:
         print(f"✗ Failed: {e}", file=sys.stderr)
@@ -197,6 +217,16 @@ def cmd_reject(args) -> int:
     try:
         r = revision(args.comment_id, operation=2, reason=args.reason)
         print(f"✓ Rejected: {r}")
+        # Q9 audit-trail: reject не считается spend, но логируем для истории
+        slug = getattr(args, "slug", None) or "blumart"
+        append_audit_trail(slug, {
+            "type": "reject",
+            "amount_rub": 0,
+            "comment_id": args.comment_id,
+            "source": "qcomment-reject",
+            "reason": args.reason,
+            "operation": 2,
+        })
         return 0
     except Exception as e:
         print(f"✗ Failed: {e}", file=sys.stderr)
@@ -210,6 +240,15 @@ def cmd_rework(args) -> int:
     try:
         r = revision(args.comment_id, operation=1, reason=args.reason)
         print(f"✓ Sent to rework: {r}")
+        slug = getattr(args, "slug", None) or "blumart"
+        append_audit_trail(slug, {
+            "type": "rework",
+            "amount_rub": 0,
+            "comment_id": args.comment_id,
+            "source": "qcomment-rework",
+            "reason": args.reason,
+            "operation": 1,
+        })
         return 0
     except Exception as e:
         print(f"✗ Failed: {e}", file=sys.stderr)
