@@ -35,7 +35,8 @@ except ImportError:
     print("❌ pip3 install playwright && playwright install chromium", file=sys.stderr)
     sys.exit(1)
 
-ROOT = Path("/Users/antonk/artvision-data")
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
 
 MONTHS = {
     "янв": 1, "фев": 2, "мар": 3, "апр": 4, "ма": 5, "мая": 5,

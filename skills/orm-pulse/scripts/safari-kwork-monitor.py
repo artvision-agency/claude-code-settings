@@ -20,7 +20,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-ROOT = Path("/Users/antonk/artvision-data")
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
 
 
 def applescript(script):
@@ -29,12 +30,22 @@ def applescript(script):
 
 
 def js(url, code):
-    """Open Safari URL + run JS, return result."""
+    """Open Safari URL + run JS, return result.
+
+    Security (code-review C1, 2026-05-12): валидируем URL whitelist чтоб не было
+    AppleScript injection через URL. Сейчас только kwork.ru разрешён.
+    """
+    from urllib.parse import urlparse
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https") or parsed.netloc not in ("kwork.ru", "www.kwork.ru"):
+        raise ValueError(f"URL не из whitelist (kwork.ru only): {url}")
+    # Дополнительная защита: экранируем url так же как code
+    safe_url = url.replace("\\", "\\\\").replace('"', '\\"')
     safe_code = code.replace("\\", "\\\\").replace('"', '\\"')
     apple = f"""
     tell application "Safari"
         if (count of windows) = 0 then make new document
-        set URL of current tab of front window to "{url}"
+        set URL of current tab of front window to "{safe_url}"
         delay 7
         return (do JavaScript "{safe_code}" in current tab of front window)
     end tell

@@ -20,7 +20,9 @@ import urllib.request
 import urllib.parse
 from pathlib import Path
 
-ROOT = Path("/Users/antonk/artvision-data")
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 TOKENS_PATH = ROOT / "tokens.json"
 
 
