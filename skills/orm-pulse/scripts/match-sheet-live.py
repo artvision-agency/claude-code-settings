@@ -22,9 +22,12 @@ from difflib import SequenceMatcher
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 
 def load_registry(slug: str) -> dict:
-    return yaml.safe_load((Path.home() / "artvision-data" / "clients" / slug / "orm" / "registry.yaml").read_text())
+    return yaml.safe_load((ROOT / "clients" / slug / "orm" / "registry.yaml").read_text())
 
 
 def normalize(text: str) -> str:
@@ -47,7 +50,7 @@ def similarity(a: str, b: str) -> float:
 
 def load_sheet_rows(slug: str) -> list[dict]:
     """Load all Sheet rows from latest snapshot."""
-    snapshots = Path.home() / "artvision-data" / "clients" / slug / "orm" / "snapshots" / "latest"
+    snapshots = ROOT / "clients" / slug / "orm" / "snapshots" / "latest"
     if not snapshots.exists():
         print(f"⚠️  No latest snapshot. Run sheet-snapshot.sh first.", file=sys.stderr)
         return []
