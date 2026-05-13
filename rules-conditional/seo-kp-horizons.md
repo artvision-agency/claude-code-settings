@@ -1,3 +1,15 @@
+---
+name: seo-kp-horizons
+description: SEO-КП — горизонты 3 / 6 / 12 месяцев + структура
+paths:
+  - 'clients/*/presale/**'
+  - 'clients/*/seo/**'
+  - 'clients/*/kp/**'
+  - 'presales/**'
+always: false
+size_tokens: 1423
+---
+
 # SEO-КП — горизонты 3 / 6 / 12 месяцев + структура
 
 > Установлено: 2026-05-01 на сессии na-sklad.ru.

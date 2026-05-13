@@ -276,6 +276,15 @@
             "command": "~/.claude/hooks/start-sync-tokens.sh"
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/inject-context-rules.sh"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -700,6 +709,15 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/pre-kp-ai-overview-pose.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/inject-context-rules.sh"
           }
         ]
       }
