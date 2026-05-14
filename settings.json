@@ -328,6 +328,10 @@
             "type": "command",
             "command": "~/.claude/hooks/stop-recap-status.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-session-compare-goal.sh"
           }
         ]
       },
@@ -387,6 +391,14 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/stop-claim-no-rule-check.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-deploy-url-check.sh"
           }
         ]
       }
@@ -831,6 +843,15 @@
             "command": "$HOME/.claude/hooks/post-agent-cost-track.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/antonk/.claude/hooks/post-edit-list-check.sh"
+          }
+        ]
       }
     ],
     "PreCompact": [
@@ -960,6 +981,14 @@
             "type": "command",
             "command": "$HOME/.claude/hooks/pre-tool-suggest-subagent-driven.sh",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/prompt-correction-detector.sh"
           }
         ]
       }
