@@ -2,7 +2,7 @@
 # Отправка уведомлений в Telegram чат команды
 # Использование: notify-telegram.sh "Текст сообщения"
 
-BOT_TOKEN="8399522625:AAGeVvP1WeyijXTcRByiynPOXncBFUwLKQ4"
+BOT_TOKEN="8399522625:AAEEayoY1yjLEXM5Ys7jvlruYyoqKHGh1ho"
 CHAT_ID="${TELEGRAM_TEAM_CHAT_ID:--4273200821}"  # Artvision team chat
 
 MESSAGE="$1"

@@ -1,0 +1,433 @@
+---
+name: audit-kp-pipeline
+description: Audit-KP Pipeline — обязательные 10 шагов для любого SEO-аудит-КП
+paths:
+  - 'clients/*/presale/**'
+  - 'clients/*/kp/**'
+  - 'clients/*/40-audits/**'
+  - 'presales/**'
+always: false
+size_tokens: 5548
+---
+
+# Audit-KP Pipeline — обязательные 10 шагов для любого SEO-аудит-КП
+
+> **Установлено:** 2026-05-11 после полного цикла на spb-kursy + cosmetology-kursy + hair-courses.
+> **Цель:** каждый новый КП повторяет тот же пайплайн без пропусков.
+> **Шаблон:** `~/artvision-data/templates/audit-kp-template.html`
+> **Эталон:** `presales/spb-kursy/kp/spb-kursy_kp_v3.html`
+
+## Триггер
+
+Любая фраза: «сделай аудит сайта X», «КП для клиента Y», «presale Z», «расширенный SEO для…».
+
+## 10 шагов (обязательны, в порядке)
+
+### Шаг 1. Brand extraction с сайта клиента (защищён хуком)
+
+```bash
+curl -sL https://<domain> | grep -oE '#[0-9a-fA-F]{6}' | sort -u | head -20
+curl -sL https://<domain> | grep -oE 'font-family:[^;]+' | sort -u
+```
+
+→ записать 2 primary цвета + шрифт в `clients/<slug>/config.yaml` под `design.palette` и `design.font`.
+
+**Хук `pre-kp-brand-extract-check.sh`** блокирует Write/Edit КП-файла если не было WebFetch/curl на домен.
+
+### Шаг 2. parse_html — главная
+
+```python
+# Через BeautifulSoup:
+title, meta_description, h1[], h2[], schema_count (jsonld),
+alt_total, alt_with_alt, alt_pct,
+canonical, word_count, internal_links_count, external_links_count
+```
+
+→ сохранить в `clients/<slug>/seo/<date>/parse-<domain>.json`
+
+### Шаг 3. PSI Lighthouse mobile
+
+```
+GET https://www.googleapis.com/pagespeedonline/v5/runPagespeed?
+    url=https://<domain>/&strategy=mobile&category=performance&category=accessibility&category=best-practices&category=seo&key={youtube.api_key}
+```
+
+→ извлечь `scores.performance/accessibility/best-practices/seo`, LCP, CLS, TBT, TTI.
+→ `clients/<slug>/seo/<date>/psi-summary-<domain>.json`
+
+### Шаг 4. Sitemap + robots + llms.txt
+
+```bash
+curl -sI https://<domain>/sitemap.xml   # status + Last-Modified
+curl -sL https://<domain>/sitemap.xml | grep -c '<loc>'   # URL count
+curl -sL https://<domain>/robots.txt    # disallow count, sitemap-directive YES/NO
+curl -sI https://<domain>/llms.txt      # 200/404
+```
+
+→ записать в parse JSON.
+
+### Шаг 5. Direct API hasSearchVolume + ForecastNew (это заменяет Wordstat)
+
+```python
+# tokens.json → yandex.direct.reklamaspb1.token
+# Endpoint: https://api.direct.yandex.com/json/v5/keywordsresearch (hasSearchVolume)
+#           https://api.direct.yandex.com/live/v4/json/ (CreateNewForecast)
+
+# 10 коммерческих ключей + 10 информационных (кластер клиента)
+# Регион: основной регион клиента (lr= из medical-kp.md таблицы)
+# Currency: RUB
+```
+
+→ `clients/<slug>/seo/<date>/direct-forecast-{commercial,informational}.json`
+
+**ВАЖНО:** НЕ пытаться Wordstat API — `subscription expired`. Direct API даёт те же impressions + clicks + CPC (см. `reference_artvision_api_access_status_2026-05-11.md`).
+
+### Шаг 6. Topvisor — позиции в Я.СПб (или другом регионе)
+
+```python
+# Если проект ещё нет:
+POST /v2/json/add/projects_2/projects   {site, name}
+POST /v2/json/add/positions_2/searchers {project_id, searcher_key:0}  # Yandex
+POST /v2/json/add/positions_2/searchers/regions
+     {project_id, searcher_key:0, region_key:<lr>, lang:"ru", device:0, depth:100}
+# Затем:
+POST /v2/json/edit/positions_2/checker/go
+     {filters:[{name:"id",operator:"EQUALS",values:[project_id]}]}
+# Через 3-5 мин:
+POST /v2/json/get/positions_2/history
+     {project_id, regions_indexes:[N], date1, date2, fields:["position"]}
+```
+
+→ `clients/<slug>/seo/<date>/topvisor-positions.json`
+
+**EQUALS-фильтр обязателен** — `feedback_topvisor_filter_safety.md` (NOT_IN сжёг 100₽ дважды).
+
+### Шаг 7. SF crawl 3 прямых конкурентов + parse_html + PSI
+
+```bash
+sf --crawl https://<competitor> --headless --save-crawl --export-tabs "Internal:All" \
+   --output-folder clients/<slug>/seo/<date>/competitors-sf/<competitor>/ --overwrite
+```
+
++ parse_html + PSI для каждого. → `competitors-data/`
+
+### Шаг 8. SEMrush backlinks (UI scrape через Playwright)
+
+```python
+# tokens.json → semrush.email/password
+# UI: https://www.semrush.com/analytics/backlinks/overview/?q=<domain>
+# Извлечь: Authority Score, Referring Domains, Backlinks, Dofollow %
+# Free-tier: ~10 запросов/день
+```
+
+→ `clients/<slug>/seo/<date>/backlinks/semrush-<domain>.json`
+
+В КП использовать как **«Artvision LinkForge»** (правило `kp-brand.md`).
+
+### Шаг 9. Wordstat CSV (опционально, если есть свежий)
+
+Если есть `/tmp/wordstat-spb-30.csv` (или аналог) ≤30 дней — взять точные частоты. Иначе → прокси через Direct ForecastNew × **коэф 1.15** (среднее по 6 ключам spb-kursy 11.05.2026).
+
+→ применять в КП колонку «Точная "!фраза"»:
+- зелёные жирные (из CSV) = реальная точная
+- серые курсивные `~NNN` = прокси × 1.15
+
+### Шаг 10. strict-factchecker + deploy
+
+```python
+# Запустить Agent(subagent_type=code-reviewer) с задачей:
+# - проверить все цифры из источников JSON совпадают с цифрами в КП
+# - проверить нет упоминаний AI/Topvisor/SEMrush/Ahrefs/DataForSEO в видимом тексте
+# - проверить TH count == TD count в каждой таблице
+# - проверить mobile h-scroll = 0 (Playwright 375 viewport)
+# - VERDICT по каждой секции
+
+# После VERDICT == PASS:
+scp clients_kp_file root@80.90.181.152:/var/www/artvision/kp/<slug>-v3/index.html  # --ack-anton
+```
+
+## Структура КП (8 секций, вариант B)
+
+```
+hero → TOC →
+#tldr (4 цветные плашки: ✅ Где сильны / 🔴 Главные риски / 🎯 Точки роста / ⚔️ Главный конкурент)
+        каждый пункт двумя строками: технически + простыми словами для собственника
+#family (если родственные домены одного владельца — таблица 3-N доменов + кросс-ссылки + robots/llms ряды)
+#score (4 фактора SEO: Коммерческие / Текстовые / Ссылочные / Поведенческие)
+#visibility (10 ком + 10 инфо ключей × позиции × CSS-bars чарт)
+#potential (Wordstat × CTR × AI_loss + Direct премиум-клики, + блок «Заявки = Трафик × Конверсия 1%»)
+#backlinks (4 домена через SEMrush — клиент + 3 конкурента)
+#tech (топ-5 показателей)
+#toppages (топ-страницы по органике)
+```
+
+## Что можно/нельзя в видимом тексте КП
+
+### МОЖНО упоминать
+- **Topvisor, SEMrush, Ahrefs, Keys.so** — это конкретные инструменты, клиент знает их. Контекст: «по данным Topvisor», «через SEMrush», «снимок Ahrefs».
+- **AI / нейроассистенты / Я.Нейро / Google AI Overview / Perplexity** — когда речь про **результат в AI-выдаче**. Это реальный SEO-фактор: AI блоки забирают 30% органического CTR.
+- **GEO / LLM SEO / нейропоиск** — отдельная подраздел SEO 2026.
+
+### НЕЛЬЗЯ упоминать
+- **AI как «наш метод»** — «мы используем AI», «нейросеть подбирает» = хайп без сути. Отдельная категория от AI-выдачи.
+- **WebFetch / curl / CONFIRMED / UNCONFIRMED / WRONG** — внутренние служебные маркеры из факт-чека.
+- **«снято через скрейпинг», «парсинг», «бот»** — внутренняя кухня.
+- **DataForSEO** — не используется как инструмент клиента (наш fallback).
+
+### Брендирование (опционально, когда нужно поднять воспринимаемую ценность)
+- Backlinks анализ → **Artvision LinkForge**
+- SEO мониторинг → **Artvision Flow**
+- Конкуренты → **Artvision Scout**
+- AI-видимость → **Artvision Radar**
+- A/B тесты → **Artvision Lens**
+
+Брендирование — **по контексту**: если клиент технически грамотный (видел Topvisor сам) — называем Topvisor. Если просто пресейл — можно «Artvision Scout» для премиальности.
+
+### Прецедент уточнения
+
+Правило «НЕ упоминать AI» было введено когда КП пестрили хайпом «AI-генерация SEO-контента». Уточнение 11.05.2026 (Антон): AI в КП можно упоминать как **AI-выдача / нейропоиск / Я.Нейро** — это **реальный SEO-фактор** в 2026, без которого аудит неполный.
+
+## Mobile-fix (обязательная override-CSS)
+
+```html
+<style id="readability-override">
+@media (max-width: 768px) {
+    html, body { overflow-x: hidden !important; max-width: 100vw !important; }
+    section table { display: block !important; overflow-x: auto !important; max-width: 100% !important; }
+    h2.section-title { font-size: 24px !important; }
+}
+[class*="pc-"] { max-width: 100vw !important; }
+</style>
+```
+
++ обернуть все `<table>` в `<div class="t-scroll" style="overflow-x:auto;max-width:100vw;width:100%;">`.
+
+## Хуки которые защищают pipeline
+
+| Хук | Что блокирует |
+|-----|---------------|
+| `pre-kp-brand-extract-check.sh` | Write КП без WebFetch домена клиента |
+| `pre-bash-topvisor-guard.sh` | NOT_IN/MATCH/EXISTS в Topvisor (broadcast по всем проектам) |
+| `pre-scp-factcheck.sh` | scp если есть CRITICAL в factcheck |
+| `pre-scp-kp-diff.sh` | scp КП без `kp-visual-diff` если есть `reference_kp:` в config.yaml |
+| `pre-kp-bred-block.sh` | Write КП с UNCONFIRMED/AI/нейросети в видимом тексте |
+| `stop-claim-no-rule-check.sh` | warning если я говорю «правило не зафиксировано» без полной проверки 4 источников |
+
+## Прецедент
+
+**11.05.2026 (сессия c4f36879):** spb-kursy + cosmetology-kursy + hair-courses — собраны 3 КП одного владельца за ~5 часов. Pipeline сначала был «копия с заменой данных» (FAILED по strict-factchecker), потом полный rebuild через агента. После этой сессии — обязательный pipeline для всех будущих аудит-КП.
+
+## Связь с другими правилами
+
+- `kp-brand.md` — обязательность brand-extraction
+- `medical-kp.md` — расширенный список для медицины
+- `quality.md` — SEO-gates
+- `presale-recon-standard.md` — обязательная разведка
+- `seo-tools-routing.md` — какой инструмент для какой задачи
+- `feedback_topvisor_filter_safety.md` — EQUALS [PID]
+- `reference_artvision_api_access_status_2026-05-11.md` — статус токенов
+
+## ШАГ 11. #market-presence — присутствие на рынке в интернете
+
+После сбора всех данных (Direct forecasts + Topvisor positions + SEMrush backlinks) — посчитать **размер рынка** и **долю клиента**.
+
+### Формулы
+
+```python
+# Из direct-forecast-{commercial,informational}.json:
+total_market_shows = sum(k['impressions_forecast'] for k in com_keywords + info_keywords)
+total_ad_clicks = sum(k['premium_block_total_clicks'] for k in com_keywords + info_keywords)
+
+# Из topvisor-positions.json + CTR-кривая Backlinko 2026:
+client_potential_clicks = sum(shows × CTR(position) × (1 - AI_loss) for k in keywords)
+
+# Доля рынка:
+market_share = client_potential_clicks / total_market_shows × 100%
+
+# Незанятое пространство:
+unclaimed = total_market_shows - total_ad_clicks - client_potential_clicks
+```
+
+### Структура секции (4 metric-card)
+
+| Карточка | Что показывает | Цвет |
+|----------|---------------|------|
+| Размер рынка | Суммарные показы/мес по N ключам | синий #2c3e88 |
+| Ваш потенциал | Текущие органические клики клиента | зелёный #15803d |
+| Доля рынка | client_potential ÷ total × 100% | оранжевый #d97706 |
+| Незанятое пространство | total - реклама - клиент | красный #b91c1c |
+
+### 2 info-блока ниже карточек
+
+1. **«Покрытие кластеров»** (голубая плашка) — статус коммерч + инфо + реклама
+2. **«Куда расти»** (жёлтая плашка) — топ-3 точки роста с цифрами
+
+### Где брать сезонность
+
+- Wordstat UI dynamics (если subscription активна)
+- Я.Директ Forecast — даёт прогноз на 30 дней (не помесячно за 2 года)
+- Я.Метрика — после старта работ, для исторических данных клиента
+
+Если данных нет — **указать пометку** «Сезонность снимем после старта работ через Я.Метрика», не выдумывать цифры.
+
+### Прецедент
+
+**spb-kursy.ru (11.05.2026):** размер рынка 3 147 показов/мес, потенциал 585 кликов, доля 18.6%, незанятое 2 562 показов. Цифры — реальные из Direct API + Topvisor.
+
+## ШАГ 12. Content Volume Benchmark — объём контента vs ТОП-выдачи
+
+Для **каждой целевой посадочной страницы клиента** сравнить word count с ТОП-10 СПб (или другого региона) по основному запросу страницы.
+
+### Скрипт
+
+```bash
+python3 ~/artvision-data/scripts/seo/content_volume_benchmark.py \
+    --query "курсы массажа спб" \
+    --target https://spb-kursy.ru/ \
+    --project-id 28362497 \
+    --region-key 2 \
+    --depth 10 \
+    --out clients/<slug>/seo/<date>/content-volume-<query>.json
+```
+
+### Что считает
+
+```python
+target_words = word_count главной/посадочной (без nav/footer/script)
+serp_top10 = [word_count URL_i for i in топ-10 Я.СПб через Topvisor SERP API]
+stats = {min, max, median, mean}
+rank = позиция target по объёму среди ТОП-10
+gap_to_median = stats.median - target_words
+gap_to_max = stats.max - target_words
+recommendation = f"Цель: {median} слов. Сейчас: {target_words}. Нужно: {gap}"
+```
+
+### Применение в КП
+
+Добавить в `#tech` или новой подсекции «Объём контента» — таблица:
+
+| Запрос | Target | Медиана ТОП-10 | Max ТОП-10 | Gap | Рекомендация |
+|--------|:------:|:------:|:------:|:------:|--------------|
+| курсы массажа спб | 5050 | 3200 | 7800 | -1850 | избыток, не критично |
+| курсы массажа онлайн | 0 | 2400 | 4500 | +2400 | критично: нет страницы |
+
+**Smart-логика:** если target_words > median × 1.5 → не «больше», а «оптимизировать» (избыточный контент мешает SEO). Если < 0.5 × median — критично. В диапазоне 0.5–1.2 × median — норма.
+
+
+## ШАГ 13. TG-popup Voice widget (обязательно)
+
+ВСЕГДА перед `</body>` нового КП:
+
+```html
+<script src="https://artvision.pro/widgets/voice.js"
+  data-bot="avportal"
+  data-chat-id="161261562"
+  data-name="Антон Камеристый"
+  data-avatar="АК"
+  data-palette-primary="<EXTRACTED_PRIMARY_HEX>"
+  data-palette-secondary="<EXTRACTED_SECONDARY_HEX>"
+  data-endpoint="https://artvision.pro/api/kp-message.php"
+  data-tg-fallback="+79110861888"
+  data-online-mode="hours"
+  data-chips="<QUESTION1>|<QUESTION2>|...|<QUESTION7>"></script>
+```
+
+7 вопросов в `data-chips` — **полный текст** под нишу клиента, НЕ лейблы.
+Палитра — реальные hex с домена клиента (Шаг 1 brand extraction).
+
+Виджет автоматом:
+- Right-side bubble + typewriter teaser × 6 фраз / 30 сек
+- Vertical chips с full-text вопросами
+- Контакт-флоу («Получить ответ в Telegram» → запрос телефон/@nick)
+- Online indicator (MSK 9-23 work hours)
+- Backend POST → @avportal_bot → chat_id 161261562 (Антон)
+- Rate-limit 5 req/60s + 50 req/день per IP
+
+**Файл виджета:** `https://artvision.pro/widgets/voice.js` (18 KB, configurable)
+**Backend API:** `https://artvision.pro/api/kp-message.php`
+**Источник идеи:** spb-kursy v3 (avc-* блок) → выделен в reusable widget 12.05.2026
+
+## ШАГ 14. TH/TD валидация таблиц (защита от рассинхрона)
+
+После создания HTML — обязательная валидация:
+
+```python
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(open(kp_path).read(), 'html.parser')
+errors = []
+for tname, t in enumerate(soup.find_all('table')):
+    th_count = len(t.find_all('th'))
+    for trname, tr in enumerate(t.find_all('tr')):
+        td_count = len(tr.find_all('td'))
+        if td_count and td_count != th_count:
+            errors.append(f'Table#{tname} TR#{trname}: TH={th_count} but TD={td_count}')
+if errors:
+    print('FAIL:', errors)
+    exit(1)
+print('OK: all TH==TD')
+```
+
+Прецедент 11.05: после автозамен в #visibility были пустые `<tr></tr>` и колонки съезжали. Нужно валидировать ДО deploy.
+
+## ШАГ 15. Семантика 100% при копировании от родственного клиента
+
+Если новый КП собирается **на основе уже существующего** (как cosmetology/hair от spb-kursy) — **обязательная проверка семантики**:
+
+```bash
+# Проверить что нет семантики ДРУГОЙ ниши:
+grep -c "массаж" cosmetology_kp.html  # должно быть <10 (только product-context)
+grep -c "косметолог" hair_kp.html     # должно быть 0 или 1 (только контекст конкурента)
+```
+
+Прецедент 11.05: cosmetology содержала 57× «массаж» из spb-kursy после программной копии. Strict-factchecker поймал → ручной фикс через replace.
+
+## ШАГ 16. Mobile h-scroll fix
+
+ОБЯЗАТЕЛЬНО override-CSS в head:
+
+```html
+<style id="readability-override">
+@media (max-width: 768px) {
+    html, body { overflow-x: hidden !important; max-width: 100vw !important; }
+    section table { display: block !important; overflow-x: auto !important; max-width: 100% !important; }
+    h2.section-title { font-size: 24px !important; }
+}
+[class*="pc-"] { max-width: 100vw !important; }
+</style>
+```
+
++ обернуть **все `<table>`** в `<div class="t-scroll" style="overflow-x:auto;max-width:100vw;width:100%;">`.
+
+Тестировать на 4 viewport: **375 / 768 / 1280 / 1920**.
+
+## ШАГ 17. Доказательство «главного конкурента» по позициям
+
+В #backlinks обязательная плашка с обоснованием:
+
+```html
+<div class="info-box">
+  <h4>Почему <CONKURENT> = главный конкурент:</h4>
+  <ul>
+    <li>ТОП-X по «<KEY1>» (наш ТОП-Y по тому же ключу)</li>
+    <li>ТОП-X по «<KEY2>» (наш ТОП-Y по тому же ключу)</li>
+    <li>Прямая борьба за один и тот же трафик</li>
+  </ul>
+</div>
+```
+
+Без обоснования по Topvisor snapshot — НЕ называть «главным». Прецедент 11.05: shkolamm в spb-kursy = ТОП-1/2 по нашим ключам → доказано. Для cos/hair — оговорено «соберём в 1-ю неделю работ».
+
+## ШАГ 18. Дисклеймер для #market-presence (НЕ TAM)
+
+Заголовок: **«Доля в анализируемом кластере (20 ключей)»** — НЕ «Размер рынка».
+
+Под заголовком жёлтая плашка-дисклеймер:
+
+```html
+<div class="disclaimer-yellow">
+  ⚠️ Это не TAM/SAM. Реальный рынок шире (сотни синонимов и long-tail).
+  Эта секция — относительная база сравнения по нашей выборке 20 ключей.
+</div>
+```
+
+Прецедент 12.05: брейншторм Voice — fact-check спросил «откуда 18.6% доли?» → выяснилось это от 20 ключей, не от рынка → честнее переименовать.

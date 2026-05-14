@@ -1,0 +1,92 @@
+# Boris Cherny tips — поведенческие советы для Claude Code
+
+> Источник: [howborisusesclaudecode.com](https://howborisusesclaudecode.com/), [Lenny's Newsletter interview](https://www.lennysnewsletter.com/p/head-of-claude-code-what-happens), [shanraisshan/claude-code-best-practice 15-tips](https://github.com/shanraisshan/claude-code-best-practice/blob/main/tips/claude-boris-15-tips-30-mar-26.md), tweets [@bcherny](https://x.com/bcherny).
+>
+> Boris Cherny — head of Claude Code в Anthropic.
+
+## 1. CLAUDE.md = mistake log, не инструкция
+
+> *"Anytime we see Claude do something incorrectly we add it to the CLAUDE.md, so Claude knows not to do it next time."*
+
+**У нас:** `~/.claude/rules/self-corrections.md` — буквально это, ещё с расширением — повторные ошибки → детерминистичные хуки.
+
+## 2. Verification loop = #1 фактор качества (2-3x)
+
+> *"Probably the most important thing to get great results out of Claude Code — give Claude a way to verify its work."*
+
+**У нас:** `qa-full.sh`, `factcheck-v2.py`, `validate-pages` skill, hook `pre-push-qa-check.sh`. **Gap:** verification loops для собственных скриптов/хуков отсутствуют — добавить тесты в `~/.claude/hooks/tests/` с run-on-commit.
+
+## 3. `/rewind` вместо «попробуй ещё раз»
+
+> *"Don't ignore context rot... use /rewind to eliminate pollution."*
+
+Если первый ответ Claude плохой — **не уточнять промпт сверху**, а откатывать состояние через `/rewind`. Каждое неудачное «попробуй заново» оставляет в контексте мусор.
+
+**Применять:** при сложных задачах когда Claude пошёл не туда — `/rewind` к точке до неверного промпта.
+
+## 4. Auto-compact window 400K, не 200K
+
+> *"Sets `CLAUDE_CODE_AUTO_COMPACT_WINDOW=400000` to compact before degradation zone (300-400k tokens)."*
+
+**У нас:** установлено в `artvision-data/.claude/settings.json` (env section) — sync на 3 аккаунта через git pull.
+
+## 5. Plan Mode + auto-accept = базовый workflow
+
+> *"Most sessions start in Plan mode... then switches to auto-accept edits."* Shift+Tab дважды.
+
+**Применять:** при правке >3 файлов — Plan Mode обязателен (для review плана). Иначе auto-accept без плана = blast-radius риск.
+
+## 6. PostToolUse hook = форматтер последних 10%
+
+> *"Claude is usually well-formatted, and the hook fixes the last 10% to avoid CI failures."*
+
+**У нас:** `post-edit-lint.sh` ловит console.log/CDN — это validator, не formatter. **Идея:** добавить `shfmt -w` для shell-хуков (88 файлов в `~/.claude/hooks/` — разнобой неизбежен).
+
+## 7. Slash commands для high-frequency triggers
+
+> *"Use slash commands for every 'inner loop' workflow that you end up doing many times a day."*
+
+**У нас:** 205 skills с триггерами, но `.claude/commands/*.md` нет. Для 5-10 высокочастотных (`/sync`, `/touch`, `/повестка`) — commands быстрее skills (без fuzzy-match overhead).
+
+## 8. `--bare` flag для SDK (10x speedup)
+
+> *"--bare to speed up SDK startup by up to 10x. Opt-in flag eliminates automatic searches for local files and MCPs."*
+
+**Применять:** в `/swarm` и параллельных Agent вызовах когда MCP не нужны.
+
+## 9. Hooks НЕ hot-swap
+
+> *"Hooks are loaded when Claude Code session starts. Changes to hook configuration require restarting Claude Code."*
+
+**Применять:** после правки `settings.json` или нового хука — **рестарт Claude Code обязателен**, не верить «применилось» в текущей сессии.
+
+## 10. Не railroad — давай контекст, не сценарий
+
+> *"Don't railroad: Give info, not step-by-step scripts; let Claude adapt."*
+
+**У нас:** в `core.md`/`quality.md` десятки пошаговых SOP. Часть оправдана (deploy, security, blast-radius), часть — over-prescriptive. **Идея:** разделить на MUST (security, revenue) и GUIDELINES (style, organization).
+
+## 11. Compound engineering через PR
+
+> *"Tag Claude during code review with corrections; Claude auto-updates CLAUDE.md as part of PR itself (via GitHub Action)."*
+
+**У нас:** `post-commit-learning.sh` есть. **Gap:** привязка к PR-ревью клиентом/Андреем отсутствует.
+
+## 12. Session naming + fork
+
+> *"`claude --name 'auth-refactor'`"* + `claude --resume <session-id> --fork-session`.
+
+**У нас:** auto-naming через `session-namer.sh` + `cc-name`. **Gap:** `--fork-session` для параллельных экспериментов из общего baseline (3 версии КП от одной точки) не используется.
+
+## Когда применять эти правила
+
+- Перед длинной сессией (>200K tokens) — проверить env `CLAUDE_CODE_AUTO_COMPACT_WINDOW`
+- При неудачном ответе Claude — использовать `/rewind`, не «уточняй промпт»
+- При правке >3 файлов — Plan Mode (Shift+Tab×2)
+- При параллельных экспериментах — `--fork-session` от общего commit'а
+
+## Связанные правила
+
+- `~/.claude/rules/self-corrections.md` — наш аналог mistake-log Cherny
+- `~/.claude/rules/bulletproof-patterns.md` — challenge loop + 40% rule
+- `artvision-data/docs/claude-code-improvements-2026-05-04.md` — roadmap из 12 пунктов улучшений

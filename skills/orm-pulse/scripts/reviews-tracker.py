@@ -23,9 +23,12 @@ from pathlib import Path
 from datetime import datetime
 import yaml
 
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 
 def load_registry(slug: str) -> dict:
-    return yaml.safe_load((Path.home() / "artvision-data" / "clients" / slug / "orm" / "registry.yaml").read_text())
+    return yaml.safe_load((ROOT / "clients" / slug / "orm" / "registry.yaml").read_text())
 
 
 def fetch_html(url: str) -> str:
@@ -88,7 +91,7 @@ def main():
     registry = load_registry(args.slug)
     url = registry["platform"]["url"]
 
-    out_dir = Path.home() / "artvision-data" / "clients" / args.slug / "orm" / "reviews-tracker"
+    out_dir = ROOT / "clients" / args.slug / "orm" / "reviews-tracker"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     timestamp = datetime.now().strftime("%Y-%m-%d-%H%M")

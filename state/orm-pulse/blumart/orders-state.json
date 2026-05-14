@@ -1,0 +1,34 @@
+{
+  "state_counts": {
+    "published": 34,
+    "moderation": 24,
+    "given_to_okponrussia": 45,
+    "given_to_kwork": 0,
+    "given_internal_sheet": 65,
+    "approved_not_given": 0,
+    "waiting_approval": 0,
+    "rejected": 2,
+    "spent": 4,
+    "rework_pool": 0,
+    "uniq_failed": 0,
+    "other": 0
+  },
+  "pace": {
+    "delta_total": 5,
+    "period_days": 6.63,
+    "per_day": 0.75,
+    "from_total": 3083,
+    "to_total": 3088,
+    "rating_now": 3.0
+  },
+  "kwork_executors": [],
+  "qcomment": {
+    "balance": "50.0000",
+    "total_projects": 40,
+    "pending_review": 2,
+    "accepted": 0,
+    "rejected": 0,
+    "rework": 0
+  },
+  "approved_not_given_full": []
+}

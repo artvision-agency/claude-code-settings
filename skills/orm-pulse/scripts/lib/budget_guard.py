@@ -178,3 +178,28 @@ def mark_alert_sent(level: str):
             state = {}
     state[level] = datetime.now().isoformat()
     _LAST_ALERT_STATE.write_text(json.dumps(state, ensure_ascii=False, indent=2))
+
+
+# Q9 audit-trail writer — JSONL append для финансового аудита.
+# Decision: decisions/2026-05-10-orm-audit-trail-jsonl.md
+# Reader: daily_spend_rub() выше, фильтрует type in (placement, payment).
+def append_audit_trail(client: str, event: dict) -> Path:
+    """Append событие в clients/<client>/orm/audit-trail.jsonl.
+
+    Args:
+        client: slug клиента (например, "blumart")
+        event: dict с минимум {type, amount_rub}. ts добавляется автоматически если нет.
+            type: "placement" | "payment" | "reject" | "rework" | "refund"
+            amount_rub: int | float (0 если operation без денег)
+            Прочие поля (comment_id, project_id, source, executor, ...) — свободные.
+
+    Returns:
+        Path к файлу audit-trail.jsonl.
+    """
+    p = ROOT / "clients" / client / "orm" / "audit-trail.jsonl"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    event = dict(event)
+    event.setdefault("ts", datetime.now().isoformat())
+    with open(p, "a", encoding="utf-8") as f:
+        f.write(json.dumps(event, ensure_ascii=False) + "\n")
+    return p

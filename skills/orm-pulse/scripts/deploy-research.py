@@ -23,7 +23,9 @@ from datetime import datetime
 
 import markdown
 
-ROOT = Path("/Users/antonk/artvision-data")
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 VPS_USER = "root"
 VPS_HOST = "80.90.181.152"
 VPS_DIR = "/var/www/artvision/orm-research"

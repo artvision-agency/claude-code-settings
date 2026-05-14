@@ -9,6 +9,26 @@ disable-model-invocation: false
 
 Создание коммерческого предложения для клиента Artvision. Полный автоматизированный pipeline.
 
+## ⚠️ ОБЯЗАТЕЛЬНАЯ ВЕРСТКА И ДИЗАЙН (правило `feedback_kp_layout_and_design.md`)
+
+**ВЕРСТКА — slide-каркас CAMEO/starclinic (фиксированная).** НЕ обычный одностраничник.
+- **Эталон каркаса:** `clients/advertmed/40-audits/starclinic/kp.html` (915 строк) или `clients/kamey/presale/kp/cameo_kp.html`
+- **Формат:** 1280×720 slide-based с навигацией dots + counter, opacity-switching
+- **Типографика:** заголовки Georgia/serif, текст system sans
+- **Генератор для мед-клиник:** `python3 clients/advertmed/40-audits/scripts/make_clinic_kp.py <slug>` (читает `configs/<slug>.yaml`)
+
+**ДИЗАЙН — палитра + шрифты ИЗ САЙТА КЛИЕНТА** (`presales/<slug>/design-system.md`):
+- `--primary` = top-1 hex с сайта клиента
+- `--accent` = контрастный hex с того же сайта
+- Шрифт — в КП system stack (без CDN), но Georgia для заголовков сохраняется как стилевой акцент
+
+**Запрет:**
+- ❌ Не делать одностраничник с `<section class="section">` для presale-КП (это получился spadent v1-v4 — пришлось пересобирать)
+- ❌ Не использовать `--primary: #307CC0` (AdvertMed) для не-AdvertMed клиентов
+- ❌ Не оставлять `.advm-mark` в footer для не-AdvertMed КП
+
+**Прецедент:** spadent v1 (11.05.2026) — собран одностраничником через Write, потребовал пересборки в slide-каркас 12.05.2026.
+
 ## Входные данные
 
 - Аргумент 1 (обязательный): URL сайта клиента (например `demosmed.ru`)

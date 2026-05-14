@@ -16,13 +16,16 @@ import yaml
 from telethon import TelegramClient
 from telethon.tl.types import User, Chat, Channel
 
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 API_ID = 35195969
 API_HASH = '576ad787126be6f43f28df1a1279aa4a'
 ORIG_SESSION = Path.home() / ".claude/state/telethon_session.session"
 
 
 def load_registry(slug: str) -> dict:
-    path = Path.home() / "artvision-data" / "clients" / slug / "orm" / "registry.yaml"
+    path = ROOT / "clients" / slug / "orm" / "registry.yaml"
     if not path.exists():
         print(f"❌ Registry not found: {path}", file=sys.stderr)
         sys.exit(1)
