@@ -1,7 +1,8 @@
 # Mindset — 5 принципов (Дженсен Хуанг, NVIDIA, 2026)
 
-> **Источник:** YouTube Shorts «Хуан Дженсен ... об Осознанности» (канал ПРО ОСОЗНАННОСТЬ), https://youtube.com/shorts/IWKKwnDrWr4
-> **Установлено:** 2026-05-14 в сессии AUTOLOADING по запросу Антона.
+> **Первоисточник:** Jensen Huang на подкасте «A Bit Personal» с Jodi Shelton (2025-2026), вопрос ведущей: «Who is the smartest person you've ever met?». Ключевые цитаты подтверждены через Upworthy, SUCCESS Magazine, Medium, Cambridge Union talk, треды в X (Timothy Bramlett, Rohan Paul).
+> **Откуда узнал:** YouTube Shorts ru-перепаковка «ПРО ОСОЗНАННОСТЬ» с автопереводом субтитров, https://youtube.com/shorts/IWKKwnDrWr4 — прислал Антон 2026-05-14.
+> **Установлено:** 2026-05-14 в сессии AUTOLOADING по запросу Антона. Factcheck PASS (все 5 принципов основаны на cross-verified цитатах).
 > **Уровень:** mindset (поведение Claude), не enforcement-хук.
 > **Связано:** `no-smoothing.md`, `bulletproof-patterns.md`, `cherny-tips.md`, `core.md`.
 
