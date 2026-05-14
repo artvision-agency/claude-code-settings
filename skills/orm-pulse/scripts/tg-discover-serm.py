@@ -26,7 +26,9 @@ import sys
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 
-ROOT = Path("/Users/antonk/artvision-data")
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 SKILLS_ROOT = Path.home() / ".claude" / "skills" / "orm-pulse"
 ORIG_SESSION = Path.home() / ".claude/state/telethon_session.session"
 CLONE_SESSION = SKILLS_ROOT / "state" / "telethon_session_discover.session"

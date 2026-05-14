@@ -24,6 +24,9 @@ from collections import Counter, defaultdict
 from difflib import SequenceMatcher
 import yaml
 
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 
 def normalize(t):
     t = (t or "").lower().strip()
@@ -40,7 +43,7 @@ def sim(a, b):
 
 
 def load_registry(slug):
-    return yaml.safe_load((Path.home() / "artvision-data" / "clients" / slug / "orm" / "registry.yaml").read_text())
+    return yaml.safe_load((ROOT / "clients" / slug / "orm" / "registry.yaml").read_text())
 
 
 def load_sheet1(snapshots_dir):
@@ -156,7 +159,7 @@ def classify(rows, executor_texts, tg_norm):
 
 def daily_pace(slug, days=7):
     """Темп публикаций/день из reviews-tracker history."""
-    history_path = Path.home() / "artvision-data" / "clients" / slug / "orm" / "reviews-tracker" / "history.csv"
+    history_path = ROOT / "clients" / slug / "orm" / "reviews-tracker" / "history.csv"
     if not history_path.exists():
         return None
 
@@ -195,7 +198,7 @@ def daily_pace(slug, days=7):
 
 def load_qcomment_snapshot(slug):
     """Последний qcomment snapshot."""
-    qc_dir = Path.home() / "artvision-data" / "clients" / slug / "orm" / "qcomment"
+    qc_dir = ROOT / "clients" / slug / "orm" / "qcomment"
     if not qc_dir.exists():
         return None
     snaps = sorted(qc_dir.glob("snap-*.json"))
@@ -226,7 +229,7 @@ def main():
     args = parser.parse_args()
 
     registry = load_registry(args.slug)
-    snapshots_dir = Path.home() / "artvision-data" / "clients" / args.slug / "orm" / "snapshots" / "latest"
+    snapshots_dir = ROOT / "clients" / args.slug / "orm" / "snapshots" / "latest"
 
     sheet1 = load_sheet1(snapshots_dir)
     executors = load_sheet2_executors(snapshots_dir)
@@ -330,7 +333,7 @@ def main():
 
     # Save
     date = datetime.now().strftime("%Y-%m-%d")
-    out_path = Path.home() / "artvision-data" / "clients" / args.slug / "orm" / f"orders-state-{date}.md"
+    out_path = ROOT / "clients" / args.slug / "orm" / f"orders-state-{date}.md"
     out_path.write_text(md)
 
     json_path = Path("/tmp/orm-pulse") / args.slug / "orders-state.json"

@@ -116,8 +116,20 @@
 | `pre-client-lexicon.sh` | PreToolUse `Write\|Edit` | lexicon-lint для clients/*/presale/*/kp/*: AI/нейросети запрещены, бренд написание, клише. **Whitelist 05.05:** `*/clients/*/CLAUDE.md\|README.md\|context-log.md\|lexicon.yaml` (служебные файлы для агента, не клиента) | `LEXICON_INTERNAL_OK=1` |
 | `inject-challenge-reminder.sh` | UserPromptSubmit | магические цифры без источника | (auto после Skill) |
 | `stop-hallucination-detect.sh` | Stop | детект галлюцинаций в ответе | — |
+| `post-edit-list-check.sh` | PostToolUse `Edit\|Write` | 13.05 — Антон много раз просил списки. Детектит h-tree/ASCII-tree/таблицы иерархии в `clients/*/plan,presale,reports,kp/*.html`. Warn-only. | — |
 
 При добавлении нового хука — **сразу обновить таблицу**.
+
+### 16. Структуры выводил h-tree/деревом вместо списков (повторная ошибка, 13.05.2026)
+- **Проблема:** В клиентских HTML (figma-redline-v3 Часть 2, ранее dentix-FINAL Часть 2) использовал `<div class="h-tree">` с цветным `<span class="h1/h2/h3">` для иерархии H1-H6 страниц. Антон уже несколько раз просил списки — продолжал делать дерево. Антон 13.05 21:15: «постоянно прошу списками, почему. Давай сделаем так, чтобы это учитывалось в каких-то файлах, чтобы на все три аккаунта все всегда это видели».
+- **Корень:** правило существовало в head Антона, не было в файлах. Опиралось на мою память, которая в конкретный момент не сработала.
+- **Решение (hard-enforce на 3 уровнях):**
+  1. `~/.claude/rules/document-list-format.md` — глобальное правило (private, во всех моих сессиях)
+  2. `artvision-data/.claude/rules/document-list-format.md` — git-sync на 3 аккаунта (justtrance / adw.artvision.pro / antoniokmr)
+  3. `memory/feedback_lists_not_trees_for_structures.md` — grep'абельная память
+  4. Hook `~/.claude/hooks/post-edit-list-check.sh` — PostToolUse(Edit|Write), детектит h-tree / ASCII-tree / таблицы иерархии в `clients/*/plan/*.html` и др., warn-only (для отлова до отправки клиенту)
+- **Активация:** хук зарегистрирован в `~/.claude/settings.json` PostToolUse `Edit|Write`. Тест на v3 — 165 нарушений найдено корректно.
+- **Применение:** ВСЕ скиллы пишущие документы (presale-kp, seo-master, content-writer, frontend-design, ui-mockup, page-review, factcheck, audit-kp, cons, и др.) ОБЯЗАНЫ выводить иерархии списками.
 
 ### 15. КП с дефолтной палитрой шаблона при копировании (инцидент 2026-05-11)
 - **Проблема:** cosmetology-kursy_kp_v3.html получил CAMEO navy+gold от spb-kursy потому что я делал ПРОГРАММНУЮ КОПИЮ шаблона (`build_3_kp.py` копирует spb → подменяет данные), а не «новый КП с нуля с extract дизайн-системы клиента». Правило `kp-brand.md` (extract palette/fonts с сайта клиента) есть, но НЕ применилось — при копировании я не запускал curl/WebFetch на cosmetology-kursy.ru. Антон поймал руками: «ПОЧЕМУ ТЫ САМ НЕ ПОНИМАЕШЬ ЧТО ТАК НАДО?»

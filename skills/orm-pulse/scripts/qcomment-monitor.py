@@ -20,12 +20,13 @@ from urllib.request import Request, urlopen
 from urllib.parse import urlencode
 from collections import defaultdict
 
-ROOT = Path("/Users/antonk/artvision-data")
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 TOKENS_PATH = ROOT / "tokens.json"
 TG_SEND = Path.home() / ".claude/scripts/tg-send.sh"
 
 # Q12 budget-cap (decisions/2026-05-10-orm-budget-cap.md)
-sys.path.insert(0, str(Path(__file__).parent))
 try:
     from lib.budget_guard import check_qcomment_balance, should_send_alert, mark_alert_sent  # noqa: E402
 except ImportError:

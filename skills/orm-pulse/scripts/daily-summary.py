@@ -17,7 +17,9 @@ import sys
 from pathlib import Path
 from datetime import datetime, timedelta
 
-ROOT = Path("/Users/antonk/artvision-data")
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 TG_SEND = Path.home() / ".claude/scripts/tg-send.sh"
 SPARK = "▁▂▃▄▅▆▇█"
 

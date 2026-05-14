@@ -18,6 +18,7 @@ import html
 import json
 import re
 import subprocess
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta
 from difflib import SequenceMatcher
@@ -25,7 +26,8 @@ from pathlib import Path
 
 import yaml
 
-ROOT = Path("/Users/antonk/artvision-data")
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
 
 
 def normalize(s: str) -> str:

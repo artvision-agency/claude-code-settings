@@ -20,7 +20,8 @@ from collections import Counter
 
 import yaml
 
-ROOT = Path.home() / "artvision-data"
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
 
 
 def load_registry(slug: str) -> dict:
@@ -40,7 +41,7 @@ def parse_dmy(s: str):
 
 def classify_buckets(slug: str) -> dict:
     """Classify Sheet rows into draft/contractors/checking/public/rejected/spent."""
-    snapshots = Path.home() / "artvision-data" / "clients" / slug / "orm" / "snapshots" / "latest"
+    snapshots = ROOT / "clients" / slug / "orm" / "snapshots" / "latest"
     today = datetime.now()
 
     buckets = {
@@ -199,11 +200,11 @@ def main():
                 match_source = f"attribution-report-{date_str}.csv ({len(reader)} rows)"
                 break
         else:
-            # Совсем нет данных — FAIL loud
+            # Совсем нет данных — FAIL loud (code-review C5 2026-05-12: exit 1, не silent)
             print(f"❌ Нет match/ И нет attribution-report — reconcile невозможен", file=sys.stderr)
             print(f"   Проверь: ls /tmp/orm-pulse/{args.slug}/match/", file=sys.stderr)
             print(f"   Или запусти: attribution-report.py {args.slug}", file=sys.stderr)
-            match_source = "MISSING"
+            sys.exit(1)
 
     # Summary cifry
     summary = {

@@ -26,9 +26,12 @@ except ImportError:
     print("❌ pip3 install playwright && playwright install chromium", file=sys.stderr)
     sys.exit(1)
 
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 
 def load_registry(slug: str) -> dict:
-    return yaml.safe_load((Path.home() / "artvision-data" / "clients" / slug / "orm" / "registry.yaml").read_text())
+    return yaml.safe_load((ROOT / "clients" / slug / "orm" / "registry.yaml").read_text())
 
 
 def parse_date_ru(s: str) -> str | None:

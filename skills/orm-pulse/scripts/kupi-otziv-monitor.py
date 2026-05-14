@@ -34,7 +34,9 @@ from urllib.request import Request, build_opener, HTTPCookieProcessor
 from http.cookiejar import MozillaCookieJar
 from typing import Any
 
-ROOT = Path("/Users/antonk/artvision-data")
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
+
 TOKENS_PATH = ROOT / "tokens.json"
 BASE = "https://kupi-otziv.ru"
 

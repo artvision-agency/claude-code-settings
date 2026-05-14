@@ -33,7 +33,8 @@ from pathlib import Path
 from datetime import datetime
 from collections import Counter, defaultdict
 
-ROOT = Path("/Users/antonk/artvision-data")
+sys.path.insert(0, str(Path(__file__).parent))
+from lib.config import ROOT  # noqa: E402
 
 LEDGER_FIELDS = [
     "timestamp", "text_id", "text_preview", "executor", "channel",
@@ -60,10 +61,21 @@ def ensure_header(path: Path) -> None:
 
 
 def append_row(path: Path, row: dict) -> None:
+    """Append с flock (code-review C4 2026-05-12).
+
+    Без flock параллельные процессы (qcomment-monitor + manual add + cron backfill)
+    могут interleave записи (для notes/text_preview >PIPE_BUF=4096B на macOS).
+    Q9 audit-trail integrity — corruption убивает историю.
+    """
+    import fcntl
     ensure_header(path)
     with open(path, "a", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=LEDGER_FIELDS)
-        writer.writerow({k: row.get(k, "") for k in LEDGER_FIELDS})
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        try:
+            writer = csv.DictWriter(f, fieldnames=LEDGER_FIELDS)
+            writer.writerow({k: row.get(k, "") for k in LEDGER_FIELDS})
+        finally:
+            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
 
 
 def load_rows(path: Path) -> list[dict]:

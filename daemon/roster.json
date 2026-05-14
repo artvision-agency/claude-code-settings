@@ -1,0 +1,54 @@
+{
+  "proto": 1,
+  "supervisorPid": 63756,
+  "updatedAt": 1778620388092,
+  "workers": {
+    "e58fbbf2": {
+      "pid": 38531,
+      "procStart": "Tue May 12 09:14:52 2026",
+      "sessionId": "e58fbbf2-c12b-4669-91f3-6f6d5957cebc",
+      "rendezvousSock": "/tmp/cc-daemon-501/bef7c323/rv/e58fbbf2.sock",
+      "ptySock": "/tmp/cc-daemon-501/bef7c323/spare/71b014f2.pty.sock",
+      "cliVersion": "2.1.139",
+      "startedAt": 1778577304504,
+      "attempt": 1,
+      "cwd": "/Users/antonk",
+      "dispatch": {
+        "proto": 1,
+        "short": "e58fbbf2",
+        "nonce": "25578e7c",
+        "sessionId": "e58fbbf2-c12b-4669-91f3-6f6d5957cebc",
+        "createdAt": 1778577304438,
+        "source": "slash",
+        "cwd": "/Users/antonk",
+        "launch": {
+          "mode": "resume",
+          "sessionId": "/Users/antonk/.claude/projects/-Users-antonk/0b1c2265-f0ac-4b7c-b6f1-07864ded2f2e.jsonl",
+          "fork": true,
+          "flagArgs": [
+            "--",
+            "continue"
+          ]
+        },
+        "env": {},
+        "isolation": "none",
+        "respawnFlags": [],
+        "seed": {
+          "intent": "go on",
+          "name": "KURSY-SPB 2"
+        },
+        "cols": 82,
+        "rows": 34
+      },
+      "decModes": [
+        1000,
+        1002,
+        1003,
+        1006,
+        2004,
+        1004,
+        2031
+      ]
+    }
+  }
+}

@@ -1,0 +1,117 @@
+# КП — обязательная верстка и дизайн-система
+
+> **Установлено:** 2026-05-12, Антон.
+> **Прецедент:** spadent КП v1-v4 (11-12.05) собрано как одностраничник через Write/Edit. Антон поправил: «верстка — такая-то / дизайн — дизайн-система клиентского сайта». Должно было быть прописано в шаблоне `presale-kp` с самого начала.
+
+## Жёсткое правило
+
+**Все presale-КП Artvision = slide-каркас CAMEO/Wave 2, цвета из дизайн-системы клиентского сайта.**
+
+Это разделение:
+- **Верстка** — фиксированный слайдовый каркас (CAMEO-/starclinic-стиль)
+- **Дизайн** — палитра/шрифты ИЗ САЙТА КЛИЕНТА (через `design-system.md`)
+
+## Верстка (фиксированная — НЕ меняется от клиента)
+
+### Каркас
+- **1280×720 slide-based** (16:9, как презентация)
+- Контейнер `.slides-wrapper` с position:relative, width:100vw, height:100vh
+- Каждый слайд `.slide` — position:absolute, opacity-switching, transition .4s
+- Навигация: `#nav` с dots (8px кружки), `#counter` правый нижний
+- Header bar: `slide::before` — 4px градиент от accent-1 к accent-2
+- Footer: `.slide-footer` с брендингом «Artvision Insight» или нейтральным маркером (НЕ AdvertMed-mark!)
+
+### Типографика
+- Заголовки H1, H2: **Georgia / serif** (статус, премиум-doctorate стиль)
+- Текст: system sans (`-apple-system, BlinkMacSystemFont, ...`)
+- H3: 14px UPPERCASE letter-spacing:1.5px
+
+### Эталон каркаса
+
+**ОСНОВНОЙ:** `~/artvision-data/clients/kamey/presale/kp/cameo_kp.html` ← CAMEO
+
+**Живые применения CAMEO (брать как референс):**
+- `clients/madwave/...` — спортивная ниша
+- `clients/atribeaute/...` — стом-сеть СПб
+- `clients/ant-partners/...` — юр.услуги
+- `presales/spb-kursy/...` v3 — массаж-курсы СПб
+
+**❌ НЕ использовать как эталон для не-AdvertMed клиента:**
+- `clients/advertmed/40-audits/starclinic/kp.html` — это AdvertMed Wave 2 стиль (slide-based 1280×720 с advm-mark, синие тона). Дизайн «как у AdvertMed» — Антон 12.05.2026 явно поправил: «такой не надо».
+- `clients/advertmed/40-audits/scripts/make_clinic_kp.py` — генератор тоже AdvertMed-only (advm-mark, AdvertMed-палитра по умолчанию). НЕ использовать для не-AdvertMed клиентов даже после перекраски.
+
+**Прецедент:** spadent v5 (12.05.2026) — собран через `make_clinic_kp.py` с перекраской под палитру SpaDent. Антон отверг: дизайн остался AdvertMed-стиля несмотря на смену цветов. Откатили на v4 одностраничник.
+
+### Используй генератор, не пиши с нуля
+
+Для нового мед-клиента:
+1. Создать `clients/advertmed/40-audits/configs/<slug>.yaml` по образцу `family-stom.yaml`
+2. Заполнить YAML: brand, domain, addresses, branches, profile, конкуренты, wordstat-таблицы, semantic_roadmap, цены
+3. Запустить `python3 clients/advertmed/40-audits/scripts/make_clinic_kp.py <slug>`
+4. Получить готовый slide-КП в `clients/advertmed/40-audits/<slug>/kp.html`
+
+Для НЕ-AdvertMed клиента (как spadent — прямой пресейл):
+- Адаптировать `make_clinic_kp.py` или скопировать starclinic.html в `presales/<slug>/kp/<slug>_kp.html`
+- Заменить домен/имя/адреса/конкурентов/цены через sed
+- Перекрасить переменные `--primary` / `--accent` под палитру клиента
+- Убрать AdvertMed-mark из footer (это их брендинг)
+
+## Дизайн (берётся ИЗ САЙТА КЛИЕНТА)
+
+### Источник
+**Файл:** `presales/<slug>/design-system.md`
+
+Извлекается обязательно ПЕРЕД сборкой:
+```bash
+curl -sL https://<client-site>/ | grep -oE '#[0-9a-fA-F]{6}' | sort | uniq -c | sort -rn | head -10
+curl -sL https://<client-site>/ | grep -oE 'font-family:[^;"]+' | sort -u
+```
+
+И WebFetch с промптом «извлеки палитру, шрифты, стиль» — см. правило `kp-brand.md`.
+
+### Что применяется в CSS slide-каркаса
+
+```css
+:root {
+  --primary: #<top-1 hex из site>;
+  --primary-dark: #<top-2 hex с adjusted brightness>;
+  --accent: #<контрастный из палитры site>;
+  --accent-dark: #<dark variant>;
+  /* остальное — фиксированное из эталона */
+}
+```
+
+Шрифт замены — только если site использует Google Font, который можно подменить системным. В КП НИКОГДА не загружать CDN.
+
+### Пример (SpaDent)
+- Извлечено: `#8699B7` (138 раз), `#475A78` (33), `#FEFEFE`, `#333333`
+- Шрифт: Rubik → в КП заменяем на system sans-serif
+- → В slide-каркасе: `--primary: #8699B7; --primary-dark: #475A78; --accent: #445775`
+- Заголовки Georgia (фиксированно из каркаса) — стиль сохраняется
+
+## Запрет
+
+❌ **Не делать presale-КП обычным одностраничником** с `<section class="section">` и `padding: 64px 0`.
+❌ Не использовать `--primary: #307CC0` (это AdvertMed брендинг!) для не-AdvertMed клиентов.
+❌ Не подгружать Google Fonts CDN.
+❌ Не оставлять AdvertMed-mark (`.advm-mark`) в footer не-AdvertMed КП.
+
+## Связь со скиллом `presale-kp`
+
+В `~/.claude/skills/presale-kp/SKILL.md` ОБЯЗАТЕЛЬНО прописать (если ещё нет):
+- Эталон верстки — starclinic.html
+- Генератор — `clients/advertmed/40-audits/scripts/make_clinic_kp.py`
+- Дизайн-система — `presales/<slug>/design-system.md`
+
+И в `~/.claude/skills/seo-master/SKILL.md`:
+- Если результат аудита идёт в КП для клиента → slide-каркас CAMEO
+- НЕ выкатывать одностраничник как «финальное КП»
+
+## Прецедент
+
+**spadent КП v1-v4 (11-12.05.2026):**
+- v1-v4 = обычный одностраничник на `<section class="section">` (cards / tables / metric-grid)
+- Размер 43-61 KB, 15 секций scroll-based
+- Антон 12.05 поправил: «дизайн как в sh командах» (slash-commands → slide-каркас Wave 2)
+- v5 требуется: пересборка в slide-каркасе CAMEO/starclinic с палитрой `#8699B7`
+- **Урок:** правило не было прописано в `presale-kp` skill → нужно прописать сейчас
