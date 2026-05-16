@@ -24,12 +24,15 @@ class SummarySection:
 
 @dataclass(frozen=True)
 class RawInputs:
+    """Read-only value object. frozen=True blocks reassignment, not in-place list mutation; treat segments/summary_sections as read-only."""
+
     duration: float
     segments: list[Segment]
     summary_sections: list[SummarySection]
     speaker_notes_text: str | None
 
 
+# Markdown H2/H3 only (## or ###); single # H1 and #### are intentionally ignored.
 _HEADING = re.compile(r"^(#{2,3})\s+(.*\S)\s*$", re.MULTILINE)
 
 
@@ -39,6 +42,7 @@ def _parse_transcript(path: Path) -> tuple[float, list[Segment]]:
         Segment(start=float(s["start"]), end=float(s["end"]), text=str(s["text"]).strip())
         for s in data.get("segments", [])
     ]
+    # duration defaults to 0.0 if absent; Plan 2 ALIGN recomputes timing from the new recording.
     return float(data.get("duration", 0.0)), segs
 
 
