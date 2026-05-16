@@ -71,11 +71,10 @@ def build_blocks(raw: RawInputs) -> list[Block]:
         scores = [
             len(seg_tok & bt) for bt in block_tokens
         ]
+        # argmax по пересечению токенов; при нуле совпадений max() вернёт
+        # первый блок (индекс 0) — сегмент всё равно никуда не теряется,
+        # контент никогда не бросаем, Claude уточнит привязку на ревью №1.
         best = max(range(len(blocks)), key=lambda i: scores[i]) if scores else 0
-        # если ноль пересечений — кладём в последний содержательный блок,
-        # чтобы текст не терялся (никогда не бросаем контент)
-        if scores and scores[best] == 0:
-            best = min(best, len(blocks) - 1)
         blocks[best].source_segments.append(seg)
 
     for b in blocks:

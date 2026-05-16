@@ -67,7 +67,7 @@ def render_script_md(*, lecture: str, blocks: list[Block]) -> str:
         if b.start is not None and b.end is not None:
             parts.append(f"\n<!-- t={b.start:.2f}..{b.end:.2f} -->")
         marker = b.marker or "C"
-        hint = (b.title if not b.summary_body else b.title).strip()
+        hint = b.title.strip()  # черновая подсказка визуала; автор уточнит на ревью №1
         parts.append(f"\n\n[{marker}: {hint}]\n")
         parts.append(f"\n{b.narration.strip()}\n")
     return "".join(parts)
