@@ -34,7 +34,7 @@ class LecturePaths:
     work_dir: Path
 
 
-def resolve_paths(*, lecture: str, project_root: Path, preset: str = "ai-course") -> LecturePaths:
+def resolve_paths(*, lecture: str, project_root: Path | str, preset: str = "ai-course") -> LecturePaths:
     if preset not in PRESETS:
         raise ValueError(f"unknown preset: {preset!r} (known: {sorted(PRESETS)})")
     tpl = PRESETS[preset]
