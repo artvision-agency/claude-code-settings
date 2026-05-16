@@ -41,3 +41,8 @@ def test_resolve_paths_detects_speaker_notes(tmp_path: Path):
 def test_resolve_paths_missing_transcript_raises(tmp_path: Path):
     with pytest.raises(FileNotFoundError, match="transcript"):
         resolve_paths(lecture="ghost", project_root=tmp_path, preset="ai-course")
+
+
+def test_resolve_paths_unknown_preset_raises(tmp_path: Path):
+    with pytest.raises(ValueError, match="unknown"):
+        resolve_paths(lecture="x", project_root=tmp_path, preset="no-such-preset")
