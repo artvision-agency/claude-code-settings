@@ -45,6 +45,16 @@ def _clean_segments(raw: RawInputs) -> list[tuple[Segment, str]]:
     return out
 
 
+def _summary_to_text(body: str) -> str:
+    """Конспект-секцию → плоский текст: снять markdown-маркеры (> # - *)."""
+    lines = []
+    for ln in body.splitlines():
+        s = ln.strip().lstrip(">#-*").strip()
+        if s:
+            lines.append(s)
+    return " ".join(lines).strip()
+
+
 def build_blocks(raw: RawInputs) -> list[Block]:
     h2 = [s for s in raw.summary_sections if s.level == 2]
     blocks = [Block(title=s.title, summary_body=s.body) for s in h2]
@@ -75,6 +85,10 @@ def build_blocks(raw: RawInputs) -> list[Block]:
             ).strip()
             b.start = min(s.start for s in b.source_segments)
             b.end = max(s.end for s in b.source_segments)
+        else:
+            # H2-секция без сопоставленного транскрипта: черновик из конспекта,
+            # НИКОГДА не пустой (Claude доведёт на ревью №1). Тайм-якоря нет.
+            b.narration = _summary_to_text(b.summary_body) or b.title
     return blocks
 
 
