@@ -67,3 +67,24 @@ def test_default_marker_is_C_when_no_signal():
     b = Block(title="Вступление", summary_body="Просто рассказ без сигналов.")
     b.narration = "Сегодня обзорная вводная часть."
     assert assign_markers([b])[0].marker == "C"
+
+
+def test_block_without_segments_falls_back_to_summary():
+    from nv_engine.inputs import RawInputs, Segment, SummarySection
+
+    raw = RawInputs(
+        duration=20.0,
+        segments=[Segment(0.0, 10.0, "Кубернетес и докер деплой пайплайн.")],
+        summary_sections=[
+            SummarySection(title="Технический раздел", level=2,
+                           body="- kubernetes\n- docker deploy pipeline"),
+            SummarySection(title="Мотивация", level=2,
+                           body="> Зачем это всё нужно команде."),
+        ],
+        speaker_notes_text=None,
+    )
+    by = {b.title: b for b in build_blocks(raw)}
+    assert by["Мотивация"].narration
+    assert "нужно" in by["Мотивация"].narration.lower()
+    assert ">" not in by["Мотивация"].narration
+    assert by["Мотивация"].start is None
