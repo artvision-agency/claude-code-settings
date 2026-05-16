@@ -40,3 +40,30 @@ def test_definition_segment_maps_to_definition_block(mini_lecture):
     blocks = build_blocks(_mini(mini_lecture))
     by_title = {b.title: b for b in blocks}
     assert "компромисс" in by_title["Новое определение"].narration.lower()
+
+
+from nv_engine.scriptgen import assign_markers
+
+
+def test_markers_assigned_to_every_block(mini_lecture):
+    blocks = assign_markers(build_blocks(_mini(mini_lecture)))
+    assert all(b.marker in {"B", "C", "D"} for b in blocks)
+
+
+def test_definition_block_is_C(mini_lecture):
+    blocks = {b.title: b for b in assign_markers(build_blocks(_mini(mini_lecture)))}
+    # "Новое определение" с маркером 🎯 -> слайд C
+    assert blocks["Новое определение"].marker == "C"
+
+
+def test_technical_pipeline_block_is_D(mini_lecture):
+    blocks = {b.title: b for b in assign_markers(build_blocks(_mini(mini_lecture)))}
+    # "Источники тех-долга" содержит CI/CD pipeline / архитектуру -> схема D
+    assert blocks["Источники тех-долга"].marker == "D"
+
+
+def test_default_marker_is_C_when_no_signal():
+    from nv_engine.scriptgen import Block
+    b = Block(title="Вступление", summary_body="Просто рассказ без сигналов.")
+    b.narration = "Сегодня обзорная вводная часть."
+    assert assign_markers([b])[0].marker == "C"

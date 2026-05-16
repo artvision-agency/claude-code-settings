@@ -76,3 +76,42 @@ def build_blocks(raw: RawInputs) -> list[Block]:
             b.start = min(s.start for s in b.source_segments)
             b.end = max(s.end for s in b.source_segments)
     return blocks
+
+
+# --- B/C/D marker heuristic -------------------------------------------------
+# Приоритет: сильный C (определение / 🎯) > D (схема/код/техника)
+#          > прочий C (тезис) > B (иллюстрация).
+# Дефолт без сигналов = C (никогда не пустой экран; слайд с тезисом).
+# Примечание: голое «код» НЕ сигнал D — слишком частое слово ("плохой код"),
+# даёт ложные D. Явное определение/🎯 — намеренный сигнал автора, бьёт D.
+
+_STRONG_C = re.compile(r"(🎯|определени)\w*", re.IGNORECASE)
+_D_SIGNALS = re.compile(
+    r"\b(pipeline|ci/cd|ci\b|cd\b|архитектур|схем|диаграмм|алгоритм|api|"
+    r"deploy|kubernetes|docker|sql|функци|класс|структур)\w*",
+    re.IGNORECASE,
+)
+_C_SIGNALS = re.compile(
+    r"(тезис|принцип|правило|вывод|итог|ключев|формул)\w*",
+    re.IGNORECASE,
+)
+_B_SIGNALS = re.compile(
+    r"\b(представьте|метафор|как кредит|история|пример из жизни|аналог)\w*",
+    re.IGNORECASE,
+)
+
+
+def assign_markers(blocks: list[Block]) -> list[Block]:
+    for b in blocks:
+        blob = f"{b.title}\n{b.summary_body}\n{b.narration}"
+        if _STRONG_C.search(blob):
+            b.marker = "C"
+        elif _D_SIGNALS.search(blob):
+            b.marker = "D"
+        elif _C_SIGNALS.search(blob):
+            b.marker = "C"
+        elif _B_SIGNALS.search(blob):
+            b.marker = "B"
+        else:
+            b.marker = "C"  # дефолт — слайд с тезисом
+    return blocks
