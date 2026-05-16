@@ -1,12 +1,8 @@
-from nv_engine.config import resolve_paths
-from nv_engine.inputs import SummarySection, load_inputs
+from nv_engine.inputs import RawInputs, SummarySection, load_inputs
 
 
-def test_load_inputs_mini(mini_lecture, tmp_path, monkeypatch):
+def test_load_inputs_mini(mini_lecture):
     # mini_lecture лежит как .../lecture-mini/{transcript,summary,speaker_notes}
-    # Соберём ad-hoc LecturePaths напрямую вместо пресета:
-    from nv_engine.inputs import RawInputs
-
     raw = load_inputs(
         transcript=mini_lecture / "transcript.json",
         summary=mini_lecture / "summary.md",
