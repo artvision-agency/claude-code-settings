@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: nv-engine
+Version: 0.1.0
+Summary: Deterministic engine for the narration-to-visuals skill (script-gen stage)
+Requires-Python: >=3.11
+Requires-Dist: PyYAML>=6.0
