@@ -50,3 +50,10 @@ def test_skill_md_documents_stage_2_and_gate_2():
     assert "narration.mp4" in text
     # обновлён объём: вне рамок теперь только Plan 3
     assert "Plan 3" in text or "План 3" in text
+
+
+def test_skill_md_documents_render_stage():
+    text = SKILL.read_text(encoding="utf-8")
+    assert "--stage render" in text
+    assert "visualized.mp4" in text
+    assert "Pipeline complete" in text or "пайплайн завершён" in text.lower()
