@@ -155,6 +155,7 @@ def run_storyboard(*, lecture: str, project_root: Path, aligner: Aligner,
 
 # --- Plan 3: generate + compose + render -----------------------------------
 
+import shutil  # noqa: E402
 from nv_engine.assets import ImageGenerator, generate_assets  # noqa: E402
 from nv_engine.compose import build_props, render_props_json, validate_props_json  # noqa: E402
 from nv_engine.render import Runner, render_video  # noqa: E402
@@ -206,9 +207,20 @@ def run_render(*, lecture: str, project_root: Path,
     validate_props_json(props_json)
     paths.remotion_props.write_text(props_json, encoding="utf-8")
 
+    # Стейджим ассеты в public-папку: Remotion staticFile() резолвит имена
+    # из неё (--public-dir). props ссылается на голые имена.
+    public = paths.remotion_public
+    if public.exists():
+        shutil.rmtree(public)
+    public.mkdir(parents=True, exist_ok=True)
+    shutil.copy(paths.recording, public / paths.recording.name)
+    for a in assets:
+        if a.image_path:
+            shutil.copy(paths.assets_dir / a.image_path, public / a.image_path)
+
     remotion_dir = Path(__file__).resolve().parent.parent / "remotion"
     render_video(props_path=paths.remotion_props, remotion_dir=remotion_dir,
-                 out_path=paths.visualized, runner=runner)
+                 out_path=paths.visualized, runner=runner, public_dir=public)
 
     cost = round(sum(a.cost_usd for a in assets), 4)
     paths.report.write_text(

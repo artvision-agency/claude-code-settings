@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 _WORD = re.compile(r"\S+")
 
@@ -28,6 +28,7 @@ class AlignedTranscript:
     text: str
 
 
+@runtime_checkable
 class Aligner(Protocol):
     def align(self, audio_path: Path, script_text: str) -> AlignedTranscript:
         ...

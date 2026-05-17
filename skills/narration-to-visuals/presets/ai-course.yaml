@@ -14,3 +14,4 @@ assets_dir: .nv-work/{lecture}/assets
 remotion_props: .nv-work/{lecture}/remotion-props.json
 visualized: source/{lecture}/visualized.mp4
 report: source/{lecture}/nv-report.md
+remotion_public: .nv-work/{lecture}/remotion-public
