@@ -48,6 +48,7 @@ def build_props(*, storyboard: Storyboard, asset_results: list[AssetResult],
         entry = {
             "index": b.index,
             "marker": b.marker,
+            "title": b.title,
             "fromFrame": cursor,
             "durationFrames": dur,
             "slideLines": b.content.get("slide_lines"),
