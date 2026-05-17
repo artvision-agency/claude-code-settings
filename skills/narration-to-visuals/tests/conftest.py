@@ -26,3 +26,8 @@ def mini_script_text(mini_lecture) -> str:
     md = (mini_lecture / "narration_script.md").read_text(encoding="utf-8")
     parsed = parse_script_md(md)
     return " ".join(b.narration for b in parsed.blocks)
+
+
+@pytest.fixture
+def mini_storyboard(mini_lecture) -> str:
+    return (mini_lecture / "storyboard.json").read_text(encoding="utf-8")
