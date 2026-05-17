@@ -40,6 +40,14 @@ N5=$(find ~/.claude/telemetry -maxdepth 1 -mtime +30 -type f 2>/dev/null | wc -l
 find ~/.claude/telemetry -maxdepth 1 -mtime +30 -type f -delete 2>/dev/null || true
 echo "[$(ts)] removed $N5 stale telemetry entries (>30d)" >> "$LOG"
 
+# 6. ~/Library/Caches и ~/.cache — приложения сами пересоздают
+# Добавлено 17.05.2026 после disk-full инцидента (260 MB свободно)
+CACHE_LIB_BEFORE=$(du -sk ~/Library/Caches 2>/dev/null | awk '{print $1}')
+CACHE_HOME_BEFORE=$(du -sk ~/.cache 2>/dev/null | awk '{print $1}')
+rm -rf ~/Library/Caches/* 2>/dev/null || true
+rm -rf ~/.cache/* 2>/dev/null || true
+echo "[$(ts)] cleaned ~/Library/Caches (was ${CACHE_LIB_BEFORE}KB) + ~/.cache (was ${CACHE_HOME_BEFORE}KB)" >> "$LOG"
+
 DISK_AFTER=$(df -g "$HOME" | awk 'NR==2 {print $4}')
 FREED=$((DISK_AFTER - DISK_BEFORE))
 echo "[$(ts)] === END free=${DISK_AFTER}GB (freed ~${FREED}GB) ===" >> "$LOG"

@@ -241,6 +241,11 @@
             "type": "command",
             "command": "~/.claude/hooks/start-time-context.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-disk-check.sh",
+            "timeout": 5
           }
         ]
       },
@@ -410,6 +415,16 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/pre-tool-block-no-taskcreate.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-tool-cons-vs-swarm-disambiguate.sh",
             "timeout": 5
           }
         ]
@@ -730,6 +745,41 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/inject-context-rules.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $HOME/.claude/hooks/pre-deploy-coords-verify.py",
+            "timeout": 20
+          },
+          {
+            "type": "command",
+            "command": "python3 $HOME/.claude/hooks/pre-deploy-price-vs-source.py",
+            "timeout": 20
+          },
+          {
+            "type": "command",
+            "command": "python3 $HOME/.claude/hooks/pre-deploy-formula-consistency.py",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "python3 $HOME/.claude/hooks/pre-deploy-delivery-date-source.py",
+            "timeout": 20
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $HOME/.claude/hooks/pre-deploy-quote-exists.py",
+            "timeout": 15
           }
         ]
       }
