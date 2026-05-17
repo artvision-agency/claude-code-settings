@@ -40,6 +40,7 @@ def test_block_frames_contiguous_and_typed(tmp_path, mini_storyboard):
     assert b1["fromFrame"] == b0["fromFrame"] + b0["durationFrames"]
     assert b2["fromFrame"] == b1["fromFrame"] + b1["durationFrames"]
     assert b0["marker"] == "C" and b0["slideLines"]
+    assert b0["title"] == "Новое определение"
     assert b1["marker"] == "D" and b1["diagramSpec"]
     assert b2["marker"] == "B" and b2["imageSrc"].endswith(".png")
 

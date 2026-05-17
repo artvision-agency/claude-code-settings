@@ -21,7 +21,7 @@ def test_package_json_has_remotion_and_render_script():
 def test_main_consumes_props_contract():
     main = (ROOT / "src" / "Main.tsx").read_text(encoding="utf-8")
     for key in ["blocks", "pip", "audioSrc", "imageSrc", "slideLines",
-                "diagramSpec", "fromFrame", "durationFrames"]:
+                "diagramSpec", "fromFrame", "durationFrames", "title"]:
         assert key in main, key
     root = (ROOT / "src" / "Root.tsx").read_text(encoding="utf-8")
     assert 'id="Main"' in root or "'Main'" in root or '"Main"' in root
