@@ -11,7 +11,7 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 from nv_engine.storyboard import Storyboard
 
@@ -29,6 +29,7 @@ class AssetResult:
     cost_usd: float
 
 
+@runtime_checkable
 class ImageGenerator(Protocol):
     def generate(self, prompt: str, out_path: Path) -> float:
         """Write an image to out_path; return the USD cost actually spent."""
