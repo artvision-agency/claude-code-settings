@@ -5,3 +5,8 @@ summary: course/{lecture}/summary.md
 speaker_notes: course/{lecture}/speaker_notes.md
 narration_script: source/{lecture}/narration_script.md
 work_dir: .nv-work/{lecture}
+recording: source/{lecture}/narration.mp4
+aligned: .nv-work/{lecture}/aligned.json
+reconcile: .nv-work/{lecture}/reconcile.md
+storyboard: .nv-work/{lecture}/storyboard.json
+storyboard_md: .nv-work/{lecture}/storyboard.md
