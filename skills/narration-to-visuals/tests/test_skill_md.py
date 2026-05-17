@@ -39,6 +39,8 @@ def test_preset_yaml_matches_engine_preset():
     assert data["narration_script"] == PRESETS["ai-course"]["narration_script"]
     assert data["recording"] == PRESETS["ai-course"]["recording"]
     assert data["storyboard"] == PRESETS["ai-course"]["storyboard"]
+    assert data["visualized"] == PRESETS["ai-course"]["visualized"]
+    assert data["assets_dir"] == PRESETS["ai-course"]["assets_dir"]
 
 
 def test_skill_md_documents_stage_2_and_gate_2():
@@ -48,3 +50,10 @@ def test_skill_md_documents_stage_2_and_gate_2():
     assert "narration.mp4" in text
     # обновлён объём: вне рамок теперь только Plan 3
     assert "Plan 3" in text or "План 3" in text
+
+
+def test_skill_md_documents_render_stage():
+    text = SKILL.read_text(encoding="utf-8")
+    assert "--stage render" in text
+    assert "visualized.mp4" in text
+    assert "Pipeline complete" in text or "пайплайн завершён" in text.lower()
