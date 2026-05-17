@@ -1,0 +1,44 @@
+{
+  "lecture": "tech-debt",
+  "blocks": [
+    {
+      "index": 0,
+      "title": "Новое определение",
+      "marker": "C",
+      "start": 12.0,
+      "end": 28.0,
+      "narration": "Технический долг это осознанный компромисс, а не плохой код.",
+      "deviation": false,
+      "content": {
+        "marker": "C",
+        "slide_lines": ["Тех-долг = осознанный компромисс", "Не «плохой код»"]
+      }
+    },
+    {
+      "index": 1,
+      "title": "Источники тех-долга",
+      "marker": "D",
+      "start": 31.0,
+      "end": 52.0,
+      "narration": "Хардкоды, пропущенные тесты, CI/CD pipeline.",
+      "deviation": false,
+      "content": {
+        "marker": "D",
+        "diagram_spec": "diagram: Источники тех-долга\nsource: хардкоды; тесты; CI/CD pipeline"
+      }
+    },
+    {
+      "index": 2,
+      "title": "Как продать рефакторинг",
+      "marker": "B",
+      "start": 52.0,
+      "end": 70.0,
+      "narration": "Считайте тех-долг в деньгах и времени.",
+      "deviation": false,
+      "content": {
+        "marker": "B",
+        "image_prompt": "Метафора кредита для бизнеса: весы деньги против времени"
+      }
+    }
+  ]
+}

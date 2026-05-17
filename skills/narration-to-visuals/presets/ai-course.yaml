@@ -10,3 +10,7 @@ aligned: .nv-work/{lecture}/aligned.json
 reconcile: .nv-work/{lecture}/reconcile.md
 storyboard: .nv-work/{lecture}/storyboard.json
 storyboard_md: .nv-work/{lecture}/storyboard.md
+assets_dir: .nv-work/{lecture}/assets
+remotion_props: .nv-work/{lecture}/remotion-props.json
+visualized: source/{lecture}/visualized.mp4
+report: source/{lecture}/nv-report.md

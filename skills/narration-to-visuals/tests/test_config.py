@@ -60,3 +60,16 @@ def test_resolve_paths_has_plan2_targets(tmp_path: Path):
     assert p.reconcile == tmp_path / ".nv-work" / "cicd" / "reconcile.md"
     assert p.storyboard == tmp_path / ".nv-work" / "cicd" / "storyboard.json"
     assert p.storyboard_md == tmp_path / ".nv-work" / "cicd" / "storyboard.md"
+
+
+def test_resolve_paths_has_plan3_targets(tmp_path: Path):
+    src = tmp_path / "source" / "cicd"
+    src.mkdir(parents=True)
+    (src / "transcript.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "course" / "cicd").mkdir(parents=True)
+
+    p = resolve_paths(lecture="cicd", project_root=tmp_path, preset="ai-course")
+    assert p.assets_dir == tmp_path / ".nv-work" / "cicd" / "assets"
+    assert p.remotion_props == tmp_path / ".nv-work" / "cicd" / "remotion-props.json"
+    assert p.visualized == src / "visualized.mp4"
+    assert p.report == src / "nv-report.md"
