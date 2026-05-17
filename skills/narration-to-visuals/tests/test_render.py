@@ -11,12 +11,14 @@ def test_render_builds_cmd_and_writes_output(tmp_path):
     out = tmp_path / "visualized.mp4"
     runner = FakeRunner()
     render_video(props_path=props, remotion_dir=tmp_path / "remotion",
-                 out_path=out, runner=runner)
+                 out_path=out, runner=runner, public_dir=tmp_path)
     assert out.exists()
     cmd = " ".join(runner.last_cmd)
     assert "remotion" in cmd and "render" in cmd
     assert str(out) in runner.last_cmd
     assert str(props) in runner.last_cmd
+    assert "--public-dir" in runner.last_cmd
+    assert str(tmp_path) in runner.last_cmd
 
 
 def test_render_raises_on_nonzero(tmp_path):
@@ -25,7 +27,8 @@ def test_render_raises_on_nonzero(tmp_path):
     with pytest.raises(RenderError, match="exit 1"):
         render_video(props_path=props, remotion_dir=tmp_path,
                      out_path=tmp_path / "v.mp4",
-                     runner=FakeRunner(returncode=1))
+                     runner=FakeRunner(returncode=1),
+                     public_dir=tmp_path)
 
 
 def test_render_raises_if_output_missing(tmp_path):
@@ -34,4 +37,5 @@ def test_render_raises_if_output_missing(tmp_path):
     with pytest.raises(RenderError, match="no output"):
         render_video(props_path=props, remotion_dir=tmp_path,
                      out_path=tmp_path / "v.mp4",
-                     runner=FakeRunner(write_output=False))
+                     runner=FakeRunner(write_output=False),
+                     public_dir=tmp_path)

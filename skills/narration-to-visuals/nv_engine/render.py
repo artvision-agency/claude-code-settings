@@ -49,11 +49,12 @@ class SubprocessRunner:
 
 
 def render_video(*, props_path: Path, remotion_dir: Path, out_path: Path,
-                 runner: Runner) -> None:
+                 runner: Runner, public_dir: Path) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     # Remotion v4 CLI: npx remotion render <entry> <composition-id> <out> [opts]
     cmd = ["npx", "remotion", "render", "src/index.ts", "Main",
-           str(out_path), "--props", str(props_path)]
+           str(out_path), "--props", str(props_path),
+           "--public-dir", str(public_dir)]
     rc = runner.run(cmd, remotion_dir)
     if rc != 0:
         raise RenderError(f"remotion render failed (exit {rc})")

@@ -29,6 +29,7 @@ PRESETS = {
         "remotion_props": ".nv-work/{lecture}/remotion-props.json",
         "visualized": "source/{lecture}/visualized.mp4",
         "report": "source/{lecture}/nv-report.md",
+        "remotion_public": ".nv-work/{lecture}/remotion-public",
     }
 }
 
@@ -50,6 +51,7 @@ class LecturePaths:
     remotion_props: Path
     visualized: Path
     report: Path
+    remotion_public: Path
 
 
 def resolve_paths(*, lecture: str, project_root: Path | str, preset: str = "ai-course") -> LecturePaths:
@@ -82,4 +84,5 @@ def resolve_paths(*, lecture: str, project_root: Path | str, preset: str = "ai-c
         remotion_props=p("remotion_props"),
         visualized=p("visualized"),
         report=p("report"),
+        remotion_public=p("remotion_public"),
     )
