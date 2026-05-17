@@ -15,9 +15,9 @@ allowed-tools: Read Write Edit Bash Glob Grep Agent
 Полный замысел и решения: см. spec
 `ai-course/docs/superpowers/specs/2026-05-16-narration-to-visuals-design.md`.
 
-**Объём текущей вехи (Plan 1): только пред-стадия SCRIPT-GEN + REVIEW GATE 1.**
-ALIGN / RECONCILE / SEGMENT / CLASSIFY / GENERATE / COMPOSE / RENDER — это
-Plan 2 и Plan 3, ещё НЕ реализованы. Не выполняй их.
+**Объём (Plan 1+2): SCRIPT-GEN + REVIEW GATE 1, затем STORYBOARD + REVIEW GATE 2.**
+GENERATE / COMPOSE / RENDER (ассеты B/C/D, Remotion, финальное видео) — это
+Plan 3, ещё НЕ реализован. Не выполняй его.
 
 ## Когда активировать
 
@@ -63,6 +63,33 @@ python -m nv_engine <lecture> --project-root <ai-course-repo-root>
 **НЕ продолжай дальше** (запись, ALIGN, генерация) до явного подтверждения
 автора. Запись видео делает автор вручную, читая утверждённый сценарий.
 Дальнейшие стадии — Plan 2 / Plan 3 (не реализованы в этой вехе).
+
+## Шаг 2: STORYBOARD (План 2, после записи, детерминированно)
+
+Предусловие: автор записал `source/<lecture>/narration.mp4`, читая
+утверждённый `narration_script.md`.
+
+```bash
+cd <repo>/skills/narration-to-visuals && . .venv/bin/activate
+python -m nv_engine <lecture> --project-root <ai-course-root> --stage storyboard
+```
+
+Скрипт: ALIGN (stable-ts по тексту скрипта) → SEGMENT (тайминги блоков из
+записи) → RECONCILE (флаги DEVIATION) → CLASSIFY (черновик контента под
+авторский маркер) → `.nv-work/<lecture>/storyboard.json` (+ `.md`, `aligned.json`,
+`reconcile.md`).
+
+## Шаг 3: Доводка раскадровки (Claude)
+
+Прочитай `storyboard.md`/`storyboard.json`. Уточни черновой контент
+(`image_prompt`/`slide_lines`/`diagram_spec`) по смыслу, не меняя авторские
+маркеры. Для блоков с `deviation: true` сверься с `reconcile.md` и записью.
+
+## === REVIEW GATE 2 ===
+
+**STOP. Жёсткий стоп-гейт.** Покажи автору `storyboard.md`: число блоков,
+распределение B/C/D, блоки с DEVIATION. Попроси проверить/поправить.
+**НЕ запускай генерацию ассетов** (это Plan 3) до явного подтверждения.
 
 ## Частые ошибки (НЕ повторять)
 
