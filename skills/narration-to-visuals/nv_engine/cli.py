@@ -1,6 +1,6 @@
 """CLI: `python -m nv_engine <lecture> [--project-root P] [--preset NAME] [--force]`.
 
-Runs SCRIPT-GEN only (Plan 1). Prints the REVIEW GATE 1 instruction so the
+Stage 'script' (Plan 1) or 'storyboard' (Plan 2). Prints the REVIEW GATE 1 instruction so the
 SKILL.md workflow halts for author review.
 """
 
@@ -19,33 +19,69 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--project-root", default=".", type=Path)
     parser.add_argument("--preset", default="ai-course")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument("--stage", choices=["script", "storyboard"],
+                         default="script")
     args = parser.parse_args(argv)
 
+    if args.stage == "script":
+        try:
+            res = run_script_gen(
+                lecture=args.lecture, project_root=args.project_root,
+                preset=args.preset, force=args.force,
+            )
+        except (FileNotFoundError, ValueError) as e:
+            print(str(e), file=sys.stderr)
+            return 2
+        if not res.created:
+            print(
+                f"narration_script.md already exists: {res.script_path}\n"
+                f"Use --force to regenerate (will overwrite author edits)."
+            )
+            return 0
+        print(
+            f"SCRIPT-GEN done: {res.block_count} blocks\n"
+            f"Draft written: {res.script_path}\n"
+            f"Brief: {res.brief_path}\n"
+            f"\n=== REVIEW GATE 1 ===\n"
+            f"STOP. Author must read and edit narration_script.md "
+            f"(text + [B/C/D:] markers) before recording. Do not proceed."
+        )
+        return 0
+
+    # stage == "storyboard"
+    import os
+    from nv_engine.pipeline import run_storyboard
+
+    if os.environ.get("NV_FAKE_ALIGNER") == "1":
+        from nv_engine.align import FakeAligner
+        aligner = FakeAligner()
+    else:
+        from nv_engine.align_stable import make_stable_aligner
+        try:
+            aligner = make_stable_aligner(model="small")
+        except RuntimeError as e:
+            print(str(e), file=sys.stderr)
+            return 2
     try:
-        res = run_script_gen(
-            lecture=args.lecture,
-            project_root=args.project_root,
-            preset=args.preset,
-            force=args.force,
+        res = run_storyboard(
+            lecture=args.lecture, project_root=args.project_root,
+            preset=args.preset, aligner=aligner, force=args.force,
         )
     except (FileNotFoundError, ValueError) as e:
         print(str(e), file=sys.stderr)
         return 2
-
     if not res.created:
-        print(
-            f"narration_script.md already exists: {res.script_path}\n"
-            f"Use --force to regenerate (will overwrite author edits)."
-        )
+        print(f"storyboard.json already exists: {res.storyboard_path}\n"
+              f"Use --force to regenerate (will overwrite author edits).")
         return 0
-
     print(
-        f"SCRIPT-GEN done: {res.block_count} blocks\n"
-        f"Draft written: {res.script_path}\n"
-        f"Brief: {res.brief_path}\n"
-        f"\n=== REVIEW GATE 1 ===\n"
-        f"STOP. Author must read and edit narration_script.md "
-        f"(text + [B/C/D:] markers) before recording. Do not proceed."
+        f"STORYBOARD done: {res.block_count} blocks, "
+        f"{res.deviations} deviation(s)\n"
+        f"Written: {res.storyboard_path}\n"
+        f"\n=== REVIEW GATE 2 ===\n"
+        f"STOP. Author must review/edit the storyboard "
+        f"(markers, content, deviations) before asset generation. "
+        f"GENERATE/RENDER is Plan 3 — do not proceed."
     )
     return 0
 
