@@ -35,6 +35,10 @@ def test_run_render_produces_video_and_report(tmp_path, mini_lecture):
     assert (root / "source" / "tech-debt" / "nv-report.md").exists()
     assert (root / ".nv-work" / "tech-debt" / "remotion-props.json").exists()
     assert res.generated_images == 1
+    pub = root / ".nv-work" / "tech-debt" / "remotion-public"
+    assert (pub / "narration.mp4").exists()
+    pngs = list(pub.glob("*.png"))
+    assert len(pngs) == 1  # mini storyboard fixture has exactly one B block
 
 
 def test_missing_storyboard_raises(tmp_path, mini_lecture):
