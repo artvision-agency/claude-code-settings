@@ -39,6 +39,8 @@ def test_preset_yaml_matches_engine_preset():
     assert data["narration_script"] == PRESETS["ai-course"]["narration_script"]
     assert data["recording"] == PRESETS["ai-course"]["recording"]
     assert data["storyboard"] == PRESETS["ai-course"]["storyboard"]
+    assert data["visualized"] == PRESETS["ai-course"]["visualized"]
+    assert data["assets_dir"] == PRESETS["ai-course"]["assets_dir"]
 
 
 def test_skill_md_documents_stage_2_and_gate_2():

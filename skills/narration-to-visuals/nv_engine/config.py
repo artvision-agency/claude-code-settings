@@ -25,6 +25,10 @@ PRESETS = {
         "reconcile": ".nv-work/{lecture}/reconcile.md",
         "storyboard": ".nv-work/{lecture}/storyboard.json",
         "storyboard_md": ".nv-work/{lecture}/storyboard.md",
+        "assets_dir": ".nv-work/{lecture}/assets",
+        "remotion_props": ".nv-work/{lecture}/remotion-props.json",
+        "visualized": "source/{lecture}/visualized.mp4",
+        "report": "source/{lecture}/nv-report.md",
     }
 }
 
@@ -42,6 +46,10 @@ class LecturePaths:
     reconcile: Path
     storyboard: Path
     storyboard_md: Path
+    assets_dir: Path
+    remotion_props: Path
+    visualized: Path
+    report: Path
 
 
 def resolve_paths(*, lecture: str, project_root: Path | str, preset: str = "ai-course") -> LecturePaths:
@@ -70,4 +78,8 @@ def resolve_paths(*, lecture: str, project_root: Path | str, preset: str = "ai-c
         reconcile=p("reconcile"),
         storyboard=p("storyboard"),
         storyboard_md=p("storyboard_md"),
+        assets_dir=p("assets_dir"),
+        remotion_props=p("remotion_props"),
+        visualized=p("visualized"),
+        report=p("report"),
     )
