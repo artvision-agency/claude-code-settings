@@ -199,6 +199,11 @@
           },
           {
             "type": "command",
+            "command": "~/.claude/hooks/start-recent-handovers.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
             "command": "~/.claude/hooks/check-unsaved-artifacts.sh",
             "timeout": 5
           },

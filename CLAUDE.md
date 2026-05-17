@@ -6,6 +6,14 @@
 2. Показать открытые задачи → TaskCreate для каждой
 3. После compaction/resume → парсить summary → TaskCreate для pending items
 
+## Поиск контекста прошлой работы
+
+**При любых вопросах «вчера/недавно/делал X / что было сделано / где deploy / какие ссылки»:**
+1. ПЕРВЫМ ДЕЛОМ → `ls handovers/HANDOVER-*.md | sort -r | head -10` + Read релевантного (имя содержит дату YYYY-MM-DD и тему).
+2. SessionStart hook `start-recent-handovers.sh` уже выводит 3 последних handovers в начале сессии — использовать их.
+3. Drive / Asana / GitHub — ТОЛЬКО если в handovers/ пусто или явно требуется внешний источник.
+4. Антипаттерн: лезть в Google Drive по ключевым словам клиента, когда контекст лежит в локальном `handovers/`.
+
 ## Rules (загружаются всегда из ~/.claude/rules/)
 
 | Файл | Что |
