@@ -81,7 +81,7 @@ def run_script_gen(
 from nv_engine.align import Aligner, align_recording  # noqa: E402
 from nv_engine.classify import draft_content  # noqa: E402
 from nv_engine.reconcile import reconcile_blocks, render_reconcile_md  # noqa: E402
-from nv_engine.script_doc import parse_script_md, validate_script_md  # noqa: E402
+from nv_engine.script_doc import parse_script_md  # noqa: E402  # validate_script_md уже импортирован на уровне модуля (Plan 1)
 from nv_engine.segment import map_blocks_to_timeline  # noqa: E402
 from nv_engine.storyboard import (  # noqa: E402
     build_storyboard,

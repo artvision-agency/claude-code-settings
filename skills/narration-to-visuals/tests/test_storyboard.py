@@ -78,3 +78,13 @@ def test_validate_accepts_good(mini_lecture):
     sb = build_storyboard(lecture="tech-debt", spans=spans, recs=recs,
                           contents=contents)
     validate_storyboard_json(render_storyboard_json(sb))
+
+
+def test_parse_rejects_unknown_key(mini_lecture):
+    _, spans, recs, contents = _pipeline(mini_lecture)
+    sb = build_storyboard(lecture="tech-debt", spans=spans, recs=recs,
+                          contents=contents)
+    d = json.loads(render_storyboard_json(sb))
+    d["blocks"][0]["EXTRA"] = 1  # автор случайно дописал лишний ключ
+    with pytest.raises(StoryboardValidationError, match="unknown"):
+        parse_storyboard_json(json.dumps(d))
