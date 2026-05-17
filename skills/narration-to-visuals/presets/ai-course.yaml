@@ -1,0 +1,7 @@
+# Раскладка путей для репозитория ai-course.
+# Должна совпадать с nv_engine.config.PRESETS["ai-course"] (тест это проверяет).
+transcript: source/{lecture}/transcript.json
+summary: course/{lecture}/summary.md
+speaker_notes: course/{lecture}/speaker_notes.md
+narration_script: source/{lecture}/narration_script.md
+work_dir: .nv-work/{lecture}
