@@ -151,3 +151,74 @@ def run_storyboard(*, lecture: str, project_root: Path, aligner: Aligner,
     return StoryboardResult(created=True, storyboard_path=paths.storyboard,
                             block_count=len(sb.blocks),
                             deviations=sum(1 for r in recs if r.deviation))
+
+
+# --- Plan 3: generate + compose + render -----------------------------------
+
+from nv_engine.assets import ImageGenerator, generate_assets  # noqa: E402
+from nv_engine.compose import build_props, render_props_json, validate_props_json  # noqa: E402
+from nv_engine.render import Runner, render_video  # noqa: E402
+from nv_engine.report import render_report_md  # noqa: E402
+from nv_engine.storyboard import parse_storyboard_json, validate_storyboard_json  # noqa: E402
+
+
+@dataclass(frozen=True)
+class RenderResult:
+    created: bool
+    video_path: Path
+    report_path: Path
+    generated_images: int
+    cached_images: int
+    cost_usd: float
+
+
+def run_render(*, lecture: str, project_root: Path,
+               image_generator: ImageGenerator, runner: Runner,
+               preset: str = "ai-course", max_cost: float = 1.0,
+               force: bool = False) -> RenderResult:
+    paths = resolve_paths(lecture=lecture, project_root=project_root,
+                          preset=preset)
+    if not paths.storyboard.exists():
+        raise FileNotFoundError(
+            f"storyboard.json missing for {lecture!r}: {paths.storyboard} — "
+            f"run --stage storyboard and approve it at Gate 2 first"
+        )
+    if not paths.recording.exists():
+        raise FileNotFoundError(
+            f"narration.mp4 missing for {lecture!r}: {paths.recording}"
+        )
+    paths.work_dir.mkdir(parents=True, exist_ok=True)
+
+    if paths.visualized.exists() and not force:
+        return RenderResult(created=False, video_path=paths.visualized,
+                            report_path=paths.report, generated_images=0,
+                            cached_images=0, cost_usd=0.0)
+
+    sb_json = paths.storyboard.read_text(encoding="utf-8")
+    validate_storyboard_json(sb_json)
+    sb = parse_storyboard_json(sb_json)
+
+    assets = generate_assets(storyboard=sb, assets_dir=paths.assets_dir,
+                             generator=image_generator, max_cost=max_cost)
+    props = build_props(storyboard=sb, asset_results=assets,
+                        narration_rel=paths.recording.name)
+    props_json = render_props_json(props)
+    validate_props_json(props_json)
+    paths.remotion_props.write_text(props_json, encoding="utf-8")
+
+    remotion_dir = Path(__file__).resolve().parent.parent / "remotion"
+    render_video(props_path=paths.remotion_props, remotion_dir=remotion_dir,
+                 out_path=paths.visualized, runner=runner)
+
+    cost = round(sum(a.cost_usd for a in assets), 4)
+    paths.report.write_text(
+        render_report_md(lecture=lecture, storyboard=sb, asset_results=assets,
+                         video_path=paths.visualized.name, cost_usd=cost),
+        encoding="utf-8")
+
+    return RenderResult(
+        created=True, video_path=paths.visualized, report_path=paths.report,
+        generated_images=sum(1 for a in assets
+                             if a.marker == "B" and not a.cached),
+        cached_images=sum(1 for a in assets if a.cached),
+        cost_usd=cost)
