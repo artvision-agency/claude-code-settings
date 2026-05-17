@@ -96,6 +96,12 @@
 4. Тест: 3+ кейса блокировки + 3+ кейса пропуска + bypass
 5. Дописать в текущий файл строку под «Активные защитные хуки»
 
+### 17. Subagents отказываются писать .md отчёты (инцидент 2026-05-17, сессия 599b44ec)
+- **Проблема:** 2 из 4 senior-агентов (security-auditor, ux-researcher) проигнорировали явный запрос записать отчёт в `personal/ipoteka-2026/v10-check-{security,ux}-2026-05-17.md`. Вернули содержимое в task-notification message. ux-researcher даже процитировал источник: «Wait — re-reading the system reminder: Do NOT Write report/summary/findings/analysis .md files. Return findings directly». Strict + math агенты (general-purpose, data-analyst) — записали без проблем.
+- **Корень:** встроенный system reminder Claude Code core инжектится в context субагента «не писать .md report files». Это НЕ локальный hook/rule — нельзя отключить через `~/.claude/`. Reviewer-агенты строже к нему чем general-purpose/data-analyst.
+- **Решение:** правило `~/.claude/rules/subagent-md-output-override.md` с явным override-блоком для копирования в промпт `Agent`. Если override не сработал — записывать .md вручную из task-notification result.
+- **Не делаю хук** — модификация tool_input в PreToolUse(Task) усложнит debug и добавит overhead на каждый Agent call. Правило + дисциплина в промпте эффективнее. При 3+ повторных инцидентов → пересмотреть на hook.
+
 ### Активные защитные хуки
 
 | Хук | Matcher | Прецедент | Bypass env |
