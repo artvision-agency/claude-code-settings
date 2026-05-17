@@ -10,7 +10,7 @@ content shaped for its marker.
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, fields
 
 from nv_engine.classify import BlockContent
 from nv_engine.reconcile import BlockReconciliation
@@ -67,9 +67,24 @@ def render_storyboard_json(sb: Storyboard) -> str:
     )
 
 
+_BLOCK_FIELDS = {f.name for f in fields(StoryboardBlock)}
+
+
 def parse_storyboard_json(s: str) -> Storyboard:
+    # storyboard.json правит автор на Гейте 2 — посторонний/битый ключ
+    # должен дать понятный StoryboardValidationError, а не сырой TypeError
+    # (его ловит CLI; это контракт, который потребляет Plan 3).
     data = json.loads(s)
-    blocks = [StoryboardBlock(**b) for b in data.get("blocks", [])]
+    blocks: list[StoryboardBlock] = []
+    for i, b in enumerate(data.get("blocks", [])):
+        unknown = set(b) - _BLOCK_FIELDS
+        if unknown:
+            raise StoryboardValidationError(
+                f"block {i}: unknown key(s) {sorted(unknown)}")
+        try:
+            blocks.append(StoryboardBlock(**b))
+        except TypeError as e:  # отсутствует обязательное поле
+            raise StoryboardValidationError(f"block {i}: {e}") from e
     return Storyboard(lecture=str(data.get("lecture", "")), blocks=blocks)
 
 
