@@ -114,9 +114,15 @@
 | `pre-tool-recap-goal-check.sh` | PreToolUse `""` (все) | 29.04 — recap «Цель сессии» пустая на первом Edit/Write/Bash 2 раза подряд (sessionId c0f1dfaa) | `RECAP_GOAL_FORCE=1` |
 | `pre-kp-bred-block.sh` | PreToolUse `Write\|Edit` | 30.04 — strict-агенты нашли 49 CRITICAL в 39 КП за месяц (выручка клиента в рублях, UNCONFIRMED маркеры в видимом тексте, artvision.pro упоминания, «Лор-Альянс»-фейковый конкурент). Системные хуки + auto-fix + scanner | `KP_BRED_OK=1` |
 | `pre-client-lexicon.sh` | PreToolUse `Write\|Edit` | lexicon-lint для clients/*/presale/*/kp/*: AI/нейросети запрещены, бренд написание, клише. **Whitelist 05.05:** `*/clients/*/CLAUDE.md\|README.md\|context-log.md\|lexicon.yaml` (служебные файлы для агента, не клиента) | `LEXICON_INTERNAL_OK=1` |
+| `pre-tool-cons-vs-swarm-disambiguate.sh` | PreToolUse `Skill` | 17.05 — 21 случай за 6 мес путаницы /cons (думать) vs /swarm (делать). Семантика: cons=думать, swarm=делать, mixed=cons→swarm пайплайн. Warn-only (не блокирует) при mismatch триггеров. | `CONS_SWARM_FORCE=1` |
 | `inject-challenge-reminder.sh` | UserPromptSubmit | магические цифры без источника | (auto после Skill) |
 | `stop-hallucination-detect.sh` | Stop | детект галлюцинаций в ответе | — |
 | `post-edit-list-check.sh` | PostToolUse `Edit\|Write` | 13.05 — Антон много раз просил списки. Детектит h-tree/ASCII-tree/таблицы иерархии в `clients/*/plan,presale,reports,kp/*.html`. Warn-only. | — |
+| `pre-deploy-coords-verify.py` | PreToolUse `Bash` (scp/cp HTML) | 16.05 IPOTEKA c052407c — пин Setl Ривьера смещён на 4 км. Проверяет Я.Карты coords против Nominatim OSM, блокирует если >2 км. | `COORDS_VERIFY_SKIP=1` |
+| `pre-deploy-price-vs-source.py` | PreToolUse `Bash` (scp HTML) | 16.05 IPOTEKA — студия Парусная 1: HTML 6.1М, реальная 11.07М (+82%). Проверяет цену в HTML vs источник (WebFetch+кэш 6ч). | `PRICE_VERIFY_SKIP=1` |
+| `pre-deploy-quote-exists.py` | PreToolUse `Write\|Edit` (HTML клиентские) | 16.05 IPOTEKA — «средства заморозить на 3 года» приписано дольщикам, в spbguru.ru НЕ найдено. Fuzzy 75% match цитат «» vs источник. | `QUOTE_VERIFY_SKIP=1` |
+| `pre-deploy-formula-consistency.py` | PreToolUse `Bash` (scp/cp HTML) | 16.05 IPOTEKA — «6.0 К/мес × млн» в шапке, таблица даёт 5.83 (3% gap). Блок при >10% расхождении K vs платёж/кредит. | `FORMULA_CONSISTENCY_SKIP=1` |
+| `pre-deploy-delivery-date-source.py` | PreToolUse `Bash` (scp HTML) | 16.05 IPOTEKA — Setl Ривьера «Q2 2026» (реально Q1 2028 = +6 кв). Проверяет дату сдачи в HTML vs сайт застройщика. | `DELIVERY_DATE_SKIP=1` |
 
 При добавлении нового хука — **сразу обновить таблицу**.
 

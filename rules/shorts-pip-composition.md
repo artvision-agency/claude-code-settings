@@ -8,6 +8,40 @@
 
 **PiP-фрейм автора НЕ ДОЛЖЕН перекрывать данные на B-roll слайдах.** Это критично — нарушение Антон сразу замечает («сам мелкий фрейм не должен перекрывать данные слайда это ни в коем случае не должно быть»).
 
+## 🎬 PREMIUM качество — дефолт с 2026-05-16
+
+**Все Shorts/Reels рендерим в PREMIUM** (решение Антона 16.05.2026 после сравнения с прошлым CRF 18 fast):
+
+| Параметр | Значение | Зачем |
+|----------|---------|-------|
+| `preset` | `slow` | Тщательное motion estimation, меньше артефактов |
+| `crf` | `16` | Visually lossless (CRF 18 был "near-lossless") |
+| `pix_fmt` | `yuv420p` | Совместимость со всеми платформами |
+| **Single-pass composition** | filter_complex объединяет всё в одном вызове | Убирает generation loss от 3-4 цепочек re-encode |
+| `-c:v copy` для concat | где возможно | Не пересжимать без необходимости |
+
+### Single-pass template (B-roll + PiP + лого + audio + loudnorm):
+```bash
+ffmpeg -y \
+  -i broll_segs.mp4 \
+  -ss 5 -t [DUR] -i pip.mp4 \
+  -i brand/logo_artvision_purple_220.png \
+  -ss 5 -t [DUR] -i speech_full_HD.mp4 \
+  -filter_complex "
+[0:v]scale=1080:1920,setpts=PTS-STARTPTS[bg];
+[1:v]scale=320:400,setpts=PTS-STARTPTS[pip];
+[2:v]scale=220:-1[logo];
+[bg][pip]overlay=40:1480[v1];
+[v1][logo]overlay=W-w-40:60[v]
+" -map "[v]" -map 3:a \
+  -c:v libx264 -preset slow -crf 16 -pix_fmt yuv420p -r 30 \
+  -af "loudnorm=I=-14:TP=-1.5:LRA=11" \
+  -c:a aac -b:a 192k -t [DUR] \
+  broll_premium.mp4
+```
+
+Размер файла +25% vs fast/CRF 18, но качество заметно лучше на мелких деталях (текст в графиках, лицо в PiP, антиалиасинг).
+
 ## 🚫 Строгие правила Антона в видео для @-Artvisionpro (security.md контекст)
 
 Применяется при ВСЕХ Shorts/Reels/16:9 для канала. Нарушение = переделка.
