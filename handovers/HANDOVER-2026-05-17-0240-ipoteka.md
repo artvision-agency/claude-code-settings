@@ -1,9 +1,24 @@
 # Handover: IPOTEKA — v10 calculator + personal doc + product slot
 
-**Дата:** 2026-05-17 02:40 MSK (обновлено 03:15)
+**Дата:** 2026-05-17 02:40 MSK (финал обновлён 03:50)
 **Контекст:** personal + products (cwd: ~/artvision-data, session: IPOTEKA 2)
 **Сессия:** 4438f572-66f4-4202-aae5-554cf5c395d6 (продолжение c052407c IPOTEKA-1)
-**Статус:** в работе — 7 background-агентов в фоне (5 senior + 2 новых отчёта), пользователь сказал «stop» но агенты не убиты
+**Статус:** ✅ ЗАВЕРШЕНО — все 4 ссылки задеплоены, всё запушено в git
+
+## 🎯 ФИНАЛ — 4 ссылки готовы
+
+| # | URL | Размер | Статус |
+|---|---|---|---|
+| 1 | https://artvision.pro/_priv-anton-ipt-260515-2cf7/ | 44 KB | 📄 личный (фото 6 домов) |
+| 2 | https://artvision.pro/_priv-anton-ipt-260516-calc/ | 211 KB | 🧮 калькулятор v10 |
+| 3 | https://artvision.pro/_priv-anton-spb-30-260517/ | 97 KB | 📊 СПб расширенный |
+| 4 | https://artvision.pro/_priv-anton-overseas-260517/ | 90 KB | 🌏 Тайланд первичный |
+
+## ☑️ Git синхронизация
+
+- `~/artvision-data` → `0d92d74441` push ✅
+- `~/.claude` → `d0f32bca` merge + `ccef221f` + `4d04c599` push ✅
+- Конфликты разрешены: 3 rules → переехали в `rules-conditional/` (refactor другой сессии принят), `bootstrap-mac-login.sh` → theirs (Ghostty приоритет)
 
 ## 🔄 ВАЖНО — Активные background-агенты (на момент закрытия)
 
