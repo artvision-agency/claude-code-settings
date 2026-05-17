@@ -15,9 +15,9 @@ allowed-tools: Read Write Edit Bash Glob Grep Agent
 Полный замысел и решения: см. spec
 `ai-course/docs/superpowers/specs/2026-05-16-narration-to-visuals-design.md`.
 
-**Объём (Plan 1+2): SCRIPT-GEN + REVIEW GATE 1, затем STORYBOARD + REVIEW GATE 2.**
-GENERATE / COMPOSE / RENDER (ассеты B/C/D, Remotion, финальное видео) — это
-Plan 3, ещё НЕ реализован. Не выполняй его.
+**Объём: полный пайплайн (Plan 1+2+3).** SCRIPT-GEN + REVIEW GATE 1 →
+запись → STORYBOARD + REVIEW GATE 2 → RENDER → `visualized.mp4`.
+Гейтов всего два; после утверждённого Гейта 2 рендер идёт до конца.
 
 ## Когда активировать
 
@@ -89,7 +89,26 @@ python -m nv_engine <lecture> --project-root <ai-course-root> --stage storyboard
 
 **STOP. Жёсткий стоп-гейт.** Покажи автору `storyboard.md`: число блоков,
 распределение B/C/D, блоки с DEVIATION. Попроси проверить/поправить.
-**НЕ запускай генерацию ассетов** (это Plan 3) до явного подтверждения.
+**НЕ запускай генерацию ассетов** до явного подтверждения.
+
+## Шаг 4: RENDER (после утверждённого Гейта 2, детерминированно)
+
+Предусловие: автор утвердил/поправил `.nv-work/<lecture>/storyboard.json`.
+
+```bash
+cd <repo>/skills/narration-to-visuals && . .venv/bin/activate
+python -m nv_engine <lecture> --project-root <ai-course-root> --stage render
+```
+
+Скрипт: GENERATE (B-картинки fal.ai, кэш по хешу, лимит `--max-cost`;
+C/D пробрасываются) → COMPOSE (`remotion-props.json`: фон B/C/D по
+таймлайну + PiP-вебка 24% справа-внизу + аудио, без субтитров) → RENDER
+(`npx remotion render`) → `source/<lecture>/visualized.mp4` +
+`nv-report.md`. **Это финал — стоп-гейтов больше нет. Pipeline complete.**
+
+Реальные адаптеры: fal.ai требует `pip install fal-client` + `FAL_KEY`;
+рендер требует Node ≥18 + Remotion (`npx`). Для прогона без них —
+переменные окружения `NV_FAKE_ASSETS=1` / `NV_FAKE_RENDER=1`.
 
 ## Частые ошибки (НЕ повторять)
 
