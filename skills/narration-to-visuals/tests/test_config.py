@@ -46,3 +46,17 @@ def test_resolve_paths_missing_transcript_raises(tmp_path: Path):
 def test_resolve_paths_unknown_preset_raises(tmp_path: Path):
     with pytest.raises(ValueError, match="unknown"):
         resolve_paths(lecture="x", project_root=tmp_path, preset="no-such-preset")
+
+
+def test_resolve_paths_has_plan2_targets(tmp_path: Path):
+    src = tmp_path / "source" / "cicd"
+    src.mkdir(parents=True)
+    (src / "transcript.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "course" / "cicd").mkdir(parents=True)
+
+    p = resolve_paths(lecture="cicd", project_root=tmp_path, preset="ai-course")
+    assert p.recording == src / "narration.mp4"
+    assert p.aligned == tmp_path / ".nv-work" / "cicd" / "aligned.json"
+    assert p.reconcile == tmp_path / ".nv-work" / "cicd" / "reconcile.md"
+    assert p.storyboard == tmp_path / ".nv-work" / "cicd" / "storyboard.json"
+    assert p.storyboard_md == tmp_path / ".nv-work" / "cicd" / "storyboard.md"

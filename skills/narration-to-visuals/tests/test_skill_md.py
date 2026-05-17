@@ -37,3 +37,5 @@ def test_preset_yaml_matches_engine_preset():
     assert data["transcript"] == PRESETS["ai-course"]["transcript"]
     assert data["summary"] == PRESETS["ai-course"]["summary"]
     assert data["narration_script"] == PRESETS["ai-course"]["narration_script"]
+    assert data["recording"] == PRESETS["ai-course"]["recording"]
+    assert data["storyboard"] == PRESETS["ai-course"]["storyboard"]
