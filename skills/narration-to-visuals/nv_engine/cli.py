@@ -19,7 +19,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--project-root", default=".", type=Path)
     parser.add_argument("--preset", default="ai-course")
     parser.add_argument("--force", action="store_true")
-    parser.add_argument("--stage", choices=["script", "storyboard"],
+    parser.add_argument("--stage", choices=["script", "storyboard", "render"],
                          default="script")
     args = parser.parse_args(argv)
 
@@ -49,39 +49,83 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     # stage == "storyboard"
-    import os
-    from nv_engine.pipeline import run_storyboard
+    if args.stage == "storyboard":
+        import os
+        from nv_engine.pipeline import run_storyboard
 
-    if os.environ.get("NV_FAKE_ALIGNER") == "1":
-        from nv_engine.align import FakeAligner
-        aligner = FakeAligner()
-    else:
-        from nv_engine.align_stable import make_stable_aligner
+        if os.environ.get("NV_FAKE_ALIGNER") == "1":
+            from nv_engine.align import FakeAligner
+            aligner = FakeAligner()
+        else:
+            from nv_engine.align_stable import make_stable_aligner
+            try:
+                aligner = make_stable_aligner(model="small")
+            except RuntimeError as e:
+                print(str(e), file=sys.stderr)
+                return 2
         try:
-            aligner = make_stable_aligner(model="small")
+            res = run_storyboard(
+                lecture=args.lecture, project_root=args.project_root,
+                preset=args.preset, aligner=aligner, force=args.force,
+            )
+        except (FileNotFoundError, ValueError) as e:
+            print(str(e), file=sys.stderr)
+            return 2
+        if not res.created:
+            print(f"storyboard.json already exists: {res.storyboard_path}\n"
+                  f"Use --force to regenerate (will overwrite author edits).")
+            return 0
+        print(
+            f"STORYBOARD done: {res.block_count} blocks, "
+            f"{res.deviations} deviation(s)\n"
+            f"Written: {res.storyboard_path}\n"
+            f"\n=== REVIEW GATE 2 ===\n"
+            f"STOP. Author must review/edit the storyboard "
+            f"(markers, content, deviations) before asset generation. "
+            f"GENERATE/RENDER is Plan 3 — do not proceed."
+        )
+        return 0
+
+    # stage == "render"
+    import os
+    from nv_engine.pipeline import run_render
+
+    if os.environ.get("NV_FAKE_ASSETS") == "1":
+        from nv_engine.assets import FakeImageGenerator
+        image_generator = FakeImageGenerator()
+    else:
+        from nv_engine.assets_fal import make_fal_generator
+        try:
+            image_generator = make_fal_generator()
         except RuntimeError as e:
             print(str(e), file=sys.stderr)
             return 2
+    if os.environ.get("NV_FAKE_RENDER") == "1":
+        from nv_engine.render import FakeRunner
+        runner = FakeRunner()
+    else:
+        from nv_engine.render import SubprocessRunner
+        runner = SubprocessRunner()
+
     try:
-        res = run_storyboard(
+        res = run_render(
             lecture=args.lecture, project_root=args.project_root,
-            preset=args.preset, aligner=aligner, force=args.force,
+            preset=args.preset, image_generator=image_generator,
+            runner=runner, force=args.force,
         )
-    except (FileNotFoundError, ValueError) as e:
+    except (FileNotFoundError, ValueError, RuntimeError) as e:
         print(str(e), file=sys.stderr)
         return 2
     if not res.created:
-        print(f"storyboard.json already exists: {res.storyboard_path}\n"
-              f"Use --force to regenerate (will overwrite author edits).")
+        print(f"visualized.mp4 already exists: {res.video_path}\n"
+              f"Use --force to re-render.")
         return 0
     print(
-        f"STORYBOARD done: {res.block_count} blocks, "
-        f"{res.deviations} deviation(s)\n"
-        f"Written: {res.storyboard_path}\n"
-        f"\n=== REVIEW GATE 2 ===\n"
-        f"STOP. Author must review/edit the storyboard "
-        f"(markers, content, deviations) before asset generation. "
-        f"GENERATE/RENDER is Plan 3 — do not proceed."
+        f"RENDER done: {res.video_path}\n"
+        f"Images: generated {res.generated_images}, cached "
+        f"{res.cached_images}, cost ${res.cost_usd:.3f}\n"
+        f"Report: {res.report_path}\n"
+        f"Pipeline complete — no further gate."
     )
     return 0
 
