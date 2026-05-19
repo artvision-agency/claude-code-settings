@@ -307,3 +307,34 @@ ffmpeg -ss <data_t> -i "$f" -vframes 1 ...                                 # г�
 - `youtube-publish` — публикация на YouTube
 - Template: `~/artvision-data/personal/social_clips/templates/artvision-shorts-pipeline/`
 - `youtube-publish` — финальный шаг публикации на канал
+
+## XII. Video circles для клиентских дашбордов (Loom-style) — 19.05.2026
+
+Отличается от Shorts (PiP+B-roll композиция) — это **автономный talking-head в круглом фрейме** для встраивания в КП/дашборды через hover-аннотации (см. https://artvision.pro/mirbir-simple/).
+
+### Pipeline
+- Скрипт: `~/artvision-data/scripts/video-circles-pipeline.sh`
+- Skill: `/video-circles-pipeline`
+- Reference: `~/artvision-data/presales/mirbir/mirbir-simple.html`
+
+### Формулы (iPhone Pro vertical 2160×3840 talking-head)
+- crop: `1900:1900:0:950` (центрирует лицо, макушка y≈1160, подбородок y≈2640) → scale 720×720
+- audio: `loudnorm=I=-14:TP=-1.5:LRA=11` (YouTube стандарт)
+- codec: libx264 preset medium CRF 20, pix_fmt yuv420p, r=30, aac 128k, +faststart
+- poster: 200×200 jpg от t=0.5s для UX hint
+- Длительность: 11-30 сек на кружок
+
+### HTML UX (3-stage hover)
+1. **anchor 36×36** — кнопка с poster + ▶ pulse animation (3.4s loop, opacity 0→1→0)
+2. **hover** — 120×120 muted teaser рядом с кнопкой
+3. **3.5 сек hover / click** — 240×240 Loom-модал bottom-right со звуком, auto-close on `ended`
+
+### Анти-паттерны (специфичные для кружков)
+- ❌ controls/×/caption на модале → «просто кружочек фигачит и всё» (Антон)
+- ❌ `-ss` перед `-i` ломает aac decoder на HEVC 4K (`Qavg: nan`) → `-ss` ПОСЛЕ `-i`
+- ❌ `crop=iw:iw:0:(ih-iw)/2` (центр по высоте) — обрезает макушку → `crop=1900:1900:0:950`
+- ❌ Полагаться на face-detection агента → замерять руками на full-size кадре
+- ❌ ssh + scp одной командой — моргание разрывает → retry-обёртка 3 попытки
+
+### Когда применять
+Любой клиент с дашбордом / КП где собственник хочет добавить личные видеокомментарии к разделам (повышает доверие + UX-сигнал «реальный человек объясняет»). Reference: MIRBIR 6 кружков (finance/market/position/channels/shops/planner).
