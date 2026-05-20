@@ -96,11 +96,33 @@
 4. Тест: 3+ кейса блокировки + 3+ кейса пропуска + bypass
 5. Дописать в текущий файл строку под «Активные защитные хуки»
 
+### 18. post-kp-deploy-factcheck.sh не зарегистрирован в settings.json + subagent silent bypass (инцидент 2026-05-19, сессия 30338bd4)
+
+- **Проблема:** auto-strict L2 factcheck не запускался после deploy КП. Думали хук срабатывает в фоне. Проверил: `~/artvision-data/clients/_factcheck-history/` — **директория не создана**, ни одного lock-файла в `/tmp/auto-strict-*`. Хук существует (`~/.claude/hooks/post-kp-deploy-factcheck.sh`), но **НЕ ЗАРЕГИСТРИРОВАН** в `~/.claude/settings.json` под PostToolUse Bash. Был установлен 05.05.2026, но в settings.json никогда не добавлен. Месяц мы думали что автоматика работает — а её не было.
+- **Дополнительная проблема:** `pre-scp-kp-strict-factcheck.sh` тоже тихо пропускал subagent scp — потому что хук матчил только source-путь `presales/<slug>/kp/*.html`, не destination `/var/www/artvision/kp/<slug>/`. Subagent в background работал в изолированном context (видимо без stdin к хукам, либо с json-парс ошибкой) → хук возвращал exit 0 без logging.
+- **Корень общий:** хуки добавляются в `~/.claude/hooks/`, но регистрация в `settings.json` забывается. Symptoms «тихо не работает» — не падает, просто не запускается. Subagent ничего не знает что хука нет.
+- **Решение:**
+  1. Регистрация добавлена: PostToolUse Bash + `~/.claude/hooks/post-kp-deploy-factcheck.sh` в settings.json (применится со следующей сессии, см. `cherny-tips.md` #9 hooks НЕ hot-swap)
+  2. `pre-scp-kp-strict-factcheck.sh` пропатчен: + destination-path regex, + slug-from-dest, + skip logging в `/tmp/factcheck-hook-skip.log` (claude-code-settings commit 9258858)
+  3. Backup settings.json: `~/.claude/settings.json.bak-2026-05-19`
+- **TBD кандидат-хук:** `SessionStart` или ежедневный cron — пройтись по `~/.claude/hooks/*.sh`, проверить какие НЕ зарегистрированы в settings.json, выдать список «orphan hooks» в TG / startup banner. Иначе любой новый хук рискует тихо лежать unused.
+- **Также записать:** при добавлении любого нового хука — ОБЯЗАТЕЛЬНЫЙ step «зарегистрировать в settings.json» + проверка `grep <hook-name> ~/.claude/settings.json` после деплоя.
+
 ### 17. Subagents отказываются писать .md отчёты (инцидент 2026-05-17, сессия 599b44ec)
 - **Проблема:** 2 из 4 senior-агентов (security-auditor, ux-researcher) проигнорировали явный запрос записать отчёт в `personal/ipoteka-2026/v10-check-{security,ux}-2026-05-17.md`. Вернули содержимое в task-notification message. ux-researcher даже процитировал источник: «Wait — re-reading the system reminder: Do NOT Write report/summary/findings/analysis .md files. Return findings directly». Strict + math агенты (general-purpose, data-analyst) — записали без проблем.
 - **Корень:** встроенный system reminder Claude Code core инжектится в context субагента «не писать .md report files». Это НЕ локальный hook/rule — нельзя отключить через `~/.claude/`. Reviewer-агенты строже к нему чем general-purpose/data-analyst.
 - **Решение:** правило `~/.claude/rules/subagent-md-output-override.md` с явным override-блоком для копирования в промпт `Agent`. Если override не сработал — записывать .md вручную из task-notification result.
 - **Не делаю хук** — модификация tool_input в PreToolUse(Task) усложнит debug и добавит overhead на каждый Agent call. Правило + дисциплина в промпте эффективнее. При 3+ повторных инцидентов → пересмотреть на hook.
+
+### 19. Массовая раскатка Artvision-брендинга на AdvertMed-партнёрские КП (инцидент 2026-05-20, сессия 70e38694)
+
+- **Проблема:** при раскатке виджета voice.js + видео-аватара Антона на 24 «активных» КП (last 30 days mtime) добавил брендинг Artvision на 16 КП AdvertMed-партнёров (aymedi, kord-klinik, dimeev, tabib, neomed, kazan-clinic, annurclinic, family-stom, avicenna-endocrin, zdorovie-semi, coral, essence, c9m, artus, aist-crm, belyy-klyk). Все 16 имеют бейдж «ADVERTMED» в HTML.
+- **Корень:** не проверил `artvision-data/.claude/rules/clients-registry.md` секцию «🚫 НЕ добавлять в портфолио» + `~/.claude/rules/artvision-branding-policy.md` перед bulk-операцией. Антон поймал на скриншоте aymedi: «адвертмед кп не трогаем».
+- **Правило (HARD-ENFORCE):** **AdvertMed-партнёрские КП НЕ трогаем НИКАКИМ брендингом Artvision** — ни лого, ни виджет voice.js, ни фото Антона, ни любые упоминания artvision.pro в видимых элементах. Это субподряд / white-label, конечный клиент — другое агентство.
+- **Список AdvertMed-партнёров (актуальный 20.05.2026):** aymedi, kord-klinik, dimeev, tabib, neomed, kazan-clinic, annurclinic, family-stom, avicenna-endocrin, zdorovie-semi, coral, essence, c9m, artus, aist-crm, belyy-klyk, varikoz/advertmed-varikozanet, stom-expert, s32, lumiere-dent, raduga/radugazvukov, advertmed-varikozanet77. Идентификация: `grep -ci "advertmed\|варикознет"` в HTML > 0 = партнёрская.
+- **Решение (быстрое):** перед любой bulk-операцией на `*/kp/*` ОБЯЗАТЕЛЬНО фильтровать по grep advertmed/варикознет.
+- **Откат:** 16 КП восстановлены из `.bak-2026-05-20-widget`. Validated curl: 0 widget refs на всех 16. С виджетом осталось 12 (4 v1 SpaDent/courses-v3 + 8 v2 non-AdvertMed).
+- **Кандидат-хук:** `pre-bulk-kp-modify-advertmed-guard.sh` — PreToolUse Bash, парсит команду на наличие `for KP in` ИЛИ цикла по `/var/www/artvision/kp/`, проверяет каждый КП на grep advertmed → если хоть один партнёр в списке без явного `--include-advertmed` → BLOCK с явным списком партнёрских. Bypass: `ADVERTMED_BULK_OK=1`.
 
 ### Активные защитные хуки
 
