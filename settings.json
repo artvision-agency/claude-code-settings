@@ -246,6 +246,11 @@
             "type": "command",
             "command": "~/.claude/hooks/start-disk-check.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-tg-session-age.sh",
+            "timeout": 5
           }
         ]
       },
@@ -337,6 +342,11 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/stop-session-compare-goal.sh"
+          },
+          {
+            "command": "~/.claude/hooks/stop-asset-recap-check.sh",
+            "timeout": 5,
+            "type": "command"
           }
         ]
       },
@@ -404,6 +414,16 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/stop-deploy-url-check.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-stop-done-verify.sh",
+            "timeout": 5
           }
         ]
       }
@@ -561,6 +581,10 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/pre-bash-resource-guard.sh \"$CLAUDE_BASH_COMMAND\""
+          },
+          {
+            "type": "command",
+            "command": "/Users/antonk/.claude/hooks/pre-finance-deploy.sh \"$CLAUDE_BASH_COMMAND\""
           }
         ]
       },
@@ -636,6 +660,11 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/pre-scp-clients-factcheck.sh"
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-scp-kp-strict-factcheck.sh",
+            "timeout": 5
           }
         ]
       },
@@ -782,6 +811,15 @@
             "timeout": 15
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-scp-dashboard-fns-check.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -836,6 +874,10 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/post-edit-tokens-sync.sh \"$CLAUDE_FILE_PATH\""
+          },
+          {
+            "type": "command",
+            "command": "/Users/antonk/.claude/hooks/post-edit-finance-numbers.sh \"$CLAUDE_FILE_PATH\""
           }
         ]
       },
@@ -871,6 +913,10 @@
             "type": "command",
             "command": "~/.claude/hooks/post-scp-deploy-report.sh",
             "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/post-kp-deploy-factcheck.sh"
           }
         ]
       },
@@ -900,6 +946,15 @@
           {
             "type": "command",
             "command": "bash /Users/antonk/.claude/hooks/post-edit-list-check.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/post-commit-dashboard-strict.sh"
           }
         ]
       }
@@ -986,6 +1041,11 @@
             "type": "command",
             "command": "~/.claude/hooks/short-confirmation-action-reminder.sh",
             "timeout": 5
+          },
+          {
+            "command": "~/.claude/hooks/post-userprompt-asset-capture.sh",
+            "timeout": 5,
+            "type": "command"
           }
         ]
       },
@@ -1152,5 +1212,6 @@
   "autoCompactEnabled": false,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "model": "opus"
 }

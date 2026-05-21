@@ -269,6 +269,21 @@ notes: |
 - `seo-master` — первичный SEO-аудит
 - `page-create` — создание страниц для клиента
 - `page-publish` — публикация на CMS клиента
+- `topvisor-init` — завести клиента в Topvisor для съёма позиций (см. опц. шаг ниже)
+
+## Опц. шаг: Topvisor onboarding (после создания структуры)
+
+Проверь готовность семантики:
+
+```bash
+test -f clients/<slug>/seo/queries.txt && test -f clients/<slug>/seo/competitors.txt
+```
+
+Если **оба файла есть** — предложи Антону:
+
+> «У клиента готова семантика + конкуренты. Запустить `/topvisor-init <slug>`? Создаст проект + snapshot за ~10 RUB. Сейчас или потом?»
+
+**НЕ запускать автоматом** — деньги (Topvisor баланс). См. `~/.claude/skills/topvisor-init/SKILL.md`. Прецедент: na-sklad.ru session 87d9412c (2026-05-20).
 
 ---
 
