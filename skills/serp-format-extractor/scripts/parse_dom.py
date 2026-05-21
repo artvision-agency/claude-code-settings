@@ -189,7 +189,7 @@ def extract_links(soup: BeautifulSoup, base_host: str | None = None) -> dict[str
     internal = 0
     external = 0
     for a in soup.find_all("a", href=True):
-        href = a["href"].strip()
+        href = str(a.get("href", "")).strip()
         if not href or href.startswith("#") or href.startswith("javascript:"):
             continue
         if href.startswith("/") or href.startswith("./") or href.startswith("../"):
@@ -213,7 +213,7 @@ def extract_images(soup: BeautifulSoup) -> dict[str, Any]:
     """Image count + alt-density."""
     imgs = soup.find_all("img")
     total = len(imgs)
-    with_alt = sum(1 for img in imgs if img.get("alt", "").strip())
+    with_alt = sum(1 for img in imgs if str(img.get("alt", "") or "").strip())
     return {
         "total": total,
         "with_alt": with_alt,

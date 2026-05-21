@@ -45,9 +45,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-# Reuse validator
+# Reuse validator (sibling script, dynamic import to satisfy linters)
 sys.path.insert(0, str(Path(__file__).parent))
-from csv_validator import validate  # noqa: E402
+import importlib  # noqa: E402
+validate = importlib.import_module("csv_validator").validate
 
 ARTVISION_DATA = Path.home() / "artvision-data"
 LOG_DIR = Path.home() / ".claude" / "logs"
