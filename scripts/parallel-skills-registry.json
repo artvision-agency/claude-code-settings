@@ -1,0 +1,164 @@
+{
+  "_meta": {
+    "version": 1,
+    "created": "2026-05-22",
+    "rule": "~/.claude/rules/parallel-skill-groups.md",
+    "max_parallel": 3,
+    "min_parallel": 2,
+    "cost_cap_usd": 1.5
+  },
+  "groups": [
+    {
+      "id": "seo-audit",
+      "name": "SEO-аудит",
+      "triggers": [
+        "seo аудит",
+        "seo audit",
+        "аудит сайта",
+        "проверь seo",
+        "технический seo",
+        "technical seo",
+        "seo health",
+        "seo issues",
+        "оптимизация сайта",
+        "почему не ранжируется",
+        "seo expert",
+        "audit my site",
+        "site audit"
+      ],
+      "default_skills": [
+        "/seo-audit",
+        "/seo-master",
+        "/seo-technical"
+      ],
+      "extended_skills": [
+        "/seo-factors-audit",
+        "/seo-cluster",
+        "/seo-geo"
+      ],
+      "consolidation": {
+        "dedup_key": "url + issue_type",
+        "severity_order": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+      },
+      "skip_when": [
+        "пользователь явно указал один скилл",
+        "одна правка <5 мин",
+        "уже параллель в этой сессии"
+      ]
+    },
+    {
+      "id": "factcheck-kp",
+      "name": "Фактчек / КП-аудит",
+      "triggers": [
+        "фактчек",
+        "factcheck",
+        "проверь кп",
+        "проверь факты",
+        "audit kp",
+        "проверь перед деплоем",
+        "validate html",
+        "kp audit",
+        "проверь страницу",
+        "ауди кп",
+        "аудит кп"
+      ],
+      "default_skills": [
+        "/factcheck",
+        "/audit-kp"
+      ],
+      "default_agents": [
+        "strict-factchecker"
+      ],
+      "extended_skills": [
+        "/finance-factcheck"
+      ],
+      "consolidation": {
+        "dedup_key": "claim_text + source_url",
+        "severity_order": ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+        "verdict_values": ["PASS", "REVIEW", "FAILED"]
+      },
+      "money_document_keywords": [
+        "ставка",
+        "вклад",
+        "офз",
+        "инвестиции",
+        "roi",
+        "ипотека",
+        "кредит",
+        "бюджет",
+        "тариф"
+      ]
+    },
+    {
+      "id": "code-review",
+      "name": "Code review / security",
+      "triggers": [
+        "code review",
+        "ревью кода",
+        "ревью",
+        "security review",
+        "проверь код",
+        "code audit",
+        "проверка безопасности",
+        "quality audit",
+        "security audit",
+        "аудит кода",
+        "review my code",
+        "audit my code"
+      ],
+      "default_skills": [
+        "/code-review",
+        "/security-review",
+        "/code-audit"
+      ],
+      "extended_skills": [
+        "/security-scan",
+        "/tdd"
+      ],
+      "consolidation": {
+        "dedup_key": "file:line + issue_type",
+        "severity_order": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+      },
+      "security_sensitive_keywords": [
+        "auth",
+        "payment",
+        "credentials",
+        "token",
+        "password",
+        "session",
+        "cookie",
+        "jwt"
+      ]
+    },
+    {
+      "id": "research-market",
+      "name": "Research / market analysis",
+      "triggers": [
+        "исследование рынка",
+        "market research",
+        "анализ рынка",
+        "конкуренты",
+        "competitive analysis",
+        "tam sam som",
+        "competitor analysis",
+        "deep research",
+        "crag",
+        "разбор конкурентов"
+      ],
+      "default_skills_market": [
+        "/market-research",
+        "/competitive-intel",
+        "/crag-research"
+      ],
+      "default_skills_competitor": [
+        "/competitive-teardown",
+        "/deep-research",
+        "/crag-research"
+      ],
+      "consolidation": {
+        "dedup_key": "claim + source_url + date",
+        "cross_confirmation_required": 2
+      }
+    }
+  ]
+}
