@@ -27,7 +27,10 @@ python3 "$SCRIPTS_DIR/orders-state.py" "$CLIENT" >> "$LOG" 2>&1 || echo "  ⚠�
 # 5. Command center HTML deploy
 python3 "$SCRIPTS_DIR/command-center.py" "$CLIENT" --deploy >> "$LOG" 2>&1 || echo "  ⚠️  command-center deploy failed" >> "$LOG"
 
-# 5.1 Attribution report (текст × источник × дата заказа × дата публикации × live статус)
+# 5.0 TG contractors monitor (за 30 дней, маркеры pub/rej/req + URL) — ДО attribution
+python3 "$SCRIPTS_DIR/tg-contractors-monitor.py" "$CLIENT" --limit 300 >> "$LOG" 2>&1 || echo "  ⚠️  tg-contractors-monitor failed" >> "$LOG"
+
+# 5.1 Attribution report (текст × источник × дата заказа × дата публикации × live статус + TG)
 python3 "$SCRIPTS_DIR/attribution-report.py" "$CLIENT" >> "$LOG" 2>&1 || echo "  ⚠️  attribution-report failed" >> "$LOG"
 
 # 5.2 qcomment auto-accept-pending (live-guard сам блокирует если нет match в live)

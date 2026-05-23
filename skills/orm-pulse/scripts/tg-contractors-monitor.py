@@ -19,7 +19,16 @@ from pathlib import Path
 import yaml
 
 ROOT = Path('/Users/antonk/artvision-data')
-SESSION = ROOT / '.claude_temp_scripts/tg_userbot'
+SESSION_SRC = Path.home() / '.claude/state/telethon_session.session'
+# Используем копию session чтобы не конфликтовать с listener daemon (он держит .session).
+import shutil
+SESSION_COPY = Path('/tmp/tg-contractors-monitor.session')
+if SESSION_SRC.exists():
+    try:
+        shutil.copy2(SESSION_SRC, SESSION_COPY)
+    except Exception:
+        pass
+SESSION = Path(str(SESSION_COPY).rsplit('.session', 1)[0])  # без .session суффикса
 TOKENS = ROOT / 'tokens.json'
 
 PUB_MARKERS = ['размещ', 'опубл', '+1', '+2', '+3', 'залетело', 'залетел', 'есть!', 'готово']
