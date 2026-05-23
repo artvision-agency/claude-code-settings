@@ -30,6 +30,12 @@ python3 "$SCRIPTS_DIR/command-center.py" "$CLIENT" --deploy >> "$LOG" 2>&1 || ec
 # 5.1 Attribution report (текст × источник × дата заказа × дата публикации × live статус)
 python3 "$SCRIPTS_DIR/attribution-report.py" "$CLIENT" >> "$LOG" 2>&1 || echo "  ⚠️  attribution-report failed" >> "$LOG"
 
+# 5.2 qcomment auto-accept-pending (live-guard сам блокирует если нет match в live)
+# Прецедент self-corrections.md #14 — guard защищает от accept «На проверке».
+if [ "$CLIENT" = "blumart" ]; then
+    python3 "$SCRIPTS_DIR/qcomment-accept-pending.py" accept --all >> "$LOG" 2>&1 || echo "  ⚠️  qcomment accept (или live-guard blocked)" >> "$LOG"
+fi
+
 # 6. Alert router (rate-limited internally)
 python3 "$SCRIPTS_DIR/alert-router.py" "$CLIENT" >> "$LOG" 2>&1 || echo "  ⚠️  alert-router failed" >> "$LOG"
 
