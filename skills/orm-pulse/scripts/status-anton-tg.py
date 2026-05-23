@@ -9,6 +9,7 @@ Cron: ~/Library/LaunchAgents/pro.artvision.orm-pulse.<client>-status-anton.plist
 """
 import re
 import sys
+import json
 import subprocess
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -93,6 +94,14 @@ def format_msg(today_md, yest_md, today_date):
             return ''
         return f' ({d:+d})'
 
+    # OCR-confirmed публикации из скринов исполнителей (бонус к published)
+    ocr_extra = 0
+    try:
+        ocr_matches = json.loads(Path('/tmp/screens-ocr/sheet-matches.json').read_text(encoding='utf-8'))
+        ocr_extra = len({(m.get('sheet_file',''), m.get('sheet_text','')[:50]) for m in ocr_matches if m.get('sim',0) >= 0.5})
+    except Exception:
+        pass
+
     pub = t_funnel.get('На reviews.yandex.ru', 0)
     on_mod = t_funnel.get('Биржа отдала, ждём', 0)
     okpon = t_funnel.get('Match с Sheet2', 0)
@@ -101,7 +110,7 @@ def format_msg(today_md, yest_md, today_date):
 
     now_str = datetime.now().strftime('%d.%m %H:%M')
     L = [f'📊 BluMart ORM — {now_str} МСК', '', '```']
-    L.append(f'Опубликовано:   {pub}{delta("На reviews.yandex.ru")}')
+    L.append(f'Опубликовано:   {pub}{delta("На reviews.yandex.ru")}' + (f' + {ocr_extra} OCR-скрины' if ocr_extra else ''))
     L.append(f'На модерации:   {on_mod}{delta("Биржа отдала, ждём")}')
     L.append(f'У okponrussia:  {okpon}{delta("Match с Sheet2")}')
     if failed:
