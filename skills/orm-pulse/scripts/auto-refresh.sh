@@ -30,6 +30,12 @@ python3 "$SCRIPTS_DIR/command-center.py" "$CLIENT" --deploy >> "$LOG" 2>&1 || ec
 # 5.0 TG contractors monitor (за 30 дней, маркеры pub/rej/req + URL) — ДО attribution
 python3 "$SCRIPTS_DIR/tg-contractors-monitor.py" "$CLIENT" --limit 300 >> "$LOG" 2>&1 || echo "  ⚠️  tg-contractors-monitor failed" >> "$LOG"
 
+# 5.0a Screens OCR (фото из чатов исполнителей → Apple Vision OCR → match с sheet)
+# ~3-5 мин, поэтому только для blumart и только если есть свежие фото
+if [ "$CLIENT" = "blumart" ]; then
+    python3 "$SCRIPTS_DIR/screens-pull-ocr.py" >> "$LOG" 2>&1 || echo "  ⚠️  screens-pull-ocr failed" >> "$LOG"
+fi
+
 # 5.1 Attribution report (текст × источник × дата заказа × дата публикации × live статус + TG)
 python3 "$SCRIPTS_DIR/attribution-report.py" "$CLIENT" >> "$LOG" 2>&1 || echo "  ⚠️  attribution-report failed" >> "$LOG"
 
