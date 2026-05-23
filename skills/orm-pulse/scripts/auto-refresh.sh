@@ -27,6 +27,9 @@ python3 "$SCRIPTS_DIR/orders-state.py" "$CLIENT" >> "$LOG" 2>&1 || echo "  ⚠�
 # 5. Command center HTML deploy
 python3 "$SCRIPTS_DIR/command-center.py" "$CLIENT" --deploy >> "$LOG" 2>&1 || echo "  ⚠️  command-center deploy failed" >> "$LOG"
 
+# 5.1 Attribution report (текст × источник × дата заказа × дата публикации × live статус)
+python3 "$SCRIPTS_DIR/attribution-report.py" "$CLIENT" >> "$LOG" 2>&1 || echo "  ⚠️  attribution-report failed" >> "$LOG"
+
 # 6. Alert router (rate-limited internally)
 python3 "$SCRIPTS_DIR/alert-router.py" "$CLIENT" >> "$LOG" 2>&1 || echo "  ⚠️  alert-router failed" >> "$LOG"
 
