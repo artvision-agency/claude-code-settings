@@ -14,7 +14,9 @@ echo "=== bootstrap $(date '+%Y-%m-%d %H:%M:%S') ==="
 
 sleep 15
 
-CMD="cd ~/artvision-data && echo '🌅 Bootstrap session. Можешь набрать /go или новую задачу.' && claude"
+# Авто-комбайн: bootstrap-сессия сразу запускает прогон очереди задач (/combine).
+# Интерактивно — окно видно, Ctrl-C перехватывает чтобы дать свою задачу.
+CMD="cd ~/artvision-data && echo '🌅 Bootstrap — авто-комбайн стартует. Ctrl-C чтобы перехватить и дать свою задачу.' && claude '/combine'"
 
 if [ -d "/Applications/Ghostty.app" ]; then
     # Ghostty: open -na открывает новое окно; --args передаёт shell command
@@ -41,7 +43,7 @@ tell application "iTerm"
         tell current window to create tab with default profile
     end if
     tell current session of current window
-        write text "cd ~/artvision-data && claude"
+        write text "cd ~/artvision-data && claude '/combine'"
     end tell
 end tell
 AS
