@@ -1,0 +1,25 @@
+# Blacklist outlets для press-leadgen-russia
+# По одной подстроке на строку; case-insensitive match в outlet/url.
+# Запросы с этих площадок не попадают в matches.
+
+# Чёрные SEO / спам-каталоги
+spam-link
+buy-link
+linkfarm
+
+# Политика / пропаганда
+politika-news
+patriot-news
+
+# Adult / 18+
+adult
+xxx
+porn
+
+# Реклама сетевого маркетинга / финпирамиды
+mlm-news
+pyramid
+
+# Тестовые outlet'ы из примеров (не реальные)
+example.com
+test-outlet

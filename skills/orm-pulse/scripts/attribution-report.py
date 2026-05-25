@@ -101,6 +101,45 @@ def load_sheet_rows(slug: str, contractor_map: dict[str, str]) -> list[dict]:
     return out
 
 
+def load_tg_signals(slug: str) -> dict:
+    """Читает свежий _index из tg-conversations/. Возвращает агрегаты по контрактору."""
+    tg_dir = ROOT / "clients" / slug / "orm" / "tg-conversations"
+    if not tg_dir.exists():
+        return {}
+    indices = sorted(tg_dir.glob("_index-*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+    if not indices:
+        return {}
+    try:
+        data = json.loads(indices[0].read_text())
+    except Exception:
+        return {}
+    out = {}
+    for chat in data:
+        if "error" in chat:
+            continue
+        s = chat.get("summary", {})
+        msgs = chat.get("messages", [])
+        # Последняя дата с pub-маркером
+        last_pub = None
+        for m in msgs:
+            if m.get("pub_markers"):
+                d = m.get("date", "")[:10]
+                if not last_pub or d > last_pub:
+                    last_pub = d
+        out[chat["label"]] = {
+            "chat_id": chat["chat_id"],
+            "count": chat.get("count", 0),
+            "pub": s.get("with_pub", 0),
+            "rej": s.get("with_rej", 0),
+            "req": s.get("with_req", 0),
+            "link": s.get("with_link", 0),
+            "last_pub": last_pub or "—",
+        }
+    out["_source"] = str(indices[0].name)
+    out["_pulled_at"] = data[0].get("fetched_at", "") if data else ""
+    return out
+
+
 def load_live(slug: str) -> list[dict]:
     """Берёт самый свежий snapshot из live-reviews/ или live-reviews-history/."""
     candidates: list[Path] = []
@@ -204,7 +243,32 @@ def render_replacement_block(rows: list[dict]) -> str:
     return "".join(blocks)
 
 
-def render_html(slug: str, rows: list[dict], stats: dict) -> str:
+def render_tg_block(tg: dict) -> str:
+    if not tg:
+        return ''
+    src = tg.pop('_source', '')
+    pulled = tg.pop('_pulled_at', '')[:16]
+    rows_html = []
+    for label, s in tg.items():
+        rows_html.append(
+            f"<tr><td>{html.escape(label)}</td>"
+            f"<td style='text-align:right'>{s['count']}</td>"
+            f"<td style='text-align:right;color:#16a34a'>{s['pub']}</td>"
+            f"<td style='text-align:right;color:#dc2626'>{s['rej']}</td>"
+            f"<td style='text-align:right'>{s['req']}</td>"
+            f"<td style='text-align:right'>{s['link']}</td>"
+            f"<td>{html.escape(s['last_pub'])}</td></tr>"
+        )
+    return (
+        '<h2 style="margin-top:24px">💬 TG-сигналы исполнителей за 30 дней</h2>'
+        f'<div class="muted">Источник: {html.escape(src)} · pulled: {html.escape(pulled)}</div>'
+        '<table><thead><tr>'
+        '<th>Чат</th><th>Msg всего</th><th>Pub-марк</th><th>Rej-марк</th><th>Req-марк</th><th>URLs</th><th>Последний pub</th>'
+        '</tr></thead><tbody>' + ''.join(rows_html) + '</tbody></table>'
+    )
+
+
+def render_html(slug: str, rows: list[dict], stats: dict, tg: dict | None = None) -> str:
     today = datetime.now().strftime("%Y-%m-%d %H:%M")
     bg = {
         "Отзыв размещён": ("#dcfce7", "✅"),
@@ -273,6 +337,8 @@ tr:hover{{background:#f8fafc}}
   <div class="metric"><span class="label">🔁 Нужна дозамена (точно)</span><span class="value" style="color:#dc2626">{stats['replacement_yes']}</span></div>
   <div class="metric"><span class="label">❓ Дозамена под вопросом</span><span class="value" style="color:#d97706">{stats['replacement_maybe']}</span></div>
 </div>
+
+{render_tg_block(tg) if tg else ''}
 
 <h2 style="margin-top:24px">🔁 Кого пинговать на дозамену</h2>
 {replacement_html}
@@ -407,7 +473,8 @@ def main() -> int:
         for r in sheet_rows:
             writer.writerow({k: r.get(k, "") for k in writer.fieldnames})
 
-    html_path.write_text(render_html(args.slug, sheet_rows, stats))
+    tg = load_tg_signals(args.slug)
+    html_path.write_text(render_html(args.slug, sheet_rows, stats, tg))
 
     print(f"\n💾 CSV:  {csv_path}")
     print(f"💾 HTML: {html_path}")

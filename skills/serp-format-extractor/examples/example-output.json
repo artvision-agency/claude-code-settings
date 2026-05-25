@@ -1,0 +1,119 @@
+{
+  "keyword": "имплантация зубов в спб",
+  "region": "spb",
+  "engine": "yandex",
+  "collected_at": "2026-05-21T10:00:00Z",
+  "confidence": "high",
+  "recommended_structure": {
+    "h1_pattern": "Имплантация зубов в Санкт-Петербурге — [USP клиники]",
+    "intro_length_words": 95,
+    "total_target_words": 1850,
+    "sections": [
+      {
+        "h2": "Что такое имплантация зубов",
+        "word_count_target": 220,
+        "h3_count": 2,
+        "has_image_recommended": true,
+        "topics_seen_in": [1, 2, 3]
+      },
+      {
+        "h2": "Показания и противопоказания",
+        "word_count_target": 180,
+        "h3_count": 2,
+        "has_image_recommended": false,
+        "topics_seen_in": [1, 3]
+      },
+      {
+        "h2": "Этапы лечения",
+        "word_count_target": 380,
+        "h3_count": 4,
+        "has_image_recommended": true,
+        "topics_seen_in": [1, 2, 3]
+      },
+      {
+        "h2": "Виды имплантов и материалы",
+        "word_count_target": 260,
+        "h3_count": 3,
+        "has_image_recommended": true,
+        "topics_seen_in": [1, 2, 3]
+      },
+      {
+        "h2": "Цены и стоимость в СПб",
+        "word_count_target": 220,
+        "h3_count": 1,
+        "has_image_recommended": false,
+        "topics_seen_in": [1, 2, 3]
+      },
+      {
+        "h2": "Гарантии и сроки службы",
+        "word_count_target": 140,
+        "h3_count": 0,
+        "has_image_recommended": false,
+        "topics_seen_in": [2, 3]
+      },
+      {
+        "h2": "Часто задаваемые вопросы",
+        "word_count_target": 320,
+        "h3_count": 0,
+        "has_image_recommended": false,
+        "topics_seen_in": [1, 2, 3]
+      }
+    ],
+    "faq_recommended": true,
+    "faq_questions_target": 8,
+    "schemas": ["Article", "FAQPage", "MedicalProcedure", "Dentist"],
+    "internal_links_target": 12,
+    "external_links_target": 3,
+    "images_target": 6
+  },
+  "top_3_analysis": [
+    {
+      "position": 1,
+      "url": "https://example-clinic-1.ru/uslugi/implantatsiya/",
+      "title": "Имплантация зубов в СПб — цены, этапы, гарантия | Клиника №1",
+      "h1": "Имплантация зубов в Санкт-Петербурге",
+      "total_word_count": 1740,
+      "intro_word_count": 88,
+      "h2_count": 7,
+      "h3_count_total": 12,
+      "images": {"total": 5, "with_alt": 5, "alt_density": 1.0},
+      "links": {"internal": 14, "external": 2},
+      "schemas": ["Article", "FAQPage", "MedicalProcedure", "Dentist"],
+      "faq": {"present": true, "via_schema": true, "via_dom": true, "question_count": 9}
+    },
+    {
+      "position": 2,
+      "url": "https://example-clinic-2.ru/implant/",
+      "title": "Имплантация зубов в Питере — современные технологии",
+      "h1": "Имплантация зубов",
+      "total_word_count": 1920,
+      "intro_word_count": 102,
+      "h2_count": 8,
+      "h3_count_total": 14,
+      "images": {"total": 7, "with_alt": 6, "alt_density": 0.86},
+      "links": {"internal": 11, "external": 4},
+      "schemas": ["Article", "FAQPage", "Dentist"],
+      "faq": {"present": true, "via_schema": true, "via_dom": false, "question_count": 8}
+    },
+    {
+      "position": 3,
+      "url": "https://example-clinic-3.ru/lechenie/implantatsiya-zubov/",
+      "title": "Имплантация зубов СПб — от 28 000 ₽ под ключ",
+      "h1": "Имплантация зубов в СПб под ключ",
+      "total_word_count": 2010,
+      "intro_word_count": 95,
+      "h2_count": 6,
+      "h3_count_total": 10,
+      "images": {"total": 6, "with_alt": 5, "alt_density": 0.83},
+      "links": {"internal": 18, "external": 3},
+      "schemas": ["Article", "MedicalProcedure"],
+      "faq": {"present": true, "via_schema": false, "via_dom": true, "question_count": 6}
+    }
+  ],
+  "synthesis_notes": [
+    "Все 3 топа имеют FAQ → faq_recommended=true, target 8 вопросов (медиана)",
+    "Schema.org MedicalProcedure встречается в 2/3 топов — рекомендуем (YMYL-сигнал)",
+    "Median total_word_count = 1920, рекомендуем 1850 (с запасом на качество)",
+    "H2 'Гарантии' только в 2/3 топа — опциональная секция, не CRIT"
+  ]
+}
