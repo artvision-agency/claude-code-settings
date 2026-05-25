@@ -12,6 +12,20 @@ if [ -z "$MESSAGE" ]; then
     exit 1
 fi
 
+# ── ФИЛЬТР ОШИБОК (Антон 25.05.2026): в TG идут только результаты работы ботов,
+#    инфра/health/error-алерты — в лог, НЕ в чат. Bypass: NOTIFY_FORCE=1.
+#    Прецедент: командный чат завален BOT CRITICAL/RESTART SPIKE/VPS UNREACHABLE.
+if [ "${NOTIFY_FORCE:-0}" != "1" ]; then
+    ERR_RE='BOT CRITICAL|RESTART SPIKE|restarts=|UNREACHABLE|RECOVERED|back online|API DOWN|API DEGRADED|kex_exchange|Connection closed|MaxStartups|🚨|💥|🆘|⛔|CRITICAL:|ALERT:|P0 |P1 |DOWN:|FAILED:|❌ '
+    if printf '%s' "$MESSAGE" | grep -qiE "$ERR_RE"; then
+        SUP_LOG="$HOME/.claude/logs/tg-suppressed-alerts.log"
+        mkdir -p "$(dirname "$SUP_LOG")"
+        printf '%s | chat=%s | %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "${TELEGRAM_TEAM_CHAT_ID:--4273200821}" "${MESSAGE//$'\n'/ }" >> "$SUP_LOG"
+        echo "🔇 Suppressed (error/infra alert → log, not TG). Bypass: NOTIFY_FORCE=1"
+        exit 0
+    fi
+fi
+
 RESP="$(curl -sS --max-time 15 --retry 2 --retry-delay 2 \
     -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
     -H "Content-Type: application/json" \
