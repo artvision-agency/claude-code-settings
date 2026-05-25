@@ -19,7 +19,6 @@ avportal-spam-watchdog.py — лёгкий сторож против спама 
 """
 
 import json
-import subprocess
 import sys
 import time
 from datetime import datetime, timezone
@@ -78,16 +77,39 @@ def write_state(state: dict) -> None:
     tmp.rename(STATE_FILE)
 
 
-def send_alert(text: str) -> None:
-    """Алерт Антону в личку через tg-send.sh (отдельный бот, не @avportal_bot)."""
+NOTIFY_SCRIPT = HOME / ".claude" / "scripts" / "notify-telegram.sh"
+ANTON_CHAT_ID = "161261562"
+
+
+def _notify_bot_token() -> str:
+    """Токен notify-бота (отдельный от @avportal_bot) из notify-telegram.sh."""
     try:
-        subprocess.run(
-            ["bash", str(TG_SEND), "anton", text],
-            timeout=30,
-            check=False,
-            capture_output=True,
-        )
-        log(f"ALERT SENT: {text[:80]}")
+        for line in open(NOTIFY_SCRIPT, encoding="utf-8"):
+            if line.strip().startswith("BOT_TOKEN="):
+                return line.split("=", 1)[1].strip().strip('"').strip("'")
+    except IOError:
+        pass
+    return ""
+
+
+def send_alert(text: str) -> None:
+    """Алерт Антону в личку PLAIN TEXT (без Markdown — в тексте есть '_', '@').
+    Отдельный notify-бот, не @avportal_bot, чтобы алерт дошёл даже при конфликте."""
+    import urllib.parse
+    import urllib.request
+
+    token = _notify_bot_token()
+    if not token:
+        log("ALERT FAILED: notify bot token not found")
+        return
+    try:
+        payload = urllib.parse.urlencode(
+            {"chat_id": ANTON_CHAT_ID, "text": text}  # БЕЗ parse_mode = plain
+        ).encode()
+        url = f"https://api.telegram.org/bot{token}/sendMessage"
+        with urllib.request.urlopen(url, data=payload, timeout=20) as r:
+            ok = json.loads(r.read().decode()).get("ok")
+        log(f"ALERT {'SENT' if ok else 'REJECTED'}: {text[:80]}")
     except Exception as e:  # noqa: BLE001
         log(f"ALERT FAILED: {e}")
 
