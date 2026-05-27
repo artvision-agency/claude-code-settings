@@ -10,6 +10,30 @@ description: "Онбординг нового клиента Artvision: созд
 
 ---
 
+## Два режима
+
+- **Новый клиент с нуля** (нет папки) → создать структуру (этот skill ниже, ШАГ 1+).
+- **Полный инит существующего** (папка есть, но context environment рассинхронен — config stub, доступы `???`, нет contacts) → триггер «полный инит \<клиент\>». Довести до рабочего уровня по формату 10 шагов ниже.
+
+## Формат «полного инита» — 10 шагов (источник: `memory/feedback_client_init_format.md`)
+
+1. **Pre-Task Read** — прочитать всё в `clients/<slug>/` (CLAUDE.md, config, access, context-log, presale, legal, last meeting). Определить уровень L0…L3.
+2. **config.yaml** — заполнить реальными данными (не stub): name, site, cms, status, контакты, сделка, каналы, регион, segment, niche, financials.
+3. **Технический скан сайта** (один curl): бренд `grep -oE '#[0-9a-fA-F]{6}'` + `font-family`; CMS по заголовкам; **аналитика — ОБЯЗАТЕЛЬНО**:
+   - Я.Метрика: `curl -sL site | grep -oE 'mc\.yandex\.ru/watch/[0-9]+'` → Counter ID (счётчик установлен?)
+   - GA/GTM: `grep -oE 'gtag|GTM-[A-Z0-9]+'`; VK Pixel: `grep vk.com/rtrg`
+   - Доступ к Метрике: Метрика API (`tokens.yandex.metrika`) GET counter <id> → 200 (доступ есть) / 403 (нет)
+   - Записать counter_id + `metrika_installed_on_site` + статус доступа в config.channels.
+4. **contacts.md** — карта коммуникаций (шаблон `templates/client-contacts-template.md`): с кем взаимодействуем / где чаты (TG личка+группа с ID, email, тел) / наша сторона / юрлицо+подписант / где переписка в git.
+5. **assets/external-urls.yaml** — создать (asset-capture; шаблон `~/.claude/templates/client-assets-external-urls.yaml`).
+6. **meetings/** — создать папку.
+7. **access.md** — доступы (gitignored!): ВК, Я.Директ+OAuth, Метрика+Counter ID, сайт/CMS, коллтрекинг. Креды в TG-чате → восстановить через `scripts/tg-signin-relay.py` (Claude шлёт код, пользователь диктует цифры).
+8. **clients-registry.md** — обновить статус (presale → договор подписан → активный MRR; в MRR только при доходе — revenue-accounting).
+9. **git commit** — всё кроме кредов (access.md gitignored).
+10. **Чеклист «чего не хватает»** — выдать по 3 категориям (📄 документы / 🔑 доступы / 📊 данные) + создать задачи на блокеры + явно назвать что физически требует пользователя.
+
+---
+
 ## Процесс онбординга
 
 ```
