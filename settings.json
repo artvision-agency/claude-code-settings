@@ -172,6 +172,7 @@
     ],
     "defaultMode": "bypassPermissions"
   },
+  "model": "opus[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -225,6 +226,11 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/start-menu.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-shorts-digest.sh",
             "timeout": 5
           },
           {
@@ -344,9 +350,9 @@
             "command": "~/.claude/hooks/stop-session-compare-goal.sh"
           },
           {
+            "type": "command",
             "command": "~/.claude/hooks/stop-asset-recap-check.sh",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       },
@@ -585,6 +591,11 @@
           {
             "type": "command",
             "command": "/Users/antonk/.claude/hooks/pre-finance-deploy.sh \"$CLAUDE_BASH_COMMAND\""
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-bash-script-staleness.sh",
+            "timeout": 5
           }
         ]
       },
@@ -820,6 +831,15 @@
             "command": "$HOME/.claude/hooks/pre-scp-dashboard-fns-check.sh"
           }
         ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-agent-finance-context.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -1043,9 +1063,13 @@
             "timeout": 5
           },
           {
+            "type": "command",
             "command": "~/.claude/hooks/post-userprompt-asset-capture.sh",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prompt-parallel-skills-detect.sh"
           }
         ]
       },
@@ -1099,6 +1123,14 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/prompt-correction-detector.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/prompt-conductor-autocall.sh"
           }
         ]
       }
@@ -1197,7 +1229,8 @@
     "pyright-lsp@claude-plugins-official": true,
     "telegram@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
-    "codex@openai-codex": true
+    "codex@openai-codex": true,
+    "claude-code-setup@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -1212,6 +1245,5 @@
   "autoCompactEnabled": false,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true,
-  "model": "opus"
+  "voiceEnabled": true
 }
