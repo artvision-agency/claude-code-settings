@@ -54,11 +54,21 @@
 
 **Применять:** в `/swarm` и параллельных Agent вызовах когда MCP не нужны.
 
-## 9. Hooks НЕ hot-swap
+## 9. Hooks подхватываются file watcher автоматически (ИСПРАВЛЕНО 2026-05-28)
 
-> *"Hooks are loaded when Claude Code session starts. Changes to hook configuration require restarting Claude Code."*
+> **БЫЛО (устаревшая цитата, опровергнута справкой):** *"Hooks are loaded when Claude Code session starts. Changes to hook configuration require restarting Claude Code."*
+>
+> **СТАЛО (текущая официальная справка `code.claude.com/docs/en/hooks`, проверено 2026-05-28):**
+> *"Direct edits to hooks in settings files are normally picked up automatically by the file watcher."*
 
-**Применять:** после правки `settings.json` или нового хука — **рестарт Claude Code обязателен**, не верить «применилось» в текущей сессии.
+**Применять:**
+- После правки `settings.json` или нового хука — **рестарт НЕ обязателен**. File watcher подхватывает автоматически.
+- `/clear` → SessionStart `source=clear` → перечитывает hooks.
+- `claude -c` / `--resume` → SessionStart `source=resume` → перечитывает hooks.
+- Команды `/reload-hooks` нет — только file watcher или явный SessionStart.
+- Оговорка: «normally» — edge-кейсы возможны. Для 100% гарантии — `/clear`. Проверить загрузку: `/hooks` (read-only список).
+
+**Прецедент ошибки 2026-05-28 (EDUCATION session):** несколько раз сказал Антону «нужен рестарт для активации hooks», опираясь на ЭТО правило из памяти. При проверке справки через WebFetch — оказалось file watcher подхватывает сам. Класс ошибки: доверие устаревшему правилу из памяти вместо сверки с первоисточником. Связь: `self-corrections.md` #20 (устаревшие факты из памяти).
 
 ## 10. Не railroad — давай контекст, не сценарий
 

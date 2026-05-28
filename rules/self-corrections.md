@@ -227,3 +227,19 @@
      - Перед списком — таблица «Тесты пройдены: factcheck ✅ · content ✅ · ...»
 - **Кандидат-хук:** `stop-deploy-links-need-tests.sh` (Stop) — детект в финальном ответе паттернов `vot ссылки|список deploy|finalnyy deploy|готов список|deliverables list|MASTER-` + наличие `.md|.html|.csv` ссылок → проверить в transcript текущей сессии: вызывался ли factcheck/code-reviewer для упомянутых файлов. Если НЕТ → warn `[VERIFY: тесты ролями для X файлов не пройдены]`. Bypass: `DEPLOY_LINKS_OK=1`. **Не зарегистрирован — ждёт approve Антона.**
 - **Связано:** `~/.claude/rules/deploy-report-template.md`, `feedback_deploy_url_first.md`, `feedback_two_deploy_links_personal_and_product.md`.
+
+### 22. Уверенные утверждения о Claude Code из памяти/устаревших правил без сверки со справкой (инцидент 2026-05-28, EDUCATION session)
+- **Проблема:** при обучении Антона архитектуре Claude Code несколько раз дал НЕВЕРНУЮ информацию, поданную уверенно:
+  1. «Hook events — это 5 штук (PreToolUse, PostToolUse, SessionStart, Stop, UserPromptSubmit)» → реально **30+** (SubagentStart/Stop, InstructionsLoaded, TaskCreated, FileChanged и др.)
+  2. «Чтобы сделать clients/ отдельным — нужны отдельные проекты ~/artvision-data-clients/» → реально subdir CLAUDE.md + path-scoped rules работают из коробки
+  3. «artvision-data/CLAUDE.md сильно больше 200 строк, надо сократить» → реально **179 строк**, под лимитом (не проверил перед утверждением)
+  4. «@import уменьшит контекст» → реально «imported files load at launch, не reduce context» (справка)
+  5. **ГЛАВНОЕ:** «Hooks НЕ hot-swap, нужен рестарт Claude Code» (×4 раза повторил) → реально справка: «Direct edits to hooks in settings files are normally picked up automatically by the file watcher». Рестарт НЕ обязателен.
+- **Корень:** доверие СВОЕЙ ПАМЯТИ и УСТАРЕВШИМ ВНУТРЕННИМ ПРАВИЛАМ (`cherny-tips.md` #9) вместо сверки с первоисточником `code.claude.com/docs`. Это тот же класс что #20 (устаревшие денежные/правовые факты), но про техническую матчасть Claude Code.
+- **Что поймало:** Антон сам спросил «рекомендации основаны на справке?» и «можешь привести жёсткий фактчекинг?». Без его вопроса неверная инфа осталась бы.
+- **Решение:**
+  1. Перед уверенным утверждением о механике Claude Code (hooks/skills/rules/agents/CLI/memory/compaction) — **WebFetch `code.claude.com/docs/en/<topic>`**, не из памяти. Pretraining + наши правила отстают от текущей справки.
+  2. Особенно опасно: утверждения о ЧИСЛАХ (сколько events, лимиты строк), о ПОВЕДЕНИИ (перечитывает/не перечитывает, выживает/не выживает /compact), о ВОЗМОЖНОСТЯХ (можно/нельзя).
+  3. `cherny-tips.md` #9 исправлен 2026-05-28 (был источником ошибки про рестарт).
+- **Кандидат-хук:** `stop-claude-code-claim-unverified.sh` (Stop) — детект в ответе утверждений о Claude Code механике (`hook|skill|rule|subagent|CLAUDE.md|/compact|/clear|settings.json` + модальность «нужно/обязательно/не работает/только/нельзя») БЕЗ WebFetch на code.claude.com в этом turn → warn `[VERIFY: утверждение о Claude Code без сверки со справкой]`. Bypass `CC_CLAIM_OK=1`. **Не зарегистрирован — ждёт approve Антона** (меняет харнес).
+- **Связано:** #20 (устаревшие факты), `~/.claude/rules/cherny-tips.md` #9 (исправлен), `quality.md` (challenge-self), правило verify-from-docs.
