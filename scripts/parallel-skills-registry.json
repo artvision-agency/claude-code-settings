@@ -159,6 +159,62 @@
         "dedup_key": "claim + source_url + date",
         "cross_confirmation_required": 2
       }
+    },
+    {
+      "id": "paid-ads",
+      "name": "Paid ads / контекстная реклама / ретаргетинг",
+      "triggers": [
+        "paid ads",
+        "контекстная реклама",
+        "ретаргетинг",
+        "retargeting",
+        "ремаркетинг",
+        "я.директ",
+        "yandex direct",
+        "яндекс директ",
+        "рся",
+        "ppc",
+        "elama",
+        "еламы",
+        "выставочная кампания",
+        "рекламная кампания",
+        "директ аудит",
+        "direct audit",
+        "мастер кампаний",
+        "епк",
+        "look-alike",
+        "look alike",
+        "lookalike"
+      ],
+      "default_skills_strategy": [
+        "/paid-ads",
+        "/retargeting-setup",
+        "/ad-creative"
+      ],
+      "default_skills_post_launch": [
+        "/paid-ads",
+        "/campaign-analytics",
+        "/cro"
+      ],
+      "must_read_artifacts": [
+        "~/artvision-forks/yandex-direct-skill/SKILL.md",
+        "~/artvision-forks/yandex-mcp/README.md",
+        "~/.claude/projects/-Users-antonk/memory/yandex-direct-2026.md",
+        "~/.claude/projects/-Users-antonk/memory/reference_elama_partnership.md",
+        "~/artvision-data/decisions/2026-04-28-ads-stack-pilot-grelka.md",
+        "~/artvision-data/knowledge/marketing/yandex-direct-skill-gap-2026-05-01.md",
+        "~/artvision-data/sops/sop-ppc.md"
+      ],
+      "experienced_clients": [
+        "otido",
+        "tvorimsovershenstvo",
+        "madwave",
+        "grelka-gudelka"
+      ],
+      "consolidation": {
+        "dedup_key": "платформа + audience + cost_metric",
+        "cross_confirmation_required": 2
+      }
     }
   ]
 }

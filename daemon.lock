@@ -1,0 +1,14 @@
+{
+  "pid": 23495,
+  "version": "2.1.143",
+  "jsonPath": "/Users/antonk/.claude/daemon.json",
+  "logPath": "/Users/antonk/.claude/daemon.log",
+  "startedAt": 1779116115027,
+  "origin": "transient",
+  "spawnedBy": {
+    "label": "claude",
+    "cwd": "/Users/antonk",
+    "pid": 21850
+  },
+  "procStart": "Mon May 18 14:55:13 2026"
+}

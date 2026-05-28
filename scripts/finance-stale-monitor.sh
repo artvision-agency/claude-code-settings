@@ -1,0 +1,1 @@
+/Users/antonk/artvision-data/.claude-shared/scripts/finance-stale-monitor.sh

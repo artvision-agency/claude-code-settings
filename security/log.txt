@@ -1,0 +1,6 @@
+[2026-05-27 15:03:40.967] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-27 15:03:40.967] Processing: hook_event=UserPromptSubmit, tool=
+[2026-05-27 15:03:41.280] Captured git baseline: b1aea98589c8
+[2026-05-29 00:56:30.080] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-29 00:56:30.081] Processing: hook_event=UserPromptSubmit, tool=
+[2026-05-29 00:56:30.534] Captured git baseline: 203708cc41c1

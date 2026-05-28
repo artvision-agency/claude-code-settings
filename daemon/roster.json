@@ -1,43 +1,46 @@
 {
   "proto": 1,
-  "supervisorPid": 63756,
-  "updatedAt": 1778620388092,
+  "supervisorPid": 23495,
+  "updatedAt": 1779116236276,
   "workers": {
-    "e58fbbf2": {
-      "pid": 38531,
-      "procStart": "Tue May 12 09:14:52 2026",
-      "sessionId": "e58fbbf2-c12b-4669-91f3-6f6d5957cebc",
-      "rendezvousSock": "/tmp/cc-daemon-501/bef7c323/rv/e58fbbf2.sock",
-      "ptySock": "/tmp/cc-daemon-501/bef7c323/spare/71b014f2.pty.sock",
-      "cliVersion": "2.1.139",
-      "startedAt": 1778577304504,
+    "4e36a776": {
+      "pid": 23516,
+      "procStart": "Mon May 18 14:55:15 2026",
+      "sessionId": "4e36a776-ed13-4a5e-8465-768abae91267",
+      "rendezvousSock": "/tmp/cc-daemon-501/bef7c323/rv/4e36a776.sock",
+      "ptySock": "/tmp/cc-daemon-501/bef7c323/spare/b8fed379.pty.sock",
+      "cliVersion": "2.1.143",
+      "startedAt": 1779116115262,
       "attempt": 1,
       "cwd": "/Users/antonk",
       "dispatch": {
         "proto": 1,
-        "short": "e58fbbf2",
-        "nonce": "25578e7c",
-        "sessionId": "e58fbbf2-c12b-4669-91f3-6f6d5957cebc",
-        "createdAt": 1778577304438,
+        "short": "4e36a776",
+        "nonce": "d386b5c4",
+        "sessionId": "4e36a776-ed13-4a5e-8465-768abae91267",
+        "createdAt": 1779116113790,
         "source": "slash",
         "cwd": "/Users/antonk",
         "launch": {
           "mode": "resume",
-          "sessionId": "/Users/antonk/.claude/projects/-Users-antonk/0b1c2265-f0ac-4b7c-b6f1-07864ded2f2e.jsonl",
+          "sessionId": "/Users/antonk/.claude/projects/-Users-antonk/1886d145-37a9-4d7a-8714-cc685629a74b.jsonl",
           "fork": true,
           "flagArgs": [
-            "--",
-            "continue"
+            "--permission-mode",
+            "bypassPermissions"
           ]
         },
         "env": {},
         "isolation": "none",
-        "respawnFlags": [],
+        "respawnFlags": [
+          "--permission-mode",
+          "bypassPermissions"
+        ],
         "seed": {
-          "intent": "go on",
-          "name": "KURSY-SPB 2"
+          "intent": "что тут такое случилос",
+          "name": "Check space"
         },
-        "cols": 82,
+        "cols": 99,
         "rows": 34
       },
       "decModes": [
