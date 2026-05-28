@@ -301,6 +301,15 @@
             "command": "~/.claude/hooks/inject-context-rules.sh"
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/start-handover-pending.sh"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -430,6 +439,33 @@
             "type": "command",
             "command": "$HOME/.claude/hooks/pre-stop-done-verify.sh",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-anti-rationalization.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-handover-check.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-knowledge-reminder.sh"
           }
         ]
       }
@@ -840,6 +876,42 @@
             "command": "$HOME/.claude/hooks/pre-agent-finance-context.sh"
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-yandex-maps-place-check.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-fork-without-roundtable.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-deploy-numbers-have-sources.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-finance-no-period-split.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -975,6 +1047,15 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/post-commit-dashboard-strict.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/post-commit-learning.sh"
           }
         ]
       }
@@ -1131,6 +1212,15 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/prompt-conductor-autocall.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/context-40pct-warn.sh"
           }
         ]
       }
