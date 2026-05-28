@@ -20,6 +20,9 @@ esac
 case "$FILE_PATH" in
   */clients/*/CLAUDE.md|*/clients/*/README.md|*/clients/*/context-log.md|*/clients/*/lexicon.yaml)
     exit 0 ;;
+  */clients/*/assets/*|*/clients/*/access.md|*/clients/*/config.yaml|*/clients/*/TODO.md)
+    # Служебные файлы для агента: assets/ (URL медиа), access.md (доступы), config.yaml (бренд+контакты), TODO.md (план работ)
+    exit 0 ;;
 esac
 
 # Явный bypass через env (для исключительных случаев — например, .ai-методология в названии скрипта)

@@ -1,0 +1,1 @@
+/Users/antonk/artvision-data/.claude-shared/hooks/post-edit-finance-numbers.sh

@@ -72,6 +72,36 @@
 - Severity: CRITICAL (security vulns) > HIGH (bugs) > MID (quality) > LOW (style)
 - Финальный артефакт: HTML-отчёт с разделами по типу проблем
 
+### Класс 5: Paid ads / контекстная реклама / ретаргетинг
+
+**Триггеры:** `paid ads`, `контекстная реклама`, `ретаргетинг`, `retargeting`, `я.директ`, `yandex direct`, `рся`, `ppc`, `elama`, `еламы`, `таргет`, `выставочная кампания`, `рекламная кампания`, `рся аудит`, `direct audit`, `мастер кампаний`, `епк`
+
+**Скиллы (запускать 2-3):**
+1. `/paid-ads` — общая стратегия PPC (платформы, audiences, creative, bid strategies)
+2. `/retargeting-setup` — Метрика сегменты + Директ retargeting lists + API (для РФ-клиентов)
+3. `/ad-creative` — генерация креативов (форматы РСЯ, изображения, тексты)
+4. `/campaign-analytics` — аналитика после запуска (CTR, CPC, CR, площадки)
+5. `/cro` — оптимизация landing page куда ведёт реклама
+
+**Default тройка для РФ Я.Директ:** `/paid-ads` + `/retargeting-setup` + `/ad-creative`
+**Для пост-запуска / аналитики:** `/paid-ads` + `/campaign-analytics` + `/cro`
+
+**ОБЯЗАТЕЛЬНО прочитать при работе с Я.Директ:**
+- `~/artvision-forks/yandex-direct-skill/` — 55 проверок YD01-YD55 (если есть OAuth клиента)
+- `~/artvision-forks/yandex-mcp/` — 128 tools (Direct+Metrika+Wordstat) для операционки через чат
+- `memory/yandex-direct-2026.md` — бенчмарки CPC, лимиты ретаргета, ЕПК 2026
+- `memory/reference_elama_partnership.md` — eLama детали, комиссия, коллтрекинг, подводные камни
+- `decisions/2026-04-28-ads-stack-pilot-grelka.md` — Artvision Ads Stack pilot
+- `knowledge/marketing/yandex-direct-skill-gap-2026-05-01.md` — gap-analysis форка
+- `clients/{otido,tvorimsovershenstvo,madwave,grelka-gudelka}/CLAUDE.md` — опыт реальных eLama-клиентов
+- `~/artvision-data/sops/sop-ppc.md` — регламент PPC
+
+**Консолидация:**
+- Ключ dedup: `платформа + audience + cost-metric`
+- Cross-confirmation: если 2+ скилла/memory подтвердили рекомендацию → +1 confidence
+- Уникальные подходы: `/paid-ads` смотрит широко (Google/Meta/LI), `/retargeting-setup` РФ-API focus, `/ad-creative` форматы и тексты. Все 3 нужны.
+- Финальный артефакт: единый план кампании с указанием источников + чек-лист запуска через eLama UI ИЛИ через API (если OAuth есть)
+
 ### Класс 4: Research / market analysis
 
 **Триггеры:** `исследование рынка`, `market research`, `анализ рынка`, `конкуренты`, `competitive analysis`, `TAM SAM SOM`, `competitor analysis`, `research`, `deep research`, `crag`
