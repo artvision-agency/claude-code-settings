@@ -468,6 +468,15 @@
             "command": "$HOME/.claude/hooks/stop-knowledge-reminder.sh"
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-claude-code-claim-unverified.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
