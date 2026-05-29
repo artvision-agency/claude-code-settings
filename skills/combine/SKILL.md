@@ -89,12 +89,16 @@ confirm_level: auto | confirm     # по security.md
 ### ФАЗА 1: PULL + DEDUP + PARSE + CONTEXT
 
 **1a. Тянем источники параллельно:**
+
+⚠️ **НЕ использовать `asana_search_tasks` с фильтрами** (`sort_by`/`due_on`/`tags_any`) — это Asana **Advanced Search = платная фича**, воркспейс «Marketing» на free-tier → **HTTP 402 Payment Required** (подтверждено 2026-05-29). Использовать базовый endpoint (free-tier OK):
 ```
-mcp__asana__asana_search_tasks:
-  workspace: 860693669973770
-  completed: false
-  sort_by: due_date
-  opt_fields: name,due_on,projects,tags,notes,assignee,dependencies
+mcp__asana__asana_get_tasks_for_project:
+  project_id: 1212305892582815   # "Задачи - Artvision" (из tokens.json asana.project_id)
+  opt_fields: name,completed,due_on,assignee.name,memberships.section.name
+  limit: 100
+# + mcp__asana__asana_get_my_tasks для задач на исполнителе
+# Сортировку/фильтрацию по due_on/priority делать НА КЛИЕНТЕ (в коде), не в запросе.
+# Игнорировать авто-мусор "[Session] ...: sync: session state" (дубли от auto-sync).
 ```
 + читаем 5 TODO-файлов:
 ```
