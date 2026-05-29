@@ -361,6 +361,11 @@
             "type": "command",
             "command": "~/.claude/hooks/stop-asset-recap-check.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-false-negative-check.sh",
+            "timeout": 10
           }
         ]
       },
