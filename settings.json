@@ -1159,6 +1159,11 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/prompt-parallel-skills-detect.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/prompt-plan-fact-detect.sh",
+            "timeout": 5
           }
         ]
       },
