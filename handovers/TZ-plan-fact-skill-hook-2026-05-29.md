@@ -60,3 +60,47 @@
 - `feedback_compare_goal_vs_result_session_end.md` (memory) — родственное правило сравнения цель↔факт
 
 ## Статус: НЕ начато. Строить в чистой сессии после /clear.
+
+---
+
+# Незакрытые рекомендации EDUCATION session (backlog после /clear)
+
+Проверено на диске 2026-05-29. ~70% рекомендаций сделано, 30% отложено.
+
+## A. НЕ сделано — защита от «слепоты» (false negative)
+
+Класс ошибки: «не нашёл = нет нигде» (прецедент: avprocontext пароль). 5 слоёв предлагал, НЕ построил:
+1. `~/.claude/rules/no-false-negative.md` — правило «перед „нет/не нашёл“ — grep по матрице источников»
+2. `~/.claude/skills/find-anywhere/SKILL.md` — multi-source grep (tokens×3 / access.md / memory / jsonl / Keychain / git log)
+3. `~/.claude/credentials-index.md` — карта где какой тип доступа лежит
+4. `~/.claude/scripts/cred-get.sh` — helper для macOS Keychain
+5. Хук-детектор фраз «нет нигде / не нашёл / только X» без признаков grep
+Связь: дополняет self-corrections (false negative защищён слабее галлюцинаций).
+
+## B. НЕ сделано — прочее
+
+- InstructionsLoaded hook для дебага (видеть какие правила реально загружены)
+- Тесты для 7 orphan-хуков Stage 1 (зарегистрированы, но логика не верифицирована)
+
+## C. Консолидация дублей (round_table перед началом — adopt паттерна)
+
+| Группа | Файлы | Действие |
+|---|---|---|
+| Stop-хуки честности (5) | stop-hallucination-detect, stop-claim-no-rule-check, stop-anti-rationalization, stop-smoothing-check, stop-claude-code-claim-unverified | 🟡 кандидат: 1 хук `stop-honesty-check.sh` с под-проверками. ОСТОРОЖНО — у каждого тесты/прецеденты в self-corrections, не потерять кейсы |
+| Finance-хуки (4) | pre-finance-deploy, pre-finance-no-period-split, post-edit-finance-numbers, pre-agent-finance-context | 🟡 проверить overlap (разные фазы pre-scp/формулы/post-edit/inject — возможно НЕ дубли) |
+| itog vs plan-fact | skill itog + skill plan-fact (строим) | 🟡 plan-fact может поглотить itog ИЛИ оставить itog как быстрый, plan-fact как глубокий |
+| Правила global↔project | document-list-format, parallel-skill-groups, proven-tools-first, task-routing, asset-capture | ❌ НЕ ТРОГАТЬ — намеренный git-sync дубль на 3 аккаунта |
+
+Метод консолидации (обязательно):
+1. Прочитать логику ВСЕХ хуков группы построчно
+2. Составить матрицу «какой кейс какой хук ловит»
+3. round_table — adopt объединённого паттерна (tool-adoption-proof.md)
+4. Объединить с сохранением ВСЕХ кейсов + переписать тесты
+5. Прогнать тесты ДО замены в settings.json
+6. Backup settings.json перед изменением
+
+## Приоритет backlog (после /clear)
+1. HIGH: plan/fact skill+hook (явный запрос Антона)
+2. MEDIUM: защита от «слепоты» (5 слоёв, секция A)
+3. MEDIUM: консолидация stop-хуков честности (секция C, с round_table)
+4. LOW: InstructionsLoaded debug hook, тесты orphan-хуков
