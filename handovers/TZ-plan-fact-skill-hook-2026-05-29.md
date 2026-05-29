@@ -59,7 +59,8 @@
 - `~/.claude/rules/quality.md` — challenge-self pipeline (тот же паттерн)
 - `feedback_compare_goal_vs_result_session_end.md` (memory) — родственное правило сравнения цель↔факт
 
-## Статус: НЕ начато. Строить в чистой сессии после /clear.
+## Статус: ✅ СДЕЛАНО (2026-05-29, сессия после /clear).
+- skills/plan-fact/SKILL.md ✅ · hooks/prompt-plan-fact-detect.sh ✅ (10/10 PASS) · settings.json ✅ · push ✅
 
 ---
 
@@ -67,15 +68,15 @@
 
 Проверено на диске 2026-05-29. ~70% рекомендаций сделано, 30% отложено.
 
-## A. НЕ сделано — защита от «слепоты» (false negative)
+## A. ✅ СДЕЛАНО (2026-05-29) — защита от «слепоты» (false negative)
 
-Класс ошибки: «не нашёл = нет нигде» (прецедент: avprocontext пароль). 5 слоёв предлагал, НЕ построил:
-1. `~/.claude/rules/no-false-negative.md` — правило «перед „нет/не нашёл“ — grep по матрице источников»
-2. `~/.claude/skills/find-anywhere/SKILL.md` — multi-source grep (tokens×3 / access.md / memory / jsonl / Keychain / git log)
-3. `~/.claude/credentials-index.md` — карта где какой тип доступа лежит
-4. `~/.claude/scripts/cred-get.sh` — helper для macOS Keychain
-5. Хук-детектор фраз «нет нигде / не нашёл / только X» без признаков grep
-Связь: дополняет self-corrections (false negative защищён слабее галлюцинаций).
+Класс ошибки: «не нашёл = нет нигде» (прецедент: avprocontext пароль). 5 слоёв ПОСТРОЕНЫ:
+1. ✅ `~/.claude/rules/no-false-negative.md`
+2. ✅ `~/.claude/skills/find-anywhere/SKILL.md`
+3. ✅ `~/.claude/credentials-index.md` (8 источников, 43 ключа tokens.json)
+4. ✅ `~/.claude/scripts/cred-get.sh` (6 источников + --json/--keychain)
+5. ✅ `~/.claude/hooks/stop-false-negative-check.sh` (Stop, 7/7 PASS, зарег.)
+Всё закоммичено + push.
 
 ## B. НЕ сделано — прочее
 
