@@ -158,6 +158,7 @@
 | `pre-deploy-quote-exists.py` | PreToolUse `Write\|Edit` (HTML клиентские) | 16.05 IPOTEKA — «средства заморозить на 3 года» приписано дольщикам, в spbguru.ru НЕ найдено. Fuzzy 75% match цитат «» vs источник. | `QUOTE_VERIFY_SKIP=1` |
 | `pre-deploy-formula-consistency.py` | PreToolUse `Bash` (scp/cp HTML) | 16.05 IPOTEKA — «6.0 К/мес × млн» в шапке, таблица даёт 5.83 (3% gap). Блок при >10% расхождении K vs платёж/кредит. | `FORMULA_CONSISTENCY_SKIP=1` |
 | `pre-deploy-delivery-date-source.py` | PreToolUse `Bash` (scp HTML) | 16.05 IPOTEKA — Setl Ривьера «Q2 2026» (реально Q1 2028 = +6 кв). Проверяет дату сдачи в HTML vs сайт застройщика. | `DELIVERY_DATE_SKIP=1` |
+| `post-banner-stretch-guard.sh` | PostToolUse `Edit\|Write` (.html/.css в `/ads/` или `*banner*`) | 29.05 Avto.World — фото 3:4 в холст 4:3 через `object-fit:fill` → люди ×1.78, Claude 5+ раз «не сплющено» (проверял ratio файла, не пропорции объектов внутри). Детект `object-fit:fill` / `background-size:100% 100%` → WARN. Тесты 8/8. warn-only. | `BANNER_STRETCH_OK=1` |
 
 При добавлении нового хука — **сразу обновить таблицу**.
 
