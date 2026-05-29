@@ -26,6 +26,17 @@ SPARK = "▁▂▃▄▅▆▇█"
 
 def load_state(slug: str) -> dict:
     p = Path("/tmp/orm-pulse") / slug / "orders-state.json"
+    # /tmp эфемерно (чистится при reboot/cleanup) → если файла нет,
+    # регенерируем из локальных снапшотов перед чтением. Иначе daily-summary
+    # тихо падает «orders-state.json not found» и секция заказов выпадает.
+    if not p.exists():
+        try:
+            subprocess.run(
+                [sys.executable, str(Path(__file__).parent / "orders-state.py"), slug],
+                check=False, capture_output=True, timeout=180,
+            )
+        except Exception:
+            pass
     if not p.exists():
         return {}
     try:
