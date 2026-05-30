@@ -19,9 +19,22 @@ description: Структурированная передача контекс�
 
 ## Где сохраняется
 
-`~/.claude/handovers/HANDOVER-{YYYY-MM-DD-HHMM}-{context}.md`
+**Правило (Антон 30.05.2026): handover хранится в папке ПРОЕКТА, к которому относится сессия.**
 
-Где `{context}` = `ops` / `bot` / `infra` / `presale` / `products` (по cwd).
+| Тип сессии | Путь |
+|-----------|------|
+| **Клиент / проект** (работа по `clients/<slug>/` или `presales/<slug>/`) | `clients/<slug>/handover/HANDOVER-{YYYY-MM-DD-HHMM}-{topic}.md` — в **artvision-data** → git → видно всем 3 аккаунтам + Андрею |
+| **Не-проектная** (infra / personal / general ops без клиента) | `~/.claude/handovers/HANDOVER-{YYYY-MM-DD-HHMM}-{context}.md` — глобально (claude-code-settings) |
+
+**Хранение — до 10 handover на проект.** При 11-м — старейший перенести в `clients/<slug>/handover/archive/` (git хранит историю, активная папка не зашумляется при resume). Свежие лежат рядом с `context-log.md` / `STATUS.md` / `plan/task-plan*.md` → углубляют контекст при resume (правило `resume-read-project-state.md`).
+
+**Почему в проекте, а не глобально (прецедент USmile 30.05):**
+- Глобальная `~/.claude/handovers/` живёт в репо **claude-code-settings**, а данные клиента — в **artvision-data**. Клиентский handover в чужом репо → Андрей/второй аккаунт его НЕ видит при `git pull artvision-data` (split-brain).
+- Проектный `HANDOVER.md` устаревал (27.05), пока свежий полный лежал только глобально (30.05) — рассинхрон.
+- Handover рядом с канон-файлами проекта = больше деталей контекста при resume.
+
+`{context}` для глобальных = `infra` / `personal` / `ops`-без-клиента (по cwd).
+`.pending/` трекинг (маркеры по session_id) остаётся глобальным — это очередь «кому нужен handover», не содержимое.
 
 ## Структура HANDOVER.md (ОБЯЗАТЕЛЬНЫЕ секции)
 
@@ -96,8 +109,10 @@ clients/blumart/
 3. **git log --oneline -20** — что коммитил в этой сессии
 4. **Восстановить решения** из истории (что выбрал, что отверг)
 5. **Спросить себя:** что бы я хотел знать, поднимая эту работу через неделю?
-6. **Записать** в `~/.claude/handovers/HANDOVER-...md`
-7. **Закоммитить** в git (handovers тоже под git)
+6. **Определить путь по типу сессии** (см. «Где сохраняется»): клиент/проект → `clients/<slug>/handover/`; не-проектная → `~/.claude/handovers/`
+7. **Записать** handover. В шапке — строка «Полное состояние → context-log.md + STATUS.md + plan/task-plan*.md (читать ПЕРВЫМ)» (правило `resume-read-project-state.md`)
+8. **Ротация:** если в `clients/<slug>/handover/` уже >10 — старейший в `handover/archive/`
+9. **Закоммитить** в нужный git: проектный → artvision-data; глобальный → claude-code-settings
 
 ## Различия с recap
 
