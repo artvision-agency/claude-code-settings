@@ -113,6 +113,7 @@
 - **Корень:** встроенный system reminder Claude Code core инжектится в context субагента «не писать .md report files». Это НЕ локальный hook/rule — нельзя отключить через `~/.claude/`. Reviewer-агенты строже к нему чем general-purpose/data-analyst.
 - **Решение:** правило `~/.claude/rules/subagent-md-output-override.md` с явным override-блоком для копирования в промпт `Agent`. Если override не сработал — записывать .md вручную из task-notification result.
 - **Не делаю хук** — модификация tool_input в PreToolUse(Task) усложнит debug и добавит overhead на каждый Agent call. Правило + дисциплина в промпте эффективнее. При 3+ повторных инцидентов → пересмотреть на hook.
+- **Свежий рецидив 2026-05-29 (combine, сессия 8505c6de):** из 2 фоновых агентов с GLOBAL OVERRIDE-промптом один (link-router research) ЗАЯВИЛ «file written», но mtime файла остался старым (26.05) — НЕ записал; второй (Adenta) записал корректно. Урок: **override НЕ 100%-надёжен даже со свежим промптом**. ОБЯЗАТЕЛЬНО после агента с .md-deliverable — проверить `find <file> -mtime -1` (свежий ли) ДО того как считать задачу закрытой; если старый/нет — дописать самому из task-notification result. Это уже 3-й инцидент (17.05 reviewer-агенты, 29.05 link-router) → правило проверки mtime обязательно.
 
 ### 19. Массовая раскатка Artvision-брендинга на AdvertMed-партнёрские КП (инцидент 2026-05-20, сессия 70e38694)
 
