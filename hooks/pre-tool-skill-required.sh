@@ -63,6 +63,15 @@ if [[ "$TOOL_NAME" == "Bash" ]]; then
   esac
 fi
 
+# Edit/Write инфраструктурных путей — unblock-действия других хуков, не защищаемый контент.
+# recap-файл = разблокировка recap-goal-check; *-done-маркеры = снуз-механизмы.
+if [[ "$TOOL_NAME" == "Edit" || "$TOOL_NAME" == "Write" ]]; then
+  FPATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+  case "$FPATH" in
+    */sync/recaps/*|*-done-*) exit 0;;
+  esac
+fi
+
 [[ -z "$SESSION_ID" ]] && exit 0
 
 # Snooze
