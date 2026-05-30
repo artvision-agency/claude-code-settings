@@ -59,7 +59,7 @@ case "$PROJECT_TYPE" in
   telegram-bot-python|python-generic|web-scraper|api|cli|data-pipeline)
     PY=".venv/bin/python3"
     [[ -x "$PY" ]] || PY="python3"
-    MAIN=$(ls bot.py main.py app.py src/main.py src/bot.py 2>/dev/null | head -1)
+    MAIN=$(ls bot.py main.py app.py src/main.py src/bot.py 2>/dev/null | head -1 || true)
     if [[ -n "$MAIN" ]] && $PY -m py_compile "$MAIN" 2>>"$LOG_FILE"; then
       echo "  OK: $MAIN" | tee -a "$LOG_FILE"
     elif [[ -n "$MAIN" ]]; then

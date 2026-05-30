@@ -32,7 +32,7 @@ fi
 
 # Извлекаем path локального файла из scp команды (первый аргумент scp)
 # scp PATH user@host:remote
-FILE=$(echo "$COMMAND" | grep -oE '(/Users/antonk/|~/)[^ ]+\.html' | head -1)
+FILE=$(echo "$COMMAND" | grep -oE '(/Users/antonk/|~/)[^ ]+\.html' | head -1 || true)
 [ -z "$FILE" ] && exit 0
 FILE="${FILE/#\~\//$HOME/}"
 

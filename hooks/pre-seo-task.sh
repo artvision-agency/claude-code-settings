@@ -44,7 +44,9 @@ else:
 " 2>/dev/null || echo "")
 
 # Извлекаем клиента из пути
-CLIENT=$(echo "$PATH_ARG" | grep -oE 'clients/[a-z0-9_-]+' | head -1 | sed 's|clients/||')
+# NB: `|| true` обязателен — под `set -euo pipefail` grep без совпадения возвращает 1,
+# pipefail пробрасывает это в присваивание, и set -e убивает warn-only хук с rc=1 (пустой stderr).
+CLIENT=$(echo "$PATH_ARG" | grep -oE 'clients/[a-z0-9_-]+' | head -1 | sed 's|clients/||' || true)
 
 # Если не клиентский путь — пропускаем
 if [[ -z "$CLIENT" ]]; then
@@ -89,9 +91,9 @@ fi
   echo ""
   echo "Запусти ОДНУ из команд перед SEO-работой (или подтверди пропуск SEO_FRESH_SKIP=1):"
   echo ""
-  CLIENT_URL=$(grep -oE 'https?://[^"[:space:]]+' "$CLIENT_DIR/config.yaml" 2>/dev/null | head -1)
+  CLIENT_URL=$(grep -oE 'https?://[^"[:space:]]+' "$CLIENT_DIR/config.yaml" 2>/dev/null | head -1 || true)
   if [[ -z "$CLIENT_URL" ]]; then
-    CLIENT_URL=$(grep -E '^(domain|site|url):' "$CLIENT_DIR/config.yaml" 2>/dev/null | head -1 | sed -E 's/^[a-z]+:[[:space:]]*//; s/^"//; s/"$//; s/[[:space:]]+$//')
+    CLIENT_URL=$(grep -E '^(domain|site|url):' "$CLIENT_DIR/config.yaml" 2>/dev/null | head -1 | sed -E 's/^[a-z]+:[[:space:]]*//; s/^"//; s/"$//; s/[[:space:]]+$//' || true)
     [[ -n "$CLIENT_URL" && "$CLIENT_URL" != http* ]] && CLIENT_URL="https://$CLIENT_URL"
   fi
   CLIENT_URL=${CLIENT_URL:-https://EXAMPLE.RU}

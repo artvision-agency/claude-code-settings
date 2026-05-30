@@ -42,7 +42,7 @@ if ! echo "$COMMAND" | grep -qE 'scp.*(clients/[^/]+/.*kp.*\.html|kp/[^/]+/.*\.h
 fi
 
 # Extract local file path (first non-option arg after scp/-q/-o etc)
-LOCAL_PATH="$(echo "$COMMAND" | grep -oE 'clients/[^ ]+\.html' | head -1)"
+LOCAL_PATH="$(echo "$COMMAND" | grep -oE 'clients/[^ ]+\.html' | head -1 || true)"
 if [[ -z "$LOCAL_PATH" ]]; then
     echo "$INPUT"
     exit 0
