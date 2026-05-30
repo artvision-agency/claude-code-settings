@@ -664,6 +664,14 @@
             "command": "$HOME/.claude/hooks/stop-claude-code-claim-unverified.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/antonk/.claude/hooks/stop-smoothing-check.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -828,6 +836,10 @@
             "type": "command",
             "command": "~/.claude/hooks/pre-bash-script-staleness.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "/Users/antonk/.claude/hooks/pre-deploy-show-files.sh"
           }
         ]
       },
@@ -1544,9 +1556,10 @@
     }
   },
   "skipDangerousModePermissionPrompt": true,
-  "theme": "dark",
+  "theme": "dark-ansi",
   "autoCompactEnabled": false,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "effortLevel": "high"
 }
