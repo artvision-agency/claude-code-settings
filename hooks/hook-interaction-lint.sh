@@ -54,13 +54,21 @@ echo
 #    Если хук A exit-2 на любой tool, но НЕ whitelist'ит unblock-tool хука B,
 #    то когда B заблокировал и требует свой tool, A заблокирует и его → цикл.
 unblock_tool(){ echo "$UNBLOCK_TABLE" | awk -F'|' -v h="$1" '$1==h{print $2}'; }
-whitelists_tool(){ # хук_файл, tool → 0 если ПРОПУСКАЕТ (exit 0), 1 если блокирует/анализирует
+whitelists_tool(){ # хук_файл, tool → 0 если ПРОПУСКАЕТ (exit 0), 1 если блокирует
   local f="$HOOKS_DIR/$1" t="$2"
   [[ ! -f "$f" ]] && return 1
-  # tool считается whitelisted ТОЛЬКО если имя на строке case-ветки, завершающейся exit 0.
-  # Иначе (ветка ':;;' / fallthrough к exit 2) — это блокировка, не пропуск.
-  # Ловим: 'Read|Grep|...|TOOL|...) exit 0' и 'TOOL) exit 0'.
-  grep -E "[)| ]${t}[|) ]" "$f" | grep -qE "exit 0|exit\s+0"
+  # Tool считается пропущенным, если имя встречается как case-токен ('|TOOL|', '|TOOL)', 'TOOL|',
+  # 'TOOL)', или с продолжением '\'), И в окне +5 строк есть 'exit 0'.
+  # Покрывает: однострочные whitelist, МНОГОСТРОЧНЫЕ case с '\'-переносом, path-scoped exempt
+  # (напр. 'Edit|Write)' → следом проверка пути → 'exit 0').
+  awk -v t="$t" '
+    function hastok(s){ return (s ~ ("[(| \t]" t "[|) \t]") || s ~ ("(^|[(| \t])" t "[\\\\]?$")) }
+    {
+      if (hastok($0)) win = 10         # нашли токен — открыли окно (case с \-переносом длинный)
+      if (win > 0) { if ($0 ~ /exit[[:space:]]+0/) { found=1; exit } win-- }
+    }
+    END { exit (found?0:1) }
+  ' "$f"
 }
 
 for A in "${GLOBAL_HOOKS[@]}"; do
