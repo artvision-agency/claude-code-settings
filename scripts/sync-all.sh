@@ -47,6 +47,17 @@ do_tokens() {
     fi
 }
 
+do_access() {
+    local mode="$1"  # push|pull|sync — clients/*/access.md через VPS (gitignored секреты)
+    log_step "clients/*/access.md через VPS ($mode)"
+    local script="$HOME/.claude/scripts/sync-access.sh"
+    if [ -x "$script" ]; then
+        timeout 40 "$script" "$mode" 2>&1 | tail -3 || log_warn "sync-access $mode exit=$?"
+    else
+        log_warn "sync-access.sh не установлен — пропускаю access"
+    fi
+}
+
 # ─── PUSH ───────────────────────────────────────────────────
 
 do_push() {
@@ -127,6 +138,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
     # ── Шаг 4: tokens.json через VPS ──
     do_tokens push
+    do_access push
 
     echo ""
     if [ $changes_made -eq 1 ]; then
@@ -178,6 +190,7 @@ do_pull() {
 
     # ── Шаг 3: tokens.json через VPS ──
     do_tokens pull
+    do_access pull
 
     echo ""
     log_ok "Pull завершён — всё актуально"
