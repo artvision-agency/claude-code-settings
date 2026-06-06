@@ -38,37 +38,13 @@ esac
 # Bash subset whitelist — git/touch/scp/curl/etc — read-only or sync ops
 if [[ "$TOOL_NAME" == "Bash" ]]; then
   CMD=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null | head -c 500)
-
-  # Never block the snooze-marker touch (self-suppressor must always run — иначе дедлок).
-  # Это НЕ ослабление: маркер — штатный снуз (строки 54-56), хук не должен блокировать
-  # единственную команду, которая его создаёт.
-  if [[ "$CMD" == *"skill-required-done-"* ]]; then
-    exit 0
-  fi
-  # Strip leading env-assignments (VAR=val VAR2=val ...) so whitelist matches the real command.
-  # Это НЕ ослабление: набор разрешённых команд тот же, лишь корректно распознаётся при env-префиксе.
-  CMD_NORM="$CMD"
-  while [[ "$CMD_NORM" =~ ^[A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]] ]]; do
-    CMD_NORM="${CMD_NORM#*[[:space:]]}"
-    CMD_NORM="${CMD_NORM#"${CMD_NORM%%[![:space:]]*}"}"
-  done
-
-  case "$CMD_NORM" in
+  case "$CMD" in
     git\ *|*"&& git "*|*"; git "*) exit 0;;
     touch\ *|mkdir\ *|chmod\ *|chown\ *|ln\ *|cp\ *|mv\ *) exit 0;;
     ls\ *|cat\ *|head\ *|tail\ *|grep\ *|find\ *|wc\ *|file\ *) exit 0;;
     scp\ *|ssh\ *|rsync\ *|curl\ *|wget\ *) exit 0;;
     python3\ *|node\ *|npm\ *|pip\ *|brew\ *|crontab\ *) exit 0;;
     echo\ *|printf\ *|date|pwd|env|export\ *) exit 0;;
-  esac
-fi
-
-# Edit/Write инфраструктурных путей — unblock-действия других хуков, не защищаемый контент.
-# recap-файл = разблокировка recap-goal-check; *-done-маркеры = снуз-механизмы.
-if [[ "$TOOL_NAME" == "Edit" || "$TOOL_NAME" == "Write" ]]; then
-  FPATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
-  case "$FPATH" in
-    */sync/recaps/*|*-done-*) exit 0;;
   esac
 fi
 

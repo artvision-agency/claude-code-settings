@@ -114,3 +114,4 @@ agents-artvision
 # ═══════════════════════════════════════════════
 voice/venv/
 __pycache__/
+secure-backups/
