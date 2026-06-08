@@ -25,7 +25,7 @@
 | 2 | Агент `design-system-architect` | ✅/❌/➖ | — |
 | 3 | Скрипт `hybrid-seo-audit.py` | ✅/❌/➖ | — |
 | 4 | SERP-анализ конкурентов (WebSearch, 5-7 запросов) | ✅/❌/➖ | — |
-| 5 | Агент `seo-analyzer` | ✅/❌/➖ | — |
+| 5 | Агент `seo-specialist` | ✅/❌/➖ | — |
 | 6 | Скрипт `factcheck-v2.py` | ✅/❌/➖ | — |
 | 7 | Ручной фактчек (curl, WebFetch) | ✅/❌/➖ | — |
 | 8 | Агент `code-reviewer` / code-audit | ✅/❌/➖ | — |

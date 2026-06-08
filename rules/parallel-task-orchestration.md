@@ -15,7 +15,7 @@
    - Да → `TaskUpdate(B, addBlockedBy:[A])` (цепочка)
    - Нет → независимые (параллель)
 3. **Независимые → рой** `Agent(run_in_background:true)` ОДНИМ сообщением (несколько Agent-вызовов в одном response = реальная параллель). Авто-подбор сеньора по `agent-roster.md`:
-   - баланс/матмодель → data-analyst · backend/API → backend-developer · фронт → vue-expert/frontend · тесты → test-automator · security → security-engineer · SEO → seo-analyzer · КП → sales-engineer · код-ревью → code-reviewer · деплой → general-purpose(Bash) · research → research-analyst
+   - баланс/матмодель → data-analyst · backend/API → backend-developer · фронт → vue-expert/frontend · тесты → test-automator · security → security-engineer · SEO → seo-specialist · КП → sales-engineer · код-ревью → code-reviewer · деплой → general-purpose(Bash) · research → research-analyst
 4. **Зависимые → по готовности** — запускать B когда A завершилась (task-notification).
 5. **Сбор** — каждый субагент уведомляет → консолидирую → отмечаю TaskUpdate completed.
 
