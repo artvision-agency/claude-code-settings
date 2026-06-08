@@ -1,5 +1,8 @@
-#!/usr/bin/env bash
+#!/opt/homebrew/bin/bash
 # sessions-resume-launcher.sh — резюмит N последних активных Claude-сессий в окнах Ghostty.
+# 2026-06-08: shebang → brew-bash (declare -A ломался в Apple /bin/bash 3.2 → "Users: unbound variable").
+#   LOGIN зовётся с N=0 (только combine, без 6 resume по mtime). WAKE resume больше не открывает.
+#   Аудит: reports/autostart-audit-2026-06-08/01-login-chain.md.
 # БЕЗ tmux. Механизм: open -na Ghostty.app --args -e /bin/zsh -lc '...' (как claude-asana.sh).
 # --resume загружает контекст и ЖДЁТ ввода (не churns) → окна открываются «где остановился».
 # Combine-окно (asana+очередь) активно работает (даётся /combine) — только в LOGIN-режиме.

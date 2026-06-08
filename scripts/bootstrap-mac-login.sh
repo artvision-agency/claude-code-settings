@@ -17,7 +17,8 @@ echo "=== bootstrap LOGIN $(date '+%F %T') ==="
 # 2) Дать сети устаканиться
 sleep 8
 
-# 3) Резюм 6 последних сессий + окно combine (asana+очередь)
-"$HOME/.claude/scripts/sessions-resume-launcher.sh" 6 || echo "sessions-resume: non-fatal error"
+# 3) ТОЛЬКО окно combine (asana+очередь). 6 resume-окон по mtime убраны 2026-06-08
+#    (тормозящий несвязанный мусор — аудит 01-login-chain.md CRITICAL #1).
+"$HOME/.claude/scripts/sessions-resume-launcher.sh" 0 || echo "sessions-resume: non-fatal error"
 
 echo "bootstrap done $(date '+%H:%M:%S')"
