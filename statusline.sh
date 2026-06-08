@@ -12,6 +12,18 @@ pct = int(float(data.get('context_window', {}).get('used_percentage', 0)))
 cost = float(data.get('cost', {}).get('total_cost_usd', 0))
 cwd = data.get('cwd', os.getcwd())
 
+# Persist REAL context % so hooks (которым used_percentage не приходит) берут правду,
+# а не оценку по размеру transcript-файла. Источник правды = context_window.used_percentage.
+try:
+    sid = data.get('session_id') or os.path.basename(data.get('transcript_path', '')).replace('.jsonl', '')
+    if sid:
+        with open(f'/tmp/claude-ctx-{sid}.pct', 'w') as _f:
+            _f.write(str(pct))
+    with open('/tmp/claude-ctx-last.pct', 'w') as _f:
+        _f.write(str(pct))
+except Exception:
+    pass
+
 user = os.environ.get('USER', 'user')
 dir_short = os.path.basename(cwd)
 
