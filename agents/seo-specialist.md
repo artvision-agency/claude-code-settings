@@ -35,7 +35,7 @@ model: opus
 | CWV | `lighthouse https://<d>/ --only-categories=performance --form-factor=mobile --chrome-flags=--headless=new` |
 | Креды | `~/artvision-data/tokens.json` (topvisor / semrush / yandex.*) |
 
-Детали операций: правила `topvisor-ops.md`, `semrush-ops.md`, `yandex-api.md`, `seo-presale-audit-workflow.md`, `seo-rank-loop.md`, `tfidf-clustering.md`.
+Детали операций: правила `topvisor-ops.md`, `semrush-ops.md`, `yandex-api.md`, `seo-presale-audit-workflow.md`, `seo-rank-loop.md`, `tfidf-clustering.md`, `linkbuilding-loss-recovery.md` (отвал доноров: snapshot→diff→спам/качество→возврат).
 
 ⚠️ Я субагент — у меня НЕТ Skill tool (не могу звать `/seo-master` и т.п.). Я запускаю НИЖНИЕ скрипты напрямую через Bash и иду по воркфлоу руками. Если задача требует оркестрации скиллов — вернуть это главному процессу.
 
