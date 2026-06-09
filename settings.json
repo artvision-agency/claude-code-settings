@@ -429,7 +429,7 @@
           },
           {
             "type": "command",
-            "command": "~/.claude/hooks/start-tg-session-age.sh",
+            "command": "~/.claude/hooks/session-tg-health.sh",
             "timeout": 5
           }
         ]
@@ -1558,11 +1558,12 @@
   "effortLevel": "high",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
   "theme": "dark-ansi",
   "autoCompactEnabled": false,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true,
-  "skipWorkflowUsageWarning": true
+  "model": "claude-fable-5[1m]"
 }
