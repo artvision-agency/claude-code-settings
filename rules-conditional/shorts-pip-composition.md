@@ -1,3 +1,15 @@
+---
+name: shorts-pip-composition
+paths:
+  - 'personal/social_clips/**'
+  - '**/social_clips/**'
+  - 'clients/**/ads/**'
+  - '**/*shorts*'
+  - '**/*reels*'
+  - '**/*video*'
+always: false
+---
+
 # Shorts PiP Composition — стандарт композиции YouTube Shorts с автором
 
 > **Установлено:** 2026-05-12, после полного цикла pilot Видео 1 (CTR теория, IMG_9893) с консилиумом 3 спецов (round_table + 2 Opus агентов). Антон утвердил параметры.

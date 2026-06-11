@@ -1,3 +1,14 @@
+---
+name: tg-video-publishing
+paths:
+  - 'personal/social_clips/**'
+  - '**/social_clips/**'
+  - 'clients/**/ads/**'
+  - '**/*video*'
+  - '**/*shorts*'
+always: false
+---
+
 # TG Video Publishing — обязательные правила (каналы / сторис / личка)
 
 > **Установлено:** 2026-05-30 (сессия 5498b74b, после потери времени на CRF 27/28 и неверной гипотезы про supports_streaming).

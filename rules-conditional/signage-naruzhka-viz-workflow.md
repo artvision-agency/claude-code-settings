@@ -1,3 +1,14 @@
+---
+name: signage-naruzhka-viz-workflow
+paths:
+  - 'clients/**/ideas/**'
+  - '**/*signage*'
+  - '**/*vyveska*'
+  - '**/*naruzhk*'
+  - '**/*billboard*'
+always: false
+---
+
 # Визуализация вывески/наружки клиента — воркфлоу (для всех проектов)
 
 > **Установлено:** 2026-06-05 (Антон, USmile). Дистилляция всего опыта вывесок USmile + консилиум (llama+qwen3+gpt-oss).

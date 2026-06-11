@@ -1,3 +1,13 @@
+---
+name: calculator-real-estate-checks
+paths:
+  - '**/*ipoteka*'
+  - '**/*calculator*'
+  - '**/*kvartir*'
+  - '**/finance/**'
+always: false
+---
+
 # Калькулятор недвижимости — обязательные факторы учёта
 
 > **HARD-ENFORCE правило** для любого калькулятора ипотеки / квартирного инвест-анализа Антона.
