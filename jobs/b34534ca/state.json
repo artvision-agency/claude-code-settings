@@ -1,17 +1,16 @@
 {
-  "state": "done",
-  "detail": "claude agents feature confirmed working; background session ffdca95d found waiting for user decision on Yandex.Plus email access method",
-  "tempo": "idle",
+  "state": "blocked",
+  "detail": "session running; 3 issues found (Asana sync failing, Telethon expired, git pull failed); awaiting specifics on what to diagnose",
+  "tempo": "blocked",
   "inFlight": {
     "tasks": 0,
     "queued": 0,
     "kinds": []
   },
-  "output": {
-    "result": "claude agents operational; session ffdca95d active, awaiting user choice: screenshot/forward email, Playwright login setup, or Safari AppleScript"
-  },
+  "needs": "name what should work (bot / asana / tg-parsing / deploy / specific task)",
+  "output": null,
   "children": null,
-  "linkScanOffset": 437795,
+  "linkScanOffset": 104161,
   "linkScanPath": "/Users/antonk/.claude/projects/-Users-antonk/b34534ca-86bc-4d84-8f9d-9a6d2eb8b3ff.jsonl",
   "template": "bg",
   "respawnFlags": [],
@@ -21,10 +20,10 @@
   "sessionId": "b34534ca-86bc-4d84-8f9d-9a6d2eb8b3ff",
   "resumeSessionId": "b34534ca-86bc-4d84-8f9d-9a6d2eb8b3ff",
   "daemonShort": "b34534ca",
-  "cliVersion": "2.1.139",
+  "cliVersion": "2.1.167",
   "cwd": "/Users/antonk",
   "backend": "daemon",
   "createdAt": "2026-05-12T09:14:51.493Z",
-  "updatedAt": "2026-05-12T09:16:19.760Z",
-  "firstTerminalAt": "2026-05-12T09:16:19.760Z"
+  "updatedAt": "2026-06-06T15:37:56.862Z",
+  "firstTerminalAt": null
 }

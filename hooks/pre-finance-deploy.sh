@@ -1,0 +1,1 @@
+/Users/antonk/artvision-data/.claude-shared/hooks/pre-finance-deploy.sh

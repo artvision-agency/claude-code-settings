@@ -85,11 +85,44 @@ disable-model-invocation: false
 
 ## PIPELINE (выполнять СТРОГО последовательно!)
 
+### ШАГ 0 (опционально): DEMBRANDT AUTO-EXTRACT
+
+**Когда применять:** флаг `--auto-extract` в команде вызова, ИЛИ автоматически когда нет `presales/<slug>/design-system.md` (первый прогон).
+
+**Цель:** Получить черновик дизайн-системы за 30 секунд (вместо 5-10 мин ручного curl+grep в Шаге 1). Не заменяет Шаг 1, а даёт seed-данные.
+
+**Запуск:**
+
+```bash
+cd ~/artvision-data/_dembrandt-pilot
+~/artvision-data/node_modules/.bin/dembrandt [URL] --dtcg --save-output --design-md
+# Output: output/<domain>/<timestamp>.tokens.json + DESIGN.md
+```
+
+Если Dembrandt не установлен — пропустить Шаг 0, идти в Шаг 1. Установка: `cd ~/artvision-data && npm install dembrandt playwright && ./node_modules/.bin/playwright install chromium`.
+
+**Перенести output в presales/:**
+
+```bash
+mkdir -p presales/<slug>
+cp output/<domain>/*.tokens.json presales/<slug>/dembrandt-tokens.json
+cp output/<domain>/DESIGN.md presales/<slug>/dembrandt-draft.md
+```
+
+**КРИТИЧНО — обязательная sanity-check** (правило `kp-brand.md` остаётся в силе):
+- Dembrandt `semantic.primary` часто **неверный** — берёт первый частый цвет, не бренд. Прецедент: Творим выдал `#ff8562` (карточка), реальный бренд `#34aabb` (бирюзовый). Проверить глазами на главной.
+- Dembrandt `body font` ловит виджеты (Я.Метрика, Тильда → `YS Text`). Heading font обычно правильный.
+- Топ-confidence цвета — это часто фон/текст (#fff, #212121), не бренд. Искать цвет с `sources` указывающим на кнопки/CTA.
+
+**Результат Шага 0:** `presales/<slug>/dembrandt-draft.md` — seed для Шага 1, не финал.
+
 ### ШАГ 1: ИЗВЛЕЧЕНИЕ ДИЗАЙН-СИСТЕМЫ КЛИЕНТА
 
 **Агент:** `design-system-architect`
 
 **ОБЯЗАТЕЛЬНО перед любой генерацией!**
+
+Если есть `presales/<slug>/dembrandt-draft.md` (из Шага 0) — использовать как стартовую точку, верифицировать каждое значение глазами + ниже описанным curl-grep.
 
 Извлечь с сайта клиента:
 

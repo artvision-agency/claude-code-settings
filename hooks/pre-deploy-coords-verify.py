@@ -36,19 +36,27 @@ def haversine_m(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     return R * 2 * math.asin(math.sqrt(a))
 
 
+class NominatimNetworkError(Exception):
+    """Сетевой/HTTP сбой обращения к Nominatim — НЕ путать с 'пусто' (нет такого места)."""
+
+
 def nominatim_geocode(query: str, city: str = "Санкт-Петербург") -> tuple[float, float] | None:
-    """Return (lat, lon) from Nominatim OSM or None on failure."""
+    """Return (lat, lon) from Nominatim OSM, or None если место не найдено (пустой ответ).
+    Поднимает NominatimNetworkError при сетевом/HTTP-сбое — чтобы caller мог fail-CLOSED,
+    а не молча пропустить непроверенные координаты."""
     q = urllib.parse.quote(f"{query} {city}")
     url = f"https://nominatim.openstreetmap.org/search?q={q}&format=json&limit=1"
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "artvision-hallucination-hook/1.0"})
         with urllib.request.urlopen(req, timeout=8) as r:
             data = json.loads(r.read())
-        if data:
-            return float(data[0]["lat"]), float(data[0]["lon"])
     except Exception as exc:
-        log.warning("Nominatim error for %r: %s", query, exc)
-    return None
+        # FAIL-CLOSED: сетевой/HTTP/parse-сбой — НЕ можем проверить координату.
+        log.warning("Nominatim network error for %r: %s", query, exc)
+        raise NominatimNetworkError(str(exc)) from exc
+    if data:
+        return float(data[0]["lat"]), float(data[0]["lon"])
+    return None  # валидный ответ, но место не найдено — это не сетевой сбой
 
 
 def extract_html_path(command: str) -> str | None:

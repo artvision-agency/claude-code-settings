@@ -1,0 +1,170 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "local-org-discovery data schemas",
+  "description": "Совмещённая схема для 5 JSON-файлов: seed-orgs + orgs-yandex + orgs-aggregators + social-research + objective-ratings",
+  "definitions": {
+    "theme_entry": {
+      "type": "object",
+      "properties": {
+        "theme": {"type": "string", "description": "Краткая формулировка темы"},
+        "delta": {
+          "type": "string",
+          "enum": ["+", "-", "новое", "стабильно"],
+          "description": "Тренд темы во времени"
+        },
+        "year": {"type": "string", "description": "Период обострения, например '2024-2025'"},
+        "note": {"type": "string", "description": "Опциональный комментарий"},
+        "names": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Имена упомянутых сотрудников (для positive — кого хвалят)"
+        }
+      },
+      "required": ["theme"]
+    },
+    "org_base": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string", "description": "slug стабильный между файлами"},
+        "name": {"type": "string"},
+        "type": {"type": "string", "description": "СОШ / Гимназия / Лицей / Частная / Клиника / ..."},
+        "number": {"type": ["integer", "null"], "description": "Если организация имеет номер (школы)"},
+        "address": {"type": "string"},
+        "org_type": {
+          "type": "string",
+          "enum": ["gov", "commercial", "private", "mixed"],
+          "description": "gov=ГБОУ/ГБУЗ/МБОУ/ФГБОУ/МУП, commercial=ООО/ИП/АНО/ЧОУ, private=без юр.формы но коммерческая"
+        }
+      },
+      "required": ["id", "name"]
+    }
+  },
+  "files": {
+    "seed-orgs.json": {
+      "description": "Базовый список организаций — собран на шаге 1 главным skill",
+      "type": "object",
+      "properties": {
+        "city": {"type": "string"},
+        "district": {"type": "string"},
+        "segment": {"type": "string", "description": "schools|clinics|kindergartens|dental|fitness|services|other"},
+        "for_whom": {"type": "string", "description": "Опционально — для кого подбор"},
+        "collected": {"type": "string", "format": "date"},
+        "sources": {"type": "array", "items": {"type": "string"}, "description": "Откуда seed-list собран"},
+        "orgs": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/org_base"}
+        }
+      },
+      "required": ["city", "segment", "collected", "orgs"]
+    },
+    "orgs-yandex.json": {
+      "description": "Я.Карты + city-verify. Спец #1.",
+      "type": "object",
+      "properties": {
+        "collected": {"type": "string", "format": "date"},
+        "agent": {"const": "yandex-maps"},
+        "method": {"type": "string"},
+        "captcha_rate": {"type": "string", "description": "Доля заблокированных, например '85%'"},
+        "data_quality_note": {"type": "string"},
+        "orgs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "yandex_url": {"type": ["string", "null"]},
+              "yandex_status": {
+                "type": "string",
+                "enum": ["direct_fetch_ok", "captcha_blocked", "not_found", "city_mismatch"]
+              },
+              "city_verified": {"type": "boolean", "description": "Обязательное поле. false = исключить из дашборда"},
+              "city_actual": {"type": "string", "description": "Если city_verified=false — фактический город"},
+              "rating": {"type": ["number", "null"]},
+              "reviews_count": {"type": ["integer", "null"]},
+              "reviews_period": {"type": "string"},
+              "themes_positive": {"type": "array", "items": {"$ref": "#/definitions/theme_entry"}},
+              "themes_negative": {"type": "array", "items": {"$ref": "#/definitions/theme_entry"}},
+              "source_fallback": {"type": "string", "description": "Если captcha — откуда взяли данные"}
+            },
+            "required": ["id", "name", "city_verified"]
+          }
+        }
+      },
+      "required": ["collected", "agent", "orgs"]
+    },
+    "orgs-aggregators.json": {
+      "description": "2GIS + Zoon + локальный каталог. Спец #2.",
+      "type": "object",
+      "properties": {
+        "collected": {"type": "string", "format": "date"},
+        "agent": {"const": "aggregators"},
+        "sources": {"type": "array", "items": {"type": "string"}},
+        "orgs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "2gis": {"type": ["object", "null"]},
+              "zoon": {"type": ["object", "null"]},
+              "local_catalog": {"type": ["object", "null"]}
+            }
+          }
+        }
+      }
+    },
+    "social-research.json": {
+      "description": "VK + Telegram public preview. Спец #3.",
+      "type": "object",
+      "properties": {
+        "collected": {"type": "string", "format": "date"},
+        "agent": {"const": "social-research"},
+        "note": {"type": "string"},
+        "vk": {
+          "type": "object",
+          "properties": {
+            "org_groups": {"type": "array"}
+          }
+        },
+        "telegram": {
+          "type": "object",
+          "properties": {
+            "channels": {"type": "array"},
+            "regional_chats": {"type": "array"}
+          }
+        }
+      }
+    },
+    "objective-ratings.json": {
+      "description": "Внешние независимые рейтинги. Спец #4.",
+      "type": "object",
+      "properties": {
+        "collected": {"type": "string", "format": "date"},
+        "agent": {"const": "objective-ratings"},
+        "methodology_note": {"type": "string"},
+        "schema_for_segment": {"type": "string"},
+        "orgs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "ratings": {"type": "object", "description": "Произвольные ключи по сегменту"},
+              "notes": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  },
+  "invariants": [
+    "id организации стабилен между всеми 5 файлами — это ключ для join на этапе HTML",
+    "city_verified=true обязательно для попадания в финальный дашборд",
+    "org_type разметка делается на этапе seed (шаг 4 pipeline), используется для gov/commercial split в дашборде",
+    "themes_* всегда с delta — без временного разреза трендов не видно",
+    "Все рейтинги/числа должны быть подтверждены источником (URL или скриншот в screens/), иначе null + комментарий"
+  ]
+}

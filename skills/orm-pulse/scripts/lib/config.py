@@ -2,9 +2,12 @@
 
 Вынесено из command-center.py при refactoring 2026-05-10 (security audit H2).
 """
+import os
 from pathlib import Path
 
-ROOT = Path("/Users/antonk/artvision-data")
+# ROOT — env-override с fallback на локальный путь (чинит VPS, где раньше правили sed).
+# Без ORM_ROOT поведение идентично прежнему (локальные cron'ы не затронуты).
+ROOT = Path(os.environ.get("ORM_ROOT", "/Users/antonk/artvision-data"))
 
 # VPS deploy
 VPS_USER = "root"

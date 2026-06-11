@@ -11,21 +11,43 @@ TRANSCRIPT=$(echo "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin)
 [ -z "$TRANSCRIPT" ] && exit 0
 [ ! -f "$TRANSCRIPT" ] && exit 0
 
-SIZE=$(stat -f%z "$TRANSCRIPT" 2>/dev/null || stat -c%s "$TRANSCRIPT" 2>/dev/null || echo 0)
+SID=$(basename "$TRANSCRIPT" .jsonl)
 
-# Rough proxy: transcript ~1MB ≈ полный контекст 200K токенов
-# 40% ≈ 400KB, 50% ≈ 500KB, 80% ≈ 800KB
-THRESHOLD_40=400000
-THRESHOLD_80=800000
+# РЕАЛЬНЫЙ процент контекста.
+# Источник правды #1: statusline пишет context_window.used_percentage в /tmp/claude-ctx-<SID>.pct
+#   (то же число, что видит пользователь внизу панели).
+# Fallback #2: считаем реальные токены контекста из usage последнего сообщения транскрипта
+#   (input + cache_read + cache_creation) ÷ окно модели. НЕ по размеру файла —
+#   .jsonl это append-only лог всей истории, а не живое окно (прецедент: файл 1.08МБ ≈ 49% реально).
+PCT=$(cat "/tmp/claude-ctx-${SID}.pct" 2>/dev/null)
+
+if ! [[ "$PCT" =~ ^[0-9]+$ ]]; then
+  PCT=$(tac "$TRANSCRIPT" 2>/dev/null | python3 -c "
+import sys, json
+WINDOW = 1000000  # Opus 4.8 [1m] / current default; даёт under-warn если окно меньше (безопаснее over-warn)
+for line in sys.stdin:
+    try: d = json.loads(line)
+    except: continue
+    u = (d.get('message') or {}).get('usage')
+    if u:
+        tot = u.get('input_tokens',0) + u.get('cache_read_input_tokens',0) + u.get('cache_creation_input_tokens',0)
+        print(int(tot * 100 / WINDOW)); break
+else:
+    print(0)
+" 2>/dev/null)
+fi
+
+[[ "$PCT" =~ ^[0-9]+$ ]] || PCT=0
+
+THRESHOLD_40=40
+THRESHOLD_80=80
 
 # Dedupe per session — не спамим каждый turn
-SID=$(basename "$TRANSCRIPT" .jsonl)
 FLAG_40="/tmp/ctx40-warned-${SID}.flag"
 FLAG_80="/tmp/ctx80-warned-${SID}.flag"
 
-if [ "$SIZE" -gt "$THRESHOLD_80" ] && [ ! -f "$FLAG_80" ]; then
+if [ "$PCT" -gt "$THRESHOLD_80" ] && [ ! -f "$FLAG_80" ]; then
   touch "$FLAG_80"
-  PCT=$((SIZE * 100 / 1000000))
   cat <<EOF
 ═══════════════════════════════════════════
 🚨 CONTEXT ~${PCT}% — КРИТИЧНО (>80%)
@@ -39,9 +61,8 @@ EOF
   exit 0
 fi
 
-if [ "$SIZE" -gt "$THRESHOLD_40" ] && [ ! -f "$FLAG_40" ]; then
+if [ "$PCT" -gt "$THRESHOLD_40" ] && [ ! -f "$FLAG_40" ]; then
   touch "$FLAG_40"
-  PCT=$((SIZE * 100 / 1000000))
   cat <<EOF
 ═══════════════════════════════════════════
 ⚠️  CONTEXT ~${PCT}% — ПРОЙДЕН ПОРОГ 40% ("Dumb Zone")

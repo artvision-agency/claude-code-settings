@@ -1,0 +1,8 @@
+# Очередь шортсов на публикацию @-Artvisionpro
+# Формат (TAB): file_path<TAB>title<TAB>status<TAB>note
+# status: ready (готово к заливке) | hold (на паузе, не лить) | done (залито — будет удалено скриптом-сверкой)
+# Скрипт shorts-daily-digest.py читает этот файл и сверяет с каналом через YouTube API.
+# Когда видео залито — поменять status на done или удалить строку.
+/Users/antonk/artvision-data/personal/social_clips/2026-05-13-video3/v3_9x16_FINAL_PREMIUM.mp4	Выдача: 4 позиции Я.Директа сверху и снизу — где SEO	ready	V3, premium 9:16, рендер 25.05
+/Users/antonk/artvision-data/personal/social_clips/2026-05-14-pilot-heavy/p1_9x16_FINAL_PREMIUM.mp4	Как мы проводим аудит сайта: 4 фактора (хук Товстоногов)	hold	P1, premium 9:16. Возможный дубль "4 фактора SEO-аудита" (на канале 01.05) — сверить угол подачи перед заливкой
+/Users/antonk/artvision-data/personal/social_clips/2026-05-15-video4-scroll/v4_9x16_FINAL_PREMIUM.mp4	Комментарий про сайт Artvision (scroll-демо)	hold	V4, premium 9:16. Внутренний/про свой сайт — решить нужно ли на канал

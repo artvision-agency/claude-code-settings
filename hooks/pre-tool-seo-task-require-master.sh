@@ -29,6 +29,12 @@ set -uo pipefail
 INPUT="$(cat 2>/dev/null || true)"
 [ -z "$INPUT" ] && exit 0
 
+# 1b. Inline bypass — env-префикс в ТЕКСТЕ команды (env-var хука не видит env суб-команды).
+#     Делает документированный `SEO_MASTER_FORCE=1 <операция>` реально рабочим
+#     для main-процесса И субагентов (seo-specialist сам несёт весь pipeline).
+#     Approve Антона 2026-06-08 («bypass»).
+printf '%s' "$INPUT" | grep -q 'SEO_MASTER_FORCE=1' && exit 0
+
 # 2. Parse session_id, tool_name, bash_command, file_path
 PARSED=$(printf '%s' "$INPUT" | python3 -c '
 import sys, json

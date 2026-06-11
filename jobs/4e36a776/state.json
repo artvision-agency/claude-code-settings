@@ -1,0 +1,34 @@
+{
+  "state": "blocked",
+  "detail": "session startup diagnostics: Asana sync crashing (38 failures, DB lock suspected), git pull failed, Telethon auth expired; user to choose next action",
+  "tempo": "blocked",
+  "inFlight": {
+    "tasks": 0,
+    "queued": 0,
+    "kinds": []
+  },
+  "needs": "choose: fix Asana sync (1), debug git pull (2), or specify another focus",
+  "output": null,
+  "children": null,
+  "linkScanOffset": 120751,
+  "linkScanPath": "/Users/antonk/.claude/projects/-Users-antonk/4e36a776-ed13-4a5e-8465-768abae91267.jsonl",
+  "template": "bg",
+  "respawnFlags": [
+    "--model",
+    "opus",
+    "--permission-mode",
+    "auto"
+  ],
+  "intent": "что тут такое случилос",
+  "name": "Check space",
+  "nameSource": "auto",
+  "sessionId": "4e36a776-ed13-4a5e-8465-768abae91267",
+  "resumeSessionId": "4e36a776-ed13-4a5e-8465-768abae91267",
+  "daemonShort": "4e36a776",
+  "cliVersion": "2.1.167",
+  "cwd": "/Users/antonk",
+  "backend": "daemon",
+  "createdAt": "2026-05-18T14:55:13.749Z",
+  "updatedAt": "2026-06-06T15:35:50.374Z",
+  "firstTerminalAt": null
+}

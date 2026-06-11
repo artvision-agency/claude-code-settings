@@ -54,11 +54,21 @@
 
 **Применять:** в `/swarm` и параллельных Agent вызовах когда MCP не нужны.
 
-## 9. Hooks НЕ hot-swap
+## 9. Hooks подхватываются file watcher автоматически (ИСПРАВЛЕНО 2026-05-28)
 
-> *"Hooks are loaded when Claude Code session starts. Changes to hook configuration require restarting Claude Code."*
+> **БЫЛО (устаревшая цитата, опровергнута справкой):** *"Hooks are loaded when Claude Code session starts. Changes to hook configuration require restarting Claude Code."*
+>
+> **СТАЛО (текущая официальная справка `code.claude.com/docs/en/hooks`, проверено 2026-05-28):**
+> *"Direct edits to hooks in settings files are normally picked up automatically by the file watcher."*
 
-**Применять:** после правки `settings.json` или нового хука — **рестарт Claude Code обязателен**, не верить «применилось» в текущей сессии.
+**Применять:**
+- После правки `settings.json` или нового хука — **рестарт НЕ обязателен**. File watcher подхватывает автоматически.
+- `/clear` → SessionStart `source=clear` → перечитывает hooks.
+- `claude -c` / `--resume` → SessionStart `source=resume` → перечитывает hooks.
+- Команды `/reload-hooks` нет — только file watcher или явный SessionStart.
+- Оговорка: «normally» — edge-кейсы возможны. Для 100% гарантии — `/clear`. Проверить загрузку: `/hooks` (read-only список).
+
+**Прецедент ошибки 2026-05-28 (EDUCATION session):** несколько раз сказал Антону «нужен рестарт для активации hooks», опираясь на ЭТО правило из памяти. При проверке справки через WebFetch — оказалось file watcher подхватывает сам. Класс ошибки: доверие устаревшему правилу из памяти вместо сверки с первоисточником. Связь: `self-corrections.md` #20 (устаревшие факты из памяти).
 
 ## 10. Не railroad — давай контекст, не сценарий
 
@@ -77,6 +87,19 @@
 > *"`claude --name 'auth-refactor'`"* + `claude --resume <session-id> --fork-session`.
 
 **У нас:** auto-naming через `session-namer.sh` + `cc-name`. **Gap:** `--fork-session` для параллельных экспериментов из общего baseline (3 версии КП от одной точки) не используется.
+
+## 13. Переосмысление цикла > ускорение старого процесса
+
+> Источник: тред [@bcherny 2026](https://x.com/bcherny/status/2060390852619272526) (зеркало [twitter-thread.com/t/2060390852619272526](https://twitter-thread.com/t/2060390852619272526)). Кейс Salesforce: проект 231 день → **13 дней**; один PR добавил 21 API-endpoint с полным тестовым покрытием; PR-ов больше, а инцидентов **−5%** (качество встроено в workflow агента, не «после»).
+>
+> *"The biggest win comes not from automating current work, but from rethinking the development cycle itself — remove steps, eliminate handoffs, let agents own tasks end-to-end."*
+
+**Главная мысль:** максимальный выигрыш — НЕ ускорять текущий процесс, а **переосмыслить сам цикл**: убрать лишние шаги, убрать передачи ответственности (handoffs), дать агенту владеть задачей end-to-end.
+
+**У нас (применимо, с оговоркой):**
+- ✅ Это ровно курс `/combine` (очередь→выполнение→проверка→деплой→закрытие без остановок) + `parallel-task-orchestration.md` (рой сеньоров вместо последовательной работы) + встроенное качество (factcheck/qa-full.sh/хуки = «инциденты −5%»). Твит **подтверждает** наш вектор, нового действия не даёт.
+- ⚠️ **Оговорка:** тезис «агент владеет end-to-end» у нас **ограничен**. CONFIRM-барьеры (контакт с клиентом, прод-деплой, деньги — `security.md`) — это НЕ «лишний handoff» для устранения, а защита от blast-radius. Убирать их по мотиву «agent owns everything» нельзя. Цифры Salesforce (231→13 дней) — про продуктовый код, к агентству SEO/маркетинга 1:1 не переносятся, переносится принцип.
+- Перекликается с #10 «не railroad»: меньше пошаговых сценариев там, где агент может владеть результатом сам.
 
 ## Когда применять эти правила
 

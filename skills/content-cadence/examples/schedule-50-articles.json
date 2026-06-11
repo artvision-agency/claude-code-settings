@@ -1,0 +1,475 @@
+{
+  "client": "tvorim",
+  "generated_at": "2026-05-21T05:03:31",
+  "start_date": "2026-05-26",
+  "target_daily_max": 5,
+  "weekdays_only": true,
+  "skip_holidays": true,
+  "hour_window": [
+    "09:00",
+    "11:00"
+  ],
+  "jitter_minutes": 30,
+  "start_offset": 0,
+  "total_articles": 50,
+  "total_scheduled": 50,
+  "total_days_with_posts": 16,
+  "items": [
+    {
+      "day": 1,
+      "date": "2026-05-26",
+      "time": "09:20",
+      "article_idx": 0,
+      "article": "article-1",
+      "status": "scheduled"
+    },
+    {
+      "day": 2,
+      "date": "2026-05-27",
+      "time": "09:06",
+      "article_idx": 1,
+      "article": "article-2",
+      "status": "scheduled"
+    },
+    {
+      "day": 3,
+      "date": "2026-05-28",
+      "time": "10:10",
+      "article_idx": 2,
+      "article": "article-3",
+      "status": "scheduled"
+    },
+    {
+      "day": 4,
+      "date": "2026-05-29",
+      "time": "09:00",
+      "article_idx": 3,
+      "article": "article-4",
+      "status": "scheduled"
+    },
+    {
+      "day": 4,
+      "date": "2026-05-29",
+      "time": "09:18",
+      "article_idx": 4,
+      "article": "article-5",
+      "status": "scheduled"
+    },
+    {
+      "day": null,
+      "date": "2026-05-30",
+      "time": null,
+      "article_idx": null,
+      "article": null,
+      "status": "skipped_non_working"
+    },
+    {
+      "day": null,
+      "date": "2026-05-31",
+      "time": null,
+      "article_idx": null,
+      "article": null,
+      "status": "skipped_non_working"
+    },
+    {
+      "day": 5,
+      "date": "2026-06-01",
+      "time": "09:08",
+      "article_idx": 5,
+      "article": "article-6",
+      "status": "scheduled"
+    },
+    {
+      "day": 5,
+      "date": "2026-06-01",
+      "time": "09:11",
+      "article_idx": 6,
+      "article": "article-7",
+      "status": "scheduled"
+    },
+    {
+      "day": 6,
+      "date": "2026-06-02",
+      "time": "09:26",
+      "article_idx": 7,
+      "article": "article-8",
+      "status": "scheduled"
+    },
+    {
+      "day": 6,
+      "date": "2026-06-02",
+      "time": "10:02",
+      "article_idx": 8,
+      "article": "article-9",
+      "status": "scheduled"
+    },
+    {
+      "day": 7,
+      "date": "2026-06-03",
+      "time": "09:02",
+      "article_idx": 9,
+      "article": "article-10",
+      "status": "scheduled"
+    },
+    {
+      "day": 7,
+      "date": "2026-06-03",
+      "time": "09:18",
+      "article_idx": 10,
+      "article": "article-11",
+      "status": "scheduled"
+    },
+    {
+      "day": 7,
+      "date": "2026-06-03",
+      "time": "09:30",
+      "article_idx": 11,
+      "article": "article-12",
+      "status": "scheduled"
+    },
+    {
+      "day": 8,
+      "date": "2026-06-04",
+      "time": "09:00",
+      "article_idx": 12,
+      "article": "article-13",
+      "status": "scheduled"
+    },
+    {
+      "day": 8,
+      "date": "2026-06-04",
+      "time": "09:24",
+      "article_idx": 13,
+      "article": "article-14",
+      "status": "scheduled"
+    },
+    {
+      "day": 8,
+      "date": "2026-06-04",
+      "time": "09:52",
+      "article_idx": 14,
+      "article": "article-15",
+      "status": "scheduled"
+    },
+    {
+      "day": 9,
+      "date": "2026-06-05",
+      "time": "09:21",
+      "article_idx": 15,
+      "article": "article-16",
+      "status": "scheduled"
+    },
+    {
+      "day": 9,
+      "date": "2026-06-05",
+      "time": "09:23",
+      "article_idx": 16,
+      "article": "article-17",
+      "status": "scheduled"
+    },
+    {
+      "day": 9,
+      "date": "2026-06-05",
+      "time": "09:44",
+      "article_idx": 17,
+      "article": "article-18",
+      "status": "scheduled"
+    },
+    {
+      "day": null,
+      "date": "2026-06-06",
+      "time": null,
+      "article_idx": null,
+      "article": null,
+      "status": "skipped_non_working"
+    },
+    {
+      "day": null,
+      "date": "2026-06-07",
+      "time": null,
+      "article_idx": null,
+      "article": null,
+      "status": "skipped_non_working"
+    },
+    {
+      "day": 10,
+      "date": "2026-06-08",
+      "time": "09:12",
+      "article_idx": 18,
+      "article": "article-19",
+      "status": "scheduled"
+    },
+    {
+      "day": 10,
+      "date": "2026-06-08",
+      "time": "09:17",
+      "article_idx": 19,
+      "article": "article-20",
+      "status": "scheduled"
+    },
+    {
+      "day": 10,
+      "date": "2026-06-08",
+      "time": "09:48",
+      "article_idx": 20,
+      "article": "article-21",
+      "status": "scheduled"
+    },
+    {
+      "day": 10,
+      "date": "2026-06-08",
+      "time": "09:55",
+      "article_idx": 21,
+      "article": "article-22",
+      "status": "scheduled"
+    },
+    {
+      "day": 11,
+      "date": "2026-06-09",
+      "time": "09:13",
+      "article_idx": 22,
+      "article": "article-23",
+      "status": "scheduled"
+    },
+    {
+      "day": 11,
+      "date": "2026-06-09",
+      "time": "09:28",
+      "article_idx": 23,
+      "article": "article-24",
+      "status": "scheduled"
+    },
+    {
+      "day": 11,
+      "date": "2026-06-09",
+      "time": "09:35",
+      "article_idx": 24,
+      "article": "article-25",
+      "status": "scheduled"
+    },
+    {
+      "day": 11,
+      "date": "2026-06-09",
+      "time": "10:08",
+      "article_idx": 25,
+      "article": "article-26",
+      "status": "scheduled"
+    },
+    {
+      "day": 12,
+      "date": "2026-06-10",
+      "time": "09:11",
+      "article_idx": 26,
+      "article": "article-27",
+      "status": "scheduled"
+    },
+    {
+      "day": 12,
+      "date": "2026-06-10",
+      "time": "09:17",
+      "article_idx": 27,
+      "article": "article-28",
+      "status": "scheduled"
+    },
+    {
+      "day": 12,
+      "date": "2026-06-10",
+      "time": "09:53",
+      "article_idx": 28,
+      "article": "article-29",
+      "status": "scheduled"
+    },
+    {
+      "day": 12,
+      "date": "2026-06-10",
+      "time": "10:01",
+      "article_idx": 29,
+      "article": "article-30",
+      "status": "scheduled"
+    },
+    {
+      "day": 13,
+      "date": "2026-06-11",
+      "time": "09:08",
+      "article_idx": 30,
+      "article": "article-31",
+      "status": "scheduled"
+    },
+    {
+      "day": 13,
+      "date": "2026-06-11",
+      "time": "09:25",
+      "article_idx": 31,
+      "article": "article-32",
+      "status": "scheduled"
+    },
+    {
+      "day": 13,
+      "date": "2026-06-11",
+      "time": "09:35",
+      "article_idx": 32,
+      "article": "article-33",
+      "status": "scheduled"
+    },
+    {
+      "day": 13,
+      "date": "2026-06-11",
+      "time": "09:51",
+      "article_idx": 33,
+      "article": "article-34",
+      "status": "scheduled"
+    },
+    {
+      "day": 13,
+      "date": "2026-06-11",
+      "time": "09:55",
+      "article_idx": 34,
+      "article": "article-35",
+      "status": "scheduled"
+    },
+    {
+      "day": null,
+      "date": "2026-06-12",
+      "time": null,
+      "article_idx": null,
+      "article": null,
+      "status": "skipped_non_working"
+    },
+    {
+      "day": null,
+      "date": "2026-06-13",
+      "time": null,
+      "article_idx": null,
+      "article": null,
+      "status": "skipped_non_working"
+    },
+    {
+      "day": null,
+      "date": "2026-06-14",
+      "time": null,
+      "article_idx": null,
+      "article": null,
+      "status": "skipped_non_working"
+    },
+    {
+      "day": 14,
+      "date": "2026-06-15",
+      "time": "09:11",
+      "article_idx": 35,
+      "article": "article-36",
+      "status": "scheduled"
+    },
+    {
+      "day": 14,
+      "date": "2026-06-15",
+      "time": "09:23",
+      "article_idx": 36,
+      "article": "article-37",
+      "status": "scheduled"
+    },
+    {
+      "day": 14,
+      "date": "2026-06-15",
+      "time": "09:37",
+      "article_idx": 37,
+      "article": "article-38",
+      "status": "scheduled"
+    },
+    {
+      "day": 14,
+      "date": "2026-06-15",
+      "time": "09:48",
+      "article_idx": 38,
+      "article": "article-39",
+      "status": "scheduled"
+    },
+    {
+      "day": 14,
+      "date": "2026-06-15",
+      "time": "09:50",
+      "article_idx": 39,
+      "article": "article-40",
+      "status": "scheduled"
+    },
+    {
+      "day": 15,
+      "date": "2026-06-16",
+      "time": "09:00",
+      "article_idx": 40,
+      "article": "article-41",
+      "status": "scheduled"
+    },
+    {
+      "day": 15,
+      "date": "2026-06-16",
+      "time": "09:06",
+      "article_idx": 41,
+      "article": "article-42",
+      "status": "scheduled"
+    },
+    {
+      "day": 15,
+      "date": "2026-06-16",
+      "time": "09:29",
+      "article_idx": 42,
+      "article": "article-43",
+      "status": "scheduled"
+    },
+    {
+      "day": 15,
+      "date": "2026-06-16",
+      "time": "09:31",
+      "article_idx": 43,
+      "article": "article-44",
+      "status": "scheduled"
+    },
+    {
+      "day": 15,
+      "date": "2026-06-16",
+      "time": "09:44",
+      "article_idx": 44,
+      "article": "article-45",
+      "status": "scheduled"
+    },
+    {
+      "day": 16,
+      "date": "2026-06-17",
+      "time": "09:02",
+      "article_idx": 45,
+      "article": "article-46",
+      "status": "scheduled"
+    },
+    {
+      "day": 16,
+      "date": "2026-06-17",
+      "time": "09:14",
+      "article_idx": 46,
+      "article": "article-47",
+      "status": "scheduled"
+    },
+    {
+      "day": 16,
+      "date": "2026-06-17",
+      "time": "09:37",
+      "article_idx": 47,
+      "article": "article-48",
+      "status": "scheduled"
+    },
+    {
+      "day": 16,
+      "date": "2026-06-17",
+      "time": "09:56",
+      "article_idx": 48,
+      "article": "article-49",
+      "status": "scheduled"
+    },
+    {
+      "day": 16,
+      "date": "2026-06-17",
+      "time": "10:02",
+      "article_idx": 49,
+      "article": "article-50",
+      "status": "scheduled"
+    }
+  ]
+}

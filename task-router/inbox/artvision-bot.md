@@ -7,3 +7,6 @@
 
 ## Routed 2026-05-09 18:11
 - [ ] **[routed]** **Telethon: outreach userbot Антона + throttle** [client:blumart] [priority:high] [assignee:claude] [result:tg-outreach-script+jsonl] [blocked-by:freelancers.csv] — userbot от личного TG Антона (НЕ @avportal_bot — у бота нет права писать первым в DM). Re-auth `tg_userbot.session` если expired (см. `self-corrections.md` #12). Throttle 5-8/час, рандомные паузы 7-15 мин. Логи в `tg-outreach.jsonl`. Dedup vs `already-contacted.csv`.
+
+## Routed 2026-05-25 19:37
+- [ ] **[routed]** **[infra] Разобрать рестарты VPS claude-worker** [priority:medium] [assignee:claude] [result:worker-stable] — claude-worker (pm2 на VPS) перезапускался 4×/ч 25.05, от него зависит AI-советник @avportal_bot. Алерты заглушены фильтром, причина не устранена. Проверить pm2 logs claude-worker. Сессия 85fca7e8.

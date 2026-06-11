@@ -16,6 +16,7 @@ disable-model-invocation: false
 | да / da | Подтверждение, согласие |
 | деплой | Задеплоить на VPS (scp + pm2 restart) |
 | ссы / ссылка | Покажи URL / дай ссылку |
+| ссылки фул деплой / фул деплой / full deploy | Дать ПОЛНЫЕ (clickable, https://...) деплой-ссылки артефакта, не относительные пути. См. self-corrections #21 |
 | синк / sync / dasync | /sync-sessions |
 | пуш | git push |
 | рой / swarm / пара | Параллельные агенты |

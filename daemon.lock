@@ -1,0 +1,15 @@
+{
+  "pid": 94691,
+  "version": "2.1.167",
+  "jsonPath": "/Users/antonk/.claude/daemon.json",
+  "logPath": "/Users/antonk/.claude/daemon.log",
+  "startedAt": 1780759974681,
+  "origin": "transient",
+  "spawnedBy": {
+    "label": "claude",
+    "cwd": "/Users/antonk",
+    "pid": 94684
+  },
+  "procStart": "Sat Jun  6 15:32:54 2026",
+  "launchTarget": "/Users/antonk/.local/share/claude/versions/2.1.167"
+}

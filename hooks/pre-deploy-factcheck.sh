@@ -28,7 +28,7 @@ if [ -n "${CLAUDE_BASH_COMMAND:-}" ]; then
     fi
 
     # Extract HTML file from scp command
-    FILE=$(echo "$COMMAND" | grep -oE '[^ ]+\.html' | head -1)
+    FILE=$(echo "$COMMAND" | grep -oE '[^ ]+\.html' | head -1 || true)
 
     # Check for --force in the command
     echo "$COMMAND" | grep -q -- '--force' && FORCE=1
@@ -110,7 +110,7 @@ REPORT="/tmp/factcheck-${CLIENT}-$(date +%Y%m%d-%H%M%S).md"
 # Determine base URL from scp target path
 BASE_URL=""
 if [ -n "${CLAUDE_BASH_COMMAND:-}" ]; then
-    REMOTE_PATH=$(echo "$CLAUDE_BASH_COMMAND" | grep -oE "${VPS_IP}:[^ ]+" | sed "s/${VPS_IP}://" | sed 's|/var/www/artvision/|https://artvision.pro/|')
+    REMOTE_PATH=$(echo "$CLAUDE_BASH_COMMAND" | grep -oE "${VPS_IP}:[^ ]+" | sed "s/${VPS_IP}://" | sed 's|/var/www/artvision/|https://artvision.pro/|' || true)
     if [ -n "$REMOTE_PATH" ]; then
         BASE_URL="--base-url $(dirname "$REMOTE_PATH")"
     fi

@@ -1,0 +1,82 @@
+[2026-05-27 15:03:40.967] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-27 15:03:40.967] Processing: hook_event=UserPromptSubmit, tool=
+[2026-05-27 15:03:41.280] Captured git baseline: b1aea98589c8
+[2026-05-29 00:56:30.080] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-29 00:56:30.081] Processing: hook_event=UserPromptSubmit, tool=
+[2026-05-29 00:56:30.534] Captured git baseline: 203708cc41c1
+[2026-05-30 13:34:22.247] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:34:22.248] Processing: hook_event=UserPromptSubmit, tool=
+[2026-05-30 13:34:22.590] Captured git baseline: 24322d48d053
+[2026-05-30 13:35:37.514] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:35:37.515] Processing: hook_event=PostToolUse, tool=Edit
+[2026-05-30 13:36:29.826] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:36:29.827] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:36:29.827] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:36:29.827] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:37:01.011] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:37:01.012] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:37:01.018] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:37:01.019] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:37:33.426] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:37:33.427] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:37:33.429] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:37:33.429] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:38:06.152] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:38:06.153] Processing: hook_event=Stop, tool=
+[2026-05-30 13:38:06.851] Stop hook: review_set=2 base=HEAD dirty_now=4 changed_since=2
+[2026-05-30 13:38:06.947] Stop hook: no source code files in diff
+[2026-05-30 13:38:25.936] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:38:25.936] Processing: hook_event=UserPromptSubmit, tool=
+[2026-05-30 13:38:26.209] Captured git baseline: 6386769230fd
+[2026-05-30 13:39:11.952] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:39:11.952] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:39:11.955] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:39:11.955] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:40:06.315] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:40:06.316] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:40:06.316] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:40:06.316] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:44:36.733] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:44:36.734] Processing: hook_event=PostToolUse, tool=Write
+[2026-05-30 13:44:56.221] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:44:56.221] Processing: hook_event=PostToolUse, tool=Write
+[2026-05-30 13:45:29.499] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:45:29.499] Processing: hook_event=PostToolUse, tool=Write
+[2026-05-30 13:45:40.349] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:45:40.349] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:45:40.349] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:45:40.349] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:49:07.462] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:49:07.462] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:49:07.462] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:49:07.462] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:51:53.120] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:51:53.120] Processing: hook_event=PostToolUse, tool=Write
+[2026-05-30 13:52:17.900] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:52:17.901] Processing: hook_event=PostToolUse, tool=Write
+[2026-05-30 13:52:25.614] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:52:25.614] Processing: hook_event=PostToolUse, tool=Write
+[2026-05-30 13:52:42.673] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:52:42.673] Processing: hook_event=PostToolUse, tool=Write
+[2026-05-30 13:55:39.343] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:55:39.343] Processing: hook_event=PostToolUse, tool=Bash
+[2026-05-30 13:55:39.356] Commit review: detected git commit in command
+[2026-05-30 13:55:39.385] Commit review: stdout had no `[branch sha]`; reflog shows 2 fresh unreviewed commit(s) (f06a9f9defdd...)
+[2026-05-30 13:55:39.415] Commit review: 2/2 sha(s) resolved, 0 files
+[2026-05-30 13:55:39.415] Commit review: no reviewable source files in commit
+[2026-05-30 13:56:32.882] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-05-30 13:56:32.883] Processing: hook_event=Stop, tool=
+[2026-05-30 13:56:34.542] Stop hook: review_set=12 base=8377468d0102 dirty_now=12 changed_since=12
+[2026-05-30 13:56:34.688] Stop hook: reviewing 3 changed files (standard diff)
+[2026-05-30 13:56:44.291] LLM code review: no vulnerabilities found
+[2026-05-30 13:56:44.291] Stop hook: LLM reviews took 9.6s total
+[2026-05-30 13:56:44.292] Stop hook: no security issues found
+[2026-06-01 01:37:54.602] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-06-01 01:37:54.602] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-01 01:37:55.931] Captured git baseline: 0f4e5ce55eef
+[2026-06-01 11:28:04.518] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-06-01 11:28:04.519] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-01 11:28:04.914] Captured git baseline: b27dd67cf4ed
+[2026-06-01 11:29:00.617] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.0/hooks/security_reminder_hook.py']
+[2026-06-01 11:29:00.620] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-01 11:29:00.957] Captured git baseline: 54592f912472

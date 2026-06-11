@@ -10,13 +10,29 @@
 #
 # Exit codes:
 #  0 = безопасно (нет токенов в пути или не cleanup-операция)
-#  1 = блок (Claude увидит список файлов и попробует другой подход)
+#  1 = блок: найдены токены (Claude увидит список файлов и попробует другой подход)
+#  2 = блок fail-CLOSED: проверка не смогла отработать (timeout find /
+#      отсутствует зависимость / find упал) — НЕ пропускаем rm вслепую
+#
+# FAIL-CLOSED: если поиск токенов не довёл работу до конца (таймаут, ошибка
+# find, нет бинаря timeout) — НЕЛЬЗЯ трактовать пустой результат как «токенов
+# нет». Это блокировка (exit 2), а не разрешение. Иначе rm удалит credentials
+# когда find просто не успел их перечислить.
 #
 # Bypass: CLEANUP_FORCE=1
 
 set -uo pipefail
 
-CMD="${1:-${CLAUDE_BASH_COMMAND:-}}"
+# Источник команды: $1 / env / stdin JSON (харнес обычно даёт tool_input через stdin).
+# Если читать только из env — при stdin-payload CMD пуст -> exit 0 -> rm не проверяется
+# (тот же класс fail-OPEN, что и в strip-guard). Поэтому добавлен stdin-fallback.
+CMD="${1:-${CLAUDE_BASH_COMMAND:-${TOOL_INPUT_COMMAND:-}}}"
+if [ -z "$CMD" ] && [ ! -t 0 ]; then
+  STDIN_JSON="$(cat 2>/dev/null || true)"
+  if [ -n "$STDIN_JSON" ] && command -v jq >/dev/null 2>&1; then
+    CMD="$(printf '%s' "$STDIN_JSON" | jq -r '.tool_input.command // empty' 2>/dev/null || true)"
+  fi
+fi
 [ -z "$CMD" ] && exit 0
 [ "${CLEANUP_FORCE:-0}" = "1" ] && exit 0
 
@@ -53,18 +69,76 @@ done
 [ "$is_danger" -eq 0 ] && exit 0
 
 # Поиск токенов в matched_paths (timeout 4s)
+# FAIL-CLOSED дизайн:
+#   - explicit capture exit-кода timeout (НЕ '|| true' — иначе сбой → пустой
+#     результат → ложное «токенов нет» → rm проходит при наличии токенов)
+#   - sentinel-маркер '__SCAN_COMPLETE__' печатается ТОЛЬКО если цикл find
+#     дошёл до конца. Его отсутствие = find не отработал (kill/ошибка).
 TOKEN_PATTERNS='token|credential|secret|refresh_token|access_token|client_secret|\.pem$|\.key$|oauth'
-found=$(timeout 4 bash -c "
+SENTINEL='__SCAN_COMPLETE__'
+
+# Зависимость: нужен бинарь timeout (или gtimeout на macOS). Нет → fail-CLOSED.
+TIMEOUT_BIN=""
+if command -v timeout >/dev/null 2>&1; then
+  TIMEOUT_BIN="timeout"
+elif command -v gtimeout >/dev/null 2>&1; then
+  TIMEOUT_BIN="gtimeout"
+fi
+
+if [ -z "$TIMEOUT_BIN" ]; then
+  echo "" >&2
+  echo "⛔ pre-cleanup-tokens-check: ЗАБЛОКИРОВАНО (fail-closed)" >&2
+  echo "" >&2
+  echo "Команда:  $CMD" >&2
+  echo "Причина: нет бинаря 'timeout'/'gtimeout' — проверка токенов невозможна." >&2
+  echo "Затронутые пути: $matched_paths" >&2
+  echo "" >&2
+  echo "Не пропускаю rm вслепую на путях где могут лежать credentials." >&2
+  echo "Установи coreutils (brew install coreutils) или используй CLEANUP_FORCE=1 осознанно." >&2
+  exit 2
+fi
+
+# Запускаем поиск. stderr inner-скрипта НЕ глушим в /dev/null на уровне
+# подстановки — только find'у разрешаем тихо падать на отдельных файлах.
+scan_out=$("$TIMEOUT_BIN" 4 bash -c "
   for p in $matched_paths; do
     [ -e \"\$p\" ] || continue
     find \"\$p\" -maxdepth 6 -type f 2>/dev/null \
       | grep -iE '$TOKEN_PATTERNS' \
-      | grep -vE '\.(log|cache|tmp|lock|md|txt|sample)$' \
-      | head -20
+      | grep -vE '\.(log|cache|tmp|lock|md|txt|sample)\$'
   done
-" 2>/dev/null || true)
+  # Маркер: достигается ТОЛЬКО если цикл завершился (не убит таймаутом)
+  echo '$SENTINEL'
+")
+scan_rc=$?
+
+# Разбор результата.
+# scan_rc != 0 → timeout убил (124) либо bash/окружение упало (125/126/127/иное).
+# Отсутствие sentinel → цикл не дошёл до конца (страховка от частичного вывода).
+if [ "$scan_rc" -ne 0 ] || ! printf '%s\n' "$scan_out" | grep -qxF "$SENTINEL"; then
+  echo "" >&2
+  echo "⛔ pre-cleanup-tokens-check: ЗАБЛОКИРОВАНО (fail-closed)" >&2
+  echo "" >&2
+  echo "Команда:  $CMD" >&2
+  echo "Затронутые пути: $matched_paths" >&2
+  if [ "$scan_rc" -eq 124 ]; then
+    echo "Причина: поиск токенов превысил таймаут (4с) — НЕ завершён." >&2
+  else
+    echo "Причина: поиск токенов не отработал (код $scan_rc, маркер завершения отсутствует)." >&2
+  fi
+  echo "" >&2
+  echo "Пустой результат при незавершённом поиске НЕ значит «токенов нет»." >&2
+  echo "Сужай область удаления (конкретная поддиректория без credentials)" >&2
+  echo "или вручную убедись что токенов нет и используй CLEANUP_FORCE=1." >&2
+  exit 2
+fi
+
+# Поиск ЗАВЕРШИЛСЯ корректно. Реальные находки = вывод без sentinel-строки,
+# ограничиваем 20-ю для читаемости.
+found=$(printf '%s\n' "$scan_out" | grep -vxF "$SENTINEL" | head -20)
 
 if [ -z "$found" ]; then
+  # find дошёл до конца И ничего не нашёл → действительно безопасно.
   exit 0
 fi
 

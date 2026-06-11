@@ -169,11 +169,15 @@ for repo in "${REPOS[@]}"; do
     git add -A 2>/dev/null || true
 
     # Удалить из staging опасные файлы (credentials, env, keys, node_modules)
+    # tokens.json* и *.bak добавлены 2026-05-29: хук пушил token-бэкапы с API-ключами
+    # на remote (корень self-corrections #20). Defense-in-depth поверх .gitignore.
     git reset HEAD -- \
         '*.env' '*.env.*' '*.env.local' '*.env.production' \
         '.env' '.env.*' \
         'credentials*' 'secrets.json' \
         '*.pem' '*.key' '*_secret*' \
+        'tokens.json' 'tokens.json.bak*' 'tokens_backup_*.json' \
+        '*.bak' '*.bak.*' '*.bak-*' '*.bak_*' \
         2>/dev/null || true
     git rm --cached -r node_modules/ 2>/dev/null || true
 

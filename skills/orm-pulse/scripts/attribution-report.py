@@ -101,34 +101,97 @@ def load_sheet_rows(slug: str, contractor_map: dict[str, str]) -> list[dict]:
     return out
 
 
-def load_live(slug: str) -> list[dict]:
-    """Берёт самый свежий snapshot из live-reviews/ или live-reviews-history/."""
-    candidates: list[Path] = []
+def load_tg_signals(slug: str) -> dict:
+    """Читает свежий _index из tg-conversations/. Возвращает агрегаты по контрактору."""
+    tg_dir = ROOT / "clients" / slug / "orm" / "tg-conversations"
+    if not tg_dir.exists():
+        return {}
+    indices = sorted(tg_dir.glob("_index-*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+    if not indices:
+        return {}
+    try:
+        data = json.loads(indices[0].read_text())
+    except Exception:
+        return {}
+    out = {}
+    for chat in data:
+        if "error" in chat:
+            continue
+        s = chat.get("summary", {})
+        msgs = chat.get("messages", [])
+        # Последняя дата с pub-маркером
+        last_pub = None
+        for m in msgs:
+            if m.get("pub_markers"):
+                d = m.get("date", "")[:10]
+                if not last_pub or d > last_pub:
+                    last_pub = d
+        out[chat["label"]] = {
+            "chat_id": chat["chat_id"],
+            "count": chat.get("count", 0),
+            "pub": s.get("with_pub", 0),
+            "rej": s.get("with_rej", 0),
+            "req": s.get("with_req", 0),
+            "link": s.get("with_link", 0),
+            "last_pub": last_pub or "—",
+        }
+    out["_source"] = str(indices[0].name)
+    out["_pulled_at"] = data[0].get("fetched_at", "") if data else ""
+    return out
+
+
+def load_live(slug: str, window_days: int = 10) -> list[dict]:
+    """Union всех crawl-dump за последние window_days дней (dedup по _live_key).
+
+    BUG-fix (2026-05-29): раньше брался ТОЛЬКО freshest-by-mtime dump → недосчёт.
+    Yandex показывает «окно» отзывов (~300-1000), наши отзывы дрейфуют в/из окна
+    при каждом crawl (сортировка по релевантности, не дате). Отзыв, мелькнувший
+    в ЛЮБОМ свежем crawl = был опубликован. Union недели crawl'ов даёт реальное
+    число (~24-27 против 3 от одного партиального 300-dump).
+    Validated: strict-publications-count-2026-05-23.md (best-estimate 22-25).
+
+    Старая логика (freshest-only, BUG-4 2026-05-11) занижала: партиальный 300-dump
+    вытеснял глубокий 894-1000 по mtime → matching против узкого окна.
+    """
+    import time
+    cutoff = time.time() - window_days * 86400
+    files: list[Path] = []
     for d in ("live-reviews", "live-reviews-history"):
         p = ROOT / "clients" / slug / "orm" / d
         if p.exists():
-            candidates.extend(p.glob("*.json"))
-    if not candidates:
-        return []
-    # BUG-4 fix (2026-05-11): freshest by mtime, not largest by size.
-    # Прецедент: full-crawl 3000 items стареет, daily-crawl 1000 свежее → matching против stale = false-removals.
-    freshest = max(candidates, key=lambda p: p.stat().st_mtime)
-    try:
-        data = json.loads(freshest.read_text())
-    except Exception:
-        return []
-    out = []
-    for it in data.get("items", []):
-        text = (it.get("text") or "").strip()
-        out.append({
-            "author": it.get("author", ""),
-            "rating": it.get("rating", ""),
-            "date": it.get("date", ""),
-            "user_id": it.get("user_id", ""),
-            "text": text,
-            "text_norm": normalize(text),
-        })
-    return out
+            files.extend(f for f in p.glob("*.json") if f.stat().st_mtime >= cutoff)
+    if not files:
+        # fallback: freshest single (если за окно ничего нет)
+        allf: list[Path] = []
+        for d in ("live-reviews", "live-reviews-history"):
+            p = ROOT / "clients" / slug / "orm" / d
+            if p.exists():
+                allf.extend(p.glob("*.json"))
+        if not allf:
+            return []
+        files = [max(allf, key=lambda p: p.stat().st_mtime)]
+    merged: dict[str, dict] = {}
+    for f in sorted(files, key=lambda p: p.stat().st_mtime, reverse=True):
+        try:
+            data = json.loads(f.read_text())
+        except Exception:
+            continue
+        for it in data.get("items", []):
+            text = (it.get("text") or "").strip()
+            key = (it.get("log_node") or it.get("user_id")
+                   or f"{it.get('author', '')}|{text[:80]}")
+            if key in merged:
+                continue
+            merged[key] = {
+                "author": it.get("author", ""),
+                "rating": it.get("rating", ""),
+                "date": it.get("date", ""),
+                "user_id": it.get("user_id", ""),
+                "log_node": it.get("log_node", ""),
+                "text": text,
+                "text_norm": normalize(text),
+            }
+    return list(merged.values())
 
 
 def best_match(needle_norm: str, hay: list[dict], threshold: float = 0.75,
@@ -204,7 +267,32 @@ def render_replacement_block(rows: list[dict]) -> str:
     return "".join(blocks)
 
 
-def render_html(slug: str, rows: list[dict], stats: dict) -> str:
+def render_tg_block(tg: dict) -> str:
+    if not tg:
+        return ''
+    src = tg.pop('_source', '')
+    pulled = tg.pop('_pulled_at', '')[:16]
+    rows_html = []
+    for label, s in tg.items():
+        rows_html.append(
+            f"<tr><td>{html.escape(label)}</td>"
+            f"<td style='text-align:right'>{s['count']}</td>"
+            f"<td style='text-align:right;color:#16a34a'>{s['pub']}</td>"
+            f"<td style='text-align:right;color:#dc2626'>{s['rej']}</td>"
+            f"<td style='text-align:right'>{s['req']}</td>"
+            f"<td style='text-align:right'>{s['link']}</td>"
+            f"<td>{html.escape(s['last_pub'])}</td></tr>"
+        )
+    return (
+        '<h2 style="margin-top:24px">💬 TG-сигналы исполнителей за 30 дней</h2>'
+        f'<div class="muted">Источник: {html.escape(src)} · pulled: {html.escape(pulled)}</div>'
+        '<table><thead><tr>'
+        '<th>Чат</th><th>Msg всего</th><th>Pub-марк</th><th>Rej-марк</th><th>Req-марк</th><th>URLs</th><th>Последний pub</th>'
+        '</tr></thead><tbody>' + ''.join(rows_html) + '</tbody></table>'
+    )
+
+
+def render_html(slug: str, rows: list[dict], stats: dict, tg: dict | None = None) -> str:
     today = datetime.now().strftime("%Y-%m-%d %H:%M")
     bg = {
         "Отзыв размещён": ("#dcfce7", "✅"),
@@ -273,6 +361,8 @@ tr:hover{{background:#f8fafc}}
   <div class="metric"><span class="label">🔁 Нужна дозамена (точно)</span><span class="value" style="color:#dc2626">{stats['replacement_yes']}</span></div>
   <div class="metric"><span class="label">❓ Дозамена под вопросом</span><span class="value" style="color:#d97706">{stats['replacement_maybe']}</span></div>
 </div>
+
+{render_tg_block(tg) if tg else ''}
 
 <h2 style="margin-top:24px">🔁 Кого пинговать на дозамену</h2>
 {replacement_html}
@@ -407,7 +497,8 @@ def main() -> int:
         for r in sheet_rows:
             writer.writerow({k: r.get(k, "") for k in writer.fieldnames})
 
-    html_path.write_text(render_html(args.slug, sheet_rows, stats))
+    tg = load_tg_signals(args.slug)
+    html_path.write_text(render_html(args.slug, sheet_rows, stats, tg))
 
     print(f"\n💾 CSV:  {csv_path}")
     print(f"💾 HTML: {html_path}")

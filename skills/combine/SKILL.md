@@ -89,12 +89,16 @@ confirm_level: auto | confirm     # по security.md
 ### ФАЗА 1: PULL + DEDUP + PARSE + CONTEXT
 
 **1a. Тянем источники параллельно:**
+
+⚠️ **НЕ использовать `asana_search_tasks` с фильтрами** (`sort_by`/`due_on`/`tags_any`) — это Asana **Advanced Search = платная фича**, воркспейс «Marketing» на free-tier → **HTTP 402 Payment Required** (подтверждено 2026-05-29). Использовать базовый endpoint (free-tier OK):
 ```
-mcp__asana__asana_search_tasks:
-  workspace: 860693669973770
-  completed: false
-  sort_by: due_date
-  opt_fields: name,due_on,projects,tags,notes,assignee,dependencies
+mcp__asana__asana_get_tasks_for_project:
+  project_id: 1212305892582815   # "Задачи - Artvision" (из tokens.json asana.project_id)
+  opt_fields: name,completed,due_on,assignee.name,memberships.section.name
+  limit: 100
+# + mcp__asana__asana_get_my_tasks для задач на исполнителе
+# Сортировку/фильтрацию по due_on/priority делать НА КЛИЕНТЕ (в коде), не в запросе.
+# Игнорировать авто-мусор "[Session] ...: sync: session state" (дубли от auto-sync).
 ```
 + читаем 5 TODO-файлов:
 ```
@@ -508,11 +512,64 @@ chore(combine): <дата> — <N> задач
 
 ---
 
-## 2 АККАУНТА
+## 2 АККАУНТА — ПАРАЛЛЕЛЬНЫЙ ДИСПЕТЧ (justtrance локально + adw на VPS)
 
-Работает на `justtrance` + `adw.artvision.pro`. Синхронизация через git: TODO, context-log, PROJECTS.md, patches/, reports/.
+> Реальная параллель: независимые проекты/клиенты молотятся одновременно на ДВУХ аккаунтах
+> (2× пул лимитов токенов). Локальный = justtrance, VPS = adw.artvision.pro (юзер `andrey`, non-root → auto-mode).
+> Координация — через git (disjoint paths → нет конфликтов). См. `~/.claude/rules/vps-parallel-combine.md`.
 
-**File-lock между аккаунтами:** `.combine-running` в `artvision-data/` — если есть, второй аккаунт ждёт 5 мин или показывает warning.
+### Когда диспетчить на VPS (авто-триггер в ФАЗЕ 2)
+
+После сортировки очереди — если выполняется ВСЁ из:
+- ≥ 4 ready-задач в очереди
+- ≥ 2 **непересекающихся** группы по `client`/`product` (разные папки → нет общих файлов)
+- задачи в группе-кандидате **автономны** (`confirm_level: auto`, не `human_only`, не CONFIRM по security.md)
+
+→ разбить очередь на 2 disjoint-партиции:
+- **LOCAL** (этот аккаунт) — группа с бОльшим revenue-приоритетом / где нужен мой live-контроль
+- **REMOTE** (VPS adw) — disjoint-группа других клиентов
+
+### Как отправить (примитив)
+
+```bash
+# Отправить партицию на VPS-аккаунт (возврат мгновенный, крутится в фоне):
+~/.claude/scripts/combine-vps-dispatch.sh --combine "client:burenie-skv OR client:geely-a2auto"
+
+# Проверить статус:
+~/.claude/scripts/combine-vps-status.sh           # все combine-сессии
+~/.claude/scripts/combine-vps-status.sh combine-<ts>
+
+# Забрать результаты в локальный репо (git pull):
+~/.claude/scripts/combine-vps-collect.sh
+```
+
+### Правила безопасности диспетча
+
+| Правило | Почему |
+|---------|--------|
+| Партиции **не пересекаются по файлам** (разные `clients/<X>/`) | иначе merge-конфликт git между аккаунтами |
+| CONFIRM-задачи (security.md) **остаются LOCAL** | VPS не должен сам слать клиентам / платить / деплоить prod |
+| VPS коммитит+пушит после КАЖДОЙ задачи | минимизирует окно конфликта |
+| Перед стартом обе стороны `git pull` (core.symlinks=false) | в origin есть битый симлинк `.claude/rules-global/core.md` |
+| Локальный комбайн НЕ ждёт VPS | параллель, не блокировка; результаты собираются в конце через collect |
+
+### Поток
+
+```
+ФАЗА 2 (сортировка) → партиция LOCAL | REMOTE
+                          │            │
+        LOCAL /combine ───┘            └─── combine-vps-dispatch.sh → VPS adw (tmux, headless, auto)
+        (этот аккаунт)                       крутится автономно, коммит+пуш по задачам
+                          │                              │
+                          └──── ФАЗА 6 ←── combine-vps-collect.sh (git pull результатов VPS)
+                                ЗАКРЫТИЕ: отчёт по ОБЕИМ партициям
+```
+
+### Однократная настройка VPS (см. `~/.claude/rules/vps-parallel-combine.md`)
+
+1. andrey-юзер авторизован на adw.artvision.pro: `ssh vps-andrey` → `claude` → `/login` → код
+2. andrey-репо на `feat/ops-crm-v1`, `core.symlinks=false`, SSH git-auth (ключ скопирован)
+3. `--dangerously-skip-permissions` работает (non-root)
 
 ---
 

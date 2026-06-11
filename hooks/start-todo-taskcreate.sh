@@ -24,8 +24,15 @@ CTX="${mapping##*$'\t'}"
 
 [ -f "$TODO" ] || exit 0
 
-# Dedupe cache per context
-SEEN=/tmp/taskcreate-seen-${CTX}.txt
+# Dedupe cache per SESSION (не per-context!) — иначе после 1-й сессии кэш в /tmp
+# глушит императив для всех последующих сессий до reboot (баг: задачи «не появляются»).
+# session_id из stdin SessionStart → новая сессия = свежий кэш = императив срабатывает;
+# resume той же сессии (--resume сохраняет session_id) = без повторного нага.
+INPUT=$(cat 2>/dev/null || echo '{}')
+SESSION_ID=$(printf '%s' "$INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('session_id','nosess'))" 2>/dev/null || echo "nosess")
+# Подчистить старые per-context кэши (legacy) + чужих сессий старше суток
+find /tmp -maxdepth 1 -name "taskcreate-seen-${CTX}*.txt" -mtime +1 -delete 2>/dev/null || true
+SEEN=/tmp/taskcreate-seen-${CTX}-${SESSION_ID}.txt
 touch "$SEEN"
 
 # Collect pending lines, strip to stable hash-key (first 80 chars)

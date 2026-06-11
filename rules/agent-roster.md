@@ -13,7 +13,7 @@
 | Тесты, QA | тест, pytest, coverage, e2e, assert | `test-automator` | opus |
 | Security, аудит безопасности | XSS, injection, auth bypass, DoS, OWASP | `security-engineer` | opus |
 | Баги, дебаг | баг, ошибка, crash, stack trace, fix | `debugger` | opus |
-| SEO, контент | SEO, ключевые, мета, title, h1, контент | `seo-analyzer` | opus |
+| SEO, контент, аудит, семантика, структура, вывод в топ | SEO, ключевые, мета, title, h1, контент, аудит сайта, кластеры, позиции | `seo-specialist` | opus |
 | КП, presale | КП, коммерческое, предложение, клиент | `sales-engineer` | opus |
 | Документы, договоры | договор, акт, НДА, docx, Google Docs | `technical-writer` | opus |
 | DevOps, деплой | nginx, pm2, docker, deploy, VPS, SSL | `devops-engineer` | opus |

@@ -96,6 +96,35 @@ def load_tg_corpus(slug):
     return corpus
 
 
+def published_breakdown(slug):
+    """Честная разбивка «опубликовано» без оверстейта.
+
+    Strict-вывод (strict-publications-count-2026-05-23.md): Sheet-статус «размещ»
+    переоценивает (zombies + дубли), attribution live-fuzzy недооценивает (тексты
+    рендерятся как [$query] плейсхолдеры). Реальное число даёт только ручной union
+    5+ источников. Поэтому показываем диапазон [live_verified .. sheet_claimed],
+    НЕ единое «точное» число.
+
+    Возвращает dict или None (если attribution недоступен).
+    """
+    orm_dir = ROOT / "clients" / slug / "orm"
+    attr_files = sorted(orm_dir.glob("attribution-report-*.csv"))
+    if not attr_files:
+        return None
+    latest = attr_files[-1]
+    try:
+        with open(latest, encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+    except Exception:
+        return None
+    live_verified = sum(1 for r in rows if r.get("live_status", "").startswith("✅"))
+    return {
+        "live_verified": live_verified,      # нижняя граница (fuzzy недооценивает)
+        "attribution_file": latest.name,
+        "attribution_date": latest.stem.replace("attribution-report-", ""),
+    }
+
+
 def classify(rows, executor_texts, tg_norm):
     """Каждая строка → одна из категорий."""
     state = {
@@ -240,6 +269,7 @@ def main():
     pace = daily_pace(args.slug, days=7)
     kwork_exec = format_kwork_executors(tg_corpus)
     qc = load_qcomment_snapshot(args.slug)
+    pub = published_breakdown(args.slug)
 
     # Output
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M МСК")
@@ -254,7 +284,11 @@ def main():
     out_md.append("")
     out_md.append("| Состояние | Кол-во | Что это |")
     out_md.append("|-----------|:------:|---------|")
-    out_md.append(f"| ✅ Опубликовано | {len(state['published'])} | На reviews.yandex.ru |")
+    if pub:
+        out_md.append(f"| ✅ Опубликовано (подтв. в live) | {pub['live_verified']} | Нижняя граница — attribution fuzzy недооценивает |")
+        out_md.append(f"| 📋 Заявлено в Sheet «размещ» | {len(state['published'])} | Верхняя граница — содержит zombies/дубли, требует live-сверки |")
+    else:
+        out_md.append(f"| 📋 Заявлено в Sheet «размещ» | {len(state['published'])} | ⚠️ attribution недоступен — только Sheet-статус, требует live-сверки |")
     out_md.append(f"| ⏳ На модерации Я | {len(state['moderation'])} | Биржа отдала, ждём |")
     out_md.append(f"| 📤 У okponrussia | {len(state['given_to_okponrussia'])} | Match с Sheet2 |")
     out_md.append(f"| 📤 У kwork | {len(state['given_to_kwork'])} | По упоминаниям в TG |")

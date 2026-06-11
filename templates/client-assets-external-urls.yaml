@@ -1,0 +1,44 @@
+# Внешние URL медиа клиента
+# Правило: ~/.claude/rules/asset-capture-no-loss.md (WRITE-FIRST)
+#
+# ЗАЧЕМ: всё что Антон передаёт в чате (URL фото, галерей, бренд-файлов) — теряется
+# в session.jsonl и недоступно следующим сессиям. Этот файл — единственный источник правды.
+#
+# КОГДА ОБНОВЛЯЕТСЯ: первым tool call ПЕРЕД ответом в чат при получении любого URL медиа клиента.
+
+client: ___SLUG___
+last_updated: ___YYYY-MM-DD___
+last_session: ___SESSION-ID___
+
+# Галереи / папки / источники
+galleries:
+  - source: ""              # wfolio | drive | dropbox | yandex-disk | other
+    url: ""                 # полный URL галереи
+    description: ""         # что внутри
+    contact_who_provided: "" # Антон | Андрей | имя клиента
+    contact_date: ""        # YYYY-MM-DD когда передали
+    expires: "unknown"      # YYYY-MM-DD или unknown
+    access: "public"        # public | private-link | needs-login
+
+# Прямые URL по категориям (для use в landings/КП)
+direct_urls:
+  process_photos: []        # фото процесса работы
+  result_before_after: []   # до/после
+  doctor_portraits: []      # портреты врачей/специалистов
+  clinic_interior: []       # интерьеры
+  equipment: []             # оборудование
+  certificates: []          # лицензии, сертификаты
+  brand_assets: []          # лого, фирменный стиль
+  other: []
+
+# Локальные зеркала (LOCAL-MIRROR/)
+# Критичные файлы которые нужно скачать локально на случай истечения CDN
+local_mirror:
+  enabled: false
+  files: []                 # список путей внутри assets/LOCAL-MIRROR/
+
+# История изменений
+changelog:
+  - date: ___YYYY-MM-DD___
+    action: "created"
+    by: "claude (session ___SESSION-ID___)"

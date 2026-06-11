@@ -89,7 +89,7 @@
 | Фактчекинг чисел | ✅ | `code-reviewer` / `general-purpose` |
 | Анализ конкурентов | ⚪ | `research-analyst` |
 | Деплой на VPS | ✅ | `general-purpose` / `devops-engineer` |
-| SEO аудит | ✅ | `seo-analyzer` |
+| SEO аудит | ✅ | `seo-specialist` |
 | Код-ревью | ⚪ | `code-reviewer` |
 | Визуальная проверка | ✅ | `ui-visual-validator` |
 
