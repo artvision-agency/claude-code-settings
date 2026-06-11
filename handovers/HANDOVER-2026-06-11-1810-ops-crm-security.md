@@ -23,6 +23,13 @@
 - ✅ Разбор `di-sukharev/vibe` → `research/2026-06-11-sukharev-vibe-arch-review.md` (стек не наш; брать структуру инженерного стандарта CLAUDE.md).
 - ✅ ANT Partners → presale (registry + MEMORY). Geely/BluMart/ANT задачи в Asana.
 
+## 🚀 СТАРТ СЛЕДУЮЩЕЙ СЕССИИ — по методу Хахалева (Антон, 11.06)
+**Первая задача (HMAC-укрепление) делать ПОЛНЫМ циклом `codex-dev-lifecycle.md`:**
+1. **Claude пишет ПЛАН** HMAC-фикса: что менять в `gantt_api.py` (sign_gid + expiry, DONE_HMAC_SECRET в PM2-env) + `evening_digest_tg.py` (signer, генерит TG-✅-ссылки команды) — синхронно, как НЕ сломать дайджест; PM2-рестарт; тест живой TG-ссылки.
+2. **Codex ревьюит ПЛАН** adversarial (`Agent codex:codex-rescue`, read-only): `<attack_surface>` auth/replay/rollback/digest-breakage → вердикт APPROVED/REVISE → правки плана (до 5, обычно 2-3).
+3. APPROVED → **build** (Claude) → **Codex ревью кода** → fix → тест.
+> НЕ переделывать уже готовое (попап/безопасность/договорные — прошли review+fix). Новый алгоритм — только на ОСТАВШЕЕСЯ.
+
 ## 🔜 ОСТАЛОСЬ (следующая чистая сессия)
 
 1. **HMAC-секрет + expiry для `/done`** [HIGH, осторожно] — ЕДИНСТВЕННЫЙ незакрытый шаг укрепления. ⚠️ signer = `/home/andrey/artvision-data/scripts/evening_digest_tg.py` (генерит вечерние ✅-ссылки КОМАНДЕ), verifier = `gantt_api.py sign_gid`. Менять ВМЕСТЕ + тест живой TG-ссылки, иначе сломается дайджест. PM2-рестарт с `DONE_HMAC_SECRET` в env (`pm2 set` / ecosystem). План в `dashboards/ops-api/README.md`.
