@@ -53,7 +53,7 @@ Last-Modified: ${LAST_MOD}
 Проверь: launchctl list pro.artvision.orm-pulse.${CLIENT}-refresh"
 
 if [ -x "$HOME/.claude/scripts/tg-send.sh" ]; then
-    "$HOME/.claude/scripts/tg-send.sh" team "$MSG" || echo "tg-send failed"
+    NOTIFY_FORCE=1 "$HOME/.claude/scripts/tg-send.sh" team "$MSG" || echo "tg-send failed"
 fi
 
 mkdir -p ${HOME}/.claude/state/orm-pulse
