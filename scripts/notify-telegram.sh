@@ -42,6 +42,24 @@ if [ $CURL_RC -ne 0 ] || [ -z "$RESP" ]; then
     exit 2
 fi
 
+# Fallback (2026-06-11): legacy Markdown ломается на одиночных подчёркиваниях в URL
+# (artvision.pro/_priv-*) — TG отвечает 400 "can't parse entities", legacy-Markdown
+# не поддерживает backslash-escape. Повторяем отправку plain-text без parse_mode.
+# Прецедент: 5× FAIL доставки превью USmile Антону 10.06.
+if printf '%s' "$RESP" | grep -q "can't parse entities"; then
+    RESP="$(curl -sS --max-time 15 --retry 2 --retry-delay 2 \
+        -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+        -H "Content-Type: application/json" \
+        -d "{
+            \"chat_id\": \"${CHAT_ID}\",
+            \"text\": \"${MESSAGE}\"
+        }" 2>&1)"
+    if [ $? -ne 0 ] || [ -z "$RESP" ]; then
+        echo "❌ Network error on plain-text fallback" >&2
+        exit 2
+    fi
+fi
+
 # Защита от парсинга пустого/HTML-ответа (TG иногда возвращает HTML 502/503)
 echo "$RESP" | python3 -c "
 import sys, json
