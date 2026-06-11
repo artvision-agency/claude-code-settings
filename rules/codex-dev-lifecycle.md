@@ -1,6 +1,8 @@
 # Codex-driven dev lifecycle — планирование + поэтапное ревью другим семейством (GPT-5.4)
 
-> **Установлено:** 2026-06-11 (Антон). **ИСТОЧНИК МЕТОДА: Тимур Хахалев**, TG-канал **@the_ai_architect** + Habr [«Как я сделал скилл для AI-ревью плана и кода — и зачем мне две модели»](https://habr.com/ru/articles/1019588/). Не наша выдумка — внедряем проверенный метод автора.
+> **Установлено:** 2026-06-11 (Антон). **АВТОР МЕТОДА/СКИЛЛА: Дмитрий Дементьев** (`github.com/dementev-dev/adversarial-review`, Apache-2.0) — Habr [1019588](https://habr.com/ru/articles/1019588/). **Тимур Хахалев** (@the_ai_architect) — **популяризатор** (курс ai.khakhalev.com), своего публичного репо НЕТ. (Поправка авторства по ресёрчу 11.06 — изначально ошибочно приписал Хахалеву.)
+> **Реальный скилл для adopt:** `dementev-dev/adversarial-review` (SKILL.md + references/runner.md + docs/DESIGN.md, режимы plan/code/code-vs-plan, до 5 раундов). ⏳ **Adopt ОТЛОЖЕН** — нужен ОК Антона (внешний код → скилл) + round_table (`tool-adoption-proof.md`). Полный ресёрч: `research/2026-06-11-khakhalev-method-deep.md`.
+> **Доп.приёмы Дементьева (богаче моего конспекта, учесть при adopt):** mutation-defense (git+sha256 снимки до/после, контракт «auditor-not-contributor»), findings-evaluation-matrix (reject обоснованно, проверять claim'ы эмпирически), структурированный resume (Applied/Re-scoped/Rejected — ревьюер оспаривает отклонения), severity-trend early-warning. Reviewer по умолчанию gpt-5.5 (override gpt-5.4), codex CLI ≥0.132.
 > **Принцип:** для содержательных задач разработки Codex (GPT-5.4, другое семейство) ведёт РЕВЬЮ ПЛАНА и КОДА, Claude (Fable/Opus) ПЛАНИРУЕТ и ИСПОЛНЯЕТ. Другая модель ловит blind-spots Claude (NIH-bias, пропущенные edge-cases).
 
 ## Метод Хахалева — конкретика (закрепить точно)
