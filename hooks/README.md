@@ -111,3 +111,37 @@ chmod -x ~/.claude/hooks/pre-read.sh
 ```bash
 chmod +x ~/.claude/hooks/pre-read.sh
 ```
+
+## usage-warn.sh + statusline-weekly.sh (недельный учёт расхода, linux-сетап stan)
+
+Самодостаточная альтернатива связке `account-usage-tracker.sh`/VPS-синка — без внешних
+зависимостей (`claude auth status`, artvision-data, Telegram): только python3 и сам Claude Code.
+
+**Как работает:**
+- `statusline-weekly.sh` (корень репы; ставится как `~/.claude/statusline.sh`) — статус-строка
+  `user | model | dir | branch* | ctx:NN% | $сессия | w:$X/LIMIT (NN%)`. Claude Code передаёт
+  statusline `cost.total_cost_usd` сессии при каждом обновлении; скрипт upsert'ит её по
+  `session_id` в `~/.claude/account-usage.json` и держит rolling 7-дневную сумму `weekly_cost`.
+  Маркеры: `w` → `w*` (≥50%) → `w!` (≥80%) → `W!` (≥97%).
+- `hooks/usage-warn.sh` (UserPromptSubmit) — при входе в полосу 50/60/70/80/90/97%
+  показывает `systemMessage` пользователю и инжектит `additionalContext` модели
+  (Claude сам предупредит и учтёт при планировании тяжёлых операций).
+  Дедуп: раз в 6 часов внутри полосы (`~/.claude/.usage-warn-state.json`).
+
+**Подключение** (`~/.claude/settings.json`):
+```json
+"statusLine": { "type": "command", "command": "/home/USER/.claude/statusline.sh" },
+"hooks": {
+  "UserPromptSubmit": [
+    { "hooks": [ { "type": "command", "command": "/home/USER/.claude/hooks/usage-warn.sh", "timeout": 10 } ] }
+  ]
+}
+```
+
+**Калибровка лимита:** трекер видит только локальные сессии этой машины (не другие
+устройства/claude.ai). Лимит подбирается по `/usage`: `weekly_limit_usd = tracked_$ / (доля
+из /usage)`. Пример: трекер $764, `/usage` 12% → лимит ≈ 6400. Правится в
+`~/.claude/account-usage.json` (файл в .gitignore — данные не коммитятся).
+
+**Известное отличие от /usage:** там фиксированный недельный сброс, тут rolling 7 дней —
+сразу после сброса трекер временно завышает (предупреждает раньше, безопасная сторона).
