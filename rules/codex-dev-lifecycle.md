@@ -63,7 +63,7 @@
 ## Закрепление / запуск
 - **Триггеры:** «спланируй кодексом», «codex план», «поэтапное ревью кодексом», «codex lifecycle», «разработка через кодекс».
 - **Метод:** `Agent({subagent_type:'codex:codex-rescue', ...})` для плана/ревью (фон); codex-скиллы для prompting/result-handling.
-- **Кандидат-воркфлоу** (чистая сессия): `codex-dev-lifecycle.js` — оркеструет PLAN→BUILD→REVIEW→REFACTOR с Codex на фазах 1/3/4, Claude на 2. Детерминированный скелет (orchestration-method-selection: воркфлоу гарантирует что ревью-гейт не пропустится).
+- **Named workflow** (✅ собран 2026-06-11): `.claude/workflows/codex-dev-lifecycle.js` — оркеструет PLAN→Codex-ревью-плана→BUILD→Codex-ревью-кода→REFACTOR, луп до «ожидание==результат». Запуск `Workflow({name:'codex-dev-lifecycle', args:{task, context, attackSurface, buildScope, maxPlanRounds:3, maxCodeRounds:3}})`. Codex через `agentType:'codex:codex-rescue'` + структурированные вердикты (PLAN_VERDICT/CODE_VERDICT/EXPECT_CHECK). Всё последовательно (build/refactor в общие файлы — race исключён). 403→null обрабатывается (needs-manual, не долбит). Триггеры в CLAUDE.md routing. Детерминированный скелет — ревью-гейт не пропустится.
 - **Надёжность:** Codex-субагенты тоже падают (403/socket) — при падении план/ревью делать через codex CLI напрямую (`codex:codex-cli-runtime`) или main-процесс по тому же чеклисту. Не долбить падающий рой.
 
 ## Антипаттерны
