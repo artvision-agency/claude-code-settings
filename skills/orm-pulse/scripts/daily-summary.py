@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -171,13 +172,20 @@ def send_to_team(message: str, dry_run: bool = False) -> int:
         return 2
     # tg-send.sh может вернуть exit 1 при ошибке парсинга msg_id, но всё равно отправляет.
     # Считаем успехом если в stdout есть "Sent" или "ok".
+    # NOTIFY_FORCE=1: плановая рабочая сводка, НЕ инфра-алерт. Без него ERR_RE-фильтр
+    # notify-telegram.sh матчит "🚨 QComment"/"❌ Не прошли модерацию" в теле отчёта
+    # и глушит ВЕСЬ отчёт (прецедент: 25.05–11.06.2026, 17 дней в tg-suppressed-alerts.log).
     proc = subprocess.run(
         [str(TG_SEND), "team", message],
         capture_output=True,
         text=True,
         timeout=30,
+        env={**os.environ, "NOTIFY_FORCE": "1"},
     )
     out = proc.stdout + proc.stderr
+    if "Suppressed" in out:
+        print(f"❌ Send suppressed by notify-telegram ERR_RE filter: {out[:200]}", file=sys.stderr)
+        return 3
     if "Sent" in out or '"ok":true' in out:
         print("✅ Sent")
         return 0

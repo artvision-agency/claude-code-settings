@@ -7,6 +7,7 @@
 Запуск: status-anton-tg.py <client_slug>
 Cron: ~/Library/LaunchAgents/pro.artvision.orm-pulse.<client>-status-anton.plist
 """
+import os
 import re
 import sys
 import json
@@ -177,7 +178,16 @@ def main():
     if not TG_SEND.exists():
         print(f'❌ tg-send.sh not found: {TG_SEND}', file=sys.stderr)
         sys.exit(2)
-    r = subprocess.run([str(TG_SEND), 'anton', msg], capture_output=True, text=True)
+    # NOTIFY_FORCE=1: рабочий статус-отчёт Антону, НЕ инфра-алерт. Без него ERR_RE-фильтр
+    # notify-telegram.sh матчит "🚨 Принять" в теле и глушит весь отчёт
+    # (прецедент 25.05–11.06.2026, см. ~/.claude/logs/tg-suppressed-alerts.log).
+    r = subprocess.run([str(TG_SEND), 'anton', msg], capture_output=True, text=True,
+                       env={**os.environ, 'NOTIFY_FORCE': '1'})
+    out = r.stdout + r.stderr
+    if 'Suppressed' in out:
+        # Suppressed = exit 0, но сообщение НЕ доставлено — не считать успехом
+        print(f'❌ Suppressed by notify-telegram ERR_RE filter: {out[:200]}', file=sys.stderr)
+        sys.exit(3)
     if r.returncode == 0 or 'msg_id' in r.stdout:
         print('✅ Sent to anton')
     else:
