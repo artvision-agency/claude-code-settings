@@ -24,11 +24,11 @@
 
 **Применять:** при сложных задачах когда Claude пошёл не туда — `/rewind` к точке до неверного промпта.
 
-## 4. Auto-compact window 400K, не 200K
+## 4. Auto-compact раньше деградации (ЗАМЕНЕНО 2026-06-11)
 
-> *"Sets `CLAUDE_CODE_AUTO_COMPACT_WINDOW=400000` to compact before degradation zone (300-400k tokens)."*
+> Было: *"Sets `CLAUDE_CODE_AUTO_COMPACT_WINDOW=400000`..."* — **не работало**: значение режется до реального окна модели (200K), эффекта 0 (проверено по env-vars docs 11.06.2026).
 
-**У нас:** установлено в `artvision-data/.claude/settings.json` (env section) — sync на 3 аккаунта через git pull.
+**У нас (с 11.06.2026):** `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE="50"` в env обоих settings.json (`~/.claude/` + `artvision-data/.claude/`) — авто-компакт срабатывает на 50% контекста (дефолт ~95%). Реализует bulletproof «40% Dumb Zone» на уровне харнеса: сессия сжимается и продолжается сама, без ручного /clear+handover. Источник: code.claude.com/docs/en/env-vars.
 
 ## 5. Plan Mode + auto-accept = базовый workflow
 
@@ -103,7 +103,7 @@
 
 ## Когда применять эти правила
 
-- Перед длинной сессией (>200K tokens) — проверить env `CLAUDE_CODE_AUTO_COMPACT_WINDOW`
+- Перед длинной сессией — env `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=50` уже стоит (компакт на 50%)
 - При неудачном ответе Claude — использовать `/rewind`, не «уточняй промпт»
 - При правке >3 файлов — Plan Mode (Shift+Tab×2)
 - При параллельных экспериментах — `--fork-session` от общего commit'а
