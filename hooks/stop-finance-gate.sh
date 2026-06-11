@@ -15,7 +15,7 @@ TRANSCRIPT=$(printf '%s' "$INPUT" | python3 -c 'import sys,json;print(json.load(
 
 # взять последний assistant-текст (хвост транскрипта, не весь файл)
 [ -z "$TRANSCRIPT" ] || [ ! -f "$TRANSCRIPT" ] && exit 0
-LAST=$(tail -c 60000 "$TRANSCRIPT" 2>/dev/null | python3 -c '
+LAST=$(tail -n 120 "$TRANSCRIPT" 2>/dev/null | python3 -c '
 import sys,json
 last=""
 for line in sys.stdin:
@@ -34,7 +34,7 @@ print(last)
 [ -z "$LAST" ] && exit 0
 
 # финансовые паттерны: суммы с ₽/руб, "N К/мес", MRR, "стоимость ... N", тыс.руб
-if printf '%s' "$LAST" | grep -qiE '[0-9][0-9 .,]*[KКkК]?[ ]*(₽|руб|RUB|/мес|К/мес|тыс)|MRR|выручк[аи][^a-zа-я]*[0-9]|стоимост[ьи][^.]{0,40}[0-9]{3,}'; then
+if printf '%s' "$LAST" | grep -qiE '[0-9][0-9 .,]*[KКkК]?[ ]*(₽|\$|€|руб|RUB|/мес|К/мес|тыс)|[0-9]+[ ]*[KkКк][ ]*(/мес|руб|₽|\b)|MRR[^a-zа-я]{0,20}[0-9]|выручк[аи][^a-zа-я]*[0-9]|оплат[аы][^.]{0,30}[0-9]{3,}|стоимост[ьи][^.]{0,40}[0-9]{3,}'; then
   echo "[FINANCE-GATE] ⚠️ В ответе похоже есть финансовые цифры (суммы/MRR/стоимость), а пароль в этой сессии НЕ введён (нет /tmp/finance-unlocked-${SID})." >&2
   echo "Правило finance-password-gate.md: показ финансов на экране — только после пароля. Если это была ЗАПИСЬ факта (не показ) или ложное срабатывание — игнорируй. Bypass: FINANCE_GATE_OK=1" >&2
 fi
