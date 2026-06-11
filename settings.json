@@ -671,6 +671,14 @@
             "command": "bash /Users/antonk/.claude/hooks/stop-smoothing-check.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-finance-gate.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
