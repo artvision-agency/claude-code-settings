@@ -35,3 +35,6 @@ crwl https://<client-site>/ --output markdown --depth 2 > /tmp/crawl-output.md
 
 - Research: `~/artvision-data/research/2026-05-20-agency-tools-discovery/01-seo-crawl.md`
 - A/B benchmark output: `~/artvision-data/benchmarks/seo-crawl4ai-<date>-<client>.md`
+
+## site → project-db.json (двухслойно) (Fable 5 win, 2026-06-12, capture-wins-as-skills; research/fable5-wins-2026-06-12/)
+Сайт клиента → структурированный project-db.json при онбординге: ДВА слоя извлечения. ТОЧНЫЕ данные (цены/телефоны/адреса/коды) — CSS-селектором/regex БЕЗ LLM (numbers-deterministic-meaning-llm). СМЫСЛЫ (УТП/услуги/позиционирование) — LLM + Pydantic-схема. Каждое поле: source_url + checked_at. Готовая бд контекста проекта для КП/контента/PPC без повторного скрейпа.

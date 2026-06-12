@@ -78,3 +78,6 @@
 
 ## Sync
 `~/.claude/rules/` → 3 аккаунта.
+
+## Findings-фильтр внешнего ревьюера (усиление findings-evaluation-matrix) (Fable 5 win, 2026-06-12, capture-wins-as-skills; research/fable5-wins-2026-06-12/)
+Находки внешнего ревьюера (Codex/round_table/Gemini) прогонять через таблицу ПРИНЯТО / ОТКЛОНЕНО + ПОЧЕМУ перед применением: внешний ревьюер НЕ знает наших доменных ограничений (CONFIRM-барьеры, white-label AdvertMed, ТАБУ AI в публичном, ФЗ-323, passthrough vs MRR). Отклонение обосновывать эмпирически (проверить claim), не голословно. Дополняет findings-evaluation-matrix Дементьева — добавляет именно слой «доменные ограничения, которых ревьюер не видит».
