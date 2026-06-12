@@ -1,0 +1,33 @@
+{
+  "state": "done",
+  "detail": "deploy URLs from prior USmile SMM session: Хаб финалов (artvision.pro/_priv-usmile-smm-2026-06-10/final/) + День России FINAL (artvision.pro/_priv-usmile-smm-2026-06-10/den-rossii/FINAL/); both on review",
+  "tempo": "active",
+  "inFlight": {
+    "tasks": 0,
+    "queued": 0,
+    "kinds": []
+  },
+  "output": null,
+  "children": null,
+  "linkScanOffset": 1118165,
+  "linkScanPath": "/Users/antonk/.claude/projects/-Users-antonk/1fce92d1-dcdc-4f08-97b9-c96c4810a176.jsonl",
+  "template": "bg",
+  "respawnFlags": [
+    "--permission-mode",
+    "auto"
+  ],
+  "bgIsolation": "none",
+  "providerEnv": {},
+  "intent": "go",
+  "name": "SMM:USMILE2",
+  "nameSource": "user",
+  "sessionId": "0836f6a9-6c34-4f0a-b8b1-ff6ecbb2bfc1",
+  "resumeSessionId": "1fce92d1-dcdc-4f08-97b9-c96c4810a176",
+  "daemonShort": "0836f6a9",
+  "cliVersion": "2.1.173",
+  "cwd": "/Users/antonk",
+  "createdAt": "2026-06-11T22:40:02.887Z",
+  "updatedAt": "2026-06-12T00:15:10.421Z",
+  "firstTerminalAt": "2026-06-12T00:02:19.313Z",
+  "backend": "daemon"
+}

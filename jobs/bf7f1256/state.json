@@ -1,10 +1,16 @@
 {
-  "state": "working",
-  "detail": "✅ Перехват защищён: **потолок клика 200₽ + счётчик 99105379** добавлены (State=ON, capped, теперь трекается). # КОНСОЛИД",
-  "tempo": "active",
+  "state": "blocked",
+  "detail": "Prompt is too long",
+  "tempo": "blocked",
+  "inFlight": {
+    "tasks": 0,
+    "queued": 0,
+    "kinds": []
+  },
   "output": null,
   "children": null,
-  "linkScanOffset": 0,
+  "linkScanOffset": 71647380,
+  "linkScanPath": "/Users/antonk/.claude/projects/-Users-antonk/bf7f1256-954b-4d9b-b7fc-9527d2d1be62.jsonl",
   "template": "bg",
   "respawnFlags": [
     "--allowed-tools",
@@ -58,7 +64,7 @@
     "--effort",
     "high",
     "--permission-mode",
-    "bypassPermissions",
+    "auto",
     "--model",
     "claude-opus-4-8"
   ],
@@ -70,9 +76,11 @@
   "sessionId": "bf7f1256-954b-4d9b-b7fc-9527d2d1be62",
   "resumeSessionId": "bf7f1256-954b-4d9b-b7fc-9527d2d1be62",
   "daemonShort": "bf7f1256",
+  "cliVersion": "2.1.167",
   "cwd": "/Users/antonk",
   "createdAt": "2026-06-06T15:38:15.211Z",
-  "updatedAt": "2026-06-06T15:41:24.197Z",
+  "updatedAt": "2026-06-08T09:40:46.201Z",
   "firstTerminalAt": null,
-  "backend": "daemon"
+  "backend": "daemon",
+  "needs": "request too large — /compact or trim · Prompt is too long"
 }

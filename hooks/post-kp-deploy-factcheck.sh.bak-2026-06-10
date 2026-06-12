@@ -12,13 +12,12 @@ CMD=$(echo "$INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).ge
 
 [ -z "$CMD" ] && exit 0
 
-# Триггер: scp клиентских страниц на наш VPS — КП, review (_priv-*), preview
-echo "$CMD" | grep -qE '\bscp\b.*root@80\.90\.181\.152.*/var/www/artvision/(kp/|_priv-|preview/)' || exit 0
+# Триггер только на scp кп-страниц на наш VPS
+echo "$CMD" | grep -qE '\bscp\b.*root@80\.90\.181\.152.*/var/www/artvision/kp/' || exit 0
 
-# Извлекаем относительный путь и slug
-REL=$(echo "$CMD" | grep -oE '/var/www/artvision/(kp/[a-z0-9_-]+|_priv-[a-z0-9_-]+|preview/[a-z0-9_-]+)' | head -1 | sed 's|/var/www/artvision/||')
-[ -z "$REL" ] && exit 0
-SLUG=$(echo "$REL" | tr '/' '-')
+# Извлекаем slug из пути scp
+SLUG=$(echo "$CMD" | grep -oE '/var/www/artvision/kp/[a-z0-9-]+' | head -1 | sed 's|/var/www/artvision/kp/||')
+[ -z "$SLUG" ] && exit 0
 
 # Skip если этот slug уже проверялся в последние 30 минут (избегаем рекурсии при v2/v3 итерациях)
 LOCK_FILE="/tmp/auto-strict-lock-${SLUG}"
@@ -30,7 +29,7 @@ if [ -f "$LOCK_FILE" ]; then
 fi
 touch "$LOCK_FILE"
 
-URL="https://artvision.pro/${REL}/"
+URL="https://artvision.pro/kp/${SLUG}/"
 LOG_DIR="$HOME/artvision-data/clients/_factcheck-history"
 mkdir -p "$LOG_DIR"
 DATE=$(date +%Y-%m-%d_%H%M)

@@ -1,10 +1,18 @@
 {
-  "state": "working",
-  "detail": "✅ Всё синхронизировано. ``` ═══════════ SYNC STATUS — 2026-06-06 18:25 ═══════════ 📁 artvision-data ✅ запушено (unpushe",
-  "tempo": "active",
-  "output": null,
+  "state": "done",
+  "detail": "moodboard USmile v5 reviewed and fixed (teeth→portraits, red→blue #0071e3, licenses cleaned, team enlarged); sync complete across 3 accounts; API key incident contained (GitHub blocked push, .gitignore updated)",
+  "tempo": "idle",
+  "inFlight": {
+    "tasks": 0,
+    "queued": 0,
+    "kinds": []
+  },
+  "output": {
+    "result": "USmile v5 moodboard fixed + synced; handover file created; secret contained"
+  },
   "children": null,
-  "linkScanOffset": 0,
+  "linkScanOffset": 27087676,
+  "linkScanPath": "/Users/antonk/.claude/projects/-Users-antonk/d3b2835f-60e8-409d-ba8a-9dc211878df5.jsonl",
   "template": "bg",
   "respawnFlags": [
     "--allowed-tools",
@@ -60,17 +68,18 @@
     "--permission-mode",
     "auto"
   ],
-  "bgIsolation": "none",
-  "providerEnv": {},
   "intent": "го",
   "name": "Review moodboard photo content and graphics",
   "nameSource": "auto",
   "sessionId": "d3b2835f-60e8-409d-ba8a-9dc211878df5",
   "resumeSessionId": "d3b2835f-60e8-409d-ba8a-9dc211878df5",
   "daemonShort": "d3b2835f",
+  "cliVersion": "2.1.167",
   "cwd": "/Users/antonk",
+  "bgIsolation": "none",
+  "providerEnv": {},
+  "backend": "daemon",
   "createdAt": "2026-06-06T15:37:52.274Z",
-  "updatedAt": "2026-06-06T15:37:52.274Z",
-  "firstTerminalAt": null,
-  "backend": "daemon"
+  "updatedAt": "2026-06-06T15:53:51.633Z",
+  "firstTerminalAt": "2026-06-06T15:53:51.633Z"
 }

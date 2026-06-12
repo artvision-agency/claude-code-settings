@@ -10,3 +10,6 @@
 
 ## Routed 2026-05-25 19:37
 - [ ] **[routed]** **[infra] Разобрать рестарты VPS claude-worker** [priority:medium] [assignee:claude] [result:worker-stable] — claude-worker (pm2 на VPS) перезапускался 4×/ч 25.05, от него зависит AI-советник @avportal_bot. Алерты заглушены фильтром, причина не устранена. Проверить pm2 logs claude-worker. Сессия 85fca7e8.
+
+## Routed 2026-06-11 03:02
+- [ ] **[routed]** 🔴 **VPS 80.90.181.152: api.telegram.org НЕДОСТУПЕН (timeout, 2 замера 11.06 ~02:35 и 02:53)** [priority:high] [assignee:claude] [result:tg-connectivity-restored-or-workaround] — DNS резолвится (149.154.166.110), TCP/HTTPS timeout. Polling-боты на VPS не получают апдейты (pm2 online ≠ работает). Выяснить: блок хостера/RKN → решение (webhook через nginx / прокси). Связано: avportal-bot остановлен 09.06.

@@ -1,6 +1,6 @@
 {
   "state": "blocked",
-  "detail": "Prompt is too long",
+  "detail": "go on",
   "tempo": "blocked",
   "output": null,
   "children": null,
@@ -15,7 +15,7 @@
   "daemonShort": "e58fbbf2",
   "cwd": "/Users/antonk",
   "createdAt": "2026-05-12T09:15:04.437Z",
-  "updatedAt": "2026-05-12T09:18:50.039Z",
+  "updatedAt": "2026-06-06T16:02:07.335Z",
   "firstTerminalAt": null,
   "backend": "daemon",
   "inFlight": {
@@ -23,5 +23,5 @@
     "queued": 0,
     "kinds": []
   },
-  "needs": "request too large — /compact or trim · Prompt is too long"
+  "needs": "approve Bash: cat /Users/antonk/.claude/projects/-Users-antonk/memory/../../../../artvision-data/sync/recaps/e58fbbf2-c12b-4669-91f3-6f6d5957cebc.md 2>/dev/null | head -60; echo \"=== END RECAP ===\""
 }
