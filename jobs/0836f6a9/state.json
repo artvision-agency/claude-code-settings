@@ -1,23 +1,24 @@
 {
-  "state": "done",
-  "detail": "deploy URLs from prior USmile SMM session: Хаб финалов (artvision.pro/_priv-usmile-smm-2026-06-10/final/) + День России FINAL (artvision.pro/_priv-usmile-smm-2026-06-10/den-rossii/FINAL/); both on review",
-  "tempo": "active",
+  "state": "blocked",
+  "detail": "4 items deployed (Day Russia QR, hub alt/lazy/CLS, prices verified); awaiting decisions on: (1) category badges — keep or remove? (2) Straumann p05 pipeline risk — proceed carefully in main or fresh session?",
+  "tempo": "blocked",
   "inFlight": {
     "tasks": 0,
     "queued": 0,
     "kinds": []
   },
-  "output": null,
+  "needs": "(1) category badges: remove from all posts or keep as topic labels? (2) Straumann/footer: continue step-by-step in main or restart with QA-acceptance-2026-06-12.md plan?",
+  "output": {
+    "result": "Day Russia QR repositioned ✅, hub optimized ✅, prices confirmed ✅; blocked on badge & pipeline decisions"
+  },
   "children": null,
-  "linkScanOffset": 1118165,
+  "linkScanOffset": 3017126,
   "linkScanPath": "/Users/antonk/.claude/projects/-Users-antonk/1fce92d1-dcdc-4f08-97b9-c96c4810a176.jsonl",
   "template": "bg",
   "respawnFlags": [
     "--permission-mode",
     "auto"
   ],
-  "bgIsolation": "none",
-  "providerEnv": {},
   "intent": "go",
   "name": "SMM:USMILE2",
   "nameSource": "user",
@@ -26,8 +27,10 @@
   "daemonShort": "0836f6a9",
   "cliVersion": "2.1.173",
   "cwd": "/Users/antonk",
+  "bgIsolation": "none",
+  "providerEnv": {},
+  "backend": "daemon",
   "createdAt": "2026-06-11T22:40:02.887Z",
-  "updatedAt": "2026-06-12T00:15:10.421Z",
-  "firstTerminalAt": "2026-06-12T00:02:19.313Z",
-  "backend": "daemon"
+  "updatedAt": "2026-06-12T01:14:52.620Z",
+  "firstTerminalAt": "2026-06-12T00:02:19.313Z"
 }
