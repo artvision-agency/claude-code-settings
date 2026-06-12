@@ -430,6 +430,11 @@
             "type": "command",
             "command": "~/.claude/hooks/session-tg-health.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/session-start-sync-health.sh",
+            "timeout": 5
           }
         ]
       },
@@ -1571,5 +1576,6 @@
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "model": "Fable"
 }
