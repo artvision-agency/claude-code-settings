@@ -116,3 +116,11 @@ voice/venv/
 __pycache__/
 secure-backups/
 daemon/control.key
+
+# --- SECRETS (added after public-leak incident 2026-06-12) ---
+wp-sites.json
+*.env
+channels/telegram/.env
+channels/telegram/.env.disabled
+**/google_cookies.txt
+**/*cookies*.txt
