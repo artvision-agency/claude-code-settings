@@ -49,3 +49,29 @@
 - Задачи трекера: #2 (ротация — сделана, хвост VPS), #3 (Стас — бандл доставлен)
 - research/fable5-wins-2026-06-12/ (источник Fable5)
 - self-corrections #31 (public secret leak), recap 03ae9e9f
+
+---
+
+## ОБНОВЛЕНИЕ (дальше по сессии) — ротация ДОВЕДЕНА почти до конца
+
+**КРИТИЧНОЕ, что чуть не упустил:** @avportal_bot — это ГЛАВНЫЙ прод-бот (vps-bot/bot.js, pm2 `avportal-bot`, polling), не только нотификатор. Revoke его функционально уронил (401). **Восстановлен:** обновил `vps-bot/.env` TELEGRAM_BOT_TOKEN + VPS tokens.json (4 копии: /root/, /root/artvision-data/, /root/.claude-sync/, /root/artvision-tg-bot/) → новый токен → `pm2 restart avportal-bot` → polling OK, 401 ушли.
+
+**Урок (в self-corrections):** ротация токена бота = чинить СНАЧАЛА сам рантайм бота (pm2 process + .env), потом хелперы. Я сперва лез в notification-скрипты, а главный бот висел сломанным.
+
+**Де-хардкод сделан (локально + VPS, читают tokens.json):**
+- `tvorims-bot/nps_reader.py` (import os + чтение `~/artvision-tg-bot/tokens.json`)
+- `vps-bot/health-check.sh` (паттерн чтения как notify-telegram.sh)
+- Запушено в fix/vps-bot-security; VPS подтянут (конфликт разрешён в пользу де-хардкод версии).
+
+**GitHub Secrets — разобрано (Антон спросил «зачем»):**
+- НЕ нужны для токена: 2 workflow (`bot-healthcheck.yml`, `read_nps.yml`) — РУЧНЫЕ (workflow_dispatch), главный путь = запуск де-хардкоженного nps_reader.py на VPS. Удалять НЕ надо (не мешают).
+- Секреты `TELEGRAM_BOT_TOKEN`/`TG_BOT_TOKEN`/`TELEGRAM_BACKUP_TOKEN_1` содержат СТАРЫЙ мёртвый токен (от января). Если scheduled Action их юзает — падает. Все значения Secrets ДУБЛИРОВАНЫ в приватном tokens.json (ничего не потеряется).
+
+**ОСТАЛОСЬ (косметика, LOW, свежая сессия):**
+1. Мёртвый токен-литерал в fallback 2 YAML (`read_nps.yml:21`, `bot-healthcheck.yml`) — не триггерится (fallback). Заменить на чтение `/root/artvision-data/tokens.json` (Edit промахнулся из-за escape-кавычек YAML — делать на свежем контексте).
+2. Опц: `gh secret set TELEGRAM_BOT_TOKEN`/`TG_BOT_TOKEN` новым токеном (если scheduled Actions используют).
+3. Стас resync (его машина).
+
+**Гача:** локальный `~/artvision-data/tokens.json` portal_bot = СТРОКА (я перезаписал dict), на VPS = dict {token,...}. notify-скрипты обрабатывают оба (`t["token"] if isinstance(t,dict) else t`). Для консистентности можно вернуть dict локально (LOW).
+
+**Новый токен avportal_bot: только в приватных tokens.json (локально стр + VPS dict). НЕ в публичном репо. Старые мертвы.**
