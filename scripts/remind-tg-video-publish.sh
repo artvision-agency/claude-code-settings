@@ -4,7 +4,7 @@
 # После отправки САМ выгружает и удаляет свою плашку (чтобы не повторялось ежегодно).
 set -uo pipefail
 
-BOT="8399522625:AAEEayoY1yjLEXM5Ys7jvlruYyoqKHGh1ho"
+BOT="$(python3 -c 'import json,os;t=json.load(open(os.path.expanduser("~/artvision-data/tokens.json")))["telegram"]["portal_bot"];print(t if isinstance(t,str) else t.get("token",""))')"
 CHAT="161261562"
 MSG="🔔 НАПОМИНАНИЕ (12:00) — публикация шортса V1 (CTR по позициям) в канал @artvisionagency
 
