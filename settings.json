@@ -709,6 +709,14 @@
             "command": "$HOME/.claude/hooks/stop-unapproved-done.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-kp-pricing-reminder.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
