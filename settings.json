@@ -693,6 +693,14 @@
             "command": "$HOME/.claude/hooks/stop-audit-without-tasks.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/stop-done-not-in-gantt.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
