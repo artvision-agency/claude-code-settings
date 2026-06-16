@@ -1176,6 +1176,15 @@
             "command": "$HOME/.claude/hooks/pre-design-without-brand-source.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-scp-no-assignees.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
