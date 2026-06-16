@@ -1134,6 +1134,24 @@
             "command": "~/.claude/hooks/pre-tool-codex-lifecycle-guard.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-scp-medical-aggregator.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-design-without-brand-source.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -1282,6 +1300,24 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/post-commit-learning.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "WebSearch|WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/post-websearch-factcheck.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/post-ui-agent-strict.sh"
           }
         ]
       }

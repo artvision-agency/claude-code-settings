@@ -108,7 +108,10 @@ if [[ ! -f "$BRAND_MANIFEST" ]]; then
      - ~/.claude/rules/quality.md (Pre-Task Protocol)
 
 EOF
-  exit 2
+  # warn-only (понижено 2026-06-16): brand-extracted.yaml есть у 0 клиентов,
+  # под matcher 726 design-файлов → хард-блок = footgun. Нудж раз в сессию.
+  [[ -n "$SESSION_ID" ]] && touch "/tmp/brand-source-done-${SESSION_ID}" 2>/dev/null || true
+  exit 0
 fi
 
 # 10) Проверка свежести (< 7 дней)
@@ -133,7 +136,9 @@ if (( MANIFEST_AGE_DAYS > 7 )); then
    ИЛИ touch /tmp/brand-source-done-${SESSION_ID}
 
 EOF
-  exit 2
+  # warn-only (понижено 2026-06-16)
+  [[ -n "$SESSION_ID" ]] && touch "/tmp/brand-source-done-${SESSION_ID}" 2>/dev/null || true
+  exit 0
 fi
 
 # 11) Опционально — есть ли вырезанные элементы
