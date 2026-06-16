@@ -1511,6 +1511,14 @@
             "command": "bash /Users/antonk/.claude/hooks/prompt-parallel-orchestration-detect.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/usage-warn.sh"
+          }
+        ]
       }
     ],
     "SubagentStart": [
