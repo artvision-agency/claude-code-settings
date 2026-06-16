@@ -167,6 +167,28 @@ for f in ~/.claude/rules/*.md; do echo "--- $f ---"; wc -l "$f"; done
 - [ ] MEMORY.md актуален (даты, контакты, проекты)
 - [ ] Проектные `.claude/rules/` в репо не конфликтуют с глобальными
 
+## 1.11 Деплой-ссылки проектов (детерминированно, НЕ агент)
+
+> Правило `project-required-files.md`: у каждого активного проекта — `assets/deploy-urls.yaml`. Скрипт пересобирает + HTTP-проверяет, вскрывает мёртвые деплои.
+
+```bash
+cd ~/artvision-data
+bash scripts/project-deploy-urls.sh --all --check --write   # пересобрать + проверить все активные
+# сводка по state: live / redirect / gated(401/403) / dead(404) / post-only / timeout
+for s in otido blumart tvorimsovershenstvo madwave avtoworld geely-a2auto esenina grelka-gudelka ant-partners; do
+  f="clients/$s/assets/deploy-urls.yaml"; [ -f "$f" ] || continue
+  printf "%-20s live:%s dead:%s gated:%s redirect:%s\n" "$s" \
+    "$(grep -c 'state: live' "$f")" "$(grep -c 'state: dead' "$f")" \
+    "$(grep -c 'state: gated' "$f")" "$(grep -c 'state: redirect' "$f")"
+done
+```
+
+- [ ] У каждого активного проекта есть `assets/deploy-urls.yaml` (`scripts/project-deploy-urls.sh --all` — обзор)
+- [ ] `state: dead` (404) — реально удалённые деплои: версионная churn (норма) ИЛИ потеря (проверить)
+- [ ] `state: gated`/`redirect` = ЖИВЫЕ (за паролем / редирект), НЕ дочищать
+- [ ] USmile — курированный файл (группы+⭐), авто-перезапись НЕ применять
+- [ ] git commit обновлённых реестров
+
 ## Формат отчёта S1
 
 ```markdown
@@ -184,6 +206,7 @@ for f in ~/.claude/rules/*.md; do echo "--- $f ---"; wc -l "$f"; done
 | Git repos | OK/WARN/FAIL | описание | что сделано |
 | Токены/API | OK/WARN/FAIL | описание | что сделано |
 | CLAUDE.md | OK/WARN/FAIL | описание | что сделано |
+| Деплой-ссылки | OK/WARN/FAIL | dead/live по проектам | что сделано |
 ```
 
 ---
