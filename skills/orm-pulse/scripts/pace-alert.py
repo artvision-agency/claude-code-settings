@@ -74,21 +74,38 @@ def find_history_snapshots(slug: str, window_hours: int) -> tuple[Path | None, P
     return newest, older
 
 
-def count_items_diff(newest: Path, older: Path | None) -> tuple[int, int, int]:
-    """Возвращает (new_count, old_count, new_added)."""
-    new_data = json.loads(newest.read_text())
-    new_items = new_data.get("items", [])
-    new_keys = {(i.get("author", ""), (i.get("text") or "")[:80]) for i in new_items}
+def pace_from_total_history(slug: str, window_hours: int):
+    """Прирост отзывов по АВТОРИТЕТНОМУ total из reviews-tracker/history.csv.
 
-    if not older:
-        return len(new_items), 0, 0
+    Раньше pace считался как set_diff(items) между live-снапшотами — но выгрузка
+    reviews.yandex.ru нестабильна (300-1000 items за разные часы из одного top-1000),
+    и diff давал шум (691/день вместо реальных 2-3). total — число, которое Яндекс
+    показывает сам, не зависит от полноты выгрузки. (fix 2026-06-16, task #2)
 
-    old_data = json.loads(older.read_text())
-    old_items = old_data.get("items", [])
-    old_keys = {(i.get("author", ""), (i.get("text") or "")[:80]) for i in old_items}
-
-    added = len(new_keys - old_keys)
-    return len(new_items), len(old_items), added
+    Возвращает (new_total, old_total, added, new_ts, old_ts) или None если данных нет.
+    """
+    import csv
+    hist = ROOT / "clients" / slug / "orm" / "reviews-tracker" / "history.csv"
+    if not hist.exists():
+        return None
+    rows = []
+    with hist.open() as f:
+        for r in csv.DictReader(f):
+            try:
+                ts = datetime.strptime(r["timestamp"], "%Y-%m-%d-%H%M")
+                total = int(r["total"])
+            except (ValueError, KeyError, TypeError):
+                continue
+            rows.append((ts, total))
+    if len(rows) < 2:
+        return None
+    rows.sort(key=lambda x: x[0])
+    new_ts, new_total = rows[-1]
+    target = new_ts - timedelta(hours=window_hours)
+    older = min(rows[:-1], key=lambda x: abs(x[0] - target))
+    old_ts, old_total = older
+    added = max(0, new_total - old_total)  # total мог упасть (антифрод удалил) → прирост 0
+    return new_total, old_total, added, new_ts, old_ts
 
 
 def main() -> int:
@@ -109,24 +126,20 @@ def main() -> int:
         print(f"⏸ Pace check skipped: crawler unhealthy (consecutive_partials={cp})")
         return 0
 
-    newest, older = find_history_snapshots(args.slug, window_h)
-    if not newest:
-        print(f"❌ Нет history snapshots в {args.slug}/orm/live-reviews-history/", file=sys.stderr)
+    res = pace_from_total_history(args.slug, window_h)
+    if res is None:
+        print(f"❌ Нет/мало данных в {args.slug}/orm/reviews-tracker/history.csv", file=sys.stderr)
         return 1
-    if not older:
-        print(f"ℹ️ Только 1 snapshot, нечего сравнивать с window {window_h}h")
-        return 0
+    new_total, old_total, added, new_ts, old_ts = res
 
-    new_count, old_count, added = count_items_diff(newest, older)
-
-    # Темп = добавилось за окно / (окно в днях)
-    days = window_h / 24.0
+    # Реальное окно в днях (по фактическим меткам времени, не фикс window_h)
+    days = max((new_ts - old_ts).total_seconds() / 86400.0, window_h / 24.0)
     pace = added / days if days > 0 else 0.0
 
-    print(f"📊 Pace report for {args.slug}:")
-    print(f"   newest snapshot: {newest.name} ({new_count} items)")
-    print(f"   older snapshot:  {older.name} ({old_count} items)")
-    print(f"   added in window {window_h}h: {added}")
+    print(f"📊 Pace report for {args.slug} (по total из history.csv):")
+    print(f"   newest: {new_ts:%Y-%m-%d %H:%M} total={new_total}")
+    print(f"   older:  {old_ts:%Y-%m-%d %H:%M} total={old_total}")
+    print(f"   прирост за {days:.1f}д: {added} отзывов")
     print(f"   pace: {pace:.2f}/day (min {min_pace}/day)")
 
     if pace >= min_pace:
@@ -148,8 +161,8 @@ def main() -> int:
 
     msg = (
         f"⚠️ {args.slug}: темп публикаций упал\n"
-        f"За {window_h}ч добавлено {added} отзывов = {pace:.2f}/день (норма ≥{min_pace}/день)\n"
-        f"Snapshot: {newest.stem} vs {older.stem}\n"
+        f"Прирост total {old_total}→{new_total} = {added} за {days:.1f}д = {pace:.2f}/день (норма ≥{min_pace}/день)\n"
+        f"Период: {old_ts:%Y-%m-%d} → {new_ts:%Y-%m-%d}\n"
         f"Проверь: replacement-pinger логи, статус подрядчиков, qcomment баланс."
     )
     if args.dry_run:
