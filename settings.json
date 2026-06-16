@@ -489,6 +489,14 @@
             "command": "bash /Users/antonk/.claude/hooks/start-parallel-plan-reminder.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/session-start-orphan-hooks.sh"
+          }
+        ]
       }
     ],
     "Stop": [
