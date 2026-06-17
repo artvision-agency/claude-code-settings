@@ -1259,6 +1259,10 @@
           {
             "type": "command",
             "command": "/Users/antonk/.claude/hooks/post-edit-finance-numbers.sh \"$CLAUDE_FILE_PATH\""
+          },
+          {
+            "type": "command",
+            "command": "/Users/antonk/.claude/hooks/post-client-html-voice-widget-check.sh"
           }
         ]
       },
@@ -1677,5 +1681,6 @@
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "model": "opus"
 }
