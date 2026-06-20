@@ -90,6 +90,7 @@
 | `stop-claim-no-rule-check.sh` | Stop | 11.05 #16b — «нигде нет правила» без grep по 4 источникам | `NO_RULE_CHECK_OK=1` |
 | `pre-commit-secret-guard.sh` | .git/hooks/pre-commit | 12.06 #31 — секреты в публичный репо. Блок секрет-файлов + контент-паттернов | `SECRET_GUARD_OK=1` |
 | `session-start-sync-health.sh` | SessionStart | 11.06 #30 — branch-drift, VPS отстал 113 коммитов. Warn-only | `SYNC_HEALTH_OFF=1` |
+| `pre-bash-forecast-reminder.sh` | PreToolUse Bash | 20.06 #32 — блок вызова мёртвого Forecast API (509) → тычет в keywordbids/AuctionBids. Тест 7/7 | `FORECAST_OK=1` |
 
 При добавлении нового хука — **сразу обновить таблицу** + зарегистрировать в settings.json (#18).
 
