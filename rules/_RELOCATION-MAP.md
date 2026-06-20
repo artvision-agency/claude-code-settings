@@ -48,3 +48,12 @@
 | visual-overlays-faces-and-metro | **/ads/**, social_clips/** |
 
 **Снято Волной 2: −63 KB** (rules/ 533→470 KB). Эффект — со следующего старта сессии.
+
+## Волна 3 — дев-механизмы на код-привязку (2026-06-20, по запросу Антона)
+Грузятся ТОЛЬКО при работе с кодом/разработкой (поведение при разработке сохранено, хуки работают всегда):
+| Правило | paths |
+|---|---|
+| codex-dev-lifecycle (20K) | *.py/js/ts/sh/jsx/tsx/vue/go/rs, scripts/**, workflows/**, vps-bot/**, products/**, devops-agent/**, hooks/** |
+| auto-test-team (6K) | *.py/js/ts/sh/html, scripts/**, workflows/**, vps-bot/**, products/**, hooks/** |
+
+**Итог волн 2+3: rules/ 533→444 KB (−89 KB ≈ −22K токенов/запрос). ×рои = больше.**

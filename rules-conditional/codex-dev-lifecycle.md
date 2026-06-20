@@ -1,3 +1,23 @@
+---
+name: codex-dev-lifecycle
+paths:
+  - '**/*.py'
+  - '**/*.js'
+  - '**/*.ts'
+  - '**/*.sh'
+  - '**/*.jsx'
+  - '**/*.tsx'
+  - '**/*.vue'
+  - '**/*.go'
+  - '**/*.rs'
+  - 'scripts/**'
+  - '**/workflows/**'
+  - 'vps-bot/**'
+  - 'products/**'
+  - 'devops-agent/**'
+  - '**/hooks/**'
+---
+
 # Codex-driven dev lifecycle — планирование + поэтапное ревью другим семейством (GPT-5.4)
 
 > **Установлено:** 2026-06-11 (Антон). **АВТОР МЕТОДА/СКИЛЛА: Дмитрий Дементьев** (`github.com/dementev-dev/adversarial-review`, Apache-2.0) — Habr [1019588](https://habr.com/ru/articles/1019588/). **Тимур Хахалев** (@the_ai_architect) — **популяризатор** (курс ai.khakhalev.com), своего публичного репо НЕТ. (Поправка авторства по ресёрчу 11.06 — изначально ошибочно приписал Хахалеву.)
