@@ -1,3 +1,11 @@
+---
+name: figma-mcp-bulk-creative
+paths:
+  - '**/design/**'
+  - '**/*figma*'
+  - '**/ads/**'
+---
+
 # Figma MCP — массовая генерация редактируемых макетов (мастер-макет + CSV)
 
 > **Установлено:** 2026-06-12 (Антон). Источник: video-learn видео «Claude сам работает в Figma — 800 макетов за минуты» (канал «Контент продаёт», youtube -Fm3Kh3VrcM). Конспект: `~/artvision-data/personal/video-learn/2026-06-12-figma-mcp-bulk/`.

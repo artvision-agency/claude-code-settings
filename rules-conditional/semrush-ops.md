@@ -1,3 +1,10 @@
+---
+name: semrush-ops
+paths:
+  - '**/seo/**'
+  - '**/*semrush*'
+---
+
 # SEMrush — операции (консолидированный ops-гайд)
 
 > Свод операций SEMrush + грабли. Скрипты: `scripts/semrush_top_pages.py`, `semrush_backlink_gap.py`, `semrush_doctra_toolgrade.py`.

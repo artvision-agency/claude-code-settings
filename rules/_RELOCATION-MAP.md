@@ -29,3 +29,22 @@
 
 ## Откат
 `git checkout main` (ветка context-diet-w1 не смержена). Или `git mv rules-conditional/<file> rules/` + убрать frontmatter.
+
+## Волна 2 — перенесено в `rules-conditional/` (2026-06-20, token-diet)
+
+| Правило | Триггер-папки (paths) |
+|---|---|
+| figma-mcp-bulk-creative | design/**, *figma*, ads/** |
+| designer-prompt-templates | design/**, *design* |
+| site-clone-pipeline | *clone*, clients/** |
+| moodboard-photographer-brief | *moodboard*, *photo*, clients/** |
+| semrush-ops | **/seo/**, *semrush* |
+| topvisor-ops | **/seo/**, *topvisor* |
+| seo-presale-audit-workflow | **/seo/**, *audit* |
+| bank-source-blocklist | **/finance/**, *vklad*, *savings* |
+| finance-data-collection | **/finance/**, *vklad*, *savings* |
+| welcome-vs-base-math | **/finance/**, *vklad* |
+| ppc-show-as-ad-previews | **/ppc/**, **/ads/** |
+| visual-overlays-faces-and-metro | **/ads/**, social_clips/** |
+
+**Снято Волной 2: −63 KB** (rules/ 533→470 KB). Эффект — со следующего старта сессии.

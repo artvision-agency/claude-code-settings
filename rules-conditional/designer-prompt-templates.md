@@ -1,3 +1,10 @@
+---
+name: designer-prompt-templates
+paths:
+  - '**/design/**'
+  - '**/*design*'
+---
+
 # Designer Prompt Templates — указатель на библиотеку one-shot промптов дизайнера
 
 > **Установлено:** 2026-06-15 (Антон). Источник: видео DesignCourse (Gary Simon) «Claude Fable 5 UI/UX One-Shots — 5 Tests» (YouTube tSg3FAdWvzI) — извлечено через `/video-learn`.
