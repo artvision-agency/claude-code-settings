@@ -27,8 +27,9 @@
 
 Алгоритм после инцидента: (1) паттерн (regex по команде/пути/args); (2) `~/.claude/hooks/pre-<thing>-guard.sh` exit 1 + bypass env; (3) зарегистрировать в `~/.claude/settings.json` под matcher; (4) тест 3+ блок / 3+ пропуск / bypass; (5) дописать строку в таблицу ниже. **Регистрация в settings.json — обязательный шаг** (#18: хук лежал unused месяц).
 
-## Сжатые уроки #8–#31 (детали → архив)
+## Сжатые уроки #8–#32 (детали → архив)
 
+- **#32** «Forecast мёртв → нет метода для CPC» (ошибка ОДНОГО метода выдана за «нет метода») → ошибка/509 одного метода ≠ «нет метода». CPC Я.Директа = `keywordbids.get/AuctionBids` (ВСЕГДА жив, живой аукцион), Forecast v4 мёртв (509 — не трогать). Проверять рабочий метод + есть ли данные уже в кабинете (имплант-ключи USmile уже были там, 367). Класс no-false-negative. KB: `knowledge/services/yandex-direct/gotchas.md`. Прецедент 2026-06-20, Антон поправил.
 - **#8** «Готово» без `qa-full.sh` → перед «готово/работает/production-ready» гнать qa-full.sh, показать PASS N/N. Хук `pre-push-qa-check.sh`.
 - **#9** TaskCreate пропуск даже при SessionStart-хуке → 2 слоя: `prompt-taskcreate-nag.sh` + `pre-tool-block-no-taskcreate.sh`.
 - **#10** Strip/clean без regression-check (157 секций) → `--dry-run` первым, baseline `.section-counts.json`, git stash. Хук `pre-strip-script-guard.sh`.
