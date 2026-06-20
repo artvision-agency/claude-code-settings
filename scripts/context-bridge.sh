@@ -23,9 +23,19 @@ NOW=$(date "+%Y-%m-%d %H:%M")
 
 mkdir -p "$(dirname "$SHARED_CONTEXT")"
 
-# Git pull first to avoid stale context / push conflicts
+# Git pull first to avoid stale context / push conflicts.
+# DATA-LOSS-SAFE (2026-06-20, инцидент потери файлов/токена yail307):
+# БЫЛО: git pull --rebase — переписывает/ОТВЯЗЫВАЕТ локальные коммиты активной сессии → dangling.
+# СТАЛО: гейт чистоты дерева. Грязное (есть WIP сессии) → НЕ трогаем, continue с локальным
+#   состоянием (скрипт это и так допускает). Чистое → merge (НИКОГДА не отвязывает коммиты).
+#   Здесь НЕ делаем commit-first: это контекст-бридж (cron 30мин), он не должен коммитить WIP юзера.
 cd "$ARTVISION_DATA"
-git pull --rebase --quiet 2>/dev/null || echo "[WARN] git pull failed, continuing with local state" >&2
+if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+    git -c core.symlinks=false pull --no-rebase --no-edit --quiet 2>/dev/null \
+        || { git merge --abort 2>/dev/null || true; echo "[WARN] git pull (merge) failed/conflict — merge --abort, continuing with local state" >&2; }
+else
+    echo "[WARN] дерево грязное (WIP сессии) — pull пропущен, continue с локальным состоянием (rebase/stash не делаем, данные целы)" >&2
+fi
 
 # ═══════════════════════════════════════════════
 # Сбор данных через Python (безопасный вывод)

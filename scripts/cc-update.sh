@@ -10,7 +10,17 @@ if [ ! -d "$SETTINGS_DIR" ]; then
     git clone https://github.com/artvision-agency/claude-code-settings.git "$SETTINGS_DIR"
 else
     echo "Pulling latest..."
-    git -C "$SETTINGS_DIR" pull --rebase
+    # DATA-LOSS-SAFE (2026-06-20, инцидент потери файлов/токена yail307):
+    # БЫЛО: git pull --rebase — отвязывал локальные коммиты settings-репо → dangling.
+    # СТАЛО: ff-only; иначе merge (--no-rebase) только при чистом дереве; грязное → пропуск.
+    if ! git -C "$SETTINGS_DIR" pull --ff-only 2>/dev/null; then
+        if [ -z "$(git -C "$SETTINGS_DIR" status --porcelain)" ]; then
+            git -C "$SETTINGS_DIR" pull --no-rebase --no-edit \
+                || { git -C "$SETTINGS_DIR" merge --abort 2>/dev/null || true; echo "⚠️  merge-конфликт settings — merge --abort, локальные коммиты целы"; }
+        else
+            echo "⚠️  settings-репо грязный — pull пропущен (rebase/stash не делаем, локальные правки целы)"
+        fi
+    fi
 fi
 
 # Sync skills

@@ -14,7 +14,18 @@ REPO="$HOME/artvision-data"
 do_pull() {
   echo "📥 Pull: git → локальные memory + rules"
   cd "$REPO"
-  git pull --ff-only 2>/dev/null || git pull --rebase
+  # DATA-LOSS-SAFE (2026-06-20, инцидент потери файлов/токена yail307):
+  # БЫЛО: ff-only || pull --rebase — fallback на rebase отвязывал локальные коммиты → dangling.
+  # СТАЛО: ff-only; если не прошёл — merge (--no-rebase) ТОЛЬКО при чистом дереве.
+  #   Грязное дерево (WIP другой сессии в artvision-data) → пропустить pull, не трогать данные.
+  if ! git pull --ff-only 2>/dev/null; then
+    if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+      git -c core.symlinks=false pull --no-rebase --no-edit \
+        || { git merge --abort 2>/dev/null || true; echo "⚠️  merge-конфликт — merge --abort, локальные коммиты целы"; }
+    else
+      echo "⚠️  дерево грязное — pull пропущен (rebase/stash не делаем, данные целы)"
+    fi
+  fi
   if [ -d "$SYNC_DST" ]; then
     mkdir -p "$MEMORY_SRC"
     rsync -a "$SYNC_DST/" "$MEMORY_SRC/"
