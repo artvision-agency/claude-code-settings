@@ -19,3 +19,13 @@ sessions:
     created: "2026-05-13"
     cwd: "/Users/antonk"
     todo: ""
+  New-Smile:
+    id: "8ae979be-47df-4ca9-959a-de84f5ce295d"
+    created: "2026-06-14"
+    cwd: "/Users/antonk/artvision-data"
+    todo: "artvision-data/TODO.md"
+  grelka:
+    id: "ce149b5f-7e44-4800-a149-1148ebbc242f"
+    created: "2026-06-14"
+    cwd: "/Users/antonk/artvision-data"
+    todo: "artvision-data/TODO.md"

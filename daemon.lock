@@ -1,15 +1,15 @@
 {
-  "pid": 15980,
-  "version": "2.1.174",
+  "pid": 89158,
+  "version": "2.1.176",
   "jsonPath": "/Users/antonk/.claude/daemon.json",
   "logPath": "/Users/antonk/.claude/daemon.log",
-  "startedAt": 1781227270943,
+  "startedAt": 1781301267925,
   "origin": "transient",
   "spawnedBy": {
     "label": "claude",
     "cwd": "/Users/antonk/artvision-data",
-    "pid": 9162
+    "pid": 16422
   },
-  "procStart": "Fri Jun 12 01:21:05 2026",
-  "launchTarget": "/Users/antonk/.local/share/claude/versions/2.1.174"
+  "procStart": "Fri Jun 12 21:54:26 2026",
+  "launchTarget": "/Users/antonk/.local/share/claude/versions/2.1.176"
 }

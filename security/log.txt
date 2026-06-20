@@ -92,3 +92,259 @@
 [2026-06-12 08:34:19.443] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.3/hooks/security_reminder_hook.py']
 [2026-06-12 08:34:19.443] Processing: hook_event=UserPromptSubmit, tool=
 [2026-06-12 08:34:20.022] Captured git baseline: 3dce437835ef
+[2026-06-13 15:41:39.509] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.3/hooks/security_reminder_hook.py']
+[2026-06-13 15:41:39.511] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-13 15:41:39.793] Captured git baseline: e728411e1f1b
+[2026-06-15 01:49:01.913] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 01:49:01.913] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-15 01:49:02.340] Captured git baseline: 83069aef189c
+[2026-06-15 01:49:38.802] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 01:49:38.802] Processing: hook_event=Stop, tool=
+[2026-06-15 01:49:39.778] Stop hook: review_set=9 base=430b31667a91 dirty_now=11 changed_since=9
+[2026-06-15 01:49:39.886] Stop hook: reviewing 5 changed files (standard diff)
+[2026-06-15 01:49:40.111] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 01:49:43.303] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 01:49:50.434] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 01:49:50.435] single: claude-opus-4-7 failed, falling back to sonnet
+[2026-06-15 01:49:51.024] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 01:49:54.217] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 01:50:00.701] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 01:50:00.723] LLM code review: no vulnerabilities found
+[2026-06-15 01:50:00.736] Stop hook: LLM reviews took 20.8s total
+[2026-06-15 01:50:00.736] Stop hook: API call failed with status -1
+[2026-06-15 02:01:18.253] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 02:01:18.253] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-15 02:01:18.941] Captured git baseline: cf548d078c65
+[2026-06-15 02:02:03.081] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 02:02:03.081] Processing: hook_event=Stop, tool=
+[2026-06-15 02:02:04.693] Stop hook: review_set=6 base=ea828d973e3e dirty_now=6 changed_since=6
+[2026-06-15 02:02:04.839] Stop hook: reviewing 2 changed files (standard diff)
+[2026-06-15 02:02:05.108] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:02:08.416] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:02:14.759] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:02:14.761] single: claude-opus-4-7 failed, falling back to sonnet
+[2026-06-15 02:02:14.934] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:02:18.189] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:02:24.454] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:02:24.455] LLM code review: no vulnerabilities found
+[2026-06-15 02:02:24.456] Stop hook: LLM reviews took 19.6s total
+[2026-06-15 02:02:24.456] Stop hook: API call failed with status -1
+[2026-06-15 02:14:22.783] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 02:14:22.784] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-15 02:14:24.384] Captured git baseline: 91a8f450011d
+[2026-06-15 02:15:05.803] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 02:15:05.805] Processing: hook_event=Stop, tool=
+[2026-06-15 02:15:06.335] Stop hook: review_set=6 base=HEAD dirty_now=7 changed_since=6
+[2026-06-15 02:15:06.505] Stop hook: reviewing 2 changed files (standard diff)
+[2026-06-15 02:15:06.853] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:15:10.027] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:15:16.186] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:15:16.188] single: claude-opus-4-7 failed, falling back to sonnet
+[2026-06-15 02:15:16.350] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:15:19.538] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:15:25.699] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 02:15:25.700] LLM code review: no vulnerabilities found
+[2026-06-15 02:15:25.700] Stop hook: LLM reviews took 19.2s total
+[2026-06-15 02:15:25.700] Stop hook: API call failed with status -1
+[2026-06-15 03:35:19.576] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 03:35:19.576] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-15 03:35:20.017] Captured git baseline: 30aa46668ef4
+[2026-06-15 09:30:20.332] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 09:30:20.332] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-15 09:30:20.972] Captured git baseline: caec8c5a5568
+[2026-06-15 09:31:06.218] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 09:31:06.218] Processing: hook_event=Stop, tool=
+[2026-06-15 09:31:07.149] Stop hook: review_set=5 base=4d58181ebe79 dirty_now=6 changed_since=5
+[2026-06-15 09:31:07.245] Stop hook: reviewing 1 changed files (standard diff)
+[2026-06-15 09:31:07.445] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 09:31:11.530] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 09:31:17.840] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 09:31:17.864] single: claude-opus-4-7 failed, falling back to sonnet
+[2026-06-15 09:31:18.090] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 09:31:21.409] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 09:31:27.757] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 09:31:27.772] LLM code review: no vulnerabilities found
+[2026-06-15 09:31:27.773] Stop hook: LLM reviews took 20.5s total
+[2026-06-15 09:31:27.774] Stop hook: API call failed with status -1
+[2026-06-15 16:35:27.907] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 16:35:27.908] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-15 16:35:29.124] Captured git baseline: 3787a83b2202
+[2026-06-15 19:15:50.101] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 19:15:50.105] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-15 19:15:50.578] Captured git baseline: 55b9974b6e8d
+[2026-06-15 19:16:17.169] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 19:16:17.169] Processing: hook_event=PostToolUse, tool=Edit
+[2026-06-15 19:18:21.353] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 19:18:21.353] Processing: hook_event=PostToolUse, tool=Write
+[2026-06-15 19:18:43.549] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 19:18:43.549] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-15 19:18:43.570] Commit review: detected git commit in command
+[2026-06-15 19:18:43.604] Commit review: stdout had no `[branch sha]`; reflog shows 2 fresh unreviewed commit(s) (3a992cd4d33a...)
+[2026-06-15 19:18:43.645] Commit review: 2/2 sha(s) resolved, 0 files
+[2026-06-15 19:18:43.645] Commit review: no reviewable source files in commit
+[2026-06-15 19:19:04.398] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-15 19:19:04.398] Processing: hook_event=Stop, tool=
+[2026-06-15 19:19:05.139] Stop hook: review_set=7 base=678d643e25ac dirty_now=7 changed_since=7
+[2026-06-15 19:19:05.263] Stop hook: reviewing 1 changed files (standard diff)
+[2026-06-15 19:19:06.298] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 19:19:09.622] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 19:19:16.011] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 19:19:16.012] single: claude-opus-4-7 failed, falling back to sonnet
+[2026-06-15 19:19:16.546] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 19:19:19.865] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 19:19:26.249] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-15 19:19:26.249] LLM code review: no vulnerabilities found
+[2026-06-15 19:19:26.250] Stop hook: LLM reviews took 21.0s total
+[2026-06-15 19:19:26.250] Stop hook: API call failed with status -1
+[2026-06-16 03:38:42.402] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:38:42.405] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-16 03:38:42.916] Captured git baseline: 695eb29d82bd
+[2026-06-16 03:40:15.079] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:40:15.080] Processing: hook_event=PostToolUse, tool=Edit
+[2026-06-16 03:41:33.347] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:41:33.347] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:41:33.347] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-16 03:41:33.347] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-16 03:41:33.347] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:41:33.348] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:41:33.348] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-16 03:41:33.348] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:41:33.348] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-16 03:41:33.349] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-16 03:42:05.284] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:42:05.284] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:42:05.284] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:42:05.284] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-16 03:42:05.284] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-16 03:42:05.284] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-16 03:42:05.285] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:42:05.285] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:42:05.285] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-16 03:42:05.285] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-16 03:50:51.838] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 03:50:51.839] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-16 03:50:52.695] Captured git baseline: 750f918158a1
+[2026-06-16 09:30:22.485] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 09:30:22.486] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-16 09:30:23.087] Captured git baseline: 405ef5b98781
+[2026-06-16 11:59:04.596] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 11:59:04.596] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-16 11:59:05.158] Captured git baseline: 52c97f0d2190
+[2026-06-16 13:28:14.990] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 13:28:14.991] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-16 13:28:16.012] Captured git baseline: 43618dc1cfe9
+[2026-06-16 16:48:08.032] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-16 16:48:08.033] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-16 16:48:08.904] Captured git baseline: c3b50f927ecd
+[2026-06-17 00:52:55.789] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-17 00:52:55.790] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-17 00:52:56.377] Captured git baseline: 3303f9db9fa2
+[2026-06-17 09:41:37.576] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-17 09:41:37.576] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-17 09:41:38.286] Captured git baseline: 4af36bb73bc0
+[2026-06-17 11:13:09.408] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-17 11:13:09.408] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-17 11:13:09.900] Captured git baseline: 6c342f22b191
+[2026-06-17 12:15:59.788] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-17 12:15:59.788] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-17 12:16:00.305] Captured git baseline: 00bf343e2402
+[2026-06-17 23:43:24.742] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-17 23:43:24.743] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-17 23:43:25.313] Captured git baseline: e99099ca828f
+[2026-06-18 09:30:23.115] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-18 09:30:23.115] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-18 09:30:23.351] Captured git baseline: 89a159417b09
+[2026-06-18 18:15:58.614] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-18 18:15:58.615] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-18 18:15:58.828] Captured git baseline: 19e132fe83c8
+[2026-06-18 18:25:56.312] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-18 18:25:56.313] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-18 18:25:56.601] Captured git baseline: 19e132fe83c8
+[2026-06-18 20:04:13.903] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-18 20:04:13.903] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-18 20:04:14.151] Captured git baseline: 19e132fe83c8
+[2026-06-18 21:40:13.013] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-18 21:40:13.014] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-18 21:40:13.286] Captured git baseline: 19e132fe83c8
+[2026-06-19 09:28:40.307] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 09:28:40.307] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-19 09:28:40.669] Captured git baseline: 7a051cbf3678
+[2026-06-19 15:09:09.680] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 15:09:09.687] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-19 15:09:10.240] Captured git baseline: 885c7beeb01d
+[2026-06-19 15:48:01.598] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 15:48:01.599] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-19 15:48:02.062] Captured git baseline: e05d524a4311
+[2026-06-19 22:06:40.916] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:06:40.917] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-19 22:06:41.693] Captured git baseline: 78a65c90e9d3
+[2026-06-19 22:08:32.629] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:08:32.635] Processing: hook_event=PostToolUse, tool=Edit
+[2026-06-19 22:08:39.785] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:08:39.786] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:08:39.786] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:08:39.786] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:08:39.786] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:08:39.787] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:08:39.787] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:08:39.787] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:08:39.787] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:08:39.788] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:11:46.627] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:11:46.627] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:11:46.627] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:11:46.627] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:11:46.627] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:11:46.627] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:11:46.627] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:11:46.627] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:11:46.628] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:11:46.629] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:15:23.069] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:15:23.069] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-19 22:15:23.580] UPS: preserving prior baseline — previous Stop hook never consumed touched_paths (likely user interrupt / aborted turn)
+[2026-06-19 22:18:16.711] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:18:16.712] Processing: hook_event=PostToolUse, tool=Write
+[2026-06-19 22:18:35.964] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:18:35.965] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:18:35.966] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:18:35.966] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:18:35.966] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:18:35.967] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:18:35.967] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:18:35.967] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:18:35.968] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:18:35.968] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:18:55.956] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:18:55.956] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:18:55.956] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:18:55.958] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:18:55.956] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:18:55.958] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:18:55.957] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:18:55.958] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:18:55.958] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:18:55.958] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:19:17.873] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:19:17.873] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:19:17.873] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:19:17.873] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:19:17.906] Commit review: detected git commit in command
+[2026-06-19 22:19:18.008] Commit review: stdout had no `[branch sha]`; reflog shows 2 fresh unreviewed commit(s) (5efd423ed9b0...)
+[2026-06-19 22:19:18.343] Commit review: 2/2 sha(s) resolved, 2 files
+[2026-06-19 22:19:18.607] agentic_review: SDK unavailable (No module named 'pydantic_core._pydantic_core'); falling back
+[2026-06-19 22:19:19.009] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-19 22:19:22.123] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-19 22:19:28.814] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-19 22:19:28.825] single: claude-opus-4-7 failed, falling back to sonnet
+[2026-06-19 22:19:29.455] Request failed, retrying in 3s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-19 22:19:32.162] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-19 22:19:32.162] Processing: hook_event=PostToolUse, tool=Bash
+[2026-06-19 22:19:32.320] Push sweep: pushed tip 91f7dc84 != HEAD 5efd423ed9b0
+[2026-06-19 22:19:32.806] Request failed, retrying in 6s: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-19 22:19:39.603] Request failed after retries: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
+[2026-06-19 22:19:39.605] LLM code review: no vulnerabilities found
+[2026-06-19 22:19:39.660] Commit review: no security issues found
+[2026-06-20 03:14:32.664] Hook called with args: ['/Users/antonk/.claude/plugins/cache/claude-plugins-official/security-guidance/2.0.6/hooks/security_reminder_hook.py']
+[2026-06-20 03:14:32.664] Processing: hook_event=UserPromptSubmit, tool=
+[2026-06-20 03:14:33.072] Captured git baseline: b55e2554d610
