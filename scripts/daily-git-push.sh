@@ -22,25 +22,31 @@ for repo in "${REPOS[@]}"; do
   (
     cd "$repo"
 
-    # Stash local changes before pull to avoid rebase conflicts
-    stashed=false
-    if ! git diff --quiet || ! git diff --cached --quiet; then
-      git stash push -m "daily-git-push auto-stash" >> "$LOG" 2>&1 && stashed=true
-    fi
-    git pull --rebase >> "$LOG" 2>&1 || echo "WARN: pull failed for $repo" >> "$LOG"
-    if [ "$stashed" = true ]; then
-      git stash pop >> "$LOG" 2>&1 || echo "WARN: stash pop conflict for $repo" >> "$LOG"
+    # ── DATA-LOSS-SAFE sync (исправлено 2026-06-20, инцидент потери файлов/токена) ──
+    # БЫЛО: git stash push → git pull --rebase → git stash pop.
+    #   stash pop конфликт = потеря незакоммиченного (yail307-токен слетел);
+    #   pull --rebase переписывает/ОТВЯЗЫВАЕТ локальные коммиты → dangling (потеря файлов).
+    # СТАЛО: commit-first (без stash) → merge (без rebase). Потеря невозможна:
+    #   любое локальное изменение становится РЕАЛЬНЫМ коммитом ДО сети,
+    #   merge НИКОГДА не отвязывает коммиты (в отличие от rebase).
+
+    # 1. Закоммитить ВСЁ локальное ДО pull (вместо stash — stash теряет при конфликте)
+    if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$(git ls-files --others --exclude-standard)" ]; then
+      git add -A
+      git commit -m "auto-sync: pre-pull commit [$(date '+%Y-%m-%d %H:%M')]" >> "$LOG" 2>&1 || echo "WARN: nothing to commit" >> "$LOG"
     fi
 
-    # Check for changes
-    if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
-      echo "No changes, skipping" >> "$LOG"
-    else
-      git add -A
-      git commit -m "auto-sync: daily push [$(date '+%Y-%m-%d %H:%M')]" >> "$LOG" 2>&1 || echo "WARN: nothing to commit" >> "$LOG"
-      git push >> "$LOG" 2>&1 || echo "ERROR: push failed for $repo" >> "$LOG"
-      echo "Pushed successfully" >> "$LOG"
+    # 2. MERGE (НЕ rebase). --no-edit чтобы не висеть на редакторе.
+    #    При конфликте НЕ трогаем дерево (никаких reset/checkout) — оставляем для ручного разбора.
+    if ! git -c core.symlinks=false pull --no-rebase --no-edit >> "$LOG" 2>&1; then
+      echo "WARN: merge conflict/pull failed for $repo — дерево НЕ тронуто, push пропущен, нужен ручной разбор" >> "$LOG"
+      git merge --abort >> "$LOG" 2>&1 || true   # откат только незавершённого merge, локальные коммиты целы
+      exit 0
     fi
+
+    # 3. Push (только если merge чистый)
+    git push >> "$LOG" 2>&1 || echo "ERROR: push failed for $repo" >> "$LOG"
+    echo "Synced (commit-first+merge) successfully" >> "$LOG"
   ) || echo "ERROR: failed processing $repo" >> "$LOG"
 done
 
