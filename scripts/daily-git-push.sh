@@ -33,7 +33,16 @@ for repo in "${REPOS[@]}"; do
     # 1. Закоммитить ВСЁ локальное ДО pull (вместо stash — stash теряет при конфликте)
     if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$(git ls-files --others --exclude-standard)" ]; then
       git add -A
-      git commit -m "auto-sync: pre-pull commit [$(date '+%Y-%m-%d %H:%M')]" >> "$LOG" 2>&1 || echo "WARN: nothing to commit" >> "$LOG"
+      git commit -m "auto-sync: pre-pull commit [$(date '+%Y-%m-%d %H:%M')]" >> "$LOG" 2>&1 || true
+    fi
+
+    # 1b. ГЕЙТ ИНВАРИАНТА (Codex finding #1 High): идти в pull ТОЛЬКО если дерево чисто.
+    #     Если commit реально упал (hook/identity/index.lock/GPG) — дерево осталось грязным →
+    #     НЕ делаем pull (иначе merge/checkout может затронуть незакоммиченное). Пропускаем репо.
+    if ! git diff --quiet || ! git diff --cached --quiet || [ -n "$(git ls-files --others --exclude-standard)" ]; then
+      echo "ABORT $repo: commit-first не очистил дерево (commit упал?) — pull/push пропущены, дерево НЕ тронуто, локальное цело" >> "$LOG"
+      touch "$repo/.sync-stuck-$(date +%Y%m%d)" 2>/dev/null || true   # сентинел залипания (finding #3)
+      exit 0
     fi
 
     # 2. MERGE (НЕ rebase). --no-edit чтобы не висеть на редакторе.
