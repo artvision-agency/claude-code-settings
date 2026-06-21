@@ -18,14 +18,24 @@ except: print('')" 2>/dev/null || true)
 
 # Пропустить текстовые/git утилиты (слова ads.add/keywordbids в тексте коммита/grep ≠ реальный API-вызов).
 # Реальный API-write идёт через python/node/curl/скрипт, не через git/grep/echo.
-firstword=$(printf '%s' "$cmd" | sed -E 's/^([[:space:]]*[A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]+)*//' | awk '{print $1}')
+# Снять ведущие 'cd <path> &&' чтобы дойти до реальной команды (иначе firstword=cd → промах whitelist → ложный блок на git).
+scan="$cmd"
+while printf '%s' "$scan" | grep -qE '^[[:space:]]*cd[[:space:]]'; do
+  next=$(printf '%s' "$scan" | sed -E 's/^[[:space:]]*cd[[:space:]]+[^&|;]*([&|;]+[[:space:]]*)?//')
+  [ "$next" = "$scan" ] && break
+  scan="$next"
+  [ -z "$scan" ] && break
+done
+firstword=$(printf '%s' "$scan" | sed -E 's/^([[:space:]]*[A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]+)*//' | awk '{print $1}')
 firstbase=$(basename "$firstword" 2>/dev/null || echo "$firstword")
 case "$firstbase" in
   git|grep|rg|ack|egrep|fgrep|echo|printf|cat|ls|find|sed|awk|head|tail|wc|less|more|diff|jq|cp|mv|rm|chmod|mkdir|touch|tee) exit 0;;
 esac
 
-# API-write паттерны Я.Директа (создают/меняют/включают/тратят) + скрипты заливки
-WRITE='ads\.(add|update|moderate)|campaigns\.(add|update|resume|unarchive)|adgroups\.(add|update)|keywordbids\.set|keywords\.add|bids\.set|adimages\.add|sitelinkssets\.add|vcards\.add|dynamictextadtargets\.add|upload[_-]?camp|uploadcamp|залив[кч]'
+# API-write паттерны Я.Директа (создают/меняют/включают/тратят) + скрипты заливки.
+# Прозо-матчер «залив[кч]» УБРАН (ловил русское слово «заливка» в тексте коммита/echo = ложные блоки).
+# Реальная заливка идёт через upload-скрипты (upload_camp / uploadcamp) или методы API ниже.
+WRITE='ads\.(add|update|moderate)|campaigns\.(add|update|resume|unarchive)|adgroups\.(add|update)|keywordbids\.set|keywords\.add|bids\.set|adimages\.add|sitelinkssets\.add|vcards\.add|dynamictextadtargets\.add|upload[_-]?camp|uploadcamp'
 
 if printf '%s' "$cmd" | grep -qiE "$WRITE"; then
   # исключение: только-suspend/get (безопасно) — если в команде НЕТ пишущих, а есть suspend/get, пропустить
