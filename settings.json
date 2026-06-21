@@ -1382,6 +1382,15 @@
             "command": "$HOME/.claude/hooks/post-ui-agent-strict.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/post-tool-large-output-guard.sh"
+          }
+        ]
       }
     ],
     "PreCompact": [
