@@ -58,3 +58,9 @@
 4. cabinet-verify → summary («✅ 8 РК OFF, 0 тратящих»), дамп в файл.
 5. Читать файл точечно (grep/jq по полю), не держать весь JSON в контексте.
 6. Один 522KB-дамп дороже сотни обычных сообщений → работать по Excel/файлам, API только для финальной заливки/verify.
+
+## NEXT (свежая сессия): связка Excel-first + FINISHER-LOOP
+Антон 21.06 одобрил подключить finisher-loop (knowledge-base/multi-agent-system.html = наше правило finisher-loop.md) к PPC.
+- Менеджер=оркестратор · Исследователь=Excel-фаза (данные из файлов) · Сборщик=заготовки+заливка OFF · СУДЬЯ=cabinet-verify+strict-factcheck против DoD(roadmap) · лимит 4 цикла → человек(CONFIRM).
+- Цель: НЕ выпускать false-готово (боль сессии: преждевременные ✅). Сборщик ≠ сам себе Судья.
+- Собрать workflow `.claude/workflows/ppc-finisher.js` (node --check). Excel-first=КАК экономить, finisher=структура качества.
