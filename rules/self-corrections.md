@@ -94,6 +94,7 @@
 | `pre-bash-forecast-reminder.sh` | PreToolUse Bash | 20.06 #32 — блок вызова мёртвого Forecast API (509) → тычет в keywordbids/AuctionBids. Тест 7/7 | `FORECAST_OK=1` |
 | `post-tool-large-output-guard.sh` | PostToolUse Bash | 21.06 — tool-результат >100KB оседает в контексте, жрёт токены/turn (Lighthouse/SEMrush/Wordstat/Topvisor/Я.Директ до 5.3МБ). Warn: в файл по каналам (детализацию не терять), в контекст индекс+сводку. Тест 4/4 | `LARGE_OUTPUT_OK=1` |
 | `pre-bash-ppc-api-write-gate.sh` | PreToolUse Bash | 21.06 — CONFIRM-гейт на API-write Я.Директа (заливка/правка/включение/ставки) как finance-gate. Блок до подтверждения Антона. НЕ трогает read/.get/suspend. Bypass=подтверждение. Тест 6/6 | `PPC_API_OK=1` |
+| `post-ppc-adcopy-reminder.sh` | PostToolUse Edit\|Write | 21.06 — правила текстов объявлений (ppc-ad-copy-relevance) применялись «когда вспомню». Warn при правке `*/ppc/*`/`*/ads/*` ad-text файлов → напомнить правило + /ppc-ad-check. Тест 3/3+bypass | `PPC_ADCOPY_OK=1` |
 
 При добавлении нового хука — **сразу обновить таблицу** + зарегистрировать в settings.json (#18).
 
