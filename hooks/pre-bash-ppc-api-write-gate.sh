@@ -16,6 +16,14 @@ except: print('')" 2>/dev/null || true)
 
 [ -z "$cmd" ] && exit 0
 
+# Пропустить текстовые/git утилиты (слова ads.add/keywordbids в тексте коммита/grep ≠ реальный API-вызов).
+# Реальный API-write идёт через python/node/curl/скрипт, не через git/grep/echo.
+firstword=$(printf '%s' "$cmd" | sed -E 's/^([[:space:]]*[A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*[[:space:]]+)*//' | awk '{print $1}')
+firstbase=$(basename "$firstword" 2>/dev/null || echo "$firstword")
+case "$firstbase" in
+  git|grep|rg|ack|egrep|fgrep|echo|printf|cat|ls|find|sed|awk|head|tail|wc|less|more|diff|jq|cp|mv|rm|chmod|mkdir|touch|tee) exit 0;;
+esac
+
 # API-write паттерны Я.Директа (создают/меняют/включают/тратят) + скрипты заливки
 WRITE='ads\.(add|update|moderate)|campaigns\.(add|update|resume|unarchive)|adgroups\.(add|update)|keywordbids\.set|keywords\.add|bids\.set|adimages\.add|sitelinkssets\.add|vcards\.add|dynamictextadtargets\.add|upload[_-]?camp|uploadcamp|залив[кч]'
 
