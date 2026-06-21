@@ -1210,6 +1210,15 @@
             "command": "$HOME/.claude/hooks/pre-bash-forecast-reminder.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-bash-ppc-api-write-gate.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [

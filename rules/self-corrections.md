@@ -92,6 +92,8 @@
 | `pre-commit-secret-guard.sh` | .git/hooks/pre-commit | 12.06 #31 — секреты в публичный репо. Блок секрет-файлов + контент-паттернов | `SECRET_GUARD_OK=1` |
 | `session-start-sync-health.sh` | SessionStart | 11.06 #30 — branch-drift, VPS отстал 113 коммитов. Warn-only | `SYNC_HEALTH_OFF=1` |
 | `pre-bash-forecast-reminder.sh` | PreToolUse Bash | 20.06 #32 — блок вызова мёртвого Forecast API (509) → тычет в keywordbids/AuctionBids. Тест 7/7 | `FORECAST_OK=1` |
+| `post-tool-large-output-guard.sh` | PostToolUse Bash | 21.06 — tool-результат >100KB оседает в контексте, жрёт токены/turn (Lighthouse/SEMrush/Wordstat/Topvisor/Я.Директ до 5.3МБ). Warn: в файл по каналам (детализацию не терять), в контекст индекс+сводку. Тест 4/4 | `LARGE_OUTPUT_OK=1` |
+| `pre-bash-ppc-api-write-gate.sh` | PreToolUse Bash | 21.06 — CONFIRM-гейт на API-write Я.Директа (заливка/правка/включение/ставки) как finance-gate. Блок до подтверждения Антона. НЕ трогает read/.get/suspend. Bypass=подтверждение. Тест 6/6 | `PPC_API_OK=1` |
 
 При добавлении нового хука — **сразу обновить таблицу** + зарегистрировать в settings.json (#18).
 
