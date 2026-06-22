@@ -14,6 +14,7 @@
 | Security, аудит безопасности | XSS, injection, auth bypass, DoS, OWASP | `security-engineer` | opus |
 | Баги, дебаг | баг, ошибка, crash, stack trace, fix | `debugger` | opus |
 | SEO, контент, аудит, семантика, структура, вывод в топ | SEO, ключевые, мета, title, h1, контент, аудит сайта, кластеры, позиции | `seo-specialist` | opus |
+| Контекстная реклама (PPC) | контекст, директ, я.директ, ppc, рся, реклама, кабинет, ставки, объявления, кампания, elama, vk реклама, ретаргетинг | `ppc-specialist` | opus |
 | КП, presale | КП, коммерческое, предложение, клиент | `sales-engineer` | opus |
 | Документы, договоры | договор, акт, НДА, docx, Google Docs | `technical-writer` | opus |
 | DevOps, деплой | nginx, pm2, docker, deploy, VPS, SSL | `devops-engineer` | opus |
