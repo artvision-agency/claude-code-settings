@@ -107,7 +107,22 @@ if cache_age > USAGE_TTL:
         except Exception:
             pass
 
-def _fmt_window(label, util):
+def _fmt_reset(resets_at):
+    # resets_at — ISO8601 с tz (UTC). Возвращаем точное время сброса в локальном tz:
+    # сегодня -> "12:49", иначе -> "Jun19 20:59".
+    if not resets_at:
+        return ''
+    try:
+        from datetime import datetime
+        dt = datetime.fromisoformat(resets_at).astimezone()   # -> локальная зона
+        loc_now = datetime.fromtimestamp(now).astimezone()
+    except Exception:
+        return ''
+    if dt.date() == loc_now.date():
+        return dt.strftime('%H:%M')
+    return dt.strftime('%b%d %H:%M')
+
+def _fmt_window(label, util, resets_at=None):
     p = int(round(util))
     if p >= 80:
         c = '\033[31m'   # красный — лимит на исходе
@@ -115,22 +130,26 @@ def _fmt_window(label, util):
         c = '\033[33m'   # жёлтый — перевалило за половину
     else:
         c = '\033[32m'   # зелёный
-    return f'{c}{label}:{p}%\033[0m'
+    r = _fmt_reset(resets_at)
+    tail = f' \033[90m({r})\033[0m' if r else ''   # серый — время до сброса окна
+    return f'{c}{label}:{p}%\033[0m{tail}'
 
 week_info = ''
 try:
     with open(cache_path) as f:
         api = json.load(f)
     segs = []
-    fh = (api.get('five_hour') or {}).get('utilization')        # 5-часовое окно (общее по аккаунту)
-    sd = (api.get('seven_day') or {}).get('utilization')        # недельный лимит (все модели)
+    five = api.get('five_hour') or {}
+    seven = api.get('seven_day') or {}
+    fh = five.get('utilization')        # 5-часовое окно (общее по аккаунту)
+    sd = seven.get('utilization')       # недельный лимит (все модели)
     if fh is not None:
-        segs.append(_fmt_window('5h', fh))
+        segs.append(_fmt_window('5h', fh, five.get('resets_at')))
     if sd is not None:
-        segs.append(_fmt_window('wk', sd))
+        segs.append(_fmt_window('wk', sd, seven.get('resets_at')))
     if segs:
-        stale = '~' if cache_age > 300 else ''  # данные старше 5 мин (нет сети / токен протух)
-        week_info = ' '.join(segs) + stale
+        stale = ' ~' if cache_age > 300 else ''  # данные старше 5 мин (нет сети / токен протух)
+        week_info = '   '.join(segs) + stale
 except Exception:
     week_info = ''
 
@@ -142,6 +161,11 @@ if git_info:
 if not os.path.exists(os.path.join(home, '.claude', 'statusline.hide')):
     parts.append(f'{ctx}:{pct}%')
     parts.append(f'${cost:.2f}')
+    # me: мой $-расход ЭТОЙ машины за неделю как % от своего $-лимита (weekly_limit_usd).
+    # Окно совпадает с wk (тот же anchor). Цвета — как у лимитов (_fmt_window).
+    wl = usage.get('weekly_limit_usd') or 0
+    if wl > 0:
+        parts.append(_fmt_window('me', weekly / wl * 100))
     if week_info:
         parts.append(week_info)
 
