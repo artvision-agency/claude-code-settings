@@ -1,0 +1,4 @@
+interface:
+  display_name: "Поиск файлов клиентов"
+  short_description: "Находит КП, аудиты и отчёты по клиенту"
+  default_prompt: "Use $find-client-files to find the latest files, audits, reports, and proposals for a client."

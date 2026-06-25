@@ -1,0 +1,53 @@
+#!/bin/zsh
+# find-client-files — поиск файлов клиента БЕЗ загрузки содержимого в контекст.
+# Зависимости: только find + grep (стандарт macOS, без ripgrep).
+# Вывод: дата | размер | путь, отсортировано по свежести. Содержимое НЕ печатается.
+
+set -u
+setopt pipefail 2>/dev/null || true
+
+if (( $# == 0 )); then
+  print -u2 "Usage: find-client-files '<regex>' [root ...]"
+  print -u2 "Example: find-client-files 'matiss.?dent|матисс.?дент'"
+  print -u2 "Default roots: ~/artvision-data ~/Desktop ~/Downloads ~/Documents"
+  exit 2
+fi
+
+fast=0
+if [[ "$1" == "--fast" ]]; then fast=1; shift; fi
+pattern="$1"
+shift
+if (( $# > 0 )); then
+  roots=("$@")
+else
+  roots=("$HOME/artvision-data" "$HOME/Desktop" "$HOME/Downloads" "$HOME/Documents")
+fi
+
+# существующие корни
+ex_roots=()
+for r in "${roots[@]}"; do [[ -d "$r" ]] && ex_roots+=("$r"); done
+(( ${#ex_roots[@]} == 0 )) && { print -u2 "Нет существующих корней"; exit 1; }
+
+tmp="$(mktemp -t find-client-files)"
+trap 'rm -f "$tmp"' EXIT INT TERM
+
+# 1) совпадение по ИМЕНИ/пути файла
+find "${ex_roots[@]}" -type f \
+  -not -path '*/.git/*' -not -path '*/node_modules/*' 2>/dev/null \
+  | grep -iE "$pattern" >> "$tmp" || true
+
+# 2) совпадение по СОДЕРЖИМОМУ (только текстовые форматы, < 1MB; пропуск в --fast)
+if (( fast == 0 )); then
+  find "${ex_roots[@]}" -type f -size -1024k \
+    -not -path '*/.git/*' -not -path '*/node_modules/*' \
+    \( -iname '*.html' -o -iname '*.htm' -o -iname '*.md' -o -iname '*.txt' \
+       -o -iname '*.json' -o -iname '*.csv' -o -iname '*.xml' \
+       -o -iname '*.yaml' -o -iname '*.yml' \) -print0 2>/dev/null \
+    | xargs -0 -P 4 grep -ilE "$pattern" 2>/dev/null >> "$tmp" || true
+fi
+
+# уникальные пути → дата|mtime|size|path, сортировка по свежести
+sort -u "$tmp" | while IFS= read -r file; do
+  [[ -e "$file" ]] || continue
+  stat -f '%m|%Sm|%z|%N' -t '%Y-%m-%d %H:%M:%S' "$file"
+done | sort -t'|' -k1,1nr | cut -d'|' -f2-
