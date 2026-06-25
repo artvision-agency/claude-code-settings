@@ -95,6 +95,7 @@
 | `post-tool-large-output-guard.sh` | PostToolUse Bash | 21.06 — tool-результат >100KB оседает в контексте, жрёт токены/turn (Lighthouse/SEMrush/Wordstat/Topvisor/Я.Директ до 5.3МБ). Warn: в файл по каналам (детализацию не терять), в контекст индекс+сводку. Тест 4/4 | `LARGE_OUTPUT_OK=1` |
 | `pre-bash-ppc-api-write-gate.sh` | PreToolUse Bash | 21.06 — CONFIRM-гейт на API-write Я.Директа (заливка/правка/включение/ставки) как finance-gate. Блок до подтверждения Антона. НЕ трогает read/.get/suspend. Bypass=подтверждение. Тест 6/6 | `PPC_API_OK=1` |
 | `post-ppc-adcopy-reminder.sh` | PostToolUse Edit\|Write | 21.06 — правила текстов объявлений (ppc-ad-copy-relevance) применялись «когда вспомню». Warn при правке `*/ppc/*`/`*/ads/*` ad-text файлов → напомнить правило + /ppc-ad-check. Тест 3/3+bypass | `PPC_ADCOPY_OK=1` |
+| `pre-agent-offload-guard.sh` | PreToolUse Agent | 25.06 ROSTELEKOM — 3 Opus research-агента на обычный веб-поиск (1 умер, вернул 0) = слив Max-квоты. Блок research/data-субагента на веб-ресёрч/разбор БЕЗ нашего приватного контекста → уведи на round_table(FREE)/Codex/Gemini. Тест 7/7 | `OFFLOAD_OK=1` |
 
 При добавлении нового хука — **сразу обновить таблицу** + зарегистрировать в settings.json (#18).
 

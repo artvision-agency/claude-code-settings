@@ -340,6 +340,7 @@
     ],
     "defaultMode": "default"
   },
+  "model": "opus",
   "hooks": {
     "SessionStart": [
       {
@@ -716,6 +717,14 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/stop-kp-pricing-reminder.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/antonk/.claude/hooks/stop-result-checklist.sh"
           }
         ]
       }
@@ -1128,6 +1137,10 @@
           {
             "type": "command",
             "command": "$HOME/.claude/hooks/pre-agent-finance-context.sh"
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-agent-offload-guard.sh"
           }
         ]
       },
