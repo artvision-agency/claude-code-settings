@@ -1,6 +1,7 @@
 {
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
   },
   "permissions": {
     "allow": [
@@ -1284,8 +1285,8 @@
           },
           {
             "type": "command",
-            "timeout": 5,
-            "command": "~/.claude/hooks/post-ppc-adcopy-reminder.sh"
+            "command": "~/.claude/hooks/post-ppc-adcopy-reminder.sh",
+            "timeout": 5
           }
         ]
       },
@@ -1596,6 +1597,14 @@
             "command": "$HOME/.claude/hooks/usage-warn.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/prompt-find-client-files.sh"
+          }
+        ]
       }
     ],
     "SubagentStart": [
@@ -1688,13 +1697,13 @@
   },
   "enabledPlugins": {
     "superpowers@superpowers-dev": true,
-    "conductor@conductor-marketplace": true,
-    "pyright-lsp@claude-plugins-official": true,
+    "conductor@conductor-marketplace": false,
+    "pyright-lsp@claude-plugins-official": false,
     "telegram@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
     "codex@openai-codex": true,
-    "claude-code-setup@claude-plugins-official": true,
-    "figma@claude-plugins-official": true
+    "claude-code-setup@claude-plugins-official": false,
+    "figma@claude-plugins-official": false
   },
   "extraKnownMarketplaces": {
     "openai-codex": {
@@ -1710,6 +1719,7 @@
   "skipWorkflowUsageWarning": true,
   "theme": "dark-ansi",
   "autoCompactEnabled": false,
+  "switchModelsOnFlag": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
