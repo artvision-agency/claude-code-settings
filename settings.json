@@ -545,6 +545,11 @@
           },
           {
             "type": "command",
+            "command": "~/.claude/hooks/stop-session-footer.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
             "command": "~/.claude/hooks/stop-session-compare-goal.sh"
           },
           {
