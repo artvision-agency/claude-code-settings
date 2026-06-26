@@ -1,5 +1,6 @@
 ---
 name: ant-deploy
+disable-model-invocation: true
 description: "Деплой страниц ANT Partners на тестовый сервер. Полный pipeline: preflight → generate → upload → verify. Триггеры: 'ant deploy', 'залей ant', 'деплой ant', 'загрузи ant страницы'"
 ---
 

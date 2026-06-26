@@ -1,5 +1,6 @@
 ---
 name: weekly-self-review
+disable-model-invocation: true
 description: "Еженедельный самоанализ агента: перечитывает историю сессий за неделю, анализирует паттерны ошибок, предлагает доработки в CLAUDE.md и memory. Триггеры: 'self review', 'самоанализ', 'обзор недели', 'weekly review'"
 ---
 

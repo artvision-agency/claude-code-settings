@@ -32,9 +32,10 @@ def parse(skill_dir):
                 if len(t.strip()) >= 3 and t.strip().lower() not in STOP)
     # ключевые слова описания (для коллизий и сходства)
     words = set(w for w in re.findall(r'[a-zа-яё][a-zа-яё\-]{3,}', desc.lower()) if w not in STOP)
+    disabled = bool(re.search(r'disable-model-invocation:\s*true', txt))
     lines = txt.count("\n") + 1
     refs = sum(1 for p in skill_dir.iterdir() if p.name != "SKILL.md")
-    return dict(name=name, desc=desc[:120], trigs=trigs, words=words, lines=lines, refs=refs)
+    return dict(name=name, desc=desc[:120], trigs=trigs, words=words, lines=lines, refs=refs, disabled=disabled)
 
 
 def main():
@@ -51,6 +52,8 @@ def main():
     # 1. КОНФЛИКТ ТРИГГЕРОВ (по ЯВНЫМ триггер-фразам в кавычках)
     wmap = {}
     for s in skills:
+        if s["disabled"]:
+            continue          # отключённые (.archived) не роутятся → не конфликтуют
         for w in s["trigs"]:
             wmap.setdefault(w, []).append(s["name"])
     coll = {w: ss for w, ss in wmap.items() if len(ss) >= 2}

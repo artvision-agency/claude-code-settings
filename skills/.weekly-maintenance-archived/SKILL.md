@@ -1,5 +1,6 @@
 ---
 name: weekly-maintenance
+disable-model-invocation: true
 description: "Еженедельное техобслуживание: проверка хуков, скриптов, агентов, конфигов на ошибки и оптимизация. Триггеры: 'maintenance', 'техобслуживание', 'ТО агента', 'weekly maintenance', 'проверь настройки'"
 ---
 

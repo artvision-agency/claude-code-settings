@@ -1,5 +1,6 @@
 ---
 name: page-create
+disable-model-invocation: true
 description: "Создание HTML страниц из шаблонов для клиентов Artvision. Выбор шаблона, парсинг контента, заполнение, config.yaml клиента. Триггеры: 'создай страницу', 'сделай HTML', 'новая страница', 'шаблон страницы', 'page from template'."
 ---
 

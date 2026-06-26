@@ -1,5 +1,6 @@
 ---
 name: ant-visual
+disable-model-invocation: true
 description: "Визуальная проверка страниц ANT Partners — скриншоты на 3 breakpoints + сравнение с предыдущей версией. Триггеры: 'ant visual', 'скриншоты ant', 'визуальная проверка ant', 'ant screenshots'"
 ---
 
