@@ -36,7 +36,7 @@
 - ❌ Считать видео практика «офиц.данными» (помечать вендор vs практика).
 
 ## Применение (старт — Я.Директ, дальше все)
-Сидинг для Я.Директа сделан: `knowledge/services/yandex-direct/`. Дальше по мере касания: Метрика, eLama, cloud.mail.ru, Вебмастер, Topvisor, SEMrush, Telethon. Кандидат-скилл `/service-kb <service>` — собрать офиц.справку+видео в KB за один прогон (TODO).
+Сидинг сделан: `knowledge/services/yandex-direct/`, `knowledge/services/yandex-reviews/` (Отзывы/Карты/Бизнес, 2026-06-26). Дальше по мере касания: Метрика, eLama, cloud.mail.ru, Вебмастер, Topvisor, SEMrush, Telethon. Скилл `/service-kb <service> [тема]` — собрать офиц.справку+видео в KB за один прогон (✅ реализован 2026-06-26, `~/.claude/skills/service-kb/`).
 
 ## Sync
 `~/.claude/rules/` → 3 аккаунта. KB-файлы в `artvision-data/knowledge/services/` → git, видно всем.
