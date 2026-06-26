@@ -1,6 +1,6 @@
 ---
 name: seo-master
-description: "Полный SEO-инструмент: аудит, keyword research, on-page оптимизация, link building, Core Web Vitals, schema markup. Для клиентов Artvision: hybrid-seo-audit.py + curl для мета-тегов (НЕ WebFetch!). Триггеры: 'SEO аудит', 'аудит сайта', 'проверь SEO', 'technical SEO', 'мета-теги', 'SEO', 'ключевые слова', 'keyword research', 'оптимизация сайта', 'позиции в поиске', 'link building', 'линкбилдинг', 'SEO issues', 'on-page SEO', 'meta tags review', 'SEO health check', 'why am I not ranking', 'почему не ранжируется', 'seo expert', 'Core Web Vitals', 'pagespeed', 'скорость сайта', 'индексация', 'crawl budget', 'robots.txt', 'sitemap', 'semrush', 'backlink gap', 'backlink analysis', 'ссылочный профиль'."
+description: "Полный SEO-аудит + оркестрация (keyword research, on-page). Оркестратор: для узких задач делегирует — schema→seo-schema, sitemap/robots→seo-sitemap, CWV/скорость→seo-technical, ссылки→seo-backlinks/linkbuilding. Для клиентов Artvision: hybrid-seo-audit.py + curl для мета-тегов (НЕ WebFetch!). Триггеры: 'SEO аудит', 'аудит сайта', 'проверь SEO', 'мета-теги', 'SEO', 'ключевые слова', 'keyword research', 'оптимизация сайта', 'позиции в поиске', 'on-page SEO', 'meta tags review', 'SEO health check', 'why am I not ranking', 'почему не ранжируется', 'seo expert', 'индексация'."
 ---
 
 # SEO Audit — Artvision
