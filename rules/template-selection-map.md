@@ -22,6 +22,7 @@
 | **kp-корпоратив** | B2B/enterprise, упор доверие/ROI | `kp-workflow-family.md` → kp-corporate | — | enterprise |
 | **visibility** | сравнение видимости клиент vs конкуренты (живой SERP + on-page, регионы раздельно) | `clients/ds-lab/seo/visibility-2026-06-08/index.html` (эталон 08.06) | `/seo-master` + Cloud SERP | дизайн-система клиента, hero+метрики+пилюли позиций |
 | **dashboard-клиент** | директорский/клиентский дашборд с графиками | `presales/mirbir/mirbir-simple.html`, `clients/usmile/plan/*plan*.html` | `frontend-design` | дизайн-система клиента, CSS-бары (не JS-либы) |
+| **отчёт-клиент** | ежемесячный отчёт клиенту (контекст/SEO/оффлайн) | **эталон `usmile-otchet`** (artvision.pro/usmile-otchet/) | `/campaign-analytics` + `ppc-report.py`/`report-fill.py` | **дашборд-сверху (выводы+графики), детали ниже** (document-structure §Отчёты); цифры из API с источником |
 | **гант/план** | план работ по дням/этапам клиенту | `project-work-plan-template.md` + USmile `plan/gantt-usmile.html` | `/project-gantt` | бренд Artvision, без исполнителей |
 | **внутренний-аудит** | аудит/инвентарь/диагностика ДЛЯ нас (не клиенту) | `internal-docs-plain-tables.md` | — | **ч/б простые таблицы**, без графики/бренда |
 | **карта-наружки** | карта размещения/билбордов | USmile `plan/usmile-billboards-map.html` | `/placement-map` | дизайн клиента |
