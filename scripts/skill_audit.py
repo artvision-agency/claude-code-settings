@@ -27,12 +27,9 @@ def parse(skill_dir):
     name = skill_dir.name
     m = re.search(r'^description:\s*["\']?(.+?)["\']?\s*$', txt, re.M | re.S)
     desc = (m.group(1) if m else "").split("\n")[0]
-    # явные триггеры: 'x', "y" внутри секции Триггеры/triggers — иначе токены описания
-    trig_section = re.search(r'(?:триггеры|triggers)[:\s]*(.+?)(?:\.|$)', desc, re.I)
-    if trig_section:
-        trigs = set(t.strip().lower() for t in re.findall(r"['\"]([^'\"]{2,40})['\"]", trig_section.group(1)))
-    else:
-        trigs = set()
+    # ЯВНЫЕ триггеры = все фразы в кавычках в описании (так скиллы объявляют триггеры)
+    trigs = set(t.strip().lower() for t in re.findall(r"['\"]([^'\"]{2,40})['\"]", desc)
+                if len(t.strip()) >= 3 and t.strip().lower() not in STOP)
     # ключевые слова описания (для коллизий и сходства)
     words = set(w for w in re.findall(r'[a-zа-яё][a-zа-яё\-]{3,}', desc.lower()) if w not in STOP)
     lines = txt.count("\n") + 1
@@ -51,16 +48,16 @@ def main():
               if d.is_dir() and (d / "SKILL.md").exists() and d.name.startswith(prefix)]
     print(f"=== skill_audit: {len(skills)} скиллов" + (f" (префикс '{prefix}')" if prefix else "") + " ===\n")
 
-    # 1. КОНФЛИКТ ТРИГГЕРОВ (по ключевым словам описания)
+    # 1. КОНФЛИКТ ТРИГГЕРОВ (по ЯВНЫМ триггер-фразам в кавычках)
     wmap = {}
     for s in skills:
-        for w in s["words"]:
+        for w in s["trigs"]:
             wmap.setdefault(w, []).append(s["name"])
-    coll = {w: ss for w, ss in wmap.items() if len(ss) >= 3}
-    print("── 1. КОНФЛИКТ ТРИГГЕРОВ (слово → 3+ скиллов, fuzzy неоднозначен) ──")
+    coll = {w: ss for w, ss in wmap.items() if len(ss) >= 2}
+    print("── 1. КОНФЛИКТ ТРИГГЕРОВ (одна явная триггер-фраза → 2+ скиллов) ──")
     if not coll:
-        print("  ✅ нет сильных коллизий")
-    for w, ss in sorted(coll.items(), key=lambda x: -len(x[1]))[:12]:
+        print("  ✅ нет коллизий явных триггеров")
+    for w, ss in sorted(coll.items(), key=lambda x: -len(x[1]))[:15]:
         print(f"  🔴 «{w}» → {len(ss)}: {', '.join(s.replace(prefix+'-','') for s in ss)}")
 
     # 2. БЛИЗНЕЦЫ (Jaccard описаний ≥ thr)
