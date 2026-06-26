@@ -106,3 +106,11 @@
 ## Кандидат-хуки (ждут approve Антона — меняют харнес на 3 аккаунта)
 
 `stop-stale-fact-guard.sh` (#20b) · `stop-deploy-links-need-tests.sh` (#21b) · `stop-claude-code-claim-unverified.sh` (#22) · `stop-audit-structure-check.sh` (#24) · `pre-agent-clone-handroll-guard.sh` (#25) · `stop-organic-claim-without-tool.sh` (#26) · `stop-ppc-status-layers.sh` (#27) · `pre-symlink-self-loop-guard.sh` (#13) · `pre-bulk-kp-modify-advertmed-guard.sh` (#19) · `pre-banner-event-check.sh` (#21a).
+
+## Сессия 2026-06-26 (USmile отчёт) — уроки для автоматизации
+
+- **#35 Клиентский HTML «готово» ТОЛЬКО после визуального гейта.** Текстовый factcheck/grep СЛЕП к фронтенду (баннеры 0 img, серые цифры, overflow, пустые бары) — за сессию дал ложный PASS 5+ раз, дефекты ловил Антон. Правило: client HTML перед «готово/отправкой» → `frontend-hardcheck.py` (img-HTTP + рендер 375/1440 + vision-validate) ОБЯЗАТЕЛЕН, не текст-чек. Enforce: хук `pre-deploy-frontend-hardcheck.sh` (WARN, зарег. 26.06). Связь: checks-by-validators-multimodel.
+- **#36 НДС в Директ-отчёте клиенту = БЕЗ НДС.** Reports API с `IncludeVAT=YES` = с-НДС (×1.22); Метрика/клиент видит БЕЗ НДС. В отчёт клиенту — расход БЕЗ НДС (совпадает с тем что клиент проверит). Прецедент: поставил 18 879 (с НДС) вместо 15 477 (без) → Codex/Антон поймал. ppc-report.py: для клиента гнать IncludeVAT=NO.
+- **#37 Вопрос про счёт/оплату → ЧИТАТЬ договор+приложения (`contract-terms.py`), не «из головы».** Сказал «305к и далее» — неверно: мес1=305к (setup PPC 95к разово), со 2-го=245к/мес. Не прочитал разбивку настройка/ведение. На любой invoice/оплата-запрос → contract-terms.py (договор = источник, FINAL-приложение приоритетно).
+- **#38 Dumb Zone (>90% контекста) → делегировать свежим агентам, не править самому.** Правки в Dumb Zone = баги (sed `&`-баг, ложный PASS). Делегирование фронт-задач свежим Opus-агентам в этой сессии сработало 5/6 (1 упал на rate-limit — не долбить, переключиться). Связь: orchestration-method-selection (зеркало: main в Dumb Zone → fresh agent).
+- **Капстоун-кандидат: скилл `/client-report <клиент>`** — оркестрирует ppc-report+seo-report+offline-report → report-fill → frontend-hardcheck → factcheck → deploy. Сейчас 6 скриптов разрозненны. Спека: docs/client-report-system-spec-2026-06-26.md. Собрать свежей сессией.
