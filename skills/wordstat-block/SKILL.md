@@ -28,7 +28,9 @@ python3 scripts/wordstat_proof_block.py --fixture data.json --region спб --ou
 ## Правила
 - kp-brand: бренд Artvision, источник Wordstat раскрыт как «данные Wordstat» (это не сторонний платный инструмент-конкурент — частотность общедоступна).
 - Числа из API детерминированно, не выдуманы (calculations-need-sources: источник+дата+регион).
-- Авторизация: `tokens.json → yandex.direct.<login>.token` ИЛИ env `YANDEX_OAUTH_TOKEN`.
+- Авторизация: env `YANDEX_OAUTH_TOKEN` > явный `--login <логин>` > первый `tokens.json → yandex.direct.<login>.token` (с WARN). При мультилогине **указывай `--login` для детерминизма**.
+- Блок «связанный спрос по теме» (SearchedWith+SearchedAlso), НЕ частотность самих сид-фраз — подписи честные + footnote «показы по связанным формулировкам, не уникальные пользователи/не прогноз лидов».
+- Тесты: `python3 scripts/tests/test_wordstat_proof_block.py` (render/embed/guards, без live API).
 
 ## Связано
 `/topvisor-positions` (образец паттерна), `/client-report` (встроить шагом), `offline-to-script-on-high-spend`, спека `docs/automation-monthly-report-trigger-spec.md` Блок 2.
