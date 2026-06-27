@@ -16,9 +16,10 @@
 #   1. Проверяет файл существует
 #   2. Прогоняет factcheck-v2.py --standard
 #   3. Если CRITICAL > 0 → exit 1 (не деплоит)
-#   4. Если 0 CRITICAL → scp на VPS
-#   5. Verifies через curl что URL отдаёт 200 + правильный Content-Length
-#   6. Печатает деплой-репорт
+#   4. Если 0 CRITICAL → mkdir -p на VPS + scp
+#   5. Ставит www-data владельцем файла
+#   6. Verifies через curl что URL отдаёт 200 + правильный Content-Length
+#   7. Печатает Live URL и деплой-репорт
 #
 # Bypass: FACTCHECK_SKIP=1 safe-deploy-html.sh ...
 # Только для emergency, не использовать для клиентских КП.
@@ -58,8 +59,25 @@ fi
 # --- Determine URL for verify ---
 # /var/www/artvision/kp/X/index.html → https://artvision.pro/kp/X/
 URL_PATH="${VPS_PATH#/var/www/artvision/}"
-URL_PATH="${URL_PATH%/index.html}"
-PUBLIC_URL="https://artvision.pro/${URL_PATH}/"
+if [[ "$URL_PATH" == "$VPS_PATH" ]]; then
+    echo "ERROR: vps_path must be under /var/www/artvision/: $VPS_PATH" >&2
+    exit 3
+fi
+
+case "$URL_PATH" in
+    */index.html)
+        URL_PATH="${URL_PATH%/index.html}"
+        PUBLIC_URL="https://artvision.pro/${URL_PATH}/"
+        ;;
+    *.html)
+        PUBLIC_URL="https://artvision.pro/${URL_PATH}"
+        ;;
+    *)
+        PUBLIC_URL="https://artvision.pro/${URL_PATH}"
+        ;;
+esac
+
+VPS_DIR="$(dirname "$VPS_PATH")"
 
 # --- Bypass ---
 if [[ "${FACTCHECK_SKIP:-0}" == "1" ]]; then
@@ -101,6 +119,19 @@ else
     echo "   Report: $REPORT" >&2
 fi
 
+# --- Prepare remote dir ---
+echo "" >&2
+echo "[safe-deploy] preparing remote dir $VPS_HOST:$VPS_DIR" >&2
+set +e
+ssh -o ConnectTimeout=10 -o BatchMode=yes "$VPS_HOST" "mkdir -p '$VPS_DIR'" 2>&1
+MKDIR_EXIT=$?
+set -e
+
+if [[ $MKDIR_EXIT -ne 0 ]]; then
+    echo "❌ remote mkdir failed (exit $MKDIR_EXIT)" >&2
+    exit 2
+fi
+
 # --- SCP ---
 echo "" >&2
 echo "[safe-deploy] scp $LOCAL → $VPS_HOST:$VPS_PATH" >&2
@@ -111,6 +142,17 @@ set -e
 
 if [[ $SCP_EXIT -ne 0 ]]; then
     echo "❌ SCP failed (exit $SCP_EXIT)" >&2
+    exit 2
+fi
+
+# --- Owner ---
+set +e
+ssh -o ConnectTimeout=10 -o BatchMode=yes "$VPS_HOST" "chown www-data:www-data '$VPS_PATH'" 2>&1
+CHOWN_EXIT=$?
+set -e
+
+if [[ $CHOWN_EXIT -ne 0 ]]; then
+    echo "❌ remote chown failed (exit $CHOWN_EXIT)" >&2
     exit 2
 fi
 
@@ -135,5 +177,6 @@ echo "  HTTP: $HTTP_CODE" >&2
 echo "  Content-Length: $CONTENT_LEN" >&2
 echo "═══════════════════════════════════════════" >&2
 
-# Stdout — для тех кто парсит автоматом
+# Stdout — первая строка для людей, JSON ниже для автоматического парсинга.
+printf 'Live URL: %s\n' "$PUBLIC_URL"
 printf '{"url":"%s","http":"%s","content_length":"%s"}\n' "$PUBLIC_URL" "$HTTP_CODE" "$CONTENT_LEN"

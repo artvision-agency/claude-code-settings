@@ -17,6 +17,7 @@ import ssl
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 # === Env ===
@@ -45,6 +46,24 @@ HEADERS = {
 
 # === SSL context (Python 3.14 + OpenSSL 3.x fix) ===
 _SSL_CTX = ssl.create_default_context()
+RETRY_STATE = Path(os.environ.get(
+    "LINK_PROCESSOR_RETRY_STATE",
+    str(Path.home() / ".claude/state/link-processor-retries.json"),
+))
+MAX_RETRIES = 3
+BACKOFF_MINUTES = (5, 15)
+
+def _load_retry_state() -> dict:
+    try:
+        return json.loads(RETRY_STATE.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+def _save_retry_state(state: dict):
+    RETRY_STATE.parent.mkdir(parents=True, exist_ok=True)
+    tmp = RETRY_STATE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(state, ensure_ascii=False, indent=2))
+    tmp.replace(RETRY_STATE)
 
 # === Supabase helpers ===
 def sb_get(path: str, params: dict | None = None):
@@ -87,6 +106,66 @@ def cmd_pending(limit: int):
         "select": "id,user_id,chat_id,message_id,temp_message_id,url,url_normalized,platform,created_at,tags,priority",
     })
     print(json.dumps(rows, ensure_ascii=False, indent=2))
+
+def cmd_get(link_id: str):
+    rows = sb_get("link_inbox", {"id": f"eq.{link_id}", "limit": "1", "select": "*"})
+    print(json.dumps(rows[0] if rows else {}, ensure_ascii=False, indent=2))
+
+def cmd_retry_check(link_id: str):
+    state = _load_retry_state().get(link_id, {})
+    next_retry = state.get("next_retry_at")
+    terminal = bool(state.get("terminal", False))
+    eligible = not terminal
+    if next_retry:
+        try:
+            eligible = (not terminal) and datetime.now(timezone.utc) >= datetime.fromisoformat(next_retry)
+        except ValueError:
+            eligible = True
+    print(json.dumps({
+        "id": link_id,
+        "eligible": eligible,
+        "attempts": int(state.get("attempts", 0)),
+        "next_retry_at": next_retry,
+        "terminal": terminal,
+        "last_error": state.get("last_error"),
+    }, ensure_ascii=False))
+
+def cmd_record_failure(link_id: str, error_msg: str):
+    state = _load_retry_state()
+    item = state.get(link_id, {})
+    attempts = int(item.get("attempts", 0)) + 1
+    hard_failure = "prompt is too long" in error_msg.lower()
+    terminal = hard_failure or attempts >= MAX_RETRIES
+    now = datetime.now(timezone.utc)
+    if terminal:
+        next_retry = None
+        db_status = "failed"
+    else:
+        delay = BACKOFF_MINUTES[min(attempts - 1, len(BACKOFF_MINUTES) - 1)]
+        next_retry = (now + timedelta(minutes=delay)).isoformat()
+        db_status = "pending"
+    state[link_id] = {
+        "attempts": attempts,
+        "next_retry_at": next_retry,
+        "last_error": error_msg[:1000],
+        "updated_at": now.isoformat(),
+        "terminal": terminal,
+    }
+    _save_retry_state(state)
+    sb_patch("link_inbox", {"id": f"eq.{link_id}"}, {
+        "status": db_status,
+        "error_message": error_msg[:1000],
+    })
+    print(json.dumps({
+        "id": link_id, "attempts": attempts, "terminal": terminal,
+        "status": db_status, "next_retry_at": next_retry,
+    }, ensure_ascii=False))
+
+def cmd_clear_retry(link_id: str):
+    state = _load_retry_state()
+    state.pop(link_id, None)
+    _save_retry_state(state)
+    print(f"OK retry cleared: {link_id}")
 
 def cmd_asana_pending(limit: int):
     rows = sb_get("link_inbox", {
@@ -280,6 +359,7 @@ def cmd_finalize():
         applicability = row.get("applicability") or {}
         tags = row.get("tags") or []
         confirmed = row.get("confirmed_sources") or []
+        confirmed_items = [c for c in confirmed if isinstance(c, dict)] if isinstance(confirmed, list) else []
 
         dt = (row.get("created_at") or "")[:16].replace("T", " ")
         app_lines = []
@@ -292,7 +372,7 @@ def cmd_finalize():
         app_block = "\n".join(app_lines) or "—"
 
         fact_lines = []
-        for c in confirmed if isinstance(confirmed, list) else []:
+        for c in confirmed_items:
             status = c.get("status", "?")
             claim = c.get("claim", "")
             srcs = c.get("sources", [])
@@ -340,7 +420,7 @@ def cmd_finalize():
         is_durable = (
             priority == "high"
             or "force-memory" in tags
-            or (isinstance(confirmed, list) and sum(1 for c in confirmed if c.get("status") == "CONFIRMED") >= 2)
+            or sum(1 for c in confirmed_items if c.get("status") == "CONFIRMED") >= 2
         )
 
         memory_path = None
@@ -348,7 +428,7 @@ def cmd_finalize():
             slug = slugify(title)
             memory_path = f"{MEMORY_ROOT}/trend_{slug}.md"
             if not os.path.exists(memory_path):
-                conf_sources = [c for c in confirmed if isinstance(c, dict) and c.get("sources")] if isinstance(confirmed, list) else []
+                conf_sources = [c for c in confirmed_items if c.get("sources")]
                 conf_urls = []
                 for c in conf_sources[:3]:
                     conf_urls.extend(c.get("sources", [])[:2])
@@ -376,7 +456,7 @@ confirmed_by:
 {app_block}
 
 ## Проверено
-{datetime.now().strftime('%Y-%m-%d')}, {len([c for c in confirmed if c.get('status') == 'CONFIRMED']) if isinstance(confirmed, list) else 0} подтверждённых источников
+{datetime.now().strftime('%Y-%m-%d')}, {len([c for c in confirmed_items if c.get('status') == 'CONFIRMED'])} подтверждённых источников
 """
                 with open(memory_path, 'w', encoding='utf-8') as f:
                     f.write(memory_content)
@@ -423,6 +503,7 @@ def cmd_send_error(link_id: str, error_msg: str):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pending", action="store_true")
+    ap.add_argument("--get", metavar="ID")
     ap.add_argument("--asana-pending", action="store_true")
     ap.add_argument("--limit", type=int, default=5)
     ap.add_argument("--mark-processing", metavar="ID")
@@ -431,11 +512,16 @@ def main():
     ap.add_argument("--send-card", metavar="ID")
     ap.add_argument("--send-error", metavar="ID")
     ap.add_argument("--error-msg", default="")
+    ap.add_argument("--retry-check", metavar="ID")
+    ap.add_argument("--record-failure", metavar="ID")
+    ap.add_argument("--clear-retry", metavar="ID")
     ap.add_argument("--finalize", action="store_true", help="Дожим processed-строк: карточка + learning + memory")
     args = ap.parse_args()
 
     if args.pending:
         cmd_pending(args.limit)
+    elif args.get:
+        cmd_get(args.get)
     elif args.asana_pending:
         cmd_asana_pending(args.limit)
     elif args.mark_processing:
@@ -449,6 +535,12 @@ def main():
         cmd_send_card(args.send_card)
     elif args.send_error:
         cmd_send_error(args.send_error, args.error_msg)
+    elif args.retry_check:
+        cmd_retry_check(args.retry_check)
+    elif args.record_failure:
+        cmd_record_failure(args.record_failure, args.error_msg)
+    elif args.clear_retry:
+        cmd_clear_retry(args.clear_retry)
     elif args.finalize:
         cmd_finalize()
     else:

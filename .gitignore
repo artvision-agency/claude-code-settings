@@ -125,3 +125,6 @@ channels/telegram/.env.disabled
 **/google_cookies.txt
 **/*cookies*.txt
 settings.json.bak_2026-06-21
+remote-settings.json
+policy-limits.json
+wordpress-mcp-stashed.json

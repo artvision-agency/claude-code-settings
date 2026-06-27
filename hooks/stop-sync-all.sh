@@ -11,6 +11,24 @@ REPOS=(
 STATE_FILE="$HOME/artvision-data/sync/SESSION_STATE.json"
 DATE_COMMIT=$(date +%Y-%m-%d_%H:%M)
 CURRENT_DIR="${PWD:-$(pwd)}"
+SYNC_LOG_DIR="$HOME/artvision-data/logs/sync"
+SYNC_FAIL_LOG="$SYNC_LOG_DIR/stop-sync-failures.log"
+SYNC_FAILURES=()
+
+mkdir -p "$SYNC_LOG_DIR"
+
+record_sync_failure() {
+    local repo="$1"
+    local step="$2"
+    local details="$3"
+    local ts
+    ts="$(date '+%Y-%m-%d %H:%M:%S')"
+    SYNC_FAILURES+=("$repo:$step")
+    {
+        printf '[%s] repo=%s step=%s\n' "$ts" "$repo" "$step"
+        printf '%s\n\n' "$details"
+    } >> "$SYNC_FAIL_LOG"
+}
 
 # ═══════════════════════════════════════════════
 # 1. Собрать session state через Python (безопасный JSON)
@@ -165,8 +183,13 @@ for repo in "${REPOS[@]}"; do
         continue
     fi
 
+    repo_name="$(basename "$repo")"
+
     # Добавить всё
-    git add -A 2>/dev/null || true
+    if ! ADD_ERR="$(git add -A 2>&1)"; then
+        record_sync_failure "$repo_name" "git add" "$ADD_ERR"
+        continue
+    fi
 
     # Удалить из staging опасные файлы (credentials, env, keys, node_modules)
     # tokens.json* и *.bak добавлены 2026-05-29: хук пушил token-бэкапы с API-ключами
@@ -187,13 +210,35 @@ for repo in "${REPOS[@]}"; do
     fi
 
     # Коммит
-    git commit -m "sync: session state ${DATE_COMMIT}
+    if ! COMMIT_ERR="$(git commit -m "sync: session state ${DATE_COMMIT}
 
-Co-Authored-By: Claude <noreply@anthropic.com>" --quiet 2>/dev/null || true
+Co-Authored-By: Claude <noreply@anthropic.com>" --quiet 2>&1)"; then
+        record_sync_failure "$repo_name" "git commit" "$COMMIT_ERR"
+        continue
+    fi
+
+    # Обновить локальную ветку перед push. Без этого non-fast-forward раньше
+    # превращался в тихий рассинхрон из-за "|| true" на push.
+    if ! PULL_ERR="$(git pull --rebase --autostash --quiet 2>&1)"; then
+        record_sync_failure "$repo_name" "git pull --rebase --autostash" "$PULL_ERR"
+        continue
+    fi
 
     # Push
-    git push --quiet 2>/dev/null || true
+    if ! PUSH_ERR="$(git push --quiet 2>&1)"; then
+        record_sync_failure "$repo_name" "git push" "$PUSH_ERR"
+        continue
+    fi
 done
 
 # Вернуться в исходную директорию
 cd "$CURRENT_DIR" 2>/dev/null || true
+
+if [ "${#SYNC_FAILURES[@]}" -gt 0 ]; then
+    {
+        echo "⚠️  stop-sync-all: GitHub sync завершился с ошибками"
+        echo "Репозитории/шаги: ${SYNC_FAILURES[*]}"
+        echo "Лог: $SYNC_FAIL_LOG"
+    } >&2
+    exit 2
+fi

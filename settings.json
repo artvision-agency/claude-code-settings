@@ -340,7 +340,6 @@
     ],
     "defaultMode": "default"
   },
-  "model": "opus",
   "hooks": {
     "SessionStart": [
       {
@@ -900,6 +899,11 @@
           {
             "type": "command",
             "command": "/Users/antonk/.claude/hooks/pre-deploy-show-files.sh"
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/pre-deploy-frontend-hardcheck.sh",
+            "timeout": 35
           }
         ]
       },

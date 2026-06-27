@@ -2,7 +2,7 @@
 # stop-deploy-url-check.sh — проверяет что deploy-ответ начинается с URL.
 # Правило: ~/.claude/projects/-Users-antonk/memory/feedback_deploy_url_first.md
 # Триггеры в последнем assistant message: "Live URL:", "scp ... :/var/www/",
-# "Опубликовано", "https://artvision.pro/(kp|preview)/"
+# "Опубликовано", любой "https://artvision.pro/..."
 # Если URL найден но НЕ в первых 3 строках → exit 2 с напоминанием.
 # Bypass: DEPLOY_URL_OK=1
 #
@@ -132,7 +132,7 @@ fi
 [[ -z "$LAST_TEXT" ]] && exit 0
 
 # Deploy маркеры
-if ! printf '%s' "$LAST_TEXT" | grep -qE "(Live URL:|scp .* :/var/www/|Опубликовано|https://artvision\.pro/(kp|preview|orm))"; then
+if ! printf '%s' "$LAST_TEXT" | grep -qE "(Live URL:|scp .* :/var/www/|Опубликовано|https://artvision\.pro/)"; then
     exit 0
 fi
 
