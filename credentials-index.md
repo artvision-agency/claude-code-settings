@@ -48,3 +48,21 @@ vk_workspace, vps, yandex, yandex_360, yandex_mail, youtube, zenno_club
 3. Только если ВСЕ 8 пусты → «не найдено в: [список где искал]»
    НЕ «нет» / «не существует» — указать ГДЕ искал
 ```
+
+## 🔑 ВОЗМОЖНОСТИ ДОСТУПА — что РЕАЛЬНО включено (читать ПЕРВЫМ при API/доступ-вопросе)
+> Установлено 2026-06-27 (Антон: «создай файл чтоб ЗАРАНЕЕ видел что в доступе + читал заранее»). Прецедент: я фумблил — говорил «Wordstat new API нужна регистрация», хотя токен УЖЕ работал в parse_implant_keywords.py. Метка `_desc` в tokens.json вводит в заблуждение («v4»), реальные возможности — здесь.
+
+### Яндекс
+| Токен (tokens.json) | Аккаунт/назначение | Что РЕАЛЬНО работает |
+|---|---|---|
+| `yandex.wordstat.token` | app 16ce5df0…, _desc «v4» (НО шире) | **v4 Direct** `api.direct.yandex.ru/v4/json CreateNewWordstatReport` ✅ (частотность, лимит 1000 вызовов/сут/аккаунт). **Новый API** `api.wordstat.yandex.net/v1/topRequests` — использовался parse_implant_keywords.py (auto-sync 22.06); при тесте 27.06 → **404** (проверить метод/доступ/транзиент). `/v1/dynamics`, `/v1/userInfo` → **404** (НЕ на нашем доступе или иной путь). SSL: нужен `ssl.CERT_NONE` (cert hostname mismatch). |
+| `yandex.direct.{reklamaspb1,yail307,avprocontext,artvisionelama_e2}` | reklamaspb1=Otido · yail307=USmile(Ярмолинский) · avprocontext=Artvision свои · elama_e2=агентский eLama | Direct API v5 + v4-Wordstat (каждый свой лимит 1000/сут) → используются round-robin для массового сбора Wordstat |
+| `yandex.webmaster.token` | user_id 126256095, OAuth | Вебмастер API v4 (показы/клики/запросы сайтов) ✅ |
+| `yandex.metrika.token` | OAuth | Метрика Stat API ✅ (+ varikozanet_counters view) |
+| `yandex.cloud.api_key` | folder b1g3skikcv7e3aehpu26 | SpeechKit + Translate. **Search API (Wordstat-через-Cloud) НЕ включён** (нужно включить в folder + billing) |
+
+### Динамика спроса во времени (тренды 2018+) — СТАТУС
+- НЕ закрыто детерминированно: `/v1/dynamics` нашим токеном = 404. Опции: (1) разобрать почему topRequests 404 теперь (был жив 22.06) → если оживёт, проверить есть ли там time-series; (2) CSV-экспорт из Wordstat-UI (кнопка «Скачать» во вкладке Динамика) — быстрый ручной путь; (3) включить Cloud Search API. См. `knowledge/services/yandex-wordstat/official-kb.md`.
+
+### Прочее (где НЕ Яндекс)
+GitHub (primary/backup токены), Telegram (portal/vps/medmarketplace боты), Asana, DataForSEO, anthropic/gemini/deepseek, adsgram, SaaS-панели (firstvds/hostland) — детали в tokens.json + клиентских access.md. Полный список top-level ключей — выше в этом файле.
