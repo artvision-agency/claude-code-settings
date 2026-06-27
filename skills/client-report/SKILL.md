@@ -25,6 +25,18 @@ python3 ~/artvision-data/scripts/ppc/client-report.py \
 - `report-fill.py --html <src> --data <data.json>` вставляет дашборд-сверху + заполняет блоки по якорям.
 - Структура строго ОБЩЕЕ→ЧАСТНОЕ (правило document-structure-general-to-specific): TOC сверху, дашборд с выводами+графиками, детали ниже.
 
+### 2b. Блок позиций Topvisor (native HTML, в SEO-раздел)
+```bash
+# идемпотентно вставляет/обновляет таблицу запрос/Яндекс/динамика
+# (бренд Artvision Flow, kp-brand: без логотипа Topvisor; даты замера + сравнения)
+python3 ~/artvision-data/scripts/topvisor_positions_shot.py \
+  --client <slug> --embed <report.html> --anchor '<!--SEO-POSITIONS-->'
+```
+- Требует клиента в реестре `CLIENTS` скрипта (project_id СПб/Москва Topvisor). Нет → добавить строку.
+- Чтение позиций = **бесплатно** (topvisor-ops); снятие НЕ делаем. 0 токенов.
+- В шаблоне отчёта оставить якорь `<!--SEO-POSITIONS-->` ИЛИ маркеры `<!--TVP-POSITIONS-START--><!--TVP-POSITIONS-END-->` (повторный прогон = чистое обновление, без дублей).
+- Скилл: `/topvisor-positions`.
+
 ### 3. Визуальный гейт (ОБЯЗАТЕЛЕН перед «готово»)
 ```bash
 python3 ~/artvision-data/scripts/ppc/frontend-hardcheck.py --url <live-url>
@@ -62,6 +74,7 @@ FACTCHECK_SKIP=1 ~/.claude/scripts/safe-deploy-html.sh <local> /var/www/artvisio
 | `client-report.py` | оркестратор: запускает 3 ниже → черновик-блоки |
 | `ppc-report.py --no-vat` | Директ (без НДС для клиента) |
 | `seo-report.py` | SEO (Вебмастер+Метрика) |
+| `topvisor_positions_shot.py --embed` | блок позиций Topvisor (native HTML, 0 токенов) → `/topvisor-positions` |
 | `offline-report.py` | оффлайн+посевы |
 | `report-fill.py` | дашборд+TOC+вставка блоков |
 | `frontend-hardcheck.py` | визуальный гейт |
