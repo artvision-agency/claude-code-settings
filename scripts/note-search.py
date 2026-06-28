@@ -164,6 +164,29 @@ def search_keep(matcher):
         return None, f"{type(e).__name__}: {e}"
 
 
+def run_selftest():
+    """Детерминированный verify-gate: проверяет логику matcher без сети."""
+    cases = [
+        # (terms, any_mode, text, expected)
+        (['235', '191', '448'], False, '#касса 28.06.26 235 191 448', True),   # AND все есть
+        (['235', '191', '448'], False, 'касса 235 191', False),                # AND не все
+        (['235', '191', '448'], True,  'касса 235 only', True),                # OR один есть
+        (['235'], False, 'avito.ru/7615600235?context', False),                # число внутри URL не матчит (\b)
+        (['235'], False, 'итог 235 руб', True),                                # отдельное число матчит
+        (['касса'], False, '#КАССА за день', True),                            # регистронезависимо
+        (['касса'], False, 'выручка дня', False),                              # нет слова
+    ]
+    fails = []
+    for terms, any_mode, text, exp in cases:
+        got = build_matcher(terms, any_mode)(text)
+        ok = (got == exp)
+        if not ok:
+            fails.append((terms, any_mode, text, exp, got))
+        print(f"  [{'PASS' if ok else 'FAIL'}] {'OR' if any_mode else 'AND'} {terms} ∈ {text!r} -> {got} (ждали {exp})")
+    print(f"\nSELFTEST: {len(cases)-len(fails)}/{len(cases)} PASS" + (" ✅" if not fails else " ❌"))
+    return 0 if not fails else 1
+
+
 def main():
     ap = argparse.ArgumentParser(description='Единый поиск TG-Избранное + Google Keep')
     ap.add_argument('terms', nargs='*', help='слова/числа для поиска')
@@ -174,7 +197,11 @@ def main():
     ap.add_argument('--keep-auth-token', help='одноразово: oauth_token из браузера -> master_token')
     ap.add_argument('--keep-auth-app', help='одноразово: app-password -> master_token')
     ap.add_argument('--keep-email', default=KEEP_EMAIL_DEFAULT)
+    ap.add_argument('--selftest', action='store_true', help='детерминированный verify-gate логики matcher')
     args = ap.parse_args()
+
+    if args.selftest:
+        sys.exit(run_selftest())
 
     # режим настройки Keep
     if args.keep_auth_token or args.keep_auth_app:
