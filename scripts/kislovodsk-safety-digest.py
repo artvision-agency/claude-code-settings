@@ -366,6 +366,173 @@ def send_tg(text):
     return 1, last
 
 
+# ── OSM-карта сигналов (одна картинка к дайджесту) ──────────────────────────
+# Координаты ЗАПЕЧЕНЫ (геокод Nominatim ОДИН раз 28.06.2026, сверены на
+# правдоподобность). В рантайме сети за геокодом НЕ ходим.
+COORDS = {
+    "Кисловодск": (43.9055, 42.7157),
+    "Минеральные Воды": (44.2107, 43.135),
+    "Ессентуки": (44.047, 42.8577),
+    "Пятигорск": (44.0398, 43.0707),
+    "Ставрополь": (45.0433, 41.9691),
+    "Невинномысск": (44.6246, 41.9476),
+    "Кочубеевское": (44.6867, 41.826),
+    "Михайловск": (45.1325, 42.0263),
+    "Ростов-на-Дону": (47.2223, 39.7199),
+    "Батайск": (47.1385, 39.7423),
+    "Новочеркасск": (47.4107, 40.102),
+    "Тихорецк": (45.8547, 40.1281),
+    "Кавказская": (45.4393, 40.6698),
+    "Миллерово": (48.9196, 40.3919),
+    "Красный Сулин": (47.8932, 40.058),
+    "Сальск": (46.4767, 41.541),
+    "Волгоград": (48.7082, 44.5153),
+    "Краснодар": (45.0352, 38.9772),
+    "Славянск-на-Кубани": (45.2492, 38.1093),
+}
+PLACE_KEYS = [
+    ("минеральные воды", "Минеральные Воды"), ("минвод", "Минеральные Воды"),
+    ("кисловодск", "Кисловодск"), ("ессентуки", "Ессентуки"),
+    ("пятигорск", "Пятигорск"), ("невинномыс", "Невинномысск"),
+    ("кочубеев", "Кочубеевское"), ("михайловск", "Михайловск"),
+    ("славянск-на-кубан", "Славянск-на-Кубани"), ("новочеркасск", "Новочеркасск"),
+    ("батайск", "Батайск"), ("тихорец", "Тихорецк"), ("кавказская", "Кавказская"),
+    ("миллерово", "Миллерово"), ("сулин", "Красный Сулин"), ("сальск", "Сальск"),
+    ("волгоград", "Волгоград"), ("краснодар", "Краснодар"),
+    ("ростов", "Ростов-на-Дону"),
+]
+HOME = "Кисловодск"
+COL_KMV = "#ff3b30"
+COL_ROUTE = "#ff9500"
+COL_HOME = "#1769ff"
+MAP_UA = {"User-Agent": "kislovodsk-safety-map/1.0 (personal monitoring)"}
+
+
+def detect_places(text):
+    t = (text or "").lower()
+    found = set()
+    for kw, key in PLACE_KEYS:
+        if kw in t:
+            found.add(key)
+    # Ставрополь-ГОРОД только явно (НЕ «ставропольского края» — краевое)
+    if (re.search(r'ставрополе[мн]?\b', t)
+            or re.search(r'(?:г\.?\s*|город\s+)ставрополь', t)
+            or re.search(r'ставрополь(?![а-яё])', t)):
+        found.add("Ставрополь")
+    return found
+
+
+def collect_points(matches):
+    """{place_key: 'kmv'/'route'} по матчам дайджеста (zone — set)."""
+    pm = {}
+    for m in matches:
+        zset = m.get("zone") or set()
+        zone = "kmv" if "kmv" in zset else "route"
+        for key in detect_places(m.get("snippet", "")):
+            if key in COORDS:
+                if pm.get(key) != "kmv":
+                    pm[key] = "kmv" if (zone == "kmv") else (pm.get(key) or "route")
+    return pm
+
+
+def render_map(point_map):
+    """Одна PNG-карта со всеми точками + опорный Кисловодск. None при ошибке."""
+    if not point_map:
+        return None
+    try:
+        from staticmap import StaticMap, CircleMarker
+    except Exception:
+        return None
+    try:
+        import tempfile
+        mp = StaticMap(720, 540,
+                       url_template='https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                       headers=MAP_UA, tile_request_timeout=20)
+        for key, zone in point_map.items():
+            if key == HOME:
+                continue
+            lat, lon = COORDS[key]
+            col = COL_KMV if zone == "kmv" else COL_ROUTE
+            mp.add_marker(CircleMarker((lon, lat), col, 18))
+            mp.add_marker(CircleMarker((lon, lat), "#ffffff", 7))
+        hlat, hlon = COORDS[HOME]
+        mp.add_marker(CircleMarker((hlon, hlat), "#ffffff", 22))
+        mp.add_marker(CircleMarker((hlon, hlat), COL_HOME, 16))
+        img = mp.render()
+        fd, path = tempfile.mkstemp(prefix="kmv-digest-map-", suffix=".png")
+        os.close(fd)
+        img.save(path)
+        return path
+    except Exception as ex:
+        log(f"MAP_RENDER_FAIL {type(ex).__name__}: {str(ex)[:80]}")
+        return None
+
+
+def send_photo(png_path, caption):
+    """sendPhoto (vps_bot) — карта с подписью. (rc, raw). caption ≤1024."""
+    import urllib.request
+    boundary = "----kmvDigestBoundary7e3f"
+    try:
+        with open(png_path, "rb") as f:
+            photo = f.read()
+    except Exception as ex:
+        return 1, f"open_png: {type(ex).__name__}"
+    last = ""
+    for bot in BOT_PREF:
+        tok = _bot_token(bot)
+        if not tok:
+            continue
+        parts = []
+
+        def field(name, value):
+            parts.append(("--" + boundary + "\r\n"
+                          f'Content-Disposition: form-data; name="{name}"\r\n\r\n'
+                          + value + "\r\n").encode("utf-8"))
+        field("chat_id", ANTON_CHAT)
+        field("caption", caption[:1024])
+        head = ("--" + boundary + "\r\n"
+                'Content-Disposition: form-data; name="photo"; '
+                'filename="map.png"\r\nContent-Type: image/png\r\n\r\n').encode("utf-8")
+        body = b"".join(parts) + head + photo + ("\r\n--" + boundary + "--\r\n").encode()
+        url = f"https://api.telegram.org/bot{tok}/sendPhoto"
+        req = urllib.request.Request(url, data=body, headers={
+            "Content-Type": f"multipart/form-data; boundary={boundary}"})
+        try:
+            with urllib.request.urlopen(req, timeout=40) as r:
+                raw = r.read().decode()
+            if '"ok":true' in raw:
+                return 0, f"[{bot}] photo ok"
+            last = f"[{bot}] {raw[:120]}"
+        except Exception as ex:
+            last = f"[{bot}] {type(ex).__name__}: {str(ex)[:60]}"
+            continue
+    return 1, last
+
+
+def dispatch_digest(text, matches):
+    """Дайджест: карта-картинкой (если есть точки) + текст; иначе текст. (rc, raw)."""
+    point_map = collect_points(matches)
+    png = render_map(point_map) if point_map else None
+    if not png:
+        return send_tg(text)
+    try:
+        if len(text) <= 1024:
+            rc, raw = send_photo(png, text)
+            if rc != 0:
+                return send_tg(text)
+            return rc, raw + " (map+caption)"
+        rc1, raw1 = send_photo(png, "🗺 Карта обстановки КМВ/маршрут (дайджест ниже)")
+        rc2, raw2 = send_tg(text)
+        if rc2 != 0:
+            return 1, f"text_fail {raw2}"
+        return 0, f"[map_rc={rc1}] {raw2} (photo+text)"
+    finally:
+        try:
+            os.remove(png)
+        except OSError:
+            pass
+
+
 async def amain():
     if not ensure_session():
         digest = ("🛡 Безопасность Кисловодск/маршрут\n⚠️ данные частичные: "
@@ -382,7 +549,7 @@ async def amain():
         matches, read_any = [], False
 
     overall, digest = build_digest(matches, errors, read_any)
-    rc, out = send_tg(digest)
+    rc, out = dispatch_digest(digest, matches)   # карта-картинка + текст
     msg_id = ""
     m = re.search(r'"message_id":(\d+)', out)
     if m:
