@@ -234,8 +234,11 @@ Co-Authored-By: Claude <noreply@anthropic.com>" --quiet 2>&1)"; then
 
     # Обновить локальную ветку перед push. Без этого non-fast-forward раньше
     # превращался в тихий рассинхрон из-за "|| true" на push.
-    if ! PULL_ERR="$(git pull --rebase --autostash --quiet 2>&1)"; then
-        record_sync_failure "$repo_name" "git pull --rebase --autostash" "$PULL_ERR"
+    # ff-only: НЕ rebase. `pull --rebase --autostash` отвязывал локальные коммиты →
+    # потеря данных (#9/#31; инцидент 28.06 stuck rebase + июнь — 282 файла Грелки).
+    # Расхождение (non-ff) → фиксируем как failure, человек разрулит вручную (данные целы).
+    if ! PULL_ERR="$(git pull --ff-only --quiet 2>&1)"; then
+        record_sync_failure "$repo_name" "git pull --ff-only (non-ff → разрулить вручную)" "$PULL_ERR"
         continue
     fi
 
