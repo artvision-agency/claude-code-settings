@@ -53,9 +53,9 @@ if common.TelegramClient is None:
 
 # ── Пути / параметры ────────────────────────────────────────────────────────
 # отдельная session-копия от дайджеста, чтобы два job'а не лочили один SQLite
-SESSION_BASE = '/Users/antonk/.claude/state/telethon_kislovodsk_rt'  # без .session
+SESSION_BASE = os.path.join(common.STATE_DIR, 'telethon_kislovodsk_rt')  # без .session
 SESSION_FILE = SESSION_BASE + '.session'
-DIGEST_SESSION = '/Users/antonk/.claude/state/telethon_kislovodsk.session'
+DIGEST_SESSION = os.path.join(common.STATE_DIR, 'telethon_kislovodsk.session')
 
 STATE_FILE = os.path.expanduser('~/.claude/state/kislovodsk-alert-seen.json')
 LOCK_FILE = STATE_FILE + '.lock'

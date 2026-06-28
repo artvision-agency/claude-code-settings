@@ -40,9 +40,15 @@ except ImportError:  # pragma: no cover - проверяется в скрипт
     TelegramClient = None
 
 # ── Пути / секреты ──────────────────────────────────────────────────────────
-TOKENS_JSON = os.path.expanduser('~/artvision-data/tokens.json')
+TOKENS_JSON = os.environ.get('KMV_TOKENS_JSON') or os.path.expanduser(
+    '~/artvision-data/tokens.json')
+# Каталог state (session/dedup/lock). Дефолт ~/.claude/state — на Mac (antonk)
+# = /Users/antonk/.claude/state, на VPS под root = /root/.claude/state.
+# Переопределяется env KMV_STATE_DIR (portable Mac↔VPS, секреты не хардкодим).
+STATE_DIR = os.environ.get('KMV_STATE_DIR') or os.path.expanduser('~/.claude/state')
 # исходная auth-сессия userbot @AntonKamer (рабочие копии делаются из неё)
-MAIN_SESSION = '/Users/antonk/.claude/state/telethon_session.session'
+MAIN_SESSION = os.environ.get('KMV_MAIN_SESSION') or os.path.join(
+    STATE_DIR, 'telethon_session.session')
 
 MSK = timezone(timedelta(hours=3))
 ANTON_CHAT = "161261562"

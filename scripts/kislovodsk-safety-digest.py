@@ -40,7 +40,7 @@ if common.TelegramClient is None:
     sys.exit(1)
 
 # ── Пути / параметры ────────────────────────────────────────────────────────
-SESSION_BASE = '/Users/antonk/.claude/state/telethon_kislovodsk'  # без .session
+SESSION_BASE = os.path.join(common.STATE_DIR, 'telethon_kislovodsk')  # без .session
 SESSION_FILE = SESSION_BASE + '.session'
 LOG = os.path.expanduser('~/.claude/logs/kislovodsk-safety.log')
 TG_SEND = os.path.expanduser('~/.claude/scripts/tg-send.sh')
