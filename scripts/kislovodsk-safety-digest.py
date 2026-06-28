@@ -218,7 +218,7 @@ async def collect():
                     matches.append({
                         "zone": zone_hits, "level": level, "ch": ch["u"],
                         "name": ch["name"], "time": tm, "snippet": snippet,
-                        "airport": airport_hit,
+                        "airport": airport_hit, "mid": m.id,
                     })
             except asyncio.TimeoutError:
                 errors.append(f"{ch['name']} (@{ch['u']}): timeout")
@@ -244,7 +244,14 @@ def zone_summary(matches, zone):
 
 
 def fmt_evidence(items):
-    return [f"• [{m['name']} {m['time']}] {m['snippet']}" for m in items]
+    # ссылка на исходное сообщение для публичных каналов (@username/<msg.id>)
+    out = []
+    for m in items:
+        line = f"• [{m['name']} {m['time']}] {m['snippet']}"
+        if m.get("ch") and m.get("mid"):
+            line += f" → https://t.me/{m['ch']}/{m['mid']}"
+        out.append(line)
+    return out
 
 
 def build_digest(matches, errors, read_any):

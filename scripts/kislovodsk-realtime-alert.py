@@ -358,7 +358,11 @@ def build_push(incidents):
             mark = "‼️" if i["impact"] else "•"
             tag = "офиц." if i["src"] == "official" else (
                 "локальн." if i["src"] == "local" else "агрегатор")
-            out.append(f"{mark} [{i['name']} · {tag} · {i['time']}] {i['snippet']}")
+            line = f"{mark} [{i['name']} · {tag} · {i['time']}] {i['snippet']}"
+            # кликабельная ссылка на исходное сообщение (публичный @username/<id>)
+            if i.get("ch") and i.get("msg_id"):
+                line += f" → https://t.me/{i['ch']}/{i['msg_id']}"
+            out.append(line)
         extra = len(items) - MAX_PER_ZONE
         if extra > 0:
             out.append(f"   …и ещё {extra} сообщ.")
