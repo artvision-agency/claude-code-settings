@@ -23,6 +23,9 @@ case "$FILE_PATH" in
   */clients/*/assets/*|*/clients/*/access.md|*/clients/*/config.yaml|*/clients/*/TODO.md)
     # Служебные файлы для агента: assets/ (URL медиа), access.md (доступы), config.yaml (бренд+контакты), TODO.md (план работ)
     exit 0 ;;
+  */clients/*/handover/*|*/clients/*/reports/*|*/clients/*/plan/*|*/clients/*/meetings/*|*/clients/*/competitors/*|*/clients/*/context/*|*/clients/*/patches/*)
+    # Внутренние папки (НЕ client-facing): handover/reports/plan/meetings/competitors/context/patches — лексикон «AI в публичных» не применяется
+    exit 0 ;;
 esac
 
 # Явный bypass через env (для исключительных случаев — например, .ai-методология в названии скрипта)
