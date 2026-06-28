@@ -30,7 +30,7 @@ except ImportError:
     sys.exit(1)
 from kislovodsk_common import (  # noqa: E402  (re-export для тестов/удобства)
     TOKENS_JSON, MAIN_SESSION, MSK, ANTON_CHAT, BOT_PREF,
-    has, near, is_allclear, tg_link, normalize_snippet,
+    has, near, is_allclear, tg_link, normalize_snippet, signal_line, short_gist,
     DRONE, AIRRAID, PRIMARY, IMPACT, KMV_CITY, KMV_LOC, ROUTE_LOC,
     TRANSPORT, DISRUPT, COORDS, PLACE_KEYS, detect_places, collect_points,
 )
@@ -184,64 +184,40 @@ def zone_summary(matches, zone):
     return lvl, txt, pick
 
 
-def fmt_evidence(items):
-    out = []
-    for m in items:
-        line = f"• [{m['name']} {m['time']}] {m['snippet']}"
-        if m.get("ch") and m.get("mid"):
-            line += f" → {tg_link(m['ch'], m['mid'])}"
-        out.append(line)
-    return out
-
-
 def build_digest(matches, errors, read_any):
-    nowmsk = datetime.now(MSK).strftime('%d.%m %H:%M')
+    """Компактный дайджест: короткая шапка + по одной строке на сигнал
+    (🔴 КМВ-город / 🟡 маршрут-краевое) + аэропорт (только при ограничениях).
+    Логика отбора/скоринга (zone_summary, overall) не меняется — меняется вывод."""
+    nowmsk = datetime.now(MSK).strftime('%d.%m')
     partial = (not read_any) or bool(errors)
 
-    kmv_lvl, kmv_txt, kmv_ev = zone_summary(matches, "kmv")
-    rt_lvl, rt_txt, rt_ev = zone_summary(matches, "route")
-
-    air = [m for m in matches if m["airport"]]
-    if air:
-        air_line = "⚠️ есть сообщения об ограничениях/задержках: " + air[0]["snippet"][:90]
-    else:
-        air_line = "штатно (за 24ч сообщений об ограничениях нет)"
+    kmv_lvl, _kmv_txt, kmv_ev = zone_summary(matches, "kmv")
+    rt_lvl, _rt_txt, rt_ev = zone_summary(matches, "route")
 
     order = {"🟢": 0, "🟡": 1, "🔴": 2}
     overall = max([kmv_lvl, rt_lvl], key=lambda x: order[x])
-    if overall == "🔴":
-        overall_txt = "есть прямые инциденты — проверь детали ниже"
-        rec = "следить за обстановкой, закладывать запас времени, гибкий план"
-    elif overall == "🟡":
-        overall_txt = "фоновая угроза БПЛА по югу / возможны сбои на маршруте"
-        rec = "ехать можно, заложить запас по времени и следить за каналами Минвод"
-    else:
-        overall_txt = "за 24ч значимых событий по КМВ и маршруту не зафиксировано"
-        rec = "ехать спокойно, плановых ограничений нет"
 
-    L = []
-    L.append(f"🛡 Безопасность Кисловодск/маршрут — {nowmsk} МСК")
+    L = [f"🛡 {overall} Безопасность КМВ/маршрут · {nowmsk} МСК"]
     if partial:
-        L.append("⚠️ данные частичные (часть источников недоступна)")
-    L.append("")
-    L.append(f"Общий уровень: {overall} — {overall_txt}")
-    L.append("")
-    L.append(f"🏔 КМВ/Минводы (24ч): {kmv_lvl} {kmv_txt}")
-    for e in fmt_evidence(kmv_ev):
-        L.append(f"   {e}")
-    L.append("")
-    L.append(f"🚆 Маршрут Ростов→Тихорецкая→Невинномысск (24ч): {rt_lvl} {rt_txt}")
-    for e in fmt_evidence(rt_ev):
-        L.append(f"   {e}")
-    L.append("")
-    L.append(f"✈️ Аэропорт Минводы: {air_line}")
-    L.append("")
-    L.append(f"Рекомендация: {rec}")
-    if errors:
-        L.append("")
-        L.append("Недоступные источники: " + "; ".join(errors[:6]))
-    L.append("")
-    L.append("— эвристика по сводкам TG-каналов за 24ч, не гарантия безопасности")
+        L.append("⚠ данные частичные")
+
+    any_sig = False
+    for i in kmv_ev:
+        emoji = "🔴" if i.get("level") == "red" else "🟡"
+        L.append(signal_line(emoji, i, "mid", fallback_place="КМВ"))
+        any_sig = True
+    for i in rt_ev:
+        emoji = "🔴" if i.get("level") == "red" else "🟡"
+        L.append(signal_line(emoji, i, "mid", fallback_place="маршрут"))
+        any_sig = True
+    if not any_sig:
+        L.append("🟢 тихо за 24ч — значимых сигналов нет")
+
+    air = [m for m in matches if m["airport"]]
+    if air:
+        L.append("✈️ Минводы: " + short_gist(air[0]["snippet"], 60))
+
+    L.append("⚠ эвристика по TG, не гарантия")
     return overall, '\n'.join(L)
 
 

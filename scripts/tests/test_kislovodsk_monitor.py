@@ -267,5 +267,86 @@ class TestBugRegressions(unittest.TestCase):
         self.assertNotIn("route", zones)
 
 
+# ── 9. Компактный формат сообщений (одна короткая строка на сигнал) ─────────
+class TestCompactFormat(unittest.TestCase):
+    def test_short_gist_passthrough(self):
+        self.assertEqual(KC.short_gist("Коротко"), "Коротко")
+
+    def test_short_gist_trims_by_word_boundary(self):
+        long = ("В Кисловодске объявлена опасность атаки беспилотных летательных "
+                "аппаратов, населению срочно укрыться в помещениях")
+        g = KC.short_gist(long, 60)
+        self.assertLessEqual(len(g), 61)        # ≤60 + '…'
+        self.assertTrue(g.endswith("…"))
+        self.assertNotIn("\n", g)
+        self.assertFalse(g[:-1].endswith(" "))  # не рвём слово/нет хвостового пробела
+
+    def test_hhmm_extracts_time(self):
+        self.assertEqual(KC.hhmm("28.06 06:14"), "06:14")
+        self.assertEqual(KC.hhmm("?"), "?")
+
+    def test_place_label_detects_city(self):
+        self.assertEqual(KC.place_label("удар по Кисловодску"), "Кисловодск")
+
+    def test_place_label_fallback_when_no_city(self):
+        self.assertEqual(KC.place_label("общая сводка без города", "КМВ"), "КМВ")
+
+    def test_short_link_no_https(self):
+        link = KC.short_link("VVV5807", 6677)
+        self.assertEqual(link, "t.me/VVV5807/6677")
+        self.assertNotIn("https://", link)
+
+    def test_signal_line_format_realtime(self):
+        item = {"snippet": "БПЛА-опасность в Кисловодске", "time": "28.06 06:14",
+                "ch": "VVV5807", "msg_id": 6677}
+        line = KC.signal_line("🔴", item, "msg_id")
+        self.assertTrue(line.startswith("🔴 "))
+        self.assertIn(" · Кисловодск · ", line)
+        self.assertIn(" · 06:14 · ", line)
+        self.assertTrue(line.endswith("t.me/VVV5807/6677"))
+        self.assertNotIn("https://", line)
+        self.assertNotIn("\n", line)
+
+    def test_signal_line_digest_mid_field(self):
+        item = {"snippet": "БПЛА над Ростовом-на-Дону, ПВО работает",
+                "time": "28.06 06:11", "ch": "radarrussiia", "mid": 78280}
+        line = KC.signal_line("🟡", item, "mid", fallback_place="маршрут")
+        self.assertTrue(line.startswith("🟡 "))
+        self.assertTrue(line.endswith("t.me/radarrussiia/78280"))
+
+
+# ── 10. build_push / build_digest — компактный вывод ────────────────────────
+class TestCompactBuilders(unittest.TestCase):
+    def test_build_push_compact(self):
+        incidents = [{"zone": "kmv", "level": "red", "ch": "VVV5807",
+                      "name": "x", "src": "official", "time": "28.06 06:14",
+                      "snippet": "В Кисловодске объявлена опасность атаки БПЛА",
+                      "hash": "h", "msg_id": 6677, "impact": False}]
+        head, text = RT.build_push(incidents)
+        self.assertEqual(head, "🔴")
+        lines = text.split("\n")
+        self.assertTrue(lines[0].startswith("🔴 БПЛА — КМВ · "))
+        self.assertIn("t.me/VVV5807/6677", text)
+        self.assertIn(" · Кисловодск · ", text)
+        for ln in lines:                        # компактность
+            self.assertLessEqual(len(ln), 130)
+
+    def test_build_digest_compact_red(self):
+        matches = [{"zone": {"kmv"}, "level": "red", "ch": "VVV5807", "name": "x",
+                    "time": "28.06 06:14", "snippet": "Над Кисловодском сбит ударный БПЛА",
+                    "airport": False, "mid": 10}]
+        overall, text = DG.build_digest(matches, [], True)
+        self.assertEqual(overall, "🔴")
+        lines = text.split("\n")
+        self.assertTrue(lines[0].startswith("🛡 🔴 "))
+        self.assertIn("t.me/VVV5807/10", text)
+        self.assertIn(" · Кисловодск · ", text)
+
+    def test_build_digest_quiet_green(self):
+        overall, text = DG.build_digest([], [], True)
+        self.assertEqual(overall, "🟢")
+        self.assertIn("тихо за 24ч", text)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

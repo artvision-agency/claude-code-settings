@@ -42,7 +42,7 @@ except ImportError:
     sys.exit(1)
 from kislovodsk_common import (  # noqa: E402  (re-export для тестов/удобства)
     TOKENS_JSON, MAIN_SESSION, MSK, ANTON_CHAT, BOT_PREF,
-    has, is_allclear, tg_link, normalize_snippet,
+    has, is_allclear, tg_link, normalize_snippet, signal_line,
     DRONE, AIRRAID, PRIMARY, IMPACT, KMV_CITY, KMV_LOC, ROUTE_LOC,
     COORDS, PLACE_KEYS, detect_places, collect_points,
 )
@@ -252,32 +252,19 @@ async def collect(st):
     return incidents, errors, read_any, new_wm
 
 
-def _block(title, items):
-    out = [title]
-    for i in items[:MAX_PER_ZONE]:
-        mark = "‼️" if i["impact"] else "•"
-        tag = "офиц." if i["src"] == "official" else (
-            "локальн." if i["src"] == "local" else "агрегатор")
-        line = f"{mark} [{i['name']} · {tag} · {i['time']}] {i['snippet']}"
-        if i.get("ch") and i.get("msg_id"):
-            line += f" → {tg_link(i['ch'], i['msg_id'])}"
-        out.append(line)
-    extra = len(items) - MAX_PER_ZONE
-    if extra > 0:
-        out.append(f"   …и ещё {extra} сообщ.")
-    return out
-
-
 def build_push(incidents):
-    """Сгруппировать новые инциденты в ОДИН пуш. classify_realtime отдаёт только
-    зону 'kmv' → пуш всегда 🔴 по КМВ (маршрут/краевое сюда не попадают)."""
+    """Сгруппировать новые инциденты в ОДИН компактный пуш. classify_realtime
+    отдаёт только зону 'kmv' → пуш всегда 🔴 по КМВ. Каждый сигнал = одна строка
+    '🔴 <суть> · <место> · <ЧЧ:ММ> · t.me/ch/id'."""
     kmv = [i for i in incidents if i["zone"] == "kmv"]
-    nowmsk = datetime.now(MSK).strftime('%d.%m %H:%M')
-    L = [f"🔴 БПЛА/ВОЗДУШНАЯ ОПАСНОСТЬ — КМВ/Ставрополье ({nowmsk} МСК)", ""]
-    L += _block("🏔 КМВ (Кисловодск/Минводы/Ставрополье):", kmv)
-    L.append("")
-    L.append("⚠️ быстрый сигнал из TG-каналов, не гарантия — сверь с официальным "
-             "(губернатор @VVV5807 / МЧС / SMS-оповещение).")
+    nowmsk = datetime.now(MSK).strftime('%d.%m')
+    L = [f"🔴 БПЛА — КМВ · {nowmsk}"]
+    for i in kmv[:MAX_PER_ZONE]:
+        L.append(signal_line("🔴", i, "msg_id", fallback_place="КМВ"))
+    extra = len(kmv) - MAX_PER_ZONE
+    if extra > 0:
+        L.append(f"…+{extra}")
+    L.append("⚠ сверь с офиц. (@VVV5807/МЧС)")
     return "🔴", '\n'.join(L)
 
 

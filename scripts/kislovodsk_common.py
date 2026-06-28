@@ -232,6 +232,57 @@ def collect_points(items):
     return pm
 
 
+# ── Компактный формат сигнала (одна короткая строка) ────────────────────────
+def short_link(channel, msg_id):
+    """Короткая t.me-ссылка БЕЗ https:// — для компактных сообщений."""
+    return f"t.me/{channel}/{msg_id}"
+
+
+def short_gist(text, limit=60):
+    """Суть сообщения одной строкой: схлопнуть пробелы, обрезать до ~limit по
+    границе слова (не рвём слово посередине), добавить '…' при обрезке."""
+    s = re.sub(r'\s+', ' ', text or '').strip()
+    if len(s) <= limit:
+        return s
+    cut = s[:limit]
+    sp = cut.rfind(' ')
+    if sp >= int(limit * 0.6):          # есть разумная граница слова
+        cut = cut[:sp]
+    return cut.rstrip(' ,.;:—-') + '…'
+
+
+def hhmm(time_str):
+    """'ДД.ММ ЧЧ:ММ' → 'ЧЧ:ММ'. Безопасно к '?'/'' (вернёт как есть)."""
+    parts = (time_str or '').split()
+    return parts[-1] if parts else (time_str or '?')
+
+
+def place_label(text, fallback="КМВ"):
+    """Короткое распознанное место (detect_places, наиболее специфичное первым
+    по PLACE_KEYS) или fallback-зона, если место не распознано."""
+    found = detect_places(text)
+    if not found:
+        return fallback
+    for _kw, key in PLACE_KEYS:          # PLACE_KEYS: специфичные первыми
+        if key in found:
+            return key
+    return next(iter(found))             # напр. Ставрополь (не из PLACE_KEYS)
+
+
+def signal_line(emoji, item, link_field="msg_id", fallback_place="КМВ"):
+    """Одна компактная строка сигнала:
+    '<emoji> <суть ≤60> · <место> · <ЧЧ:ММ> · t.me/ch/id'.
+    item — dict с полями snippet/time/ch/<link_field>."""
+    snip = item.get("snippet", "")
+    parts = [f"{emoji} {short_gist(snip, 60)}",
+             place_label(snip, fallback_place),
+             hhmm(item.get("time", "?"))]
+    ch, mid = item.get("ch"), item.get(link_field)
+    if ch and mid:
+        parts.append(short_link(ch, mid))
+    return " · ".join(parts)
+
+
 # ── Telegram Bot API ────────────────────────────────────────────────────────
 def _bot_token(name):
     try:
