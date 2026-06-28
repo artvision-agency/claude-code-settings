@@ -8,6 +8,7 @@ PY="${KISLO_PY:-/Library/Frameworks/Python.framework/Versions/3.14/bin/python3}"
 [ -x "$PY" ] || PY="$(command -v python3)"
 
 SCRIPTS="$HOME/.claude/scripts"
+COMMON="$SCRIPTS/kislovodsk_common.py"
 DIGEST="$SCRIPTS/kislovodsk-safety-digest.py"
 ALERT="$SCRIPTS/kislovodsk-realtime-alert.py"
 TESTS="$SCRIPTS/tests/test_kislovodsk_monitor.py"
@@ -21,6 +22,7 @@ bad()  { printf '  FAIL  %s\n' "$1"; fail=1; }
 echo "== QA Kislovodsk monitor (PY=$PY) =="
 
 echo "[1] py_compile"
+if "$PY" -m py_compile "$COMMON" 2>/dev/null; then pass "compile common"; else bad "compile common"; fi
 if "$PY" -m py_compile "$DIGEST" 2>/dev/null; then pass "compile digest"; else bad "compile digest"; fi
 if "$PY" -m py_compile "$ALERT"  2>/dev/null; then pass "compile alert";  else bad "compile alert";  fi
 
