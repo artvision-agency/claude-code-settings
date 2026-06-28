@@ -3,19 +3,37 @@
 # Заменяет sync-all-repos.sh — добавляет SESSION_STATE.json
 set -euo pipefail
 
-# --- mutual lock (macOS: mkdir-atomic, нет flock) ---
-# Stop-хук не критичен: не получил лок → тихо выходим 0 (синк сделает следующий цикл),
-# завершение сессии не ломаем.
+# --- mutual lock (macOS: нет flock; mkdir-atomic + PID-liveness reclaim) ---
+# Замена mtime-эвристики (find -mmin +5): та могла украсть лок у ЛЕГИТ-прогона >5мин
+# и допускала гонку двух забирающих (оба rmdir+mkdir). Теперь владелец пишет свой PID;
+# занятый лок с ЖИВЫМ pid не трогаем; мёртвый/осиротевший pid забираем повторным
+# атомарным mkdir (единственный арбитр гонки — кто первым mkdir, тот владелец).
+# Stop-хук не критичен: не получили лок → тихо выходим 0 (синк сделает следующий цикл).
 _GSLOCK=/tmp/artvision-git-sync.lock
-if ! mkdir "$_GSLOCK" 2>/dev/null; then
-  # stale > 5 мин → забрать
-  if find "$_GSLOCK" -maxdepth 0 -mmin +5 2>/dev/null | grep -q .; then
-    rmdir "$_GSLOCK" 2>/dev/null; mkdir "$_GSLOCK" 2>/dev/null || exit 0
-  else
-    exit 0
-  fi
-fi
-trap 'rmdir "$_GSLOCK" 2>/dev/null' EXIT
+_lock_acquire() {
+  local tries=0 owner
+  while ! mkdir "$_GSLOCK" 2>/dev/null; do
+    owner="$(cat "$_GSLOCK/pid" 2>/dev/null || true)"
+    if [ -n "$owner" ]; then
+      if kill -0 "$owner" 2>/dev/null; then
+        return 1                                 # владелец жив — не крадём
+      fi
+      rm -f "$_GSLOCK/pid" 2>/dev/null || true   # владелец мёртв → освободить;
+      rmdir "$_GSLOCK" 2>/dev/null || true       # пере-захват атомарным mkdir на след. итерации
+    else
+      tries=$((tries + 1))                       # pid ещё не записан (чужой setup, ~мкс):
+      if [ "$tries" -ge 10 ]; then               # после grace сочли осиротевшим — забрать
+        rmdir "$_GSLOCK" 2>/dev/null || true
+      else
+        sleep 0.2
+      fi
+    fi
+  done
+  echo "$$" > "$_GSLOCK/pid"                      # заявить владение
+  return 0
+}
+_lock_acquire || exit 0
+trap 'rm -f "$_GSLOCK/pid" 2>/dev/null; rmdir "$_GSLOCK" 2>/dev/null' EXIT
 # --- /lock ---
 
 REPOS=(
@@ -199,6 +217,15 @@ for repo in "${REPOS[@]}"; do
     fi
 
     repo_name="$(basename "$repo")"
+
+    # GUARD против массовой потери данных (июнь 2026: 282 файла Грелки уехали в commit+push).
+    # Проверяем ДО `git add -A`: >10 удалённых файлов → НЕ коммитим этот репо,
+    # фиксируем как failure (данные целы), человек разрулит вручную.
+    DELETED_CNT="$(git status --porcelain 2>/dev/null | grep -c '^ D\|^D ' || true)"
+    if [ "${DELETED_CNT:-0}" -gt 10 ]; then
+        record_sync_failure "$repo_name" "deletion-guard" "${DELETED_CNT} удалений (>10) — авто-commit отменён, вероятна потеря данных, разрулить вручную"
+        continue
+    fi
 
     # Добавить всё
     if ! ADD_ERR="$(git add -A 2>&1)"; then
