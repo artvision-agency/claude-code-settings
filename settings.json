@@ -471,6 +471,11 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/inject-context-rules.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/start-session-context-autoresume.sh",
+            "timeout": 5
           }
         ]
       },
@@ -559,6 +564,11 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/stop-false-negative-check.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-code-without-codex.sh",
             "timeout": 10
           }
         ]
