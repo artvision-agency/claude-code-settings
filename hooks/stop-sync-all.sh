@@ -3,6 +3,21 @@
 # Заменяет sync-all-repos.sh — добавляет SESSION_STATE.json
 set -euo pipefail
 
+# --- mutual lock (macOS: mkdir-atomic, нет flock) ---
+# Stop-хук не критичен: не получил лок → тихо выходим 0 (синк сделает следующий цикл),
+# завершение сессии не ломаем.
+_GSLOCK=/tmp/artvision-git-sync.lock
+if ! mkdir "$_GSLOCK" 2>/dev/null; then
+  # stale > 5 мин → забрать
+  if find "$_GSLOCK" -maxdepth 0 -mmin +5 2>/dev/null | grep -q .; then
+    rmdir "$_GSLOCK" 2>/dev/null; mkdir "$_GSLOCK" 2>/dev/null || exit 0
+  else
+    exit 0
+  fi
+fi
+trap 'rmdir "$_GSLOCK" 2>/dev/null' EXIT
+# --- /lock ---
+
 REPOS=(
     "$HOME/artvision-data"
     "$HOME/artvision-tg-bot"
