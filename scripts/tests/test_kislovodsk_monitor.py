@@ -89,6 +89,42 @@ class TestRealtimeClassify(unittest.TestCase):
             (None, None))
 
 
+# ── 1b. Анти-false-🔴: чужой (не-КМВ) аэропорт/город (прецедент 28.06) ───────
+class TestRealtimeForeignSuppression(unittest.TestCase):
+    """🔴 ТОЛЬКО когда КМВ-город рядом с триггером И суть НЕ про чужой регион.
+    Прецедент: «аэропорт Сочи» из КМВ-канала давал 🔴 — это не угроза курорту."""
+
+    def test_foreign_airport_only_not_red(self):
+        # Сочи без КМВ-города → шаг 3 отсекает (никакого 🔴)
+        self.assertEqual(
+            RT.classify_realtime("Аэропорт Сочи закрыт из-за угрозы атаки БПЛА"),
+            (None, None))
+
+    def test_sochi_airport_with_distant_calm_kmv_not_red(self):
+        # Сочи/Адлер у триггера, КМВ упомянут в спокойном контексте дальше →
+        # чужой регион ближе к триггеру → НЕ 🔴 (ровно прецедент 28.06).
+        text = ("Сводка: в Сочи и Адлере объявлена опасность атаки БПЛА, "
+                "аэропорт Сочи ограничил приём. В Минеральных Водах спокойно.")
+        self.assertEqual(RT.classify_realtime(text), (None, None))
+
+    def test_kmv_far_from_trigger_roundup_not_red(self):
+        # КМВ-город в спокойном контексте, триггер про Краснодарский край → НЕ 🔴
+        text = ("В Кисловодске сегодня ясно, работают санатории и нарзанные ванны. "
+                "Тем временем в Краснодарском крае объявлена опасность атаки БПЛА.")
+        self.assertEqual(RT.classify_realtime(text), (None, None))
+
+    def test_real_kmv_alert_with_distant_foreign_mention_still_red(self):
+        # настоящий КМВ-алерт; упоминание Сочи ДАЛЕКО не должно гасить 🔴
+        text = ("В Кисловодске объявлена опасность атаки БПЛА. "
+                + "Берегите себя. " * 5
+                + "Ранее сообщалось о ситуации в Сочи.")
+        self.assertEqual(RT.classify_realtime(text), ("kmv", "red"))
+
+    def test_foreign_list_has_sochi(self):
+        self.assertIn("сочи", KC.FOREIGN)
+        self.assertIn("краснодар", KC.FOREIGN)
+
+
 # ── 2. Точный словарь — «удар»/«атака» без БПЛА-слов НЕ триггерят ────────────
 class TestPreciseDictionary(unittest.TestCase):
     def test_udar_alone_no_realtime(self):
@@ -346,6 +382,68 @@ class TestCompactBuilders(unittest.TestCase):
         overall, text = DG.build_digest([], [], True)
         self.assertEqual(overall, "🟢")
         self.assertIn("тихо за 24ч", text)
+
+
+# ── 11. Config-extract: загрузка из JSON + фолбэк на дефолты ─────────────────
+class TestConfigExtract(unittest.TestCase):
+    def test_config_file_exists_and_valid_json(self):
+        import json
+        path = os.path.join(SCRIPTS, "kislovodsk-config.json")
+        self.assertTrue(os.path.exists(path), "kislovodsk-config.json отсутствует")
+        with open(path, encoding="utf-8") as f:
+            cfg = json.load(f)            # бросит при битом JSON
+        self.assertIsInstance(cfg, dict)
+        for sect in ("keywords", "coords", "thresholds", "channels"):
+            self.assertIn(sect, cfg, f"в конфиге нет секции {sect}")
+
+    def test_config_loaded_into_module(self):
+        # модуль реально подхватил конфиг (а не пустой словарь)
+        self.assertTrue(KC._CFG, "config не загрузился в kislovodsk_common")
+
+    def test_cfg_get_dotted_path(self):
+        self.assertEqual(KC.cfg_num("thresholds.realtime.near_window", -1), 80)
+        self.assertEqual(KC.cfg_num("thresholds.digest.hours", -1), 24)
+
+    def test_cfg_get_missing_returns_default(self):
+        self.assertEqual(KC.cfg_get("nope.not.here", "DFLT"), "DFLT")
+        self.assertEqual(KC.cfg_num("thresholds.absent_key", 7), 7)
+
+    def test_missing_config_file_falls_back_to_empty(self):
+        # битый/отсутствующий путь → {} (скрипт не падает, работает на дефолтах)
+        self.assertEqual(KC._load_config("/nonexistent/path/zzz.json"), {})
+
+    def test_keywords_match_config(self):
+        import json
+        with open(os.path.join(SCRIPTS, "kislovodsk-config.json"), encoding="utf-8") as f:
+            cfg = json.load(f)
+        self.assertEqual(KC.DRONE, [w.lower() for w in cfg["keywords"]["drone"]])
+        self.assertEqual(KC.KMV_CITY, [w.lower() for w in cfg["keywords"]["kmv_city"]])
+
+    def test_channels_loaded_from_config(self):
+        # списки каналов непустые и взяты из конфига
+        self.assertTrue(len(RT.FAST_CHANNELS) >= 10)
+        self.assertTrue(len(DG.CHANNELS) >= 10)
+        self.assertTrue(all(c.get("u") and c.get("zone") for c in RT.FAST_CHANNELS))
+
+    def test_thresholds_loaded_into_scripts(self):
+        self.assertEqual(RT.NEAR_WINDOW, 80)
+        self.assertEqual(RT.MAX_AGE_HOURS, 6)
+        self.assertEqual(DG.HOURS, 24)
+
+
+# ── 12. min_dist() — расстояние между группами слов ─────────────────────────
+class TestMinDist(unittest.TestCase):
+    def test_min_dist_basic(self):
+        # 'абв' на 0, 'эюя' на 4 → расстояние 4
+        self.assertEqual(KC.min_dist("абв эюя", ["абв"], ["эюя"]), 4)
+
+    def test_min_dist_none_when_absent(self):
+        self.assertIsNone(KC.min_dist("только абв", ["абв"], ["нет"]))
+
+    def test_near_still_works(self):
+        self.assertTrue(KC.near("Кисловодск БПЛА", ["кисловодск"], ["бпла"], 80))
+        self.assertFalse(KC.near("Кисловодск" + " " * 200 + "БПЛА",
+                                 ["кисловодск"], ["бпла"], 80))
 
 
 if __name__ == "__main__":

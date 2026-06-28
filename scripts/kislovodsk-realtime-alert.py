@@ -42,8 +42,8 @@ except ImportError:
     sys.exit(1)
 from kislovodsk_common import (  # noqa: E402  (re-export для тестов/удобства)
     TOKENS_JSON, MAIN_SESSION, MSK, ANTON_CHAT, BOT_PREF,
-    has, is_allclear, tg_link, normalize_snippet, signal_line,
-    DRONE, AIRRAID, PRIMARY, IMPACT, KMV_CITY, KMV_LOC, ROUTE_LOC,
+    has, is_allclear, tg_link, normalize_snippet, signal_line, min_dist,
+    DRONE, AIRRAID, PRIMARY, IMPACT, FOREIGN, KMV_CITY, KMV_LOC, ROUTE_LOC,
     COORDS, PLACE_KEYS, detect_places, collect_points,
 )
 
@@ -61,14 +61,17 @@ STATE_FILE = os.path.expanduser('~/.claude/state/kislovodsk-alert-seen.json')
 LOCK_FILE = STATE_FILE + '.lock'
 LOG = os.path.expanduser('~/.claude/logs/kislovodsk-alert.log')
 
-MAX_AGE_HOURS = 6            # soft-cap: не алертить сообщения старше N ч (≥ StartInterval)
-READ_LIMIT = 40             # сколько последних сообщений тянуть на канал
-CHANNEL_TIMEOUT = 25
-MAX_PER_ZONE = 6            # сколько инцидентов показать в одном пуше
-INCIDENT_KEEP = 800         # сколько хешей инцидентов хранить в state
+# Пороги/окна и список каналов — из kislovodsk-config.json (фолбэк на дефолты).
+MAX_AGE_HOURS = common.cfg_num("thresholds.realtime.max_age_hours", 6)   # soft-cap: не алертить старше N ч (≥ StartInterval)
+READ_LIMIT = common.cfg_num("thresholds.realtime.read_limit", 40)        # сколько последних сообщений тянуть на канал
+CHANNEL_TIMEOUT = common.cfg_num("thresholds.realtime.channel_timeout", 25)
+MAX_PER_ZONE = common.cfg_num("thresholds.realtime.max_per_zone", 6)     # сколько инцидентов показать в одном пуше
+INCIDENT_KEEP = common.cfg_num("thresholds.realtime.incident_keep", 800)  # сколько хешей инцидентов хранить в state
+# окно «КМВ-город рядом с триггером» для мгновенного 🔴 (анти-false-positive).
+NEAR_WINDOW = common.cfg_num("thresholds.realtime.near_window", 80)
 
-# ── БЫСТРЫЕ каналы (zone: kmv | both) ───────────────────────────────────────
-FAST_CHANNELS = [
+# ── БЫСТРЫЕ каналы (zone: kmv | both) — из config (фолбэк ниже) ──────────────
+FAST_CHANNELS = common.cfg_channels("channels.fast", [
     {"u": "VVV5807",        "zone": "kmv",  "name": "Губернатор Ставрополья (офиц.)", "src": "official"},
     {"u": "moy_kislovodsk", "zone": "kmv",  "name": "Мой Кисловодск",   "src": "local"},
     {"u": "Kislovodsx7",    "zone": "kmv",  "name": "Кисловодск Live",   "src": "local"},
@@ -84,7 +87,7 @@ FAST_CHANNELS = [
     {"u": "rybar",          "zone": "both", "name": "Рыбарь",            "src": "aggregate"},
     {"u": "bazabazon",      "zone": "both", "name": "Baza",              "src": "aggregate"},
     {"u": "kavkaz_leakbez", "zone": "both", "name": "Кавказ",            "src": "aggregate"},
-]
+])
 
 
 def log(line):
@@ -95,17 +98,32 @@ def log(line):
 
 # ── Классификация real-time (🔴 ТОЛЬКО при явном КМВ-городе + триггер БПЛА) ──
 def classify_realtime(text):
-    """Вариант «б»: мгновенный пуш ТОЛЬКО при ЯВНОМ КМВ-ГОРОДЕ + триггере (🔴).
-    Общекраевые объявления (без города) и маршрут НЕ пушатся мгновенно — они
-    всплывут в дайджесте как 🟡. Вернуть (zone, level) или (None, None)."""
-    if is_allclear(text):          # отбой — не алертить
+    """Вариант «б»: мгновенный пуш ТОЛЬКО при ЯВНОМ КМВ-ГОРОДЕ-КУРОРТЕ РЯДОМ с
+    БПЛА-триггером, И сообщение НЕ «про» чужой (не-КМВ) аэропорт/город.
+    Вернуть (zone, level) или (None, None).
+
+    Анти-false-🔴 (прецедент 28.06: «аэропорт Сочи» из КМВ-канала давал 🔴):
+      1. отбой → нет;
+      2. нет триггера БПЛА/тревоги → нет;
+      3. нет КМВ-города-курорта в ТЕКСТЕ → нет (краевое/маршрут идут в дайджест);
+      4. КМВ-город НЕ рядом с триггером (роундап, город в спокойном контексте) → нет;
+      5. чужой город/аэропорт (Сочи/Адлер/Краснодар/Крым…) БЛИЖЕ к триггеру, чем
+         КМВ-город → суть про другой регион → нет.
+    Общекраевые/маршрут/отбой/не-курорт всплывут в дайджесте (🟡), не мгновенно."""
+    if is_allclear(text):                 # 1. отбой — не алертить
         return None, None
     t = text.lower()
-    if not has(t, PRIMARY):        # нет триггерного слова
+    if not has(t, PRIMARY):               # 2. нет триггерного слова
         return None, None
-    if has(t, KMV_CITY):           # явный город-курорт КМВ
-        return "kmv", "red"
-    return None, None              # краевое/маршрут → не мгновенно (в дайджест)
+    if not has(t, KMV_CITY):              # 3. нет явного города-курорта КМВ
+        return None, None
+    d_kmv = min_dist(t, KMV_CITY, PRIMARY)
+    if d_kmv is None or d_kmv > NEAR_WINDOW:   # 4. КМВ-город не рядом с триггером
+        return None, None
+    d_foreign = min_dist(t, FOREIGN, PRIMARY)
+    if d_foreign is not None and d_foreign < d_kmv:   # 5. триггер про чужой регион
+        return None, None
+    return "kmv", "red"                   # явный КМВ-курорт рядом с БПЛА-триггером
 
 
 # ── State (дедуп) с fcntl-локом ─────────────────────────────────────────────
