@@ -126,8 +126,8 @@ def _fmt_window(label, util, resets_at=None):
     p = int(round(util))
     if p >= 80:
         c = '\033[31m'   # красный — лимит на исходе
-    elif p >= 50:
-        c = '\033[33m'   # жёлтый — перевалило за половину
+    elif p >= 70:
+        c = '\033[33m'   # жёлтый — перевалило за 70%
     else:
         c = '\033[32m'   # зелёный
     r = _fmt_reset(resets_at)
